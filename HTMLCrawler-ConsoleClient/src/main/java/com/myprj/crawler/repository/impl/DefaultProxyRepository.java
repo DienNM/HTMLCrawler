@@ -16,7 +16,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.myprj.crawler.client.util.ProjectType;
+import com.myprj.crawler.enumeration.ProjectType;
 import com.myprj.crawler.model.ProxyModel;
 import com.myprj.crawler.repository.ProxyRepository;
 

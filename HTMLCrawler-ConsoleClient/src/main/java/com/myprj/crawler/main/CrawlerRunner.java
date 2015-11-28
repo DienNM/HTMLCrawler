@@ -4,11 +4,11 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Scanner;
 
-import com.myprj.crawler.client.factory.ProjectServiceFactory;
-import com.myprj.crawler.client.repository.impl.DefaultProjectRepository;
-import com.myprj.crawler.client.repository.impl.DefaultProxyRepository;
-import com.myprj.crawler.client.util.ProjectType;
+import com.myprj.crawler.factory.ProjectServiceFactory;
+import com.myprj.crawler.repository.impl.DefaultProjectRepository;
+import com.myprj.crawler.repository.impl.DefaultProxyRepository;
 import com.myprj.crawler.enumeration.ProjectStatus;
+import com.myprj.crawler.enumeration.ProjectType;
 import com.myprj.crawler.model.ProjectModel;
 import com.myprj.crawler.repository.ProjectRepository;
 import com.myprj.crawler.repository.ProxyRepository;
@@ -168,8 +168,6 @@ public class CrawlerRunner {
 
     private void exit() throws Exception {
         System.out.println();
-        System.out.print("\tExit after 10 seconds");
-        Thread.sleep(5000);
         System.exit(0);
     }
 }

@@ -1,6 +1,7 @@
 package com.myprj.crawler.service.impl;
 
-import static com.myprj.crawler.client.util.ProjectType.chotot;
+
+import static com.myprj.crawler.enumeration.ProjectType.chotot;
 
 import com.myprj.crawler.service.AbstractProjectSupport;
 

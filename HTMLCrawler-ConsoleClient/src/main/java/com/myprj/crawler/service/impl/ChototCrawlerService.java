@@ -10,9 +10,9 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import com.myprj.crawler.client.domain.PhoneData;
 import com.myprj.crawler.domain.Item;
 import com.myprj.crawler.domain.Site;
+import com.myprj.crawler.model.PhoneData;
 import com.myprj.crawler.service.AbstractCrawler;
 
 /**

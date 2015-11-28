@@ -15,9 +15,9 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import com.myprj.crawler.client.domain.ProductData;
 import com.myprj.crawler.domain.Item;
 import com.myprj.crawler.domain.Site;
+import com.myprj.crawler.model.ProductData;
 import com.myprj.crawler.service.AbstractCrawler;
 import com.myprj.crawler.util.Serialization;
 import com.myprj.crawler.util.StreamUtil;
@@ -36,8 +36,7 @@ public class LazadaCrawlerService extends AbstractCrawler<ProductData> {
     protected void persistResult(Site site, List<Item<ProductData>> items) {
         List<String> detail = new ArrayList<String>();
         for (Item<ProductData> item : items) {
-            ProductData productData = item.getContent();
-            detail.add(Serialization.serialize(productData));
+            detail.add(Serialization.serialize(item));
         }
         StreamUtil.write(new File(PROJECTS + site.getProject().getName() + separator + "lazada-product-info.json"),
                 detail, true);
