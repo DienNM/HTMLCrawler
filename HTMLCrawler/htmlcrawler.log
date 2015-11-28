@@ -1,0 +1,12 @@
+2015-11-28 18:18:49 INFO  DefaultProxyRepository:69 - Loaded proxies
+2015-11-28 18:18:49 INFO  DefaultProxyRepository:69 - Loaded proxies
+2015-11-28 18:18:53 INFO  ProjectService:92 - RESUME Crawling project: lazada2. Page = 1, Link = http://www.lazada.vn/cham-soc-da-mat/?page=%s
+2015-11-28 18:18:53 INFO  CrawlerService:68 - Start crawling: http://www.lazada.vn/cham-soc-da-mat/?page=1
+2015-11-28 18:19:01 INFO  CrawlerService:68 - Start crawling: http://www.lazada.vn/cham-soc-da-mat/?page=2
+2015-11-28 18:19:08 INFO  CrawlerService:68 - Start crawling: http://www.lazada.vn/cham-soc-da-mat/?page=3
+2015-11-28 18:19:16 INFO  CrawlerService:68 - Start crawling: http://www.lazada.vn/cham-soc-da-mat/?page=4
+2015-11-28 18:23:12 INFO  DefaultProxyRepository:69 - Loaded proxies
+2015-11-28 18:23:12 INFO  DefaultProxyRepository:69 - Loaded proxies
+2015-11-28 18:23:15 INFO  ProjectService:92 - RESUME Crawling project: lazada1. Page = 10, Link = 
+2015-11-28 18:23:15 INFO  CrawlerService:68 - Start crawling: http://www.lazada.vn/trang-diem/?page=1
+2015-11-28 18:23:32 INFO  CrawlerService:68 - Start crawling: http://www.lazada.vn/trang-diem/?page=2
