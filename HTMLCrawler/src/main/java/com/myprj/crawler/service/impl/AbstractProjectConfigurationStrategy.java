@@ -11,7 +11,6 @@ import com.myprj.crawler.exception.ProjectCrawlerException;
 import com.myprj.crawler.model.ProjectModel;
 import com.myprj.crawler.repository.ProxyRepository;
 import com.myprj.crawler.service.ProjectConfigurationStrategy;
-import com.myprj.crawler.util.Log;
 
 /**
  * @author DienNM (DEE)
@@ -19,7 +18,7 @@ import com.myprj.crawler.util.Log;
 
 public abstract class AbstractProjectConfigurationStrategy implements ProjectConfigurationStrategy {
 
-    protected final Logger logger = LoggerFactory.getLogger(Log.PROJECT_LOG);
+    protected final Logger logger = LoggerFactory.getLogger(ProjectConfigurationStrategy.class);
     
     protected ProxyRepository proxyRepository;
 

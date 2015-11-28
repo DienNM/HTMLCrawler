@@ -19,7 +19,6 @@ import org.slf4j.LoggerFactory;
 import com.myprj.crawler.client.util.ProjectType;
 import com.myprj.crawler.model.ProxyModel;
 import com.myprj.crawler.repository.ProxyRepository;
-import com.myprj.crawler.util.Log;
 
 /**
  * @author DienNM (DEE)
@@ -27,7 +26,7 @@ import com.myprj.crawler.util.Log;
 
 public class DefaultProxyRepository implements ProxyRepository {
     
-    private static final Logger logger = LoggerFactory.getLogger(Log.PROJECT_LOG);
+    private static final Logger logger = LoggerFactory.getLogger(DefaultProxyRepository.class);
     
     static final String ROOT = "data".intern() + separator;
     

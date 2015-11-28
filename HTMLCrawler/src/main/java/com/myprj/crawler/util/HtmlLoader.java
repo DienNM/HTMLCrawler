@@ -10,7 +10,8 @@ import org.slf4j.LoggerFactory;
  **/
 
 public class HtmlLoader {
-    private final static Logger logger = LoggerFactory.getLogger(Log.CRAWLER_LOG);
+    
+    private final static Logger logger = LoggerFactory.getLogger(HtmlLoader.class);
 
     public static Document download(String url) {
         int attempted = 0;

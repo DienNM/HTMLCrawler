@@ -12,7 +12,6 @@ import com.myprj.crawler.domain.Site;
 import com.myprj.crawler.exception.ProjectCrawlerException;
 import com.myprj.crawler.model.ProjectModel;
 import com.myprj.crawler.repository.ProjectRepository;
-import com.myprj.crawler.util.Log;
 import com.myprj.crawler.util.Page;
 import com.myprj.crawler.util.Pageable;
 
@@ -22,7 +21,7 @@ import com.myprj.crawler.util.Pageable;
 
 public abstract class AbstractProjectSupport implements ProjectService {
 
-    private final Logger logger = LoggerFactory.getLogger(Log.PROJECT_LOG);
+    private final Logger logger = LoggerFactory.getLogger(ProjectService.class);
 
     private CrawlerService crawlerService;
 
@@ -108,12 +107,12 @@ public abstract class AbstractProjectSupport implements ProjectService {
     public void setCrawlerService(CrawlerService crawlerService) {
         this.crawlerService = crawlerService;
     }
-    
+
     @Override
     public CrawlerService getCrawlerService() {
         return this.crawlerService;
     }
-    
+
     @Override
     public void setProjectRepository(ProjectRepository projectRepository) {
         this.projectRepository = projectRepository;

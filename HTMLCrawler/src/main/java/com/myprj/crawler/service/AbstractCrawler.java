@@ -20,7 +20,6 @@ import com.myprj.crawler.domain.Site;
 import com.myprj.crawler.enumeration.ProjectStatus;
 import com.myprj.crawler.model.ProxyModel;
 import com.myprj.crawler.util.HtmlLoader;
-import com.myprj.crawler.util.Log;
 
 /**
  * @author DienNM (DEE)
@@ -28,7 +27,7 @@ import com.myprj.crawler.util.Log;
 
 public abstract class AbstractCrawler<T> implements CrawlerService {
 
-    private final Logger logger = LoggerFactory.getLogger(Log.CRAWLER_LOG);
+    private final Logger logger = LoggerFactory.getLogger(CrawlerService.class);
 
     protected ExecutorService executorService;
 

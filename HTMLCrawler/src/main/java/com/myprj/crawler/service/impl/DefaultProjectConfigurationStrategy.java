@@ -23,7 +23,6 @@ import com.myprj.crawler.domain.Link;
 import com.myprj.crawler.domain.Site;
 import com.myprj.crawler.exception.ProjectCrawlerException;
 import com.myprj.crawler.model.ProjectModel;
-import com.myprj.crawler.util.Log;
 
 /**
  * @author DienNM (DEE)
@@ -31,7 +30,7 @@ import com.myprj.crawler.util.Log;
 
 public class DefaultProjectConfigurationStrategy extends AbstractProjectConfigurationStrategy {
 
-    private final Logger logger = LoggerFactory.getLogger(Log.PROJECT_LOG);
+    private final Logger logger = LoggerFactory.getLogger(DefaultProjectConfigurationStrategy.class);
     @Override
     public void configure(ProjectModel project) throws ProjectCrawlerException {
         // Create: data/projects/project_name
