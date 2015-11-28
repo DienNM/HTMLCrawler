@@ -1,0 +1,30 @@
+2015-11-28 16:46:08 INFO  projectLog:70 - Loaded proxies
+2015-11-28 16:46:08 INFO  projectLog:70 - Loaded proxies
+2015-11-28 16:46:41 INFO  projectLog:70 - Loaded proxies
+2015-11-28 16:46:41 INFO  projectLog:70 - Loaded proxies
+2015-11-28 16:46:44 INFO  projectLog:91 - RESUME Crawling project: lazada1. Page = , Link = 2
+2015-11-28 16:46:44 INFO  htmlcrawlerLog:69 - Start crawling: http://www.lazada.vn/trang-diem/?page=1
+2015-11-28 16:46:56 INFO  htmlcrawlerLog:69 - Start crawling: http://www.lazada.vn/trang-diem/?page=2
+2015-11-28 16:47:03 ERROR htmlcrawlerLog:91 - Error: {}
+java.util.concurrent.ExecutionException: java.lang.NullPointerException
+	at java.util.concurrent.FutureTask.report(FutureTask.java:122)
+	at java.util.concurrent.FutureTask.get(FutureTask.java:188)
+	at com.myprj.crawler.service.AbstractCrawler.crawl(AbstractCrawler.java:85)
+	at com.myprj.crawler.service.AbstractProjectSupport.crawl(AbstractProjectSupport.java:99)
+	at com.myprj.crawler.client.main.CrawlerRunner.handleCrawlProject(CrawlerRunner.java:150)
+	at com.myprj.crawler.client.main.CrawlerRunner.main(CrawlerRunner.java:58)
+Caused by: java.lang.NullPointerException
+	at com.myprj.crawler.service.impl.LazadaCrawlerService.getCrawledResult(LazadaCrawlerService.java:92)
+	at com.myprj.crawler.service.AbstractCrawler.crawlDetail(AbstractCrawler.java:119)
+	at com.myprj.crawler.service.AbstractCrawler$CrawlDetail.call(AbstractCrawler.java:136)
+	at com.myprj.crawler.service.AbstractCrawler$CrawlDetail.call(AbstractCrawler.java:1)
+	at java.util.concurrent.FutureTask.run(FutureTask.java:262)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1145)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:615)
+	at java.lang.Thread.run(Thread.java:745)
+2015-11-28 16:47:06 INFO  htmlcrawlerLog:69 - Start crawling: http://www.lazada.vn/cham-soc-da-mat/?page=1
+2015-11-28 16:47:16 INFO  htmlcrawlerLog:69 - Start crawling: http://www.lazada.vn/cham-soc-da-mat/?page=2
+2015-11-28 16:48:09 INFO  projectLog:70 - Loaded proxies
+2015-11-28 16:48:09 INFO  projectLog:70 - Loaded proxies
+2015-11-28 16:48:16 INFO  projectLog:91 - RESUME Crawling project: lazada1. Page = , Link = 2
+2015-11-28 16:48:25 INFO  htmlcrawlerLog:69 - Start crawling: http://www.lazada.vn/trang-diem/?page=1
