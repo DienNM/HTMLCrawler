@@ -1,6 +1,6 @@
-package com.myprj.crawler.repository.impl;
+package com.myprj.crawler.client.repository.impl;
 
-import static com.myprj.crawler.client.util.PathConstants.GLOBAL_PROJECTS;
+import static com.myprj.crawler.util.PathConstants.GLOBAL_PROJECTS;
 
 import java.io.BufferedReader;
 import java.io.File;

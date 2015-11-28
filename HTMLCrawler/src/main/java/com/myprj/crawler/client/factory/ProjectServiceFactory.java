@@ -1,12 +1,12 @@
 package com.myprj.crawler.client.factory;
 
+import com.myprj.crawler.client.service.impl.ChototCrawlerService;
+import com.myprj.crawler.client.service.impl.ChototProject;
+import com.myprj.crawler.client.service.impl.LazadaCrawlerService;
+import com.myprj.crawler.client.service.impl.LazadaProject;
 import com.myprj.crawler.client.util.ProjectType;
 import com.myprj.crawler.service.CrawlerService;
 import com.myprj.crawler.service.ProjectService;
-import com.myprj.crawler.service.impl.ChototCrawlerService;
-import com.myprj.crawler.service.impl.ChototProject;
-import com.myprj.crawler.service.impl.LazadaCrawlerService;
-import com.myprj.crawler.service.impl.LazadaProject;
 
 /**
  * @author DienNM (DEE)

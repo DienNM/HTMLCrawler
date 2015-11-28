@@ -90,7 +90,7 @@ public abstract class AbstractProjectSupport implements ProjectService {
     public void crawl(ProjectModel project) {
         if (project.getActiveLink() != null) {
             logger.info("RESUME Crawling project: {}. Page = {}, Link = {}", project.getName(),
-                    project.getActiveLink(), project.getActivePage());
+                    project.getActivePage(), project.getActiveLink());
         } else {
             logger.info("START Crawling project: {}", project.getName());
         }

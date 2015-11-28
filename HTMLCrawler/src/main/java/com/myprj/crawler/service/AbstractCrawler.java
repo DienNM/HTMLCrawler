@@ -92,7 +92,7 @@ public abstract class AbstractCrawler<T> implements CrawlerService {
                 }
 
                 if (!items.isEmpty()) {
-                    System.out.println("\tCrawled: " + items.size());
+                    System.out.println("\tCrawled: " + items.size() + " record(s)");
                     persistResult(site, items);
                 }
             }

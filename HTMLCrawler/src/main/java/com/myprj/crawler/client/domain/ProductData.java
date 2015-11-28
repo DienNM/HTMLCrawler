@@ -17,12 +17,17 @@ public class ProductData {
 
     private String description;
 
+    private List<String> specifications = new ArrayList<String>();
+    
+    private List<String> includedInBox = new ArrayList<String>();
+    
     private List<String> descriptionDetails = new ArrayList<String>();
 
     @Override
     public String toString() {
-        return String.format("%s|price=%s|Orginal Price=%s|%s", name, price, originalPrice,
-                descriptionDetails.toString());
+        return String.format("%s|price=%s|Orginal Price=%s|Specifications: %s|Included In Box: %s|Description Details: %s", 
+                name, price, originalPrice,
+                specifications.toString(), includedInBox.toString(), descriptionDetails.toString());
     }
 
     public String getName() {
@@ -57,11 +62,28 @@ public class ProductData {
         this.description = description;
     }
 
-    public List<String> getDescriptionDetails() {
+    public void setDescriptionDetails(List<String>  descriptionDetails) {
+        this.descriptionDetails = descriptionDetails;
+    }
+
+    public List<String>  getDescriptionDetails() {
         return descriptionDetails;
     }
 
-    public void setDescriptionDetails(List<String> descriptionDetails) {
-        this.descriptionDetails = descriptionDetails;
+    public List<String> getSpecifications() {
+        return specifications;
     }
+
+    public void setSpecifications(List<String> specifications) {
+        this.specifications = specifications;
+    }
+
+    public List<String> getIncludedInBox() {
+        return includedInBox;
+    }
+
+    public void setIncludedInBox(List<String> includedInBox) {
+        this.includedInBox = includedInBox;
+    }
+
 }

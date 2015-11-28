@@ -1,6 +1,6 @@
-package com.myprj.crawler.service.impl;
+package com.myprj.crawler.client.service.impl;
 
-import static com.myprj.crawler.client.util.PathConstants.PROJECTS;
+import static com.myprj.crawler.util.PathConstants.PROJECTS;
 import static java.io.File.separator;
 
 import java.io.File;
@@ -19,6 +19,7 @@ import com.myprj.crawler.client.domain.ProductData;
 import com.myprj.crawler.domain.Item;
 import com.myprj.crawler.domain.Site;
 import com.myprj.crawler.service.AbstractCrawler;
+import com.myprj.crawler.util.Serialization;
 import com.myprj.crawler.util.StreamUtil;
 
 /**
@@ -36,9 +37,9 @@ public class LazadaCrawlerService extends AbstractCrawler<ProductData> {
         List<String> detail = new ArrayList<String>();
         for (Item<ProductData> item : items) {
             ProductData productData = item.getContent();
-            detail.add(productData.toString());
+            detail.add(Serialization.serialize(productData));
         }
-        StreamUtil.write(new File(PROJECTS + site.getProject().getName() + separator + "lazada-product-info.csv"),
+        StreamUtil.write(new File(PROJECTS + site.getProject().getName() + separator + "lazada-product-info.json"),
                 detail, true);
     }
 
@@ -82,31 +83,48 @@ public class LazadaCrawlerService extends AbstractCrawler<ProductData> {
         ProductData product = new ProductData();
         item.setContent(product);
         item.setLink(updateUrlBeforeCrawling(url));
+        
+        Element body = document.body();
 
-        Elements productNameElements = document.body().select("div.product-info-name");
+        // Get Product Name
+        Elements productNameElements = body.select("div.product-info-name");
         if (productNameElements != null && !productNameElements.isEmpty()) {
             product.setName(productNameElements.first().text());
         }
 
-        Element descriptionDetailElement = document.body().select("div.description-detail").first();
-        if(descriptionDetailElement != null) {
-            Elements detailElements = descriptionDetailElement.select("ul li");
-            if (detailElements != null && !detailElements.isEmpty()) {
-                for (Element e : detailElements) {
-                    product.getDescriptionDetails().add(e.text());
-                }
-            }
-        }
-
-        Elements productPriceElements = document.body().select("div.product-prices span.product-price");
+        // Get Price
+        Elements productPriceElements = body.select("div.product-prices span.product-price");
         if (productPriceElements != null && !productPriceElements.isEmpty()) {
             product.setPrice(productPriceElements.first().text());
         }
 
-        Elements productPriceOrgElements = document.body().select("div.product-prices span.product-price-past");
+        // Get Past Price
+        Elements productPriceOrgElements = body.select("div.product-prices span.product-price-past");
         if (productPriceOrgElements != null && !productPriceOrgElements.isEmpty()) {
             product.setOriginalPrice(productPriceOrgElements.first().text());
         }
+        
+        Elements specificationsElements = body.select("div.catWrapper.specifications.specifications-detail div.description-detail ul li span");
+        if(specificationsElements != null && specificationsElements.first() != null) {
+            for(Element element :specificationsElements) {
+                product.getSpecifications().add(element.text());
+            }
+        }
+        
+        Elements includedInBoxsElements = body.select("div.catWrapper.whatisinbox div.description-detail ul li span");
+        if(includedInBoxsElements != null && includedInBoxsElements.first() != null) {
+            for(Element element :includedInBoxsElements) {
+                product.getIncludedInBox().add(element.text());
+            }
+        }
+        
+        Elements descriptionDetailsElements = body.select("div.catWrapper div.description-detail ul.simpleList.uip li");
+        if(descriptionDetailsElements != null) {
+            for(Element element :descriptionDetailsElements) {
+                product.getDescriptionDetails().add(element.text());
+            }
+        }
+        
         return item;
     }
 }

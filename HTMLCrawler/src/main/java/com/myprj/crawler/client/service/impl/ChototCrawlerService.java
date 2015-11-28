@@ -1,4 +1,4 @@
-package com.myprj.crawler.service.impl;
+package com.myprj.crawler.client.service.impl;
 
 import java.util.HashSet;
 import java.util.Iterator;

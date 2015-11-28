@@ -1,5 +1,7 @@
 package com.myprj.crawler.util;
 
+import java.io.File;
+
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.slf4j.Logger;
@@ -30,6 +32,16 @@ public class HtmlLoader {
                     return null;
                 }
             }
+        }
+    }
+    
+    /**
+     * Used for check HTML content
+     */
+    public static void downloadAndStore2File(String url, String outputFile) {
+        Document doc = download(url);
+        if(doc != null) {
+            StreamUtil.write(new File(outputFile), doc.html(), false);
         }
     }
 

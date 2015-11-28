@@ -1,10 +1,10 @@
 package com.myprj.crawler.service.impl;
 
-import static com.myprj.crawler.client.util.PathConstants.CONFIG_FILE;
-import static com.myprj.crawler.client.util.PathConstants.LINK_FILE;
-import static com.myprj.crawler.client.util.PathConstants.PROJECTS;
-import static com.myprj.crawler.client.util.PathConstants.PROJECT_CONFIG;
-import static com.myprj.crawler.client.util.PathConstants.TEMPLATE_CONFIG;
+import static com.myprj.crawler.util.PathConstants.CONFIG_FILE;
+import static com.myprj.crawler.util.PathConstants.LINK_FILE;
+import static com.myprj.crawler.util.PathConstants.PROJECTS;
+import static com.myprj.crawler.util.PathConstants.PROJECT_CONFIG;
+import static com.myprj.crawler.util.PathConstants.TEMPLATE_CONFIG;
 
 import java.io.BufferedReader;
 import java.io.File;

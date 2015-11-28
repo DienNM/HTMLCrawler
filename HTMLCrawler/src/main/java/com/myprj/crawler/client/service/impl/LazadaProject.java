@@ -1,4 +1,4 @@
-package com.myprj.crawler.service.impl;
+package com.myprj.crawler.client.service.impl;
 
 import static com.myprj.crawler.client.util.ProjectType.lazada;
 

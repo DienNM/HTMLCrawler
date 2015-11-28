@@ -5,13 +5,13 @@ import java.util.List;
 import java.util.Scanner;
 
 import com.myprj.crawler.client.factory.ProjectServiceFactory;
+import com.myprj.crawler.client.repository.impl.DefaultProjectRepository;
+import com.myprj.crawler.client.repository.impl.DefaultProxyRepository;
 import com.myprj.crawler.client.util.ProjectType;
 import com.myprj.crawler.enumeration.ProjectStatus;
 import com.myprj.crawler.model.ProjectModel;
 import com.myprj.crawler.repository.ProjectRepository;
 import com.myprj.crawler.repository.ProxyRepository;
-import com.myprj.crawler.repository.impl.DefaultProjectRepository;
-import com.myprj.crawler.repository.impl.DefaultProxyRepository;
 import com.myprj.crawler.service.ProjectConfigurationStrategy;
 import com.myprj.crawler.service.ProjectService;
 import com.myprj.crawler.service.impl.DefaultProjectConfigurationStrategy;

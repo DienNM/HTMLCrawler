@@ -1,4 +1,4 @@
-package com.myprj.crawler.client.util;
+package com.myprj.crawler.util;
 
 import static java.io.File.separator;
 
