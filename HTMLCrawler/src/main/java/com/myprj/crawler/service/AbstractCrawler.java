@@ -52,7 +52,7 @@ public abstract class AbstractCrawler<T> implements CrawlerService {
         
         ProxyTracer proxyTrack = new ProxyTracer();
         site.setProxyTrack(proxyTrack);
-
+        
         for (Link outssiteLink : site.getLinks()) {
             if(!outssiteLink.isActive()) {
                 continue;
@@ -90,7 +90,7 @@ public abstract class AbstractCrawler<T> implements CrawlerService {
                         logger.error("Error: {}", e);
                     }
                 }
-
+                outssiteLink.setActive(false);
                 if (!items.isEmpty()) {
                     System.out.println("\tCrawled: " + items.size() + " record(s)");
                     persistResult(site, items);
