@@ -1,6 +1,6 @@
 package com.myprj.crawler.service.event;
 
-import com.myprj.crawler.service.event.impl.AbstractEvent;
+import com.myprj.crawler.service.event.impl.CrawlEvent;
 
 
 /**
@@ -9,8 +9,8 @@ import com.myprj.crawler.service.event.impl.AbstractEvent;
 
 public interface CrawlEventPublisher {
     
-    void register(CrawlEventListener<AbstractEvent> event);
+    void register(CrawlEventListener<? extends CrawlEvent> event);
     
-    void publish(AbstractEvent event);
+    void publish(CrawlEvent event);
     
 }

@@ -14,27 +14,28 @@ import com.myprj.crawler.service.event.CrawlEventPublisher;
 
 public class DefaultCrawlEventPublisher implements CrawlEventPublisher {
 
-    private Map<String, List<CrawlEventListener<AbstractEvent>>> listeners = new HashMap<String, List<CrawlEventListener<AbstractEvent>>>();
+    private Map<String, List<CrawlEventListener<? extends CrawlEvent>>> listeners = 
+            new HashMap<String, List<CrawlEventListener<? extends CrawlEvent>>>();
 
     @Override
-    public synchronized void register(CrawlEventListener<AbstractEvent> listener) {
+    public synchronized void register(CrawlEventListener<? extends CrawlEvent> listener) {
         String type = listener.getEventType().getCanonicalName();
-        List<CrawlEventListener<AbstractEvent>> listenersByTypes = listeners.get(type);
+        List<CrawlEventListener<? extends CrawlEvent>> listenersByTypes = listeners.get(type);
         if(listenersByTypes == null) {
-            listenersByTypes = new ArrayList<CrawlEventListener<AbstractEvent>>();
+            listenersByTypes = new ArrayList<CrawlEventListener<? extends CrawlEvent>>();
         }
         listenersByTypes.add(listener);
-        listeners.put(listener.getClass().getCanonicalName(), listenersByTypes);
+        listeners.put(type, listenersByTypes);
     }
 
     @Override
-    public synchronized void publish(AbstractEvent event) {
+    public synchronized void publish(CrawlEvent event) {
         String type = event.getClass().getCanonicalName();
-        List<CrawlEventListener<AbstractEvent>> listenersByTypes = listeners.get(type);
+        List<CrawlEventListener<? extends CrawlEvent>> listenersByTypes = listeners.get(type);
         if(listenersByTypes == null) {
             return;
         }
-        for(CrawlEventListener<AbstractEvent> listenerByType : listenersByTypes) {
+        for(CrawlEventListener<? extends CrawlEvent> listenerByType : listenersByTypes) {
             listenerByType.handle(event);
         }
     }

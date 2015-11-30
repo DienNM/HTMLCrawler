@@ -1,10 +1,7 @@
 package com.myprj.crawler.model.crawl;
 
-import static com.myprj.crawler.enumeration.WorkerStatus.Created;
-
 import com.myprj.crawler.enumeration.Level;
 import com.myprj.crawler.enumeration.WorkerItemTargetType;
-import com.myprj.crawler.enumeration.WorkerStatus;
 import com.myprj.crawler.model.AuditModel;
 
 /**
@@ -33,8 +30,6 @@ public class WorkerItemModel extends AuditModel implements Comparable<WorkerItem
     // JSON {"toPage" : "1"}
     private String workerItemPagingConfig;
     
-    private WorkerStatus workerStatus = Created;
-
     public Level getLevel() {
         return level;
     }
@@ -100,14 +95,6 @@ public class WorkerItemModel extends AuditModel implements Comparable<WorkerItem
 
     public void setWorkerItemPagingConfig(String WorkerItemPagingConfig) {
         this.workerItemPagingConfig = WorkerItemPagingConfig;
-    }
-
-    public WorkerStatus getWorkerStatus() {
-        return workerStatus;
-    }
-
-    public void setWorkerStatus(WorkerStatus workerStatus) {
-        this.workerStatus = workerStatus;
     }
 
     public String getNextUrl() {

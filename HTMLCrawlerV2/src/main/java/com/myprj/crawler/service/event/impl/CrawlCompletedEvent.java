@@ -7,7 +7,7 @@ import com.myprj.crawler.model.crawl.CrawlResultModel;
  * @author DienNM (DEE)
  */
 
-public class CrawlCompletedEvent extends AbstractEvent {
+public class CrawlCompletedEvent implements CrawlEvent {
 
     private static final long serialVersionUID = 1L;
     

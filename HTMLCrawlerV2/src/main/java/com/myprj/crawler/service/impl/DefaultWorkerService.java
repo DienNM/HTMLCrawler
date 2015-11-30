@@ -5,7 +5,6 @@ import static com.myprj.crawler.util.Serialization.deserialize;
 import java.util.Iterator;
 import java.util.Map;
 
-import org.apache.commons.lang3.StringUtils;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -17,7 +16,6 @@ import com.myprj.crawler.domain.WorkerContext;
 import com.myprj.crawler.domain.worker.ListWorkerTargetParameter;
 import com.myprj.crawler.domain.worker.WorkerItemConfig;
 import com.myprj.crawler.enumeration.AttributeType;
-import com.myprj.crawler.enumeration.WorkerStatus;
 import com.myprj.crawler.exception.WorkerException;
 import com.myprj.crawler.model.config.AttributeModel;
 import com.myprj.crawler.model.crawl.CrawlResultModel;
@@ -26,6 +24,7 @@ import com.myprj.crawler.model.crawl.WorkerModel;
 import com.myprj.crawler.service.WorkerService;
 import com.myprj.crawler.service.cache.AttributeCacheService;
 import com.myprj.crawler.service.event.CrawlEventPublisher;
+import com.myprj.crawler.service.event.impl.CrawlCompletedEvent;
 import com.myprj.crawler.service.handler.HandlerRegister;
 import com.myprj.crawler.util.HtmlDownloader;
 import com.myprj.crawler.util.Serialization;
@@ -64,8 +63,6 @@ public class DefaultWorkerService implements WorkerService {
         ListWorkerTargetParameter workerTarget = Serialization.deserialize(workerItem.getWorkerItemPagingConfig(),
                 ListWorkerTargetParameter.class);
 
-        workerItem.setWorkerStatus(WorkerStatus.Running);
-
         WorkerModel worker = workerCtx.getWorker();
         String url = workerItem.getUrl();
 
@@ -90,23 +87,19 @@ public class DefaultWorkerService implements WorkerService {
                     Element element = elements.next();
                     String nextLevelLink = element.attr(workerTarget.getUrlAttribute());
                     if (isValidLinkOfListTargetItem(nextLevelLink)) {
-
+                        
                         WorkerItemModel nextWorkItems = workerCtx.nextWorkerItem(workerItem);
                         if (nextWorkItems == null) {
-                            logger.error("Cannot go next level of " + workerItem.getId());
+                            logger.error("Cannot go to the next level of " + workerItem.getId());
                             continue;
                         }
-                        if (StringUtils.isEmpty(nextWorkItems.getUrl())) {
-                            nextWorkItems.setUrl(nextLevelLink);
-                        }
-
+                        nextWorkItems.setUrl(nextLevelLink);
                         doWork(workerCtx, nextWorkItems);
                     }
                 }
             }
 
         }
-        workerItem.setWorkerStatus(WorkerStatus.Done);
     }
 
     protected void doWorkOnWorkerItemDetail(WorkerContext workerCtx, WorkerItemModel workerItem) throws WorkerException {
@@ -115,23 +108,17 @@ public class DefaultWorkerService implements WorkerService {
         
         if (url == null) {
             logger.error("Cannot crawl a worker without URL: " + workerItem.getId());
-            workerItem.setWorkerStatus(WorkerStatus.Error);
             return;
         }
-
         url = updateUrlBeforeCrawling(url);
-        
-        workerItem.setWorkerStatus(WorkerStatus.Running);
         CrawlResultModel crawlResult = new CrawlResultModel();
 
         Document document = HtmlDownloader.download(url, worker.getPauseTimeOfDownload(), worker.getAttemptTimes());
         if (isDownloadSuccess(document)) {
 
             HtmlDocument htmlDocument = new HtmlDocument(document);
-
             WorkerItemConfig workerItemConfig = deserialize(workerItem.getAttributeCssSelectors(), WorkerItemConfig.class);
 
-            // Update Result
             crawlResult.setCategoryId(workerItemConfig.getCategoryId());
             crawlResult.setItemId(workerItemConfig.getItemId());
 
@@ -150,13 +137,8 @@ public class DefaultWorkerService implements WorkerService {
             }
         }
         
-        String a = Serialization.serialize(crawlResult);
-        System.out.println(a);
-        
-        crawlResult = Serialization.deserialize(a, CrawlResultModel.class);
-        System.out.println(crawlResult);
-        
-        workerItem.setWorkerStatus(WorkerStatus.Done);
+        CrawlCompletedEvent crawlCompletedEvent = new CrawlCompletedEvent(crawlResult);
+        crawlEventPublisher.publish(crawlCompletedEvent);
     }
 
     protected boolean isValidLinkOfListTargetItem(String url) {

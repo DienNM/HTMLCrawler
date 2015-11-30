@@ -1,5 +1,7 @@
 package com.myprj.crawler.model.crawl;
 
+import java.util.Date;
+
 import com.myprj.crawler.enumeration.CrawlStatus;
 import com.myprj.crawler.model.AuditModel;
 
@@ -7,11 +9,15 @@ import com.myprj.crawler.model.AuditModel;
  * @author DienNM (DEE)
  */
 
-public class CrawlHistory extends AuditModel{
+public class CrawlHistoryModel extends AuditModel{
 
     private static final long serialVersionUID = 1L;
     
     private long id;
+    
+    private long workerId;
+    
+    private Date eolDate;
     
     private CrawlStatus status = CrawlStatus.Created;
     
@@ -39,6 +45,22 @@ public class CrawlHistory extends AuditModel{
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public long getWorkerId() {
+        return workerId;
+    }
+
+    public void setWorkerId(long workerId) {
+        this.workerId = workerId;
+    }
+
+    public Date getEolDate() {
+        return eolDate;
+    }
+
+    public void setEolDate(Date eolDate) {
+        this.eolDate = eolDate;
     } 
 
 }

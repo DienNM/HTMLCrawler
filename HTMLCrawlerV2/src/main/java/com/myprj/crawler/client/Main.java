@@ -23,11 +23,13 @@ import com.myprj.crawler.model.crawl.WorkerItemModel;
 import com.myprj.crawler.model.crawl.WorkerModel;
 import com.myprj.crawler.repository.AttributeRepository;
 import com.myprj.crawler.repository.CategoryRepository;
+import com.myprj.crawler.repository.CrawlHistoryRepository;
 import com.myprj.crawler.repository.ItemRepository;
 import com.myprj.crawler.repository.WorkerItemRepository;
 import com.myprj.crawler.repository.WorkerRepository;
 import com.myprj.crawler.repository.impl.DefaultAttributeRepository;
 import com.myprj.crawler.repository.impl.DefaultCategoryRepository;
+import com.myprj.crawler.repository.impl.DefaultCrawlHistoryRepository;
 import com.myprj.crawler.repository.impl.DefaultItemRepository;
 import com.myprj.crawler.repository.impl.DefaultWorkerItemRepository;
 import com.myprj.crawler.repository.impl.DefaultWorkerRepository;
@@ -36,6 +38,8 @@ import com.myprj.crawler.service.WorkerService;
 import com.myprj.crawler.service.cache.AttributeCacheService;
 import com.myprj.crawler.service.cache.impl.InMemoryAttributeCacheService;
 import com.myprj.crawler.service.event.CrawlEventPublisher;
+import com.myprj.crawler.service.event.impl.CrawlCompletedEventListener;
+import com.myprj.crawler.service.event.impl.CrawlFailedEventListener;
 import com.myprj.crawler.service.event.impl.DefaultCrawlEventPublisher;
 import com.myprj.crawler.service.handler.impl.HtmlAttributeHandler;
 import com.myprj.crawler.service.handler.impl.LinkAttributeHandler;
@@ -64,6 +68,8 @@ public class Main {
     
     private CrawlEventPublisher crawlEventPublisher = new DefaultCrawlEventPublisher();
     
+    private CrawlHistoryRepository crawlHistoryRepository = new DefaultCrawlHistoryRepository();
+    
     public Main() {
         // Initialize Handlers
         new ListAttributeHandler();
@@ -75,8 +81,12 @@ public class Main {
         workerService.setAttributeCacheService(attributeCacheService);
         workerService.setCrawlEventPublisher(crawlEventPublisher);
         
+        crawlEventPublisher.register(new CrawlCompletedEventListener());
+        crawlEventPublisher.register(new CrawlFailedEventListener());
+        
         crawlerService = new DefaultCrawlerService();
         crawlerService.setWorkerService(workerService);
+        crawlerService.setCrawlHistoryRepository(crawlHistoryRepository);
     }
     
     public CategoryModel createCategory() {
@@ -157,7 +167,7 @@ public class Main {
     public void createWorkerItem(WorkerModel worker, ItemModel item, List<AttributeModel> attributes) {
         ListWorkerTargetParameter listParam = new ListWorkerTargetParameter();
         listParam.setFromPage(1);
-        listParam.setToPage(2);
+        listParam.setToPage(1);
         listParam.setCurrentPage(1);
         listParam.setUrlAttribute("href");
         
