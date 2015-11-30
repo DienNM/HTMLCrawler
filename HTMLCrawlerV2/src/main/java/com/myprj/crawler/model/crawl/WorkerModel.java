@@ -23,7 +23,7 @@ public class WorkerModel extends AuditModel {
     
     private int attemptTimes;
     
-    private int pauseTimeOfDownload = 500;
+    private int delayTime = 500;
     
     private List<WorkerItemModel> workerItems = new ArrayList<WorkerItemModel>();
 
@@ -67,12 +67,12 @@ public class WorkerModel extends AuditModel {
         this.description = description;
     }
 
-    public int getPauseTimeOfDownload() {
-        return pauseTimeOfDownload;
+    public int getDelayTime() {
+        return delayTime;
     }
 
-    public void setPauseTimeOfDownload(int pauseTimeOfDownload) {
-        this.pauseTimeOfDownload = pauseTimeOfDownload;
+    public void setDelayTime(int delayTime) {
+        this.delayTime = delayTime;
     }
 
     public int getAttemptTimes() {

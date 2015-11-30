@@ -154,9 +154,9 @@ public class Main {
         WorkerModel worker = new WorkerModel();
         worker.setId(IdGenerator.generateId());
         worker.setAttemptTimes(3);
-        worker.setPauseTimeOfDownload(1000);
+        worker.setDelayTime(300);
         worker.setDescription("Lazada Worker 1: Sample Worker");
-        worker.setThreads(1);
+        worker.setThreads(3);
         worker.setName("Lazada Worker 1");
         
         createWorkerItem(worker, item, attributes);
@@ -181,7 +181,7 @@ public class Main {
         workerItem1.setWorkerItemPagingConfig(Serialization.serialize(listParam));
         
         Map<String, String> cssSelectors1 = new HashMap<String, String>();
-        cssSelectors1.put(AttributeType.LINK.name(), "div.product-description a");
+        cssSelectors1.put(AttributeType.LINK.name(), "div.product-description a.product-image-url");
         workerItem1.setAttributeCssSelectors(Serialization.serialize(cssSelectors1));
         
         workerItemRepository.save(workerItem1);

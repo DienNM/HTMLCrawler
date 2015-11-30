@@ -23,6 +23,8 @@ public class CrawlResultModel extends AuditModel {
     private Map<Long, Object> detail = new HashMap<Long, Object>();
 
     private ResultStatus status = ResultStatus.MISSING;
+    
+    private String url;
 
     public CrawlResultModel() {
     }
@@ -65,6 +67,14 @@ public class CrawlResultModel extends AuditModel {
 
     public void setStatus(ResultStatus status) {
         this.status = status;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
     }
 
 }

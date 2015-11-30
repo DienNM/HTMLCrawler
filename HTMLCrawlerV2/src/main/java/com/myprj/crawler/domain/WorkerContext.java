@@ -81,5 +81,5 @@ public class WorkerContext implements Serializable{
     public void setWorkerItems(Map<Level, WorkerItemModel> workerItems) {
         this.workerItems = workerItems;
     }
-    
+
 }

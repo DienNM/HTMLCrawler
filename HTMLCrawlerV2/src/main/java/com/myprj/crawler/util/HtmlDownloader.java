@@ -23,14 +23,15 @@ public class HtmlDownloader {
         int attempted = 0;
         while (true) {
             try {
+                Thread.sleep(pausedTime);
                 Document doc = Jsoup.connect(url)
                         .ignoreContentType(true)
                         .userAgent("Mozilla")
                         .referrer("http://www.google.com")
-                        .timeout(pausedTime).get();
+                        .timeout(10000).get();
                 return doc;
             } catch (Exception e) {
-                logger.error("Dowloaded {} failed. Attempted: {}. Error: ", url, attempted, e.getMessage());
+                logger.error("Dowloaded {} failed. Attempted: {}. Error: {}", url, attempted, e.getMessage());
                 attempted++;
                 if (attempted > attemptTimes) {
                     return null;
@@ -48,5 +49,10 @@ public class HtmlDownloader {
             StreamUtil.write(new File(outputFile), doc.html(), false);
         }
     }
-
+    
+    public static void main(String[] args) {
+        HtmlDownloader.downloadAndStore2File("http://www.lazada.vn/phan-trang-diem-hut-dau-sang-min-maybelline-white-super-fresh-spf-34-3-natural-9g-1058415.html"
+                + "", "/media/diennm/Working/abc.txt");
+    }
+    
 }

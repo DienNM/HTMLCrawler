@@ -2,8 +2,12 @@ package com.myprj.crawler.service.impl;
 
 import static com.myprj.crawler.util.Serialization.deserialize;
 
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Callable;
+import java.util.concurrent.Future;
 
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -43,9 +47,7 @@ public class DefaultWorkerService implements WorkerService {
 
     @Override
     public void doWork(WorkerContext workerCtx, WorkerItemModel workerItem) throws WorkerException {
-
         // Pool here
-
         switch (workerItem.getTargetType()) {
         case LIST:
             doWorkOnWorkerItemList(workerCtx, workerItem);
@@ -72,7 +74,7 @@ public class DefaultWorkerService implements WorkerService {
             logger.info("Start crawling: {}", finalLink);
 
             finalLink = updateUrlBeforeCrawling(finalLink);
-            Document document = HtmlDownloader.download(url, worker.getPauseTimeOfDownload(), worker.getAttemptTimes());
+            Document document = HtmlDownloader.download(url, worker.getDelayTime(), worker.getAttemptTimes());
             if (isDownloadSuccess(document)) {
                 Map<String, String> cssSelectors = Serialization.deserialize(workerItem.getAttributeCssSelectors(),
                         Map.class);
@@ -83,22 +85,50 @@ public class DefaultWorkerService implements WorkerService {
                     return;
                 }
                 Iterator<Element> elements = div.iterator();
+                List<Future<Object>> futureItems = new ArrayList<Future<Object>>();
                 while (elements.hasNext()) {
                     Element element = elements.next();
                     String nextLevelLink = element.attr(workerTarget.getUrlAttribute());
-                    if (isValidLinkOfListTargetItem(nextLevelLink)) {
-                        
-                        WorkerItemModel nextWorkItems = workerCtx.nextWorkerItem(workerItem);
-                        if (nextWorkItems == null) {
-                            logger.error("Cannot go to the next level of " + workerItem.getId());
-                            continue;
-                        }
-                        nextWorkItems.setUrl(nextLevelLink);
-                        doWork(workerCtx, nextWorkItems);
+                    if (!isValidLinkOfListTargetItem(nextLevelLink)) {
+                        continue;
+                    }
+                    WorkerItemModel nextWorkItems = workerCtx.nextWorkerItem(workerItem);
+                    if (nextWorkItems == null) {
+                        logger.error("Cannot go to the next level of " + workerItem.getId());
+                        continue;
+                    }
+                    
+                    WorkerItemModel newWorkerItem = createNewWorkerItem(nextWorkItems);
+                    newWorkerItem.setUrl(nextLevelLink);
+                    
+                    futureItems.add(workerCtx.getExecutorService().submit(new CrawlerJob(workerCtx, newWorkerItem)));
+                }
+                for (Future<Object> fitem : futureItems) {
+                    try {
+                        fitem.get();
+                    } catch (Exception e) {
+                        logger.error("Error: {}", e);
                     }
                 }
             }
 
+        }
+    }
+    
+    class CrawlerJob implements Callable<Object> {
+
+        private WorkerContext workerCtx;
+        private WorkerItemModel workerItem;
+        
+        public CrawlerJob(WorkerContext workerCtx, WorkerItemModel workerItem) {
+            this.workerCtx = workerCtx;
+            this.workerItem = workerItem;
+        }
+
+        @Override
+        public Object call() throws Exception {
+            doWork(workerCtx, workerItem);
+            return null;
         }
     }
 
@@ -112,8 +142,9 @@ public class DefaultWorkerService implements WorkerService {
         }
         url = updateUrlBeforeCrawling(url);
         CrawlResultModel crawlResult = new CrawlResultModel();
+        crawlResult.setUrl(url);
 
-        Document document = HtmlDownloader.download(url, worker.getPauseTimeOfDownload(), worker.getAttemptTimes());
+        Document document = HtmlDownloader.download(url, worker.getDelayTime(), worker.getAttemptTimes());
         if (isDownloadSuccess(document)) {
 
             HtmlDocument htmlDocument = new HtmlDocument(document);
@@ -139,6 +170,18 @@ public class DefaultWorkerService implements WorkerService {
         
         CrawlCompletedEvent crawlCompletedEvent = new CrawlCompletedEvent(crawlResult);
         crawlEventPublisher.publish(crawlCompletedEvent);
+    }
+    
+    private WorkerItemModel createNewWorkerItem(WorkerItemModel current) {
+        WorkerItemModel newItem = new WorkerItemModel();
+        newItem.setId(current.getId());
+        newItem.setAttributeCssSelectors(current.getAttributeCssSelectors());
+        newItem.setLevel(current.getLevel());
+        newItem.setNextUrl(current.getNextUrl());
+        newItem.setTargetType(current.getTargetType());
+        newItem.setUrl(current.getUrl());
+        newItem.setWorkerItemPagingConfig(current.getWorkerItemPagingConfig());
+        return newItem;
     }
 
     protected boolean isValidLinkOfListTargetItem(String url) {
