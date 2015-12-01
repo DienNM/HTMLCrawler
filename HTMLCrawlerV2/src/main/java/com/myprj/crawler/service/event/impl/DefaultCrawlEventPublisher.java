@@ -5,16 +5,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.stereotype.Service;
+
 import com.myprj.crawler.service.event.CrawlEventListener;
 import com.myprj.crawler.service.event.CrawlEventPublisher;
 
 /**
  * @author DienNM (DEE)
  */
-
+@Service
 public class DefaultCrawlEventPublisher implements CrawlEventPublisher {
 
-    private Map<String, List<CrawlEventListener<? extends CrawlEvent>>> listeners = 
+    private static Map<String, List<CrawlEventListener<? extends CrawlEvent>>> listeners = 
             new HashMap<String, List<CrawlEventListener<? extends CrawlEvent>>>();
 
     @Override

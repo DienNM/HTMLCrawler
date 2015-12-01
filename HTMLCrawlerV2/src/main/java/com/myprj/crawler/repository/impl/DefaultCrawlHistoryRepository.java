@@ -1,10 +1,11 @@
 package com.myprj.crawler.repository.impl;
 
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+
+import javax.persistence.TypedQuery;
+
+import org.springframework.stereotype.Repository;
 
 import com.myprj.crawler.model.crawl.CrawlHistoryModel;
 import com.myprj.crawler.repository.CrawlHistoryRepository;
@@ -12,44 +13,49 @@ import com.myprj.crawler.repository.CrawlHistoryRepository;
 /**
  * @author DienNM (DEE)
  */
+@Repository
+public class DefaultCrawlHistoryRepository extends DefaultGenericDao<CrawlHistoryModel, Long> implements
+        CrawlHistoryRepository {
 
-public class DefaultCrawlHistoryRepository implements CrawlHistoryRepository {
-    
-    private static Map<Long, CrawlHistoryModel> repo = new HashMap<Long, CrawlHistoryModel>();
-    
     @Override
-    public CrawlHistoryModel save(CrawlHistoryModel crawlHistory) {
-        if(repo.containsKey(crawlHistory.getId())) {
-            repo.put(crawlHistory.getId(), crawlHistory);
-            return crawlHistory;
+    protected Class<CrawlHistoryModel> getTargetClass() {
+        return CrawlHistoryModel.class;
+    }
+
+    @Override
+    public void save(CrawlHistoryModel crawlHistory) {
+        CrawlHistoryModel latestCrawlHistory = findLatest(crawlHistory.getWorkerId());
+        if (latestCrawlHistory != null) {
+            latestCrawlHistory.setEolDate(Calendar.getInstance().getTimeInMillis());
+            update(latestCrawlHistory);
         }
-        for(CrawlHistoryModel history : repo.values()) {
-            if(history.getWorkerId() == crawlHistory.getId() && history.getEolDate() == 0) {
-                history.setEolDate(Calendar.getInstance().getTimeInMillis());
-            }
-        }
-        return crawlHistory;
+        super.save(crawlHistory);
     }
 
     @Override
     public CrawlHistoryModel findLatest(long workerId) {
-        for(CrawlHistoryModel crawlHistory : repo.values()) {
-            if(crawlHistory.getWorkerId() == workerId && crawlHistory.getEolDate() == 0) {
-                return crawlHistory;
-            }
+        StringBuilder queryStr = new StringBuilder("FROM CrawlHistoryModel ");
+        queryStr.append(" WHERE workerId = :workerId AND eolDate = 0");
+
+        TypedQuery<CrawlHistoryModel> query = entityManager.createNamedQuery(queryStr.toString(), getClazz());
+        query.setParameter("workerId", workerId);
+
+        List<CrawlHistoryModel> list = query.getResultList();
+        if (list.isEmpty()) {
+            return null;
         }
-        return null;
+        return list.get(0);
     }
 
     @Override
     public List<CrawlHistoryModel> findByWorkerId(long workerId) {
-        List<CrawlHistoryModel> crawlHistories = new ArrayList<CrawlHistoryModel>();
-        for(CrawlHistoryModel crawlHistory : repo.values()) {
-            if(crawlHistory.getWorkerId() == workerId) {
-                crawlHistories.add(crawlHistory);
-            }
-        }
-        return crawlHistories;
+        StringBuilder queryStr = new StringBuilder("FROM CrawlHistoryModel ");
+        queryStr.append(" WHERE workerId = :workerId ");
+
+        TypedQuery<CrawlHistoryModel> query = entityManager.createNamedQuery(queryStr.toString(), getClazz());
+        query.setParameter("workerId", workerId);
+
+        return query.getResultList();
     }
 
 }

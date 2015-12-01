@@ -96,7 +96,9 @@ public class ChoTotTest {
         category.setParentCategoryId(-1);
         category.setStatus(GlobalStatus.ONLINE);
         category.setCreatedAt(Calendar.getInstance().getTimeInMillis());
-        return categoryRepository.save(category);
+        categoryRepository.save(category);
+        
+        return category;
     }
     
     public ItemModel createItem(CategoryModel category) {
@@ -107,7 +109,9 @@ public class ChoTotTest {
         item.setName("Product");
         item.setStatus(GlobalStatus.ONLINE);
         
-        return itemRepository.save(item);
+        itemRepository.save(item);
+        
+        return item;
     }
     
     public List<AttributeModel> createAttributes(ItemModel item) {
@@ -144,7 +148,9 @@ public class ChoTotTest {
         
         createWorkerItem(worker, item, attributes);
         
-        return workerRepository.save(worker);
+        workerRepository.save(worker);
+        
+        return worker;
     }
     
     public void createWorkerItem(WorkerModel worker, ItemModel item, List<AttributeModel> attributes) {

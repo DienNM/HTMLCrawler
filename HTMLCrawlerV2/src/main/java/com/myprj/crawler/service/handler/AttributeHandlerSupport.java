@@ -6,9 +6,4 @@ package com.myprj.crawler.service.handler;
 
 public abstract class AttributeHandlerSupport implements AttributeHandler {
 
-    @Override
-    public void registerHandler() {
-        HandlerRegister.register(getType(), this);
-    }
-
 }

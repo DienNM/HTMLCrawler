@@ -3,20 +3,24 @@ package com.myprj.crawler.service.handler.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.PostConstruct;
+
 import org.apache.commons.lang3.StringUtils;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.springframework.stereotype.Service;
 
 import com.myprj.crawler.domain.HtmlDocument;
 import com.myprj.crawler.domain.worker.CssSelector;
 import com.myprj.crawler.enumeration.AttributeType;
 import com.myprj.crawler.service.handler.AttributeHandlerSupport;
+import com.myprj.crawler.service.handler.HandlerRegister;
 import com.myprj.crawler.util.Serialization;
 
 /**
  * @author DienNM (DEE)
  */
-
+@Service("listAttributeHandler")
 public class ListAttributeHandler extends AttributeHandlerSupport{
     
     @Override
@@ -24,8 +28,10 @@ public class ListAttributeHandler extends AttributeHandlerSupport{
         return AttributeType.LIST;
     }
     
-    public ListAttributeHandler() {
-        registerHandler();
+    @Override
+    @PostConstruct
+    public void registerHandler() {
+        HandlerRegister.register(getType(), this);
     }
 
     @Override

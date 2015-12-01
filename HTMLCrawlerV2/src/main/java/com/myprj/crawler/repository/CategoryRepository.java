@@ -6,10 +6,6 @@ import com.myprj.crawler.model.config.CategoryModel;
  * @author DienNM (DEE)
  */
 
-public interface CategoryRepository {
-    
-    CategoryModel save(CategoryModel category);
-    
-    CategoryModel find(long id);
+public interface CategoryRepository extends GenericDao<CategoryModel, Long> {
     
 }

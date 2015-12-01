@@ -20,6 +20,8 @@ import com.myprj.crawler.model.AuditModel;
 public class ItemModel extends AuditModel {
 
     private static final long serialVersionUID = 1L;
+    
+    public static final String TABLE_NAME = "item";
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

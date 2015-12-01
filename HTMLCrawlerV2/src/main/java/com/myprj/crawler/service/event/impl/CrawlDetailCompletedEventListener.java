@@ -1,14 +1,29 @@
 package com.myprj.crawler.service.event.impl;
 
+import javax.annotation.PostConstruct;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.myprj.crawler.model.crawl.CrawlResultModel;
 import com.myprj.crawler.service.event.CrawlEventListener;
+import com.myprj.crawler.service.event.CrawlEventPublisher;
 import com.myprj.crawler.util.Serialization;
 
 /**
  * @author DienNM (DEE)
  */
-
+@Service
 public class CrawlDetailCompletedEventListener implements CrawlEventListener<CrawlDetailCompletedEvent> {
+    
+    @Autowired
+    private CrawlEventPublisher crawlEventPublisher;
+    
+    @Override
+    @PostConstruct
+    public void register() {
+        crawlEventPublisher.register(this);
+    }
     
     @Override
     public void handle(CrawlEvent event) {

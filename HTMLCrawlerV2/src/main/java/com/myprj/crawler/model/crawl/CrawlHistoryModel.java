@@ -1,5 +1,7 @@
 package com.myprj.crawler.model.crawl;
 
+import java.io.Serializable;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -10,16 +12,17 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 import com.myprj.crawler.enumeration.CrawlStatus;
-import com.myprj.crawler.model.AuditModel;
 
 /**
  * @author DienNM (DEE)
  */
 @Entity
 @Table(name = "crawl_history")
-public class CrawlHistoryModel extends AuditModel{
+public class CrawlHistoryModel implements Serializable {
 
     private static final long serialVersionUID = 1L;
+    
+    public static final String TABLE_NAME = "crawl_history";
     
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

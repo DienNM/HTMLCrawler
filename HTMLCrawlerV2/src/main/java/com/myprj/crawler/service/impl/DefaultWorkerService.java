@@ -15,6 +15,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
 
 import com.myprj.crawler.domain.HtmlDocument;
 import com.myprj.crawler.domain.WorkerContext;
@@ -39,7 +40,7 @@ import com.myprj.crawler.util.HtmlDownloader;
 /**
  * @author DienNM (DEE)
  */
-
+@Service
 public abstract class DefaultWorkerService implements WorkerService {
 
     private final Logger logger = LoggerFactory.getLogger(DefaultWorkerService.class);

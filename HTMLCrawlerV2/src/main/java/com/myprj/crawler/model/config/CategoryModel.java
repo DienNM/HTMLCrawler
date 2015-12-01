@@ -22,7 +22,9 @@ import com.myprj.crawler.model.AuditModel;
 public class CategoryModel extends AuditModel {
 
     private static final long serialVersionUID = 1L;
-
+    
+    public static final String TABLE_NAME = "category";
+    
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;

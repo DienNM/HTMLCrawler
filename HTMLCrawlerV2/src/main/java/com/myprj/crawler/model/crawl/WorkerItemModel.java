@@ -23,6 +23,8 @@ import com.myprj.crawler.model.AuditModel;
 public class WorkerItemModel extends AuditModel implements Comparable<WorkerItemModel> {
 
     private static final long serialVersionUID = 1L;
+    
+    public static final String TABLE_NAME = "worker_item";
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

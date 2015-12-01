@@ -3,13 +3,15 @@ package com.myprj.crawler.service.cache.impl;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.springframework.stereotype.Service;
+
 import com.myprj.crawler.model.config.AttributeModel;
 import com.myprj.crawler.service.cache.AttributeCacheService;
 
 /**
  * @author DienNM (DEE)
  */
-
+@Service
 public class InMemoryAttributeCacheService implements AttributeCacheService {
 
     public static Map<Long, AttributeModel> cache = new HashMap<Long, AttributeModel>();

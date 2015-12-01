@@ -8,9 +8,7 @@ import com.myprj.crawler.model.crawl.CrawlHistoryModel;
  * @author DienNM (DEE)
  */
 
-public interface CrawlHistoryRepository {
-    
-    CrawlHistoryModel save(CrawlHistoryModel crawlHistory);
+public interface CrawlHistoryRepository extends GenericDao<CrawlHistoryModel, Long> {
     
     CrawlHistoryModel findLatest(long workerId);
     

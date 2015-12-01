@@ -1,7 +1,6 @@
 package com.myprj.crawler.repository.impl;
 
-import java.util.HashMap;
-import java.util.Map;
+import org.springframework.stereotype.Repository;
 
 import com.myprj.crawler.model.config.CategoryModel;
 import com.myprj.crawler.repository.CategoryRepository;
@@ -9,20 +8,12 @@ import com.myprj.crawler.repository.CategoryRepository;
 /**
  * @author DienNM (DEE)
  */
-
-public class DefaultCategoryRepository implements CategoryRepository {
-
-    private static Map<Long, CategoryModel> repo = new HashMap<Long, CategoryModel>();
+@Repository
+public class DefaultCategoryRepository extends DefaultGenericDao<CategoryModel, Long> implements CategoryRepository {
 
     @Override
-    public CategoryModel save(CategoryModel category) {
-        repo.put(category.getId(), category);
-        return category;
-    }
-
-    @Override
-    public CategoryModel find(long id) {
-        return repo.get(id);
+    protected Class<CategoryModel> getTargetClass() {
+        return CategoryModel.class;
     }
 
 }

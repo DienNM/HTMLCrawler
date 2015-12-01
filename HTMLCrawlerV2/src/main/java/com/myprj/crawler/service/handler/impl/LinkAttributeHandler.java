@@ -1,17 +1,21 @@
 package com.myprj.crawler.service.handler.impl;
 
+import javax.annotation.PostConstruct;
+
 import org.apache.commons.lang3.StringUtils;
 import org.jsoup.select.Elements;
+import org.springframework.stereotype.Service;
 
 import com.myprj.crawler.domain.HtmlDocument;
 import com.myprj.crawler.domain.worker.CssSelector;
 import com.myprj.crawler.enumeration.AttributeType;
 import com.myprj.crawler.service.handler.AttributeHandlerSupport;
+import com.myprj.crawler.service.handler.HandlerRegister;
 
 /**
  * @author DienNM (DEE)
  */
-
+@Service("linkAttributeHandler")
 public class LinkAttributeHandler extends AttributeHandlerSupport{
     
     
@@ -20,8 +24,10 @@ public class LinkAttributeHandler extends AttributeHandlerSupport{
         return AttributeType.LINK;
     }
     
-    public LinkAttributeHandler() {
-        registerHandler();
+    @Override
+    @PostConstruct
+    public void registerHandler() {
+        HandlerRegister.register(getType(), this);
     }
 
     @Override

@@ -6,10 +6,6 @@ import com.myprj.crawler.model.config.ItemModel;
  * @author DienNM (DEE)
  */
 
-public interface ItemRepository {
-    
-    ItemModel save(ItemModel item);
-    
-    ItemModel find(long id);
+public interface ItemRepository extends GenericDao<ItemModel, Long> {
     
 }

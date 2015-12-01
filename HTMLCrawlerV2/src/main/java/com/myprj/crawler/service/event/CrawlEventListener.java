@@ -10,7 +10,9 @@ public interface CrawlEventListener<T extends CrawlEvent> {
     
     Class<T> getEventType();
     
-    void handle(CrawlEvent event); 
+    void handle(CrawlEvent event);
+    
+    void register();
     
 }
 

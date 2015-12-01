@@ -7,5 +7,4 @@ import java.io.Serializable;
  */
 
 public interface CrawlEvent extends Serializable{
-    
 }
