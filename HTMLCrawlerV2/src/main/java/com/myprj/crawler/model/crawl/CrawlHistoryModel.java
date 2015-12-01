@@ -1,6 +1,13 @@
 package com.myprj.crawler.model.crawl;
 
-import java.util.Date;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
 import com.myprj.crawler.enumeration.CrawlStatus;
 import com.myprj.crawler.model.AuditModel;
@@ -8,17 +15,24 @@ import com.myprj.crawler.model.AuditModel;
 /**
  * @author DienNM (DEE)
  */
-
+@Entity
+@Table(name = "crawl_history")
 public class CrawlHistoryModel extends AuditModel{
 
     private static final long serialVersionUID = 1L;
     
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
     
+    @Column(name = "worker_id", nullable = false)
     private long workerId;
     
-    private Date eolDate;
+    @Column(name = "eol_date")
+    private long eolDate = 0;
     
+    @Column(name = "status", length = 10)
+    @Enumerated(EnumType.STRING)
     private CrawlStatus status = CrawlStatus.Created;
     
     private String message;
@@ -55,11 +69,11 @@ public class CrawlHistoryModel extends AuditModel{
         this.workerId = workerId;
     }
 
-    public Date getEolDate() {
+    public long getEolDate() {
         return eolDate;
     }
 
-    public void setEolDate(Date eolDate) {
+    public void setEolDate(long eolDate) {
         this.eolDate = eolDate;
     } 
 

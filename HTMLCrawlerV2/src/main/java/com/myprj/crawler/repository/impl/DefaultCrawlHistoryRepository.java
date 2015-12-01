@@ -24,8 +24,8 @@ public class DefaultCrawlHistoryRepository implements CrawlHistoryRepository {
             return crawlHistory;
         }
         for(CrawlHistoryModel history : repo.values()) {
-            if(history.getWorkerId() == crawlHistory.getId() && history.getEolDate() == null) {
-                history.setEolDate(Calendar.getInstance().getTime());
+            if(history.getWorkerId() == crawlHistory.getId() && history.getEolDate() == 0) {
+                history.setEolDate(Calendar.getInstance().getTimeInMillis());
             }
         }
         return crawlHistory;
@@ -34,7 +34,7 @@ public class DefaultCrawlHistoryRepository implements CrawlHistoryRepository {
     @Override
     public CrawlHistoryModel findLatest(long workerId) {
         for(CrawlHistoryModel crawlHistory : repo.values()) {
-            if(crawlHistory.getWorkerId() == workerId && crawlHistory.getEolDate() == null) {
+            if(crawlHistory.getWorkerId() == workerId && crawlHistory.getEolDate() == 0) {
                 return crawlHistory;
             }
         }

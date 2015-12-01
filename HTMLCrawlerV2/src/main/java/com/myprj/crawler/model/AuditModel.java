@@ -1,24 +1,42 @@
 package com.myprj.crawler.model;
 
 import java.io.Serializable;
+import java.util.Calendar;
+
+import javax.persistence.MappedSuperclass;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
 
 /**
  * @author DienNM (DEE)
  */
 
+@MappedSuperclass
 public class AuditModel implements Serializable {
 
     private static final long serialVersionUID = 1L;
     
     private long createdAt;
     
-    private String createBy;
+    private String createdBy;
     
     private long updatedAt;
     
-    private String updateBy;
+    private String updatedBy;
     
     public AuditModel() {
+    }
+    
+    @PrePersist
+    public void prePersistAudit() {
+        createdAt = Calendar.getInstance().getTimeInMillis();
+        createdBy = "System";
+    }
+    
+    @PreUpdate
+    public void preUpdateAudit() {
+        updatedAt = Calendar.getInstance().getTimeInMillis();
+        updatedBy = "System";
     }
 
     public long getCreatedAt() {
@@ -29,12 +47,12 @@ public class AuditModel implements Serializable {
         this.createdAt = createdAt;
     }
 
-    public String getCreateBy() {
-        return createBy;
+    public String getCreatedBy() {
+        return createdBy;
     }
 
-    public void setCreateBy(String createBy) {
-        this.createBy = createBy;
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
     }
 
     public long getUpdatedAt() {
@@ -45,11 +63,11 @@ public class AuditModel implements Serializable {
         this.updatedAt = updatedAt;
     }
 
-    public String getUpdateBy() {
-        return updateBy;
+    public String getUpdatedBy() {
+        return updatedBy;
     }
 
-    public void setUpdateBy(String updateBy) {
-        this.updateBy = updateBy;
+    public void setUpdatedBy(String updatedBy) {
+        this.updatedBy = updatedBy;
     }
 }
