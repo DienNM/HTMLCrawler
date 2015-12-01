@@ -1,4 +1,4 @@
-package com.myprj.crawler.service.impl;
+package com.myprj.crawler.service.crawl.impl;
 
 import static com.myprj.crawler.util.DateUtil.addDays;
 import static com.myprj.crawler.util.Serialization.deserialize;

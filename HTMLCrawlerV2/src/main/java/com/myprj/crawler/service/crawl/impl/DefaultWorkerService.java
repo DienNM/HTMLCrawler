@@ -1,4 +1,4 @@
-package com.myprj.crawler.service.impl;
+package com.myprj.crawler.service.crawl.impl;
 
 import static com.myprj.crawler.enumeration.Level.Level0;
 import static com.myprj.crawler.util.Serialization.deserialize;
@@ -30,8 +30,8 @@ import com.myprj.crawler.model.config.AttributeModel;
 import com.myprj.crawler.model.crawl.CrawlResultModel;
 import com.myprj.crawler.model.crawl.WorkerItemModel;
 import com.myprj.crawler.model.crawl.WorkerModel;
-import com.myprj.crawler.service.WorkerService;
 import com.myprj.crawler.service.cache.AttributeCacheService;
+import com.myprj.crawler.service.crawl.WorkerService;
 import com.myprj.crawler.service.event.CrawlEventPublisher;
 import com.myprj.crawler.service.event.impl.CrawlDetailCompletedEvent;
 import com.myprj.crawler.service.handler.HandlerRegister;

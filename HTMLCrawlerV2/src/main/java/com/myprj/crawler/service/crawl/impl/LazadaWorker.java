@@ -1,4 +1,4 @@
-package com.myprj.crawler.service.impl;
+package com.myprj.crawler.service.crawl.impl;
 
 /**
  * @author DienNM (DEE)

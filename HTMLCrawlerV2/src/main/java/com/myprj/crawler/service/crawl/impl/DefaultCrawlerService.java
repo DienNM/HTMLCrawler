@@ -1,4 +1,4 @@
-package com.myprj.crawler.service.impl;
+package com.myprj.crawler.service.crawl.impl;
 
 import java.util.Calendar;
 import java.util.Collections;
@@ -20,8 +20,8 @@ import com.myprj.crawler.model.crawl.WorkerItemModel;
 import com.myprj.crawler.model.crawl.WorkerModel;
 import com.myprj.crawler.repository.CrawlHistoryRepository;
 import com.myprj.crawler.repository.WorkerRepository;
-import com.myprj.crawler.service.CrawlerService;
-import com.myprj.crawler.service.WorkerService;
+import com.myprj.crawler.service.crawl.CrawlerService;
+import com.myprj.crawler.service.crawl.WorkerService;
 
 /**
  * @author DienNM (DEE)

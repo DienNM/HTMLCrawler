@@ -33,10 +33,12 @@ import com.myprj.crawler.repository.impl.DefaultCrawlHistoryRepository;
 import com.myprj.crawler.repository.impl.DefaultItemRepository;
 import com.myprj.crawler.repository.impl.DefaultWorkerItemRepository;
 import com.myprj.crawler.repository.impl.DefaultWorkerRepository;
-import com.myprj.crawler.service.CrawlerService;
-import com.myprj.crawler.service.WorkerService;
 import com.myprj.crawler.service.cache.AttributeCacheService;
 import com.myprj.crawler.service.cache.impl.InMemoryAttributeCacheService;
+import com.myprj.crawler.service.crawl.CrawlerService;
+import com.myprj.crawler.service.crawl.WorkerService;
+import com.myprj.crawler.service.crawl.impl.ChototWorker;
+import com.myprj.crawler.service.crawl.impl.DefaultCrawlerService;
 import com.myprj.crawler.service.event.CrawlEventPublisher;
 import com.myprj.crawler.service.event.impl.CrawlDetailCompletedEventListener;
 import com.myprj.crawler.service.event.impl.DefaultCrawlEventPublisher;
@@ -44,8 +46,6 @@ import com.myprj.crawler.service.handler.impl.HtmlAttributeHandler;
 import com.myprj.crawler.service.handler.impl.LinkAttributeHandler;
 import com.myprj.crawler.service.handler.impl.ListAttributeHandler;
 import com.myprj.crawler.service.handler.impl.TextAttributeHandler;
-import com.myprj.crawler.service.impl.ChototWorker;
-import com.myprj.crawler.service.impl.DefaultCrawlerService;
 import com.myprj.crawler.util.Serialization;
 
 /**

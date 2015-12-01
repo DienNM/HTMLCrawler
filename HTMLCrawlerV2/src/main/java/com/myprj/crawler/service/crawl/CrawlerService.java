@@ -1,4 +1,4 @@
-package com.myprj.crawler.service;
+package com.myprj.crawler.service.crawl;
 
 import com.myprj.crawler.exception.CrawlerException;
 import com.myprj.crawler.model.crawl.WorkerModel;

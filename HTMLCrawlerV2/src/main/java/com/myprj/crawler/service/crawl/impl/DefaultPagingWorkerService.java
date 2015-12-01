@@ -1,10 +1,8 @@
-package com.myprj.crawler.service.impl;
+package com.myprj.crawler.service.crawl.impl;
 
 import static com.myprj.crawler.enumeration.WorkerItemTargetType.LIST;
-import static com.myprj.crawler.util.DateUtil.addDays;
 import static com.myprj.crawler.util.Serialization.deserialize;
 
-import java.util.Date;
 import java.util.Map;
 
 import org.jsoup.nodes.Document;
@@ -21,18 +19,15 @@ import com.myprj.crawler.enumeration.WorkerItemTargetType;
 import com.myprj.crawler.exception.WorkerException;
 import com.myprj.crawler.model.crawl.WorkerItemModel;
 import com.myprj.crawler.model.crawl.WorkerModel;
-import com.myprj.crawler.util.DateUtil;
 import com.myprj.crawler.util.HtmlDownloader;
 
 /**
  * @author DienNM (DEE)
  */
 
-public class DefaultDateWorkerService extends DefaultWorkerService {
+public class DefaultPagingWorkerService extends DefaultWorkerService {
 
-    private final Logger logger = LoggerFactory.getLogger(DefaultDateWorkerService.class);
-    
-    public static final String DATE_FORMAT = "MM-dd-yyyy";
+    private final Logger logger = LoggerFactory.getLogger(DefaultPagingWorkerService.class);
 
     @SuppressWarnings("unchecked")
     protected void doWorkOnWorkerItemList(WorkerContext workerCtx, WorkerItemModel workerItem) throws WorkerException {
@@ -41,12 +36,13 @@ public class DefaultDateWorkerService extends DefaultWorkerService {
 
         WorkerModel worker = workerCtx.getWorker();
         String url = workerItem.getUrl();
+
+        int numberOfContinuousFailures = 0;
+        int fromPage = Integer.valueOf(workerTarget.getStart());
+        int toPage = Integer.valueOf(workerTarget.getEnd());
         
-        Date startDate = DateUtil.convertString2Date(workerTarget.getStart(), getDateFormat());
-        Date endDate = DateUtil.convertString2Date(workerTarget.getEnd(), getDateFormat());
-        
-        for (; DateUtil.lte(startDate, endDate); startDate = addDays(startDate, 1)) {
-            String urlWithPaging = formateURLWithDate(updateUrlFormat(url), startDate);
+        for (int page = fromPage; page <= toPage; page++) {
+            String urlWithPaging = String.format(updateUrlFormat(url), page);
             logger.info("Start crawling: {}", urlWithPaging);
             urlWithPaging = updateUrlBeforeCrawling(urlWithPaging);
 
@@ -59,7 +55,11 @@ public class DefaultDateWorkerService extends DefaultWorkerService {
                 errorLink.setTargetType(WorkerItemTargetType.DETAIL);
                 workerCtx.getErrorLinks().add(errorLink);
                 logger.warn(errorMessage);
+                if (numberOfContinuousFailures++ > 2) {
+                    return;
+                }
             }
+            numberOfContinuousFailures = 0;
 
             Map<String, String> cssSelectors = deserialize(workerItem.getcssSelectors(), Map.class);
             
@@ -80,14 +80,5 @@ public class DefaultDateWorkerService extends DefaultWorkerService {
             logger.info("End crawling: {}", urlWithPaging);
         }
     }
-    
-    protected String getDateFormat() {
-        return DATE_FORMAT;
-    }
-    
-    protected String formateURLWithDate(String url, Date date) {
-        String text = DateUtil.convertDate2String(date, getDateFormat());
-        return String.format(url, text);
-    }
-    
+
 }
