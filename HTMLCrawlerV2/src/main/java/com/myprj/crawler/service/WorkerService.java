@@ -11,8 +11,8 @@ import com.myprj.crawler.service.event.CrawlEventPublisher;
  */
 
 public interface WorkerService {
-    
-    void doWork(WorkerContext workerCtx, WorkerItemModel workerItem) throws WorkerException;
+
+    void doCrawl(WorkerContext workerCtx, WorkerItemModel workerItem) throws WorkerException;
     
     void setAttributeCacheService(AttributeCacheService attributeCacheService);
     

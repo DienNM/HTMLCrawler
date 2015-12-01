@@ -38,22 +38,21 @@ import com.myprj.crawler.service.WorkerService;
 import com.myprj.crawler.service.cache.AttributeCacheService;
 import com.myprj.crawler.service.cache.impl.InMemoryAttributeCacheService;
 import com.myprj.crawler.service.event.CrawlEventPublisher;
-import com.myprj.crawler.service.event.impl.CrawlCompletedEventListener;
-import com.myprj.crawler.service.event.impl.CrawlFailedEventListener;
+import com.myprj.crawler.service.event.impl.CrawlDetailCompletedEventListener;
 import com.myprj.crawler.service.event.impl.DefaultCrawlEventPublisher;
 import com.myprj.crawler.service.handler.impl.HtmlAttributeHandler;
 import com.myprj.crawler.service.handler.impl.LinkAttributeHandler;
 import com.myprj.crawler.service.handler.impl.ListAttributeHandler;
 import com.myprj.crawler.service.handler.impl.TextAttributeHandler;
 import com.myprj.crawler.service.impl.DefaultCrawlerService;
-import com.myprj.crawler.service.impl.DefaultWorkerService;
+import com.myprj.crawler.service.impl.LazadaWorker;
 import com.myprj.crawler.util.Serialization;
 
 /**
  * @author DienNM (DEE)
  */
 
-public class Main {
+public class LazadaTest {
     
     private CrawlerService crawlerService;
     private WorkerService workerService ;
@@ -70,22 +69,22 @@ public class Main {
     
     private CrawlHistoryRepository crawlHistoryRepository = new DefaultCrawlHistoryRepository();
     
-    public Main() {
+    public LazadaTest() {
         // Initialize Handlers
         new ListAttributeHandler();
         new LinkAttributeHandler();
         new TextAttributeHandler();
         new HtmlAttributeHandler();
         
-        workerService = new DefaultWorkerService();
+        workerService = new LazadaWorker();
         workerService.setAttributeCacheService(attributeCacheService);
         workerService.setCrawlEventPublisher(crawlEventPublisher);
         
-        crawlEventPublisher.register(new CrawlCompletedEventListener());
-        crawlEventPublisher.register(new CrawlFailedEventListener());
+        crawlEventPublisher.register(new CrawlDetailCompletedEventListener());
         
         crawlerService = new DefaultCrawlerService();
         crawlerService.setWorkerService(workerService);
+        crawlerService.setWorkerRepository(workerRepository);
         crawlerService.setCrawlHistoryRepository(crawlHistoryRepository);
     }
     
@@ -133,21 +132,38 @@ public class Main {
         AttributeModel attribute4 = new AttributeModel();
         attribute4.setId(IdGenerator.generateId());
         attribute4.setItemId(item.getId());
-        attribute4.setName("xxxx");
-        attribute4.setType(AttributeType.LINK);
+        attribute4.setName("specifications");
+        attribute4.setType(AttributeType.LIST);
+
+
+        AttributeModel attribute5 = new AttributeModel();
+        attribute5.setId(IdGenerator.generateId());
+        attribute5.setItemId(item.getId());
+        attribute5.setName("includedInBoxs");
+        attribute5.setType(AttributeType.LIST);
+
+        AttributeModel attribute6 = new AttributeModel();
+        attribute6.setId(IdGenerator.generateId());
+        attribute6.setItemId(item.getId());
+        attribute6.setName("descriptionDetails");
+        attribute6.setType(AttributeType.LIST);
         
         attributeRepository.save(attribute1);
         attributeRepository.save(attribute2);
         attributeRepository.save(attribute3);
         attributeRepository.save(attribute4);
+        attributeRepository.save(attribute5);
+        attributeRepository.save(attribute6);
         
         
         attributeCacheService.updateCache(attribute1);
         attributeCacheService.updateCache(attribute2);
         attributeCacheService.updateCache(attribute3);
         attributeCacheService.updateCache(attribute4);
+        attributeCacheService.updateCache(attribute5);
+        attributeCacheService.updateCache(attribute6);
         
-        return Arrays.asList(attribute1, attribute2, attribute3);
+        return Arrays.asList(attribute1, attribute2, attribute3, attribute4, attribute5, attribute6);
     }
     
     public WorkerModel createWorker(ItemModel item, List<AttributeModel> attributes) {
@@ -168,8 +184,6 @@ public class Main {
         ListWorkerTargetParameter listParam = new ListWorkerTargetParameter();
         listParam.setFromPage(1);
         listParam.setToPage(1);
-        listParam.setCurrentPage(1);
-        listParam.setUrlAttribute("href");
         
         // Level 0
         WorkerItemModel workerItem1 = new WorkerItemModel();
@@ -178,11 +192,11 @@ public class Main {
         workerItem1.setLevel(Level.Level0);
         workerItem1.setUrl("http://www.lazada.vn/trang-diem/?page=%s");
         workerItem1.setTargetType(WorkerItemTargetType.LIST);
-        workerItem1.setWorkerItemPagingConfig(Serialization.serialize(listParam));
+        workerItem1.setPagingConfig(Serialization.serialize(listParam));
         
         Map<String, String> cssSelectors1 = new HashMap<String, String>();
         cssSelectors1.put(AttributeType.LINK.name(), "div.product-description a.product-image-url");
-        workerItem1.setAttributeCssSelectors(Serialization.serialize(cssSelectors1));
+        workerItem1.setCssSelectors(Serialization.serialize(cssSelectors1));
         
         workerItemRepository.save(workerItem1);
         
@@ -204,12 +218,18 @@ public class Main {
                 workerItemConfig.getAttributesCssSelectors().put(att.getId(), "div.product-prices span.product-price");
             } else if(att.getName().equals("productOldPrice")) {
                 workerItemConfig.getAttributesCssSelectors().put(att.getId(), "div.product-prices span.product-price-past");
+            } else if(att.getName().equals("specifications")) {
+                workerItemConfig.getAttributesCssSelectors().put(att.getId(), "div.catWrapper.specifications.specifications-detail div.description-detail ul li span");
+            } else if(att.getName().equals("includedInBoxs")) {
+                workerItemConfig.getAttributesCssSelectors().put(att.getId(), "div.catWrapper.whatisinbox div.description-detail ul li span");
+            } else if(att.getName().equals("descriptionDetails")) {
+                workerItemConfig.getAttributesCssSelectors().put(att.getId(), "div.catWrapper div.description-detail ul.simpleList.uip li");
             }
         }
         
         //workerItemConfig.getAttributesCssSelectors().put(AttributeType.LINK.name(), value);
         
-        workerItem2.setAttributeCssSelectors(Serialization.serialize(workerItemConfig));
+        workerItem2.setCssSelectors(Serialization.serialize(workerItemConfig));
         workerItemRepository.save(workerItem2);
 
         worker.getWorkerItems().add(workerItem1);
@@ -218,7 +238,7 @@ public class Main {
     
     public static void main(String[] args) {
         
-        Main main = new Main();
+        LazadaTest main = new LazadaTest();
         
         CategoryModel category = main.createCategory();
         ItemModel item = main.createItem(category);
@@ -226,10 +246,9 @@ public class Main {
 
         WorkerModel worker = main.createWorker(item, attributes);
         
-        
-        main.getCrawlerService().init(worker);
         try {
-            main.getCrawlerService().crawl(worker);
+            main.getCrawlerService().init(worker);
+            main.getCrawlerService().crawl(worker.getId());
         } catch (CrawlerException e) {
             e.printStackTrace();
         }

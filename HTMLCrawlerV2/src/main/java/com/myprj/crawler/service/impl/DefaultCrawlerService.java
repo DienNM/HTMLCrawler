@@ -10,13 +10,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.myprj.crawler.domain.WorkerContext;
+import com.myprj.crawler.domain.worker.ErrorLink;
 import com.myprj.crawler.enumeration.CrawlStatus;
+import com.myprj.crawler.enumeration.WorkerStatus;
 import com.myprj.crawler.exception.CrawlerException;
 import com.myprj.crawler.exception.WorkerException;
 import com.myprj.crawler.model.crawl.CrawlHistoryModel;
 import com.myprj.crawler.model.crawl.WorkerItemModel;
 import com.myprj.crawler.model.crawl.WorkerModel;
 import com.myprj.crawler.repository.CrawlHistoryRepository;
+import com.myprj.crawler.repository.WorkerRepository;
 import com.myprj.crawler.service.CrawlerService;
 import com.myprj.crawler.service.WorkerService;
 
@@ -25,60 +28,84 @@ import com.myprj.crawler.service.WorkerService;
  */
 
 public class DefaultCrawlerService implements CrawlerService {
-    
+
     private Logger logger = LoggerFactory.getLogger(DefaultCrawlerService.class);
-    
+
     private static Map<Long, WorkerContext> workerContextCache = new HashMap<Long, WorkerContext>();
-    
+
     private WorkerService workerService;
-    
+
     private CrawlHistoryRepository crawlHistoryRepository;
     
+    private WorkerRepository workerRepository;
+
     @Override
-    public void crawl(WorkerModel worker) throws CrawlerException {
-        WorkerContext workerCtx = workerContextCache.get(worker.getId());
-        if(workerCtx == null) {
-            throw new CrawlerException(String.format("Worker %s [name = %s] has not registered yet", 
-                    worker.getId(), worker.getName()));
-        }
+    public void crawl(long workerId) throws CrawlerException {
+        
+        WorkerContext workerCtx = pickupWorkerContext(workerId);
+        WorkerModel worker = workerCtx.getWorker();
+        
+        worker.setStatus(WorkerStatus.Running);
+        workerRepository.update(worker);
         
         logger.info("Worker {} [Id={}] starts crawling...", worker.getName(), worker.getId());
-        
+
         List<WorkerItemModel> workerItems = worker.getWorkerItems();
         Collections.sort(workerItems);
-        
+
         CrawlHistoryModel crawlHistory = new CrawlHistoryModel();
         crawlHistory.setWorkerId(worker.getId());
         crawlHistory.setStatus(CrawlStatus.Running);
         crawlHistoryRepository.save(crawlHistory);
-        
+
         long starttime = Calendar.getInstance().getTimeInMillis();
-        
-        WorkerItemModel rootWorkerItem = workerItems.get(0);
         try {
-            workerService.doWork(workerCtx, rootWorkerItem);
+            workerService.doCrawl(workerCtx, workerItems.get(0));
+            crawlHistory.setStatus(CrawlStatus.Done);
+            worker.setStatus(WorkerStatus.Done);
         } catch (WorkerException e) {
-            crawlHistory = crawlHistoryRepository.findLatest(worker.getId());
             crawlHistory.setStatus(CrawlStatus.Error);
+            worker.setStatus(WorkerStatus.Error);
             crawlHistory.setMessage(e.getMessage());
-            crawlHistoryRepository.save(crawlHistory);
         } finally {
             destroy(worker);
+
+            worker.setUpdatedAt(Calendar.getInstance().getTimeInMillis());
+            workerRepository.update(worker);
+            crawlHistoryRepository.save(crawlHistory);
             long endtime = Calendar.getInstance().getTimeInMillis();
             logger.info("Worker {} [Id={}] stops crawling. Took: {} second(s)", worker.getName(), worker.getId(),
-                    (endtime - starttime)/1000);
+                    (endtime - starttime) / 1000);
+            
+            logger.error("All Error Links: ");
+            for(ErrorLink errorLink : workerCtx.getErrorLinks()) {
+                logger.error(errorLink.toString());
+            }
         }
     }
-
-    @Override
-    public void init(WorkerModel worker) {
-        workerContextCache.put(worker.getId(), new WorkerContext(worker));
+    
+    private synchronized WorkerContext pickupWorkerContext(long workerId) throws CrawlerException{
+        WorkerContext workerCtx = workerContextCache.get(workerId);
+        if (workerCtx == null) {
+            throw new CrawlerException(String.format("Worker ID=%s has not registered yet", workerId));
+        }
+        return workerCtx;
     }
 
     @Override
-    public void destroy(WorkerModel worker) {
+    public synchronized void init(WorkerModel worker) throws CrawlerException {
+        WorkerContext workerCtx = workerContextCache.get(worker.getId());
+        if (workerCtx == null || WorkerStatus.Created.equals(workerCtx.getWorker().getStatus())) {
+            workerContextCache.put(worker.getId(), new WorkerContext(worker));
+            return;
+        }
+        throw new CrawlerException("Worker " + worker.getId() + " is running");
+    }
+
+    @Override
+    public synchronized void destroy(WorkerModel worker) {
         WorkerContext workerContext = workerContextCache.get(worker.getId());
-        if(workerContext != null) {
+        if (workerContext != null) {
             workerContextCache.remove(worker.getId());
             workerContext.destroyWorker();
         }
@@ -95,6 +122,11 @@ public class DefaultCrawlerService implements CrawlerService {
     @Override
     public void setCrawlHistoryRepository(CrawlHistoryRepository crawlHistoryRepository) {
         this.crawlHistoryRepository = crawlHistoryRepository;
+    }
+    
+    @Override
+    public void setWorkerRepository(WorkerRepository workerRepository) {
+        this.workerRepository = workerRepository;
     }
 
 }

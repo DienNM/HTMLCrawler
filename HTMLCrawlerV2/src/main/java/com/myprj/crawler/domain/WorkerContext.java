@@ -1,11 +1,14 @@
 package com.myprj.crawler.domain;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import com.myprj.crawler.domain.worker.ErrorLink;
 import com.myprj.crawler.enumeration.Level;
 import com.myprj.crawler.model.crawl.WorkerItemModel;
 import com.myprj.crawler.model.crawl.WorkerModel;
@@ -23,6 +26,8 @@ public class WorkerContext implements Serializable{
     private WorkerModel worker;
     
     private Map<Level, WorkerItemModel> workerItems = new HashMap<Level, WorkerItemModel>();
+    
+    private List<ErrorLink> errorLinks = new ArrayList<ErrorLink>(); 
     
     private ProxyTracer proxyTracer;
     
@@ -80,6 +85,14 @@ public class WorkerContext implements Serializable{
     
     public void setWorkerItems(Map<Level, WorkerItemModel> workerItems) {
         this.workerItems = workerItems;
+    }
+
+    public List<ErrorLink> getErrorLinks() {
+        return errorLinks;
+    }
+
+    public void setErrorLinks(List<ErrorLink> errorLinks) {
+        this.errorLinks = errorLinks;
     }
 
 }

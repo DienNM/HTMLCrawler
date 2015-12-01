@@ -1,8 +1,11 @@
 package com.myprj.crawler.model.crawl;
 
+import static com.myprj.crawler.enumeration.WorkerStatus.Created;
+
 import java.util.ArrayList;
 import java.util.List;
 
+import com.myprj.crawler.enumeration.WorkerStatus;
 import com.myprj.crawler.model.AuditModel;
 
 /**
@@ -24,6 +27,8 @@ public class WorkerModel extends AuditModel {
     private int attemptTimes;
     
     private int delayTime = 500;
+    
+    private WorkerStatus status = Created;
     
     private List<WorkerItemModel> workerItems = new ArrayList<WorkerItemModel>();
 
@@ -81,5 +86,13 @@ public class WorkerModel extends AuditModel {
 
     public void setAttemptTimes(int attemptTimes) {
         this.attemptTimes = attemptTimes;
+    }
+
+    public WorkerStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(WorkerStatus status) {
+        this.status = status;
     }
 }

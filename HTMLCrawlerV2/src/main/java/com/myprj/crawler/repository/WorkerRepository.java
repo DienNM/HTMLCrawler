@@ -10,6 +10,8 @@ public interface WorkerRepository {
     
     WorkerModel save(WorkerModel worker);
     
+    void update(WorkerModel worker);
+    
     WorkerModel find(long id);
     
 }

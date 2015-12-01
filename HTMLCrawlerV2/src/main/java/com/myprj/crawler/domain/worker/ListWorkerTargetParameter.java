@@ -14,10 +14,6 @@ public class ListWorkerTargetParameter implements Serializable{
     
     private int fromPage;
     
-    private int currentPage;
-    
-    private String urlAttribute = "href";
-    
     public ListWorkerTargetParameter() {
     }
     
@@ -37,20 +33,4 @@ public class ListWorkerTargetParameter implements Serializable{
         this.fromPage = fromPage;
     }
 
-    public int getCurrentPage() {
-        return currentPage;
-    }
-
-    public void setCurrentPage(int currentPage) {
-        this.currentPage = currentPage;
-    }
-
-    public String getUrlAttribute() {
-        return urlAttribute;
-    }
-
-    public void setUrlAttribute(String urlAttribute) {
-        this.urlAttribute = urlAttribute;
-    }
-    
 }

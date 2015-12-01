@@ -25,4 +25,9 @@ public class DefaultWorkerRepository implements WorkerRepository {
         return repo.get(id);
     }
 
+    @Override
+    public void update(WorkerModel worker) {
+        repo.put(worker.getId(), worker);
+    }
+
 }

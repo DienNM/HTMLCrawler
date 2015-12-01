@@ -7,17 +7,17 @@ import com.myprj.crawler.model.crawl.CrawlResultModel;
  * @author DienNM (DEE)
  */
 
-public class CrawlCompletedEvent implements CrawlEvent {
+public class CrawlDetailCompletedEvent implements CrawlEvent {
 
     private static final long serialVersionUID = 1L;
     
     private CrawlResultModel crawlResult;
     
-    public CrawlCompletedEvent() {
+    public CrawlDetailCompletedEvent() {
     }
 
     
-    public CrawlCompletedEvent(CrawlResultModel crawlResult) {
+    public CrawlDetailCompletedEvent(CrawlResultModel crawlResult) {
         this.crawlResult = crawlResult;
     }
     

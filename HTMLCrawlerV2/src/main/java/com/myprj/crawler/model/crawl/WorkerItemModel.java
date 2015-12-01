@@ -1,5 +1,7 @@
 package com.myprj.crawler.model.crawl;
 
+import static com.myprj.crawler.enumeration.Level.Level0;
+
 import com.myprj.crawler.enumeration.Level;
 import com.myprj.crawler.enumeration.WorkerItemTargetType;
 import com.myprj.crawler.model.AuditModel;
@@ -16,19 +18,19 @@ public class WorkerItemModel extends AuditModel implements Comparable<WorkerItem
 
     private long workerId;
 
-    private Level level = Level.Level0;
-
     private String url;
     
     private String nextUrl;
-
+    
+    private Level level = Level0;
+    
     private WorkerItemTargetType targetType;
 
     // JSON {"attribute1_id" : "@..."}
-    private String attributeCssSelectors;
+    private String cssSelectors;
 
     // JSON {"toPage" : "1"}
-    private String workerItemPagingConfig;
+    private String pagingConfig;
     
     public Level getLevel() {
         return level;
@@ -54,12 +56,12 @@ public class WorkerItemModel extends AuditModel implements Comparable<WorkerItem
         this.targetType = targetType;
     }
 
-    public String getAttributeCssSelectors() {
-        return attributeCssSelectors;
+    public String getcssSelectors() {
+        return cssSelectors;
     }
 
-    public void setAttributeCssSelectors(String attributeCssSelectors) {
-        this.attributeCssSelectors = attributeCssSelectors;
+    public void setCssSelectors(String cssSelectors) {
+        this.cssSelectors = cssSelectors;
     }
 
     public long getId() {
@@ -89,12 +91,12 @@ public class WorkerItemModel extends AuditModel implements Comparable<WorkerItem
         return -1;
     }
 
-    public String getWorkerItemPagingConfig() {
-        return workerItemPagingConfig;
+    public String getPagingConfig() {
+        return pagingConfig;
     }
 
-    public void setWorkerItemPagingConfig(String WorkerItemPagingConfig) {
-        this.workerItemPagingConfig = WorkerItemPagingConfig;
+    public void setPagingConfig(String pagingConfig) {
+        this.pagingConfig = pagingConfig;
     }
 
     public String getNextUrl() {

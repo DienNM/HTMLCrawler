@@ -11,5 +11,4 @@ public enum WorkerStatus {
     Running,
     Done,
     Error
-    
 }
