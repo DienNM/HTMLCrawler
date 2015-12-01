@@ -149,8 +149,8 @@ public class ChoTotTest {
     
     public void createWorkerItem(WorkerModel worker, ItemModel item, List<AttributeModel> attributes) {
         ListWorkerTargetParameter listParam = new ListWorkerTargetParameter();
-        listParam.setFromPage(1);
-        listParam.setToPage(1);
+        listParam.setStart("1");
+        listParam.setEnd("3");
         
         // Level 0
         WorkerItemModel workerItem1 = new WorkerItemModel();

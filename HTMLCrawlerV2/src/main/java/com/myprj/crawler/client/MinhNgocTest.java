@@ -4,9 +4,7 @@ import static com.myprj.crawler.client.util.IdGenerator.generateId;
 
 import java.util.Arrays;
 import java.util.Calendar;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import com.myprj.crawler.client.util.IdGenerator;
 import com.myprj.crawler.domain.worker.ListWorkerTargetParameter;
@@ -45,14 +43,14 @@ import com.myprj.crawler.service.handler.impl.LinkAttributeHandler;
 import com.myprj.crawler.service.handler.impl.ListAttributeHandler;
 import com.myprj.crawler.service.handler.impl.TextAttributeHandler;
 import com.myprj.crawler.service.impl.DefaultCrawlerService;
-import com.myprj.crawler.service.impl.LazadaWorker;
+import com.myprj.crawler.service.impl.DefaultNavigationWorkerService;
 import com.myprj.crawler.util.Serialization;
 
 /**
  * @author DienNM (DEE)
  */
 
-public class LazadaTest {
+public class MinhNgocTest {
     
     private CrawlerService crawlerService;
     private WorkerService workerService ;
@@ -69,14 +67,14 @@ public class LazadaTest {
     
     private CrawlHistoryRepository crawlHistoryRepository = new DefaultCrawlHistoryRepository();
     
-    public LazadaTest() {
+    public MinhNgocTest() {
         // Initialize Handlers
         new ListAttributeHandler();
         new LinkAttributeHandler();
         new TextAttributeHandler();
         new HtmlAttributeHandler();
         
-        workerService = new LazadaWorker();
+        workerService = new DefaultNavigationWorkerService();
         workerService.setAttributeCacheService(attributeCacheService);
         workerService.setCrawlEventPublisher(crawlEventPublisher);
         
@@ -91,8 +89,8 @@ public class LazadaTest {
     public CategoryModel createCategory() {
         CategoryModel category = new CategoryModel();
         category.setId(generateId());
-        category.setName("Lazada");
-        category.setDescription("Crawler for Lazada website");
+        category.setName("Xo So Minh Ngoc");
+        category.setDescription("Crawler for Minh Ngoc website");
         category.setParentCategoryId(-1);
         category.setStatus(GlobalStatus.ONLINE);
         category.setCreatedAt(Calendar.getInstance().getTimeInMillis());
@@ -114,39 +112,68 @@ public class LazadaTest {
         AttributeModel attribute1 = new AttributeModel();
         attribute1.setId(IdGenerator.generateId());
         attribute1.setItemId(item.getId());
-        attribute1.setName("productName");
+        attribute1.setName("title");
         attribute1.setType(AttributeType.TEXT);
         
         AttributeModel attribute2 = new AttributeModel();
         attribute2.setId(IdGenerator.generateId());
         attribute2.setItemId(item.getId());
-        attribute2.setName("productPrice");
+        attribute2.setName("loaiVe");
         attribute2.setType(AttributeType.TEXT);
         
         AttributeModel attribute3 = new AttributeModel();
         attribute3.setId(IdGenerator.generateId());
         attribute3.setItemId(item.getId());
-        attribute3.setName("productOldPrice");
+        attribute3.setName("giaiDacBiet");
         attribute3.setType(AttributeType.TEXT);
-
+        
         AttributeModel attribute4 = new AttributeModel();
         attribute4.setId(IdGenerator.generateId());
         attribute4.setItemId(item.getId());
-        attribute4.setName("specifications");
-        attribute4.setType(AttributeType.LIST);
-
-
+        attribute4.setName("giaiNhat");
+        attribute4.setType(AttributeType.TEXT);
+        
         AttributeModel attribute5 = new AttributeModel();
         attribute5.setId(IdGenerator.generateId());
         attribute5.setItemId(item.getId());
-        attribute5.setName("includedInBoxs");
-        attribute5.setType(AttributeType.LIST);
-
+        attribute5.setName("giaiNhi");
+        attribute5.setType(AttributeType.TEXT);
+        
         AttributeModel attribute6 = new AttributeModel();
         attribute6.setId(IdGenerator.generateId());
         attribute6.setItemId(item.getId());
-        attribute6.setName("descriptionDetails");
+        attribute6.setName("giaiBa");
         attribute6.setType(AttributeType.LIST);
+        
+        AttributeModel attribute7 = new AttributeModel();
+        attribute7.setId(IdGenerator.generateId());
+        attribute7.setItemId(item.getId());
+        attribute7.setName("giaiTu");
+        attribute7.setType(AttributeType.LIST);
+        
+        AttributeModel attribute8 = new AttributeModel();
+        attribute8.setId(IdGenerator.generateId());
+        attribute8.setItemId(item.getId());
+        attribute8.setName("giaiNam");
+        attribute8.setType(AttributeType.LIST);
+        
+        AttributeModel attribute9 = new AttributeModel();
+        attribute9.setId(IdGenerator.generateId());
+        attribute9.setItemId(item.getId());
+        attribute9.setName("giaiSau");
+        attribute9.setType(AttributeType.LIST);
+        
+        AttributeModel attribute10 = new AttributeModel();
+        attribute10.setId(IdGenerator.generateId());
+        attribute10.setItemId(item.getId());
+        attribute10.setName("giaiBay");
+        attribute10.setType(AttributeType.LIST);
+        
+        AttributeModel attribute11 = new AttributeModel();
+        attribute11.setId(IdGenerator.generateId());
+        attribute11.setItemId(item.getId());
+        attribute11.setName("giaiTam");
+        attribute11.setType(AttributeType.LIST);
         
         attributeRepository.save(attribute1);
         attributeRepository.save(attribute2);
@@ -154,6 +181,11 @@ public class LazadaTest {
         attributeRepository.save(attribute4);
         attributeRepository.save(attribute5);
         attributeRepository.save(attribute6);
+        attributeRepository.save(attribute7);
+        attributeRepository.save(attribute8);
+        attributeRepository.save(attribute9);
+        attributeRepository.save(attribute10);
+        attributeRepository.save(attribute11);
         
         
         attributeCacheService.updateCache(attribute1);
@@ -162,8 +194,14 @@ public class LazadaTest {
         attributeCacheService.updateCache(attribute4);
         attributeCacheService.updateCache(attribute5);
         attributeCacheService.updateCache(attribute6);
+        attributeCacheService.updateCache(attribute7);
+        attributeCacheService.updateCache(attribute8);
+        attributeCacheService.updateCache(attribute9);
+        attributeCacheService.updateCache(attribute10);
+        attributeCacheService.updateCache(attribute11);
         
-        return Arrays.asList(attribute1, attribute2, attribute3, attribute4, attribute5, attribute6);
+        return Arrays.asList(attribute1, attribute2, attribute3, attribute4, attribute5, attribute6,
+                attribute7, attribute8, attribute9, attribute10, attribute11);
     }
     
     public WorkerModel createWorker(ItemModel item, List<AttributeModel> attributes) {
@@ -171,9 +209,9 @@ public class LazadaTest {
         worker.setId(IdGenerator.generateId());
         worker.setAttemptTimes(3);
         worker.setDelayTime(300);
-        worker.setDescription("Lazada Worker 1: Sample Worker");
+        worker.setDescription("MinhNgoc Worker 1: Sample Worker");
         worker.setThreads(3);
-        worker.setName("Lazada Worker 1");
+        worker.setName("MinhNgoc Worker 1");
         
         createWorkerItem(worker, item, attributes);
         
@@ -182,63 +220,59 @@ public class LazadaTest {
     
     public void createWorkerItem(WorkerModel worker, ItemModel item, List<AttributeModel> attributes) {
         ListWorkerTargetParameter listParam = new ListWorkerTargetParameter();
-        listParam.setStart("1");
-        listParam.setEnd("1");
+        listParam.setStart("01-09-2015");
+        listParam.setEnd("19-11-2015");
         
         // Level 0
         WorkerItemModel workerItem1 = new WorkerItemModel();
         workerItem1.setId(IdGenerator.generateId());
         workerItem1.setWorkerId(worker.getId());
         workerItem1.setLevel(Level.Level0);
-        workerItem1.setUrl("http://www.lazada.vn/trang-diem/?page=%s");
-        workerItem1.setTargetType(WorkerItemTargetType.LIST);
+        workerItem1.setUrl("http://www.minhngoc.net.vn/ket-qua-xo-so/mien-nam/an-giang/%s.html");
+        workerItem1.setTargetType(WorkerItemTargetType.NAVIGATION);
         workerItem1.setPagingConfig(Serialization.serialize(listParam));
-        
-        Map<String, String> cssSelectors1 = new HashMap<String, String>();
-        cssSelectors1.put(AttributeType.LINK.name(), "div.product-description a.product-image-url");
-        workerItem1.setCssSelectors(Serialization.serialize(cssSelectors1));
-        
-        workerItemRepository.save(workerItem1);
-        
-        // Level 1
-        WorkerItemModel workerItem2 = new WorkerItemModel();
-        workerItem2.setId(IdGenerator.generateId());
-        workerItem2.setWorkerId(worker.getId());
-        workerItem2.setLevel(Level.Level1);
-        workerItem2.setTargetType(WorkerItemTargetType.DETAIL);
         
         WorkerItemConfig workerItemConfig = new WorkerItemConfig();
         workerItemConfig.setCategoryId(item.getCategoryId());
         workerItemConfig.setItemId(item.getId());
         
         for(AttributeModel att : attributes) {
-            if(att.getName().equals("productName")) {
-                workerItemConfig.getAttributesCssSelectors().put(att.getId(), "div.product-info-name");
-            } else if(att.getName().equals("productPrice")) {
-                workerItemConfig.getAttributesCssSelectors().put(att.getId(), "div.product-prices span.product-price");
-            } else if(att.getName().equals("productOldPrice")) {
-                workerItemConfig.getAttributesCssSelectors().put(att.getId(), "div.product-prices span.product-price-past");
-            } else if(att.getName().equals("specifications")) {
-                workerItemConfig.getAttributesCssSelectors().put(att.getId(), "div.catWrapper.specifications.specifications-detail div.description-detail ul li span");
-            } else if(att.getName().equals("includedInBoxs")) {
-                workerItemConfig.getAttributesCssSelectors().put(att.getId(), "div.catWrapper.whatisinbox div.description-detail ul li span");
-            } else if(att.getName().equals("descriptionDetails")) {
-                workerItemConfig.getAttributesCssSelectors().put(att.getId(), "div.catWrapper div.description-detail ul.simpleList.uip li");
-            }
+            if(att.getName().equals("title")) {
+                workerItemConfig.getAttributesCssSelectors().put(att.getId(), "div.box_kqxs div.title");
+            } if(att.getName().equals("loaiVe")) {
+                workerItemConfig.getAttributesCssSelectors().put(att.getId(), "div.content span.loaive");
+            } if(att.getName().equals("giaiDacBiet")) {
+                workerItemConfig.getAttributesCssSelectors().put(att.getId(), "div.content td.giaidb div");
+            } if(att.getName().equals("giaiNhat")) {
+                workerItemConfig.getAttributesCssSelectors().put(att.getId(), "div.content td.giai1 div");
+            } if(att.getName().equals("giaiNhi")) {
+                workerItemConfig.getAttributesCssSelectors().put(att.getId(), "div.content td.giai2 div");
+            } if(att.getName().equals("giaiBa")) {
+                workerItemConfig.getAttributesCssSelectors().put(att.getId(), "div.content td.giai3 div");
+            } if(att.getName().equals("giaiTu")) {
+                workerItemConfig.getAttributesCssSelectors().put(att.getId(), "div.content td.giai4 div");
+            } else if(att.getName().equals("giaiNam")) {
+                workerItemConfig.getAttributesCssSelectors().put(att.getId(), "div.content td.giai5 div");
+            }  else if(att.getName().equals("giaiSau")) {
+                workerItemConfig.getAttributesCssSelectors().put(att.getId(), "div.content td.giai6 div");
+            }  else if(att.getName().equals("giaiBay")) {
+                workerItemConfig.getAttributesCssSelectors().put(att.getId(), "div.content td.giai7 div");
+            }  else if(att.getName().equals("giaiTam")) {
+                workerItemConfig.getAttributesCssSelectors().put(att.getId(), "div.content td.giai8 div");
+            } 
         }
         
         //workerItemConfig.getAttributesCssSelectors().put(AttributeType.LINK.name(), value);
         
-        workerItem2.setCssSelectors(Serialization.serialize(workerItemConfig));
-        workerItemRepository.save(workerItem2);
+        workerItem1.setCssSelectors(Serialization.serialize(workerItemConfig));
+        workerItemRepository.save(workerItem1);
 
         worker.getWorkerItems().add(workerItem1);
-        worker.getWorkerItems().add(workerItem2);
     }
     
     public static void main(String[] args) {
         
-        LazadaTest main = new LazadaTest();
+        MinhNgocTest main = new MinhNgocTest();
         
         CategoryModel category = main.createCategory();
         ItemModel item = main.createItem(category);

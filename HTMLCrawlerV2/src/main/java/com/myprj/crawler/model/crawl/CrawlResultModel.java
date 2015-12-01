@@ -20,7 +20,7 @@ public class CrawlResultModel extends AuditModel {
 
     private long itemId;
 
-    private Map<Long, Object> detail = new HashMap<Long, Object>();
+    private Map<String, Object> detail = new HashMap<String, Object>();
 
     private ResultStatus status = ResultStatus.MISSING;
     
@@ -53,11 +53,11 @@ public class CrawlResultModel extends AuditModel {
         this.itemId = itemId;
     }
 
-    public Map<Long, Object> getDetail() {
+    public Map<String, Object> getDetail() {
         return detail;
     }
 
-    public void setDetail(Map<Long, Object> detail) {
+    public void setDetail(Map<String, Object> detail) {
         this.detail = detail;
     }
 

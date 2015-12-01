@@ -1,36 +1,53 @@
 package com.myprj.crawler.domain.worker;
 
+import static com.myprj.crawler.domain.worker.ListWorkerTargetParameter.WorkerListType.PAGING;
+
 import java.io.Serializable;
 
 /**
  * @author DienNM (DEE)
  */
 
-public class ListWorkerTargetParameter implements Serializable{
+public class ListWorkerTargetParameter implements Serializable {
     
     private static final long serialVersionUID = 1L;
 
-    private int toPage;
+    private String end;
     
-    private int fromPage;
+    private String start;
+    
+    private WorkerListType workerListType = PAGING;
+    
+    enum WorkerListType {
+        PAGING,
+        DATE
+    }
     
     public ListWorkerTargetParameter() {
     }
     
-    public int getToPage() {
-        return toPage;
+    public String getEnd() {
+        return end;
     }
 
-    public void setToPage(int toPage) {
-        this.toPage = toPage;
+    public void setEnd(String end) {
+        this.end = end;
     }
 
-    public int getFromPage() {
-        return fromPage;
+    public String getStart() {
+        return start;
     }
 
-    public void setFromPage(int fromPage) {
-        this.fromPage = fromPage;
+    public void setStart(String start) {
+        this.start = start;
+    }
+
+    public WorkerListType getWorkerListType() {
+        return workerListType;
+    }
+
+    public void setWorkerListType(WorkerListType workerListType) {
+        this.workerListType = workerListType;
     }
 
 }

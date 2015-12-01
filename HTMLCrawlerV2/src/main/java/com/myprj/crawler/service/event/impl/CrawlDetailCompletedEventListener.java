@@ -9,7 +9,7 @@ import com.myprj.crawler.util.Serialization;
  */
 
 public class CrawlDetailCompletedEventListener implements CrawlEventListener<CrawlDetailCompletedEvent> {
-
+    
     @Override
     public void handle(CrawlEvent event) {
         if (event instanceof CrawlDetailCompletedEvent) {

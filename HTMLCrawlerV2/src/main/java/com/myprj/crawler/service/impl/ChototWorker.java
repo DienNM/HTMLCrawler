@@ -5,7 +5,7 @@ package com.myprj.crawler.service.impl;
  * @author DienNM (DEE)
  */
 
-public class ChototWorker extends DefaultWorkerService {
+public class ChototWorker extends DefaultPagingWorkerService {
     
     @Override
     protected boolean isValidLinkOfListTargetItem(String url) {

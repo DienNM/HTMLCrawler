@@ -8,6 +8,7 @@ package com.myprj.crawler.enumeration;
 public enum WorkerItemTargetType {
     
     DETAIL,
-    LIST
+    LIST,
+    NAVIGATION
     
 }

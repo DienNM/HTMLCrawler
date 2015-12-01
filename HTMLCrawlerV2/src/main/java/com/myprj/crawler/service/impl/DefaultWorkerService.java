@@ -1,7 +1,6 @@
 package com.myprj.crawler.service.impl;
 
 import static com.myprj.crawler.enumeration.Level.Level0;
-import static com.myprj.crawler.enumeration.WorkerItemTargetType.LIST;
 import static com.myprj.crawler.util.Serialization.deserialize;
 
 import java.util.ArrayList;
@@ -23,7 +22,7 @@ import com.myprj.crawler.domain.worker.CssSelector;
 import com.myprj.crawler.domain.worker.ErrorLink;
 import com.myprj.crawler.domain.worker.ListWorkerTargetParameter;
 import com.myprj.crawler.domain.worker.WorkerItemConfig;
-import com.myprj.crawler.enumeration.AttributeType;
+import com.myprj.crawler.enumeration.ResultStatus;
 import com.myprj.crawler.enumeration.WorkerItemTargetType;
 import com.myprj.crawler.exception.WorkerException;
 import com.myprj.crawler.model.config.AttributeModel;
@@ -41,7 +40,7 @@ import com.myprj.crawler.util.HtmlDownloader;
  * @author DienNM (DEE)
  */
 
-public class DefaultWorkerService implements WorkerService {
+public abstract class DefaultWorkerService implements WorkerService {
 
     private final Logger logger = LoggerFactory.getLogger(DefaultWorkerService.class);
 
@@ -55,6 +54,9 @@ public class DefaultWorkerService implements WorkerService {
         case LIST:
             doWorkOnWorkerItemList(workerCtx, workerItem);
             break;
+        case NAVIGATION:
+            doWorkOnWorkerItemList(workerCtx, workerItem);
+            break;
         case DETAIL:
             doWorkOnWorkerItemDetail(workerCtx, workerItem);
             break;
@@ -63,55 +65,9 @@ public class DefaultWorkerService implements WorkerService {
         }
     }
     
-    @SuppressWarnings("unchecked")
-    protected void doWorkOnWorkerItemList(WorkerContext workerCtx, WorkerItemModel workerItem) throws WorkerException {
-        ListWorkerTargetParameter workerTarget = deserialize(workerItem.getPagingConfig(),
-                ListWorkerTargetParameter.class);
-
-        WorkerModel worker = workerCtx.getWorker();
-        String url = workerItem.getUrl();
-
-        int numberOfContinuousFailures = 0;
-        for (int page = workerTarget.getFromPage(); page <= workerTarget.getToPage(); page++) {
-            String urlWithPaging = String.format(updateUrlFormat(url), page);
-            logger.info("Start crawling: {}", urlWithPaging);
-            urlWithPaging = updateUrlBeforeCrawling(urlWithPaging);
-
-            Document document = HtmlDownloader.download(urlWithPaging, worker.getDelayTime(), worker.getAttemptTimes());
-            if (!isDownloadSuccess(document)) {
-                String errorMessage = "Cannot download HTML from " + urlWithPaging;
-                ErrorLink errorLink = new ErrorLink(url);
-                errorLink.setMessage(errorMessage);
-                errorLink.setLevel(workerItem.getLevel());
-                errorLink.setTargetType(WorkerItemTargetType.DETAIL);
-                workerCtx.getErrorLinks().add(errorLink);
-                logger.warn(errorMessage);
-                if (numberOfContinuousFailures++ > 2) {
-                    return;
-                }
-            }
-            numberOfContinuousFailures = 0;
-
-            Map<String, String> cssSelectors = deserialize(workerItem.getcssSelectors(), Map.class);
-            
-            String text = cssSelectors.get(AttributeType.LINK.name());
-            CssSelector cssSelector = new CssSelector(text);
-            Elements elements = document.body().select(cssSelector.getSelector());
-            if (elements == null) {
-                String errorMessage = String.format("No Data. CSS-Selector=%s, URL=%s", cssSelector, urlWithPaging);
-                ErrorLink errorLink = new ErrorLink(url);
-                errorLink.setMessage(errorMessage);
-                errorLink.setLevel(workerItem.getLevel());
-                errorLink.setTargetType(LIST);
-                workerCtx.getErrorLinks().add(errorLink);
-                logger.error(errorMessage);
-                continue;
-            }
-            processListItemsPerPage(workerCtx, workerItem, workerTarget, elements, cssSelector);
-        }
-    }
-
-    private void processListItemsPerPage(WorkerContext workerCtx, WorkerItemModel workerItem,
+    protected abstract void doWorkOnWorkerItemList(WorkerContext workerCtx, WorkerItemModel workerItem) throws WorkerException;
+    
+    protected void processListItemsPerPage(WorkerContext workerCtx, WorkerItemModel workerItem,
             ListWorkerTargetParameter workerTarget, Elements elements, CssSelector cssSelector) throws WorkerException {
         List<Future<Object>> futureItems = new ArrayList<Future<Object>>();
         for (Element element : elements) {
@@ -152,12 +108,10 @@ public class DefaultWorkerService implements WorkerService {
             }
         }
     }
-
+    
     protected void doWorkOnWorkerItemDetail(WorkerContext workerCtx, WorkerItemModel workerItem) throws WorkerException {
         WorkerModel worker = workerCtx.getWorker();
         String url = updateUrlBeforeCrawling(workerItem.getUrl());
-        CrawlResultModel crawlResult = new CrawlResultModel();
-        crawlResult.setUrl(url);
 
         Document document = HtmlDownloader.download(url, worker.getDelayTime(), worker.getAttemptTimes());
         if (!isDownloadSuccess(document)) {
@@ -169,10 +123,16 @@ public class DefaultWorkerService implements WorkerService {
             workerCtx.getErrorLinks().add(errorLink);
             logger.warn(errorMessage);
         }
-
         HtmlDocument htmlDocument = new HtmlDocument(document);
+        collectionDetail(url, htmlDocument, workerItem);
+    }
+    
+    protected void collectionDetail(String url, HtmlDocument htmlDocument, WorkerItemModel workerItem) {
         WorkerItemConfig workerItemConfig = deserialize(workerItem.getcssSelectors(), WorkerItemConfig.class);
 
+        CrawlResultModel crawlResult = new CrawlResultModel();
+        crawlResult.setUrl(url);
+        
         crawlResult.setCategoryId(workerItemConfig.getCategoryId());
         crawlResult.setItemId(workerItemConfig.getItemId());
 
@@ -190,12 +150,17 @@ public class DefaultWorkerService implements WorkerService {
             if (data == null) {
                 logger.warn("No Data. Attribute: {}, CSS-Selector: {}, URL: {}", attribute.getName(), cssText, url);
             }
-            crawlResult.getDetail().put(attribute.getId(), data);
+            crawlResult.getDetail().put(attribute.getName(), data);
+        }
+        if(crawlResult.getDetail().isEmpty()) {
+            crawlResult.setStatus(ResultStatus.MISSING);
+        } else {
+            crawlResult.setStatus(ResultStatus.COMPLETED);
         }
         crawlEventPublisher.publish(new CrawlDetailCompletedEvent(crawlResult));
     }
 
-    private WorkerItemModel createNewWorkerItem(WorkerItemModel current) {
+    protected WorkerItemModel createNewWorkerItem(WorkerItemModel current) {
         WorkerItemModel newItem = new WorkerItemModel();
         newItem.setId(current.getId());
         newItem.setCssSelectors(current.getcssSelectors());
