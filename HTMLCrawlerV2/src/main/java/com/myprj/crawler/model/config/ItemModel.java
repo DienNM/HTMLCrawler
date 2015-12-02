@@ -24,14 +24,17 @@ public class ItemModel extends AuditModel {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
-    @Column(name = "category_id", nullable = false)
-    private long categoryId;
-
     @Column(name = "name", length = 50, nullable = false)
     private String name;
 
+    @Column(name = "category_id", nullable = false)
+    private long categoryId;
+
     @Column(name = "description", length = 150)
     private String description;
+    
+    @Column(name = "sample_content_json", length = 1000)
+    private String sampleContentJson;
 
     public ItemModel() {
     }
@@ -66,5 +69,13 @@ public class ItemModel extends AuditModel {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+    
+    public String getSampleContentJson() {
+        return sampleContentJson;
+    }
+    
+    public void setSampleContentJson(String sampleContentJson) {
+        this.sampleContentJson = sampleContentJson;
     }
 }

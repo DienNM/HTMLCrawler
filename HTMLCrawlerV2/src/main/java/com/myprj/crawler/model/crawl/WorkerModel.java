@@ -27,8 +27,6 @@ public class WorkerModel extends AuditModel {
 
     private static final long serialVersionUID = 1L;
     
-    public static final String TABLE_NAME = "worker";
-    
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;

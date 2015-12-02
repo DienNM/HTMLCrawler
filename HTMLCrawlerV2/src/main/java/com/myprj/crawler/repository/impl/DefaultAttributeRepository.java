@@ -10,7 +10,7 @@ import com.myprj.crawler.repository.AttributeRepository;
  */
 
 @Repository
-public class DefaultAttributeRepository extends DefaultGenericDao<AttributeModel, Long> implements AttributeRepository {
+public class DefaultAttributeRepository extends DefaultGenericDao<AttributeModel, String> implements AttributeRepository {
 
     @Override
     protected Class<AttributeModel> getTargetClass() {

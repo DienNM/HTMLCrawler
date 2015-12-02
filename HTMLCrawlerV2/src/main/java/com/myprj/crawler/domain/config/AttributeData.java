@@ -11,57 +11,58 @@ import com.myprj.crawler.model.config.AttributeModel;
  * @author DienNM (DEE)
  */
 
-public class AttributeData extends AuditData{
-    
+public class AttributeData extends AuditData {
+
     private static final long serialVersionUID = 1L;
 
     private String id;
-    
+
     private long itemId;
-    
+
     private String name;
-    
+
     private AttributeType type;
-    
+
+    private String parentId;
+
     private AttributeData parent;
-    
+
     private List<AttributeData> children = new ArrayList<AttributeData>();
-    
+
     public AttributeData() {
-        
     }
-    
+
     public static void toDatas(List<AttributeModel> sources, List<AttributeData> dests) {
-        for(AttributeModel source : sources) {
+        for (AttributeModel source : sources) {
             AttributeData dest = new AttributeData();
             toData(source, dest);
             dests.add(dest);
         }
     }
-    
+
     public static void toModels(List<AttributeData> sources, List<AttributeModel> dests) {
-        for(AttributeData source : sources) {
+        for (AttributeData source : sources) {
             AttributeModel dest = new AttributeModel();
             toModel(source, dest);
             dests.add(dest);
         }
     }
-    
+
     public static void toData(AttributeModel source, AttributeData dest) {
-        dest.setId(String.valueOf(source.getId()));
+        dest.setId(source.getId());
         dest.setName(source.getName());
         dest.setItemId(source.getItemId());
         dest.setType(source.getType());
+        dest.setParentId(source.getParentId());
         toAuditData(source, dest);
     }
-    
-    
-    
+
     public static void toModel(AttributeData source, AttributeModel dest) {
-        //dest.setId();
+        dest.setId(source.getId());
         dest.setName(source.getName());
         dest.setItemId(source.getItemId());
         dest.setType(source.getType());
+        dest.setParentId(source.getParentId());
         toAuditModel(source, dest);
     }
 
@@ -111,5 +112,13 @@ public class AttributeData extends AuditData{
 
     public void setChildren(List<AttributeData> children) {
         this.children = children;
+    }
+
+    public String getParentId() {
+        return parentId;
+    }
+
+    public void setParentId(String parentId) {
+        this.parentId = parentId;
     }
 }

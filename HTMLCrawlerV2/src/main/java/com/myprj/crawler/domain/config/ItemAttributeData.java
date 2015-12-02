@@ -1,11 +1,13 @@
 package com.myprj.crawler.domain.config;
 
+import static com.myprj.crawler.util.Serialization.deserialize;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import com.myprj.crawler.domain.AuditData;
-import com.myprj.crawler.enumeration.AttributeType;
-import com.myprj.crawler.model.config.AttributeModel;
+import com.myprj.crawler.model.config.ItemAttributeModel;
+import com.myprj.crawler.util.Serialization;
 
 /**
  * @author DienNM (DEE)
@@ -19,51 +21,54 @@ public class ItemAttributeData extends AuditData {
     
     private long itemId;
     
-    private String name;
+    private String parentId;
     
-    private AttributeType type;
+    private String attributeId;
     
     private AttributeSelector selector;
     
-    private ItemAttributeData parent;
+    private AttributeData attribute;
     
+    private ItemAttributeData parent;
     
     private List<ItemAttributeData> children = new ArrayList<ItemAttributeData>();
     
     public ItemAttributeData() {
     }
     
-    public static void toDatas(List<AttributeModel> sources, List<ItemAttributeData> dests) {
-        for(AttributeModel source : sources) {
+    public static void toDatas(List<ItemAttributeModel> sources, List<ItemAttributeData> dests) {
+        for(ItemAttributeModel source : sources) {
             ItemAttributeData dest = new ItemAttributeData();
             toData(source, dest);
             dests.add(dest);
         }
     }
     
-    public static void toModels(List<ItemAttributeData> sources, List<AttributeModel> dests) {
+    public static void toModels(List<ItemAttributeData> sources, List<ItemAttributeModel> dests) {
         for(ItemAttributeData source : sources) {
-            AttributeModel dest = new AttributeModel();
+            ItemAttributeModel dest = new ItemAttributeModel();
             toModel(source, dest);
             dests.add(dest);
         }
     }
     
-    public static void toData(AttributeModel source, ItemAttributeData dest) {
-        dest.setId(String.valueOf(source.getId()));
-        dest.setName(source.getName());
+    public static void toData(ItemAttributeModel source, ItemAttributeData dest) {
+        dest.setId(source.getId());
         dest.setItemId(source.getItemId());
-        dest.setType(source.getType());
+        dest.setAttributeId(source.getAttributeId());
+        dest.setParentId(source.getParentId());
+        dest.setSelector(deserialize(source.getSelectorJson(), AttributeSelector.class));
         toAuditData(source, dest);
     }
     
     
     
-    public static void toModel(ItemAttributeData source, AttributeModel dest) {
-        //dest.setId();
-        dest.setName(source.getName());
+    public static void toModel(ItemAttributeData source, ItemAttributeModel dest) {
+        dest.setId(source.getId());
         dest.setItemId(source.getItemId());
-        dest.setType(source.getType());
+        dest.setAttributeId(source.getAttributeId());
+        dest.setParentId(source.getParentId());
+        dest.setSelectorJson(Serialization.serialize(source.getSelector()));
         toAuditModel(source, dest);
     }
 
@@ -81,22 +86,6 @@ public class ItemAttributeData extends AuditData {
 
     public void setItemId(long itemId) {
         this.itemId = itemId;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public AttributeType getType() {
-        return type;
-    }
-
-    public void setType(AttributeType type) {
-        this.type = type;
     }
 
     public ItemAttributeData getParent() {
@@ -121,5 +110,29 @@ public class ItemAttributeData extends AuditData {
 
     public void setSelector(AttributeSelector selector) {
         this.selector = selector;
+    }
+
+    public String getAttributeId() {
+        return attributeId;
+    }
+
+    public void setAttributeId(String attributeId) {
+        this.attributeId = attributeId;
+    }
+
+    public AttributeData getAttribute() {
+        return attribute;
+    }
+
+    public void setAttribute(AttributeData attribute) {
+        this.attribute = attribute;
+    }
+
+    public String getParentId() {
+        return parentId;
+    }
+
+    public void setParentId(String parentId) {
+        this.parentId = parentId;
     }
 }

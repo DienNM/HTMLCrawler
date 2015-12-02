@@ -1,8 +1,8 @@
 package com.myprj.crawler.domain.crawl;
 
+import java.io.Serializable;
 import java.util.List;
 
-import com.myprj.crawler.domain.AuditData;
 import com.myprj.crawler.enumeration.CrawlStatus;
 import com.myprj.crawler.model.crawl.CrawlHistoryModel;
 
@@ -10,7 +10,7 @@ import com.myprj.crawler.model.crawl.CrawlHistoryModel;
  * @author DienNM (DEE)
  */
 
-public class CrawlHistoryData extends AuditData{
+public class CrawlHistoryData implements Serializable {
     
     private static final long serialVersionUID = 1L;
 
@@ -25,6 +25,8 @@ public class CrawlHistoryData extends AuditData{
     private long timeTaken;
     
     private CrawlStatus status;
+    
+    private String errorLinks;
     
     public CrawlHistoryData() {
     }
@@ -52,6 +54,7 @@ public class CrawlHistoryData extends AuditData{
         dest.setMessage(source.getMessage());
         dest.setStatus(source.getStatus());
         dest.setTimeTaken(source.getTimeTaken());
+        dest.setErrorLinks(source.getErrorLinks());
     }
     
     public static void toModel(CrawlHistoryData source, CrawlHistoryModel dest) {
@@ -61,6 +64,7 @@ public class CrawlHistoryData extends AuditData{
         dest.setMessage(source.getMessage());
         dest.setStatus(source.getStatus());
         dest.setTimeTaken(source.getTimeTaken());
+        dest.setErrorLinks(source.getErrorLinks());
     }
 
     public long getId() {
@@ -109,6 +113,14 @@ public class CrawlHistoryData extends AuditData{
 
     public void setTimeTaken(long timeTaken) {
         this.timeTaken = timeTaken;
+    }
+
+    public String getErrorLinks() {
+        return errorLinks;
+    }
+
+    public void setErrorLinks(String errorLinks) {
+        this.errorLinks = errorLinks;
     }
     
 }

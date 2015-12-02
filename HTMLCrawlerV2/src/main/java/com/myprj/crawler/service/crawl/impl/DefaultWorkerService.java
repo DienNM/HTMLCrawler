@@ -74,7 +74,7 @@ public class DefaultWorkerService implements WorkerService {
 
     @Override
     public void invoke(WorkerContext workerCtx, WorkerItemData workerItem) throws WorkerException {
-        switch (workerItem.getType()) {
+        switch (workerItem.getCrawlType()) {
         case LIST:
             invokeWorkerList(workerCtx, workerItem);
             break;
@@ -95,7 +95,7 @@ public class DefaultWorkerService implements WorkerService {
             ErrorLink errorLink = new ErrorLink(url);
             errorLink.setMessage(errorMessage);
             errorLink.setLevel(workerItem.getLevel());
-            errorLink.setTargetType(workerItem.getType());
+            errorLink.setCrawlType(workerItem.getCrawlType());
             workerCtx.getErrorLinks().add(errorLink);
             logger.warn(errorMessage);
         }
@@ -115,7 +115,7 @@ public class DefaultWorkerService implements WorkerService {
                 ErrorLink error = new ErrorLink(url);
                 error.setMessage(errorMessage);
                 error.setLevel(workerItem.getLevel());
-                error.setTargetType(workerItem.getType());
+                error.setCrawlType(workerItem.getCrawlType());
                 workerCtx.getErrorLinks().add(error);
                 logger.warn(errorMessage);
                 numberOfContinuousFailures++;
@@ -204,7 +204,7 @@ public class DefaultWorkerService implements WorkerService {
         result.setUrl(url);
         result.setItemId(item.getId());
         result.setCategoryId(item.getCategoryId());
-        result.getDetail().putAll(item.getItemContent().getContent());
+        result.getDetail().putAll(item.getSampleContent().getContent());
 
         collectResult4Attribute(htmlDocument, rootItemAttribute, result);
 
@@ -218,9 +218,9 @@ public class DefaultWorkerService implements WorkerService {
 
     protected void collectResult4Attribute(HtmlDocument htmlDocument, ItemAttributeData current, CrawlResultData result) {
         AttributeSelector selector = current.getSelector();
-        Object data = HandlerRegister.getHandler(current.getType()).handle(htmlDocument, selector);
+        Object data = HandlerRegister.getHandler(current.getAttribute().getType()).handle(htmlDocument, selector);
         if (data == null) {
-            logger.warn("No Data: Attribute={}, CSS-Selector={}, URL={}", current.getName(), selector.getText(),
+            logger.warn("No Data: Attribute={}, CSS-Selector={}, URL={}", current.getAttribute().getName(), selector.getText(),
                     selector.getUrl());
             return;
         }
@@ -272,7 +272,7 @@ public class DefaultWorkerService implements WorkerService {
                 ErrorLink errorLink = new ErrorLink(workerItem.getUrl());
                 errorLink.setMessage(errorMessage);
                 errorLink.setLevel(workerItem.getLevel());
-                errorLink.setTargetType(workerItem.getType());
+                errorLink.setCrawlType(workerItem.getCrawlType());
                 workerCtx.getErrorLinks().add(errorLink);
                 logger.warn(errorMessage);
             }

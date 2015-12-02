@@ -32,7 +32,7 @@ public final class ItemStructureUtil {
         rootAttribute.setName(ItemContent.ROOT);
         rootAttribute.setId(String.valueOf(item.getId()) + "|" + ItemContent.ROOT);
         
-        item.setItemContent(new ItemContent());
+        item.setSampleContent(new ItemContent());
         return build(item, rootAttribute, inputObject);
     }
     
@@ -99,7 +99,7 @@ public final class ItemStructureUtil {
         current.setParent(parent);
         current.setType(OBJECT);
 
-        Map<String, Object> parentObject = AttributeUtil.getObject(item.getItemContent(), parent.getId());
+        Map<String, Object> parentObject = AttributeUtil.getObject(item.getSampleContent(), parent.getId());
         parentObject.put(key, new HashMap<String, Object>());
 
         return build(item, current, value);
@@ -112,7 +112,7 @@ public final class ItemStructureUtil {
         current.setType(LIST);
 
 
-        Map<String, Object> parentObj = AttributeUtil.getObject(item.getItemContent(), parent.getId());
+        Map<String, Object> parentObj = AttributeUtil.getObject(item.getSampleContent(), parent.getId());
         List<Object> listValue = new ArrayList<Object>();
         parentObj.put(key, listValue);
 
@@ -135,7 +135,7 @@ public final class ItemStructureUtil {
         current.setParent(parent);
         current.setType(TEXT);
         
-        Map<String, Object> parentObj = AttributeUtil.getObject(item.getItemContent(), parent.getId());
+        Map<String, Object> parentObj = AttributeUtil.getObject(item.getSampleContent(), parent.getId());
         parentObj.put(key, EMPTY_TEXT);
         return current;
     }

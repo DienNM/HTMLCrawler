@@ -1,5 +1,8 @@
 package com.myprj.crawler.domain.config;
 
+import static com.myprj.crawler.util.Serialization.deserialize;
+import static com.myprj.crawler.util.Serialization.serialize;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,13 +19,13 @@ public class ItemData extends AuditData {
 
     private long id;
 
-    private long categoryId;
-
     private String name;
+
+    private long categoryId;
 
     private String description;
 
-    private ItemContent itemContent;
+    private ItemContent sampleContent;
 
     private ItemAttributeData rootItemAttribute;
 
@@ -54,6 +57,7 @@ public class ItemData extends AuditData {
         dest.setName(source.getName());
         dest.setDescription(source.getDescription());
         dest.setCategoryId(source.getCategoryId());
+        dest.setSampleContent(deserialize(source.getSampleContentJson(), ItemContent.class));
         toAuditData(source, dest);
     }
 
@@ -62,6 +66,7 @@ public class ItemData extends AuditData {
         dest.setName(source.getName());
         dest.setDescription(source.getDescription());
         dest.setCategoryId(source.getCategoryId());
+        dest.setSampleContentJson(serialize(source.getSampleContent()));
         toAuditModel(source, dest);
     }
 
@@ -121,11 +126,11 @@ public class ItemData extends AuditData {
         this.rootItemAttribute = rootItemAttribute;
     }
 
-    public ItemContent getItemContent() {
-        return itemContent;
+    public ItemContent getSampleContent() {
+        return sampleContent;
     }
 
-    public void setItemContent(ItemContent itemContent) {
-        this.itemContent = itemContent;
+    public void setSampleContent(ItemContent sampleontent) {
+        this.sampleContent = sampleontent;
     }
 }

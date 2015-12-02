@@ -30,10 +30,10 @@ public class Test {
         item.setId(1);
 
         AttributeData root = ItemStructureUtil.build(item, text);
-        System.out.println(item.getItemContent().getContent().toString());
+        System.out.println(item.getSampleContent().getContent().toString());
         ItemStructureUtil.print(root);
         
-        Map<String, Object> detail = item.getItemContent().getContent();
+        Map<String, Object> detail = item.getSampleContent().getContent();
         // populate
         ItemStructureUtil.populateValue2Attributes(detail, "1|content|name", "Bộ 16 son mẫu thử Aron Intrend Lipstick 5g x 16");
         ItemStructureUtil.populateValue2Attributes(detail, "1|content|price", "149.000 VND");
@@ -50,6 +50,6 @@ public class Test {
         ItemStructureUtil.populateValue2Attributes(detail, "1|content|descriptionDetails|size|detail|height", "200");
         
         System.out.println("After populate:...");
-        System.out.println(item.getItemContent().getContent().toString());
+        System.out.println(item.getSampleContent().getContent().toString());
     }
 }

@@ -36,12 +36,15 @@ public class CrawlHistoryModel implements Serializable {
     @Enumerated(EnumType.STRING)
     private CrawlStatus status;
     
+    @Column(name = "message", length = 200)
     private String message;
-    
+
+    @Column(name = "time_taken")
     private long timeTaken;
     
+    @Column(name = "error_links", length = 4000)
     private String errorLinks;
-
+    
     public long getId() {
         return id;
     }
@@ -96,6 +99,6 @@ public class CrawlHistoryModel implements Serializable {
 
     public void setErrorLinks(String errorLinks) {
         this.errorLinks = errorLinks;
-    } 
+    }
 
 }

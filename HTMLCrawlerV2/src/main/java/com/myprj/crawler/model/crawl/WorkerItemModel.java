@@ -12,7 +12,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 import com.myprj.crawler.enumeration.Level;
-import com.myprj.crawler.enumeration.WorkerItemType;
+import com.myprj.crawler.enumeration.CrawlType;
 import com.myprj.crawler.model.AuditModel;
 
 /**
@@ -24,8 +24,6 @@ public class WorkerItemModel extends AuditModel implements Comparable<WorkerItem
 
     private static final long serialVersionUID = 1L;
     
-    public static final String TABLE_NAME = "worker_item";
-
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
@@ -36,14 +34,11 @@ public class WorkerItemModel extends AuditModel implements Comparable<WorkerItem
     @Column(name = "url", length = 150)
     private String url;
 
-    @Column(name = "next_url", length = 150)
-    private String nextUrl;
-
     @Column(name = "level", length = 10)
     @Enumerated(EnumType.STRING)
     private Level level = Level0;
     
-    private WorkerItemType targetType;
+    private CrawlType crawlType;
 
     // JSON {"attribute1_id" : "@..."}
     private String cssSelectors;
@@ -67,12 +62,12 @@ public class WorkerItemModel extends AuditModel implements Comparable<WorkerItem
         this.url = url;
     }
 
-    public WorkerItemType getTargetType() {
-        return targetType;
+    public CrawlType getCrawlType() {
+        return crawlType;
     }
 
-    public void setTargetType(WorkerItemType targetType) {
-        this.targetType = targetType;
+    public void setCrawlType(CrawlType crawlType) {
+        this.crawlType = crawlType;
     }
 
     public String getCssSelectors() {
@@ -116,14 +111,6 @@ public class WorkerItemModel extends AuditModel implements Comparable<WorkerItem
 
     public void setPagingConfig(String pagingConfig) {
         this.pagingConfig = pagingConfig;
-    }
-
-    public String getNextUrl() {
-        return nextUrl;
-    }
-
-    public void setNextUrl(String nextUrl) {
-        this.nextUrl = nextUrl;
     }
 
 }

@@ -6,6 +6,6 @@ import com.myprj.crawler.model.config.AttributeModel;
  * @author DienNM (DEE)
  */
 
-public interface AttributeRepository extends GenericDao<AttributeModel, Long>{
+public interface AttributeRepository extends GenericDao<AttributeModel, String>{
     
 }

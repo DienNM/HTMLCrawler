@@ -9,7 +9,7 @@ import com.myprj.crawler.domain.AuditData;
 import com.myprj.crawler.domain.config.AttributeSelector;
 import com.myprj.crawler.domain.config.ItemData;
 import com.myprj.crawler.enumeration.Level;
-import com.myprj.crawler.enumeration.WorkerItemType;
+import com.myprj.crawler.enumeration.CrawlType;
 import com.myprj.crawler.model.crawl.WorkerItemModel;
 
 /**
@@ -26,11 +26,9 @@ public class WorkerItemData extends AuditData {
 
     private String url;
 
-    private String nextUrl;
-
     private Level level;
     
-    private WorkerItemType type;
+    private CrawlType crawlType;
     
     // For DETAIL
     private ItemData item;
@@ -63,8 +61,7 @@ public class WorkerItemData extends AuditData {
     public static void copy(WorkerItemData source, WorkerItemData dest) {
         dest.setId(source.getId());
         dest.setLevel(source.getLevel());
-        dest.setNextUrl(source.getNextUrl());
-        dest.setType(source.getType());
+        dest.setCrawlType(source.getCrawlType());
         dest.setUrl(source.getUrl());
         dest.setWorkerId(source.getWorkerId());
         dest.setPagingConfig(source.getPagingConfig());
@@ -74,8 +71,7 @@ public class WorkerItemData extends AuditData {
     public static void toData(WorkerItemModel source, WorkerItemData dest) {
         dest.setId(source.getId());
         dest.setLevel(source.getLevel());
-        dest.setNextUrl(source.getNextUrl());
-        dest.setType(source.getTargetType());
+        dest.setCrawlType(source.getCrawlType());
         dest.setUrl(source.getUrl());
         dest.setWorkerId(source.getWorkerId());
         if(source.getPagingConfig() != null) {
@@ -87,8 +83,7 @@ public class WorkerItemData extends AuditData {
     public static void toModel(WorkerItemData source, WorkerItemModel dest) {
         dest.setId(source.getId());
         dest.setLevel(source.getLevel());
-        dest.setNextUrl(source.getNextUrl());
-        dest.setTargetType(source.getType());
+        dest.setCrawlType(source.getCrawlType());
         dest.setUrl(source.getUrl());
         dest.setWorkerId(source.getWorkerId());
         if(source.getPagingConfig() != null) {
@@ -121,14 +116,6 @@ public class WorkerItemData extends AuditData {
         this.url = url;
     }
 
-    public String getNextUrl() {
-        return nextUrl;
-    }
-
-    public void setNextUrl(String nextUrl) {
-        this.nextUrl = nextUrl;
-    }
-
     public Level getLevel() {
         return level;
     }
@@ -137,12 +124,12 @@ public class WorkerItemData extends AuditData {
         this.level = level;
     }
 
-    public WorkerItemType getType() {
-        return type;
+    public CrawlType getCrawlType() {
+        return crawlType;
     }
 
-    public void setType(WorkerItemType type) {
-        this.type = type;
+    public void setCrawlType(CrawlType type) {
+        this.crawlType = type;
     }
 
     public PagingConfig getPagingConfig() {
