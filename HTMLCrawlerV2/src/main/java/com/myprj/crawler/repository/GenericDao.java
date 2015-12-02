@@ -2,6 +2,9 @@ package com.myprj.crawler.repository;
 
 import java.util.List;
 
+import com.myprj.crawler.domain.PageResult;
+import com.myprj.crawler.domain.Pageable;
+
 /**
  * @author DienNM (DEE)
  */
@@ -9,6 +12,12 @@ import java.util.List;
 public interface GenericDao<E, Id> {
     
     List<E> findAll();
+    
+    List<E> findAll(Pageable pageable);
+    
+    PageResult<E> find(Pageable pageable);
+    
+    long count();
     
     E find(Id id);
     

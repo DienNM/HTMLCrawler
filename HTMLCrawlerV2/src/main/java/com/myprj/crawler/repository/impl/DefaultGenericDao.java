@@ -6,6 +6,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
+import com.myprj.crawler.domain.PageResult;
+import com.myprj.crawler.domain.Pageable;
 import com.myprj.crawler.repository.GenericDao;
 
 /**
@@ -28,12 +30,51 @@ public abstract class DefaultGenericDao<E, Id>  implements GenericDao<E, Id> {
     
     protected abstract Class<E> getTargetClass();
     
+    @Override
+    public long count() {
+        Query query = entityManager.createQuery("Select count(*) from " + getClassName());
+        Object obj = query.getSingleResult();
+        return Long.valueOf(obj.toString());
+    }
+    
     @SuppressWarnings("unchecked")
     @Override
     public List<E> findAll() {
         Query query = entityManager.createQuery("from " + getClassName());
-        List<E> students = query.getResultList();
-        return students;
+        List<E> entities = query.getResultList();
+        return entities;
+    }
+    
+    @SuppressWarnings("unchecked")
+    @Override
+    public List<E> findAll(Pageable pageable) {
+        Query query = entityManager.createQuery("from " + getClassName());
+        query.setFirstResult(pageable.getPageIndex() *  pageable.getPageSize());
+        query.setMaxResults(pageable.getPageSize());
+        return query.getResultList();
+    }
+    
+    @SuppressWarnings("unchecked")
+    @Override
+    public PageResult<E> find(Pageable pageable) {
+        Query query = entityManager.createQuery("from " + getClassName());
+        query.setFirstResult(pageable.getPageIndex() *  pageable.getPageSize());
+        query.setMaxResults(pageable.getPageSize());
+        List<E> entities = query.getResultList();
+        
+        long totalRecords = count();
+        long totalPages = totalRecords / pageable.getPageSize();
+        if(totalRecords % pageable.getPageSize() != 0 ) {
+            totalPages += 1;
+        }
+        
+        PageResult<E> pageResult = new PageResult<>();
+        pageResult.setContent(entities);
+        pageResult.setPageable(pageable);
+        pageResult.setTotalPages(totalPages);
+        pageResult.setTotalRecords(totalRecords);
+        
+        return pageResult;
     }
 
     @Override
