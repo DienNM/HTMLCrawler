@@ -27,6 +27,8 @@ public class ItemData extends AuditData {
 
     private GlobalStatus status = ONLINE;
     
+    private ItemContent itemContent;
+    
     private ItemAttributeData rootItemAttribute;
     
     private List<AttributeData> attributes = new ArrayList<AttributeData>();
@@ -134,5 +136,13 @@ public class ItemData extends AuditData {
 
     public void setRootItemAttribute(ItemAttributeData rootItemAttribute) {
         this.rootItemAttribute = rootItemAttribute;
+    }
+
+    public ItemContent getItemContent() {
+        return itemContent;
+    }
+
+    public void setItemContent(ItemContent itemContent) {
+        this.itemContent = itemContent;
     }
 }

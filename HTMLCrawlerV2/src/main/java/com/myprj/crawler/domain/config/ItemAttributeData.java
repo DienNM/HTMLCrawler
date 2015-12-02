@@ -1,10 +1,7 @@
 package com.myprj.crawler.domain.config;
 
 import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.regex.Pattern;
 
 import com.myprj.crawler.domain.AuditData;
 import com.myprj.crawler.enumeration.AttributeType;
@@ -26,22 +23,14 @@ public class ItemAttributeData extends AuditData {
     
     private AttributeType type;
     
+    private AttributeSelector selector;
+    
     private ItemAttributeData parent;
+    
     
     private List<ItemAttributeData> children = new ArrayList<ItemAttributeData>();
     
-    private AttributeSelector attributeSelector;
-    
     public ItemAttributeData() {
-    }
-    
-    public Iterator<String> parseAttributeNamesFromId() {
-        List<String> names = new LinkedList<String>();
-        String[] attNames = id.split(Pattern.quote("|"));
-        for(String attName : attNames) {
-            names.add(attName);
-        }
-        return  names.iterator();
     }
     
     public static void toDatas(List<AttributeModel> sources, List<ItemAttributeData> dests) {
@@ -126,11 +115,11 @@ public class ItemAttributeData extends AuditData {
         this.children = children;
     }
 
-    public AttributeSelector getAttributeSelector() {
-        return attributeSelector;
+    public AttributeSelector getSelector() {
+        return selector;
     }
 
-    public void setAttributeSelector(AttributeSelector attributeSelector) {
-        this.attributeSelector = attributeSelector;
+    public void setSelector(AttributeSelector selector) {
+        this.selector = selector;
     }
 }

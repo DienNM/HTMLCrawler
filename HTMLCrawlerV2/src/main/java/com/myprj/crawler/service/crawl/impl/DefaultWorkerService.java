@@ -42,7 +42,7 @@ import com.myprj.crawler.util.HtmlDownloader;
  * @author DienNM (DEE)
  */
 @Service
-public abstract class DefaultWorkerService implements WorkerService {
+public class DefaultWorkerService implements WorkerService {
 
     private final Logger logger = LoggerFactory.getLogger(DefaultWorkerService.class);
 
@@ -215,7 +215,7 @@ public abstract class DefaultWorkerService implements WorkerService {
     }
 
     protected void collectResult4Attribute(HtmlDocument htmlDocument, ItemAttributeData current, CrawlResultData result) {
-        AttributeSelector selector = current.getAttributeSelector();
+        AttributeSelector selector = current.getSelector();
         Object data = HandlerRegister.getHandler(current.getType()).handle(htmlDocument, selector);
         if (data == null) {
             logger.warn("No Data: Attribute={}, CSS-Selector={}, URL={}", current.getName(), selector.getText(),

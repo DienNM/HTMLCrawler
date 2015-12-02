@@ -1,10 +1,8 @@
 package com.myprj.crawler.client;
 
-import java.util.Map;
-
 import com.myprj.crawler.domain.config.AttributeData;
+import com.myprj.crawler.domain.config.ItemData;
 import com.myprj.crawler.service.impl.DefaultItemStructureBuilder;
-import com.myprj.crawler.util.Serialization;
 
 /**
  * @author DienNM (DEE)
@@ -13,12 +11,26 @@ import com.myprj.crawler.util.Serialization;
 public class Test {
 
     public static void main(String[] args) {
-        String text = "{\"name\":\"\",\"price\":\"\",\"originalPrice\":\"\",\"specifications\":[\"\"],\"includedInBox\":[\"\"],\"descriptionDetails\":{\"brand\" : \"\",\"gender\" : \"\",\"size\" : {\"large\" : [\"\"],\"medium\" : [\"\"]}}}";
-        Map<String, Object> map = Serialization.deserialize(text, Map.class);
-        DefaultItemStructureBuilder a = new DefaultItemStructureBuilder();
-        AttributeData root = a.build(1, text);
-        a.print(root);
+        String text = "{\"name\":\"\",\"price\":\"\", \"originalPrice\":\"\","
+                + "\"includedInBox\":[\"\"],"
+                + "\"specifications\":[{ \"att1\": \"\"}],"
+                + "\"descriptionDetails\":{"
+                        + "\"brand\" : \"\","
+                        + "\"size\" : {"
+                            + "\"large\" : [],"
+                            + "\"medium\" : \"\", "
+                            + "\"detail\" : {"
+                                + "\"width\" : \"\", "
+                                + "\"height\":\"\""
+                            + "}}}}";
+        
+        DefaultItemStructureBuilder builder = new DefaultItemStructureBuilder();
+        ItemData item = new ItemData();
+        item.setId(1);
+
+        AttributeData root = builder.build(item, text);
+        System.out.println(item.getItemContent().getContent().toString());
+        builder.print(root);
     }
-    
 
 }

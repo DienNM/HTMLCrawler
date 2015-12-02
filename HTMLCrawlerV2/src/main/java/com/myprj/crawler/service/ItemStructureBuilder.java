@@ -1,6 +1,7 @@
 package com.myprj.crawler.service;
 
 import com.myprj.crawler.domain.config.AttributeData;
+import com.myprj.crawler.domain.config.ItemData;
 
 /**
  * @author DienNM (DEE)
@@ -8,7 +9,7 @@ import com.myprj.crawler.domain.config.AttributeData;
 
 public interface ItemStructureBuilder {
     
-    AttributeData build(long itemId, String jsonText);
+    AttributeData build(ItemData item, String jsonText);
     
     void print(AttributeData root);
     

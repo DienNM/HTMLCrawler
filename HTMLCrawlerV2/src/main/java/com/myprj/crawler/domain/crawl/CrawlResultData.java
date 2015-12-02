@@ -11,6 +11,7 @@ import com.myprj.crawler.domain.AuditData;
 import com.myprj.crawler.domain.config.ItemAttributeData;
 import com.myprj.crawler.enumeration.ResultStatus;
 import com.myprj.crawler.model.crawl.ResultModel;
+import com.myprj.crawler.util.AttributeUtil;
 
 /**
  * @author DienNM (DEE)
@@ -39,7 +40,7 @@ public class CrawlResultData extends AuditData {
         Map<String, Object> detail = result.getDetail();
         
         // 1|detail|size|large
-        Iterator<String> attNames = attribute.parseAttributeNamesFromId();
+        Iterator<String> attNames = AttributeUtil.parseAttributeNames(attribute.getId());
         if(attNames.hasNext()) {
             populate(detail, attNames, value);
         }

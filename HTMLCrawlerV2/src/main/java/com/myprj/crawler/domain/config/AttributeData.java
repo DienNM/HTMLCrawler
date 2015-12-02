@@ -28,6 +28,7 @@ public class AttributeData extends AuditData{
     private List<AttributeData> children = new ArrayList<AttributeData>();
     
     public AttributeData() {
+        
     }
     
     public static void toDatas(List<AttributeModel> sources, List<AttributeData> dests) {
