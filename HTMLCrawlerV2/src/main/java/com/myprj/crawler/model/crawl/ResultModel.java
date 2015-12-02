@@ -1,7 +1,13 @@
 package com.myprj.crawler.model.crawl;
 
-import java.util.HashMap;
-import java.util.Map;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
 import com.myprj.crawler.enumeration.ResultStatus;
 import com.myprj.crawler.model.AuditModel;
@@ -9,24 +15,33 @@ import com.myprj.crawler.model.AuditModel;
 /**
  * @author DienNM (DEE)
  */
-
-public class CrawlResultModel extends AuditModel {
+@Entity
+@Table(name = "crawl_result")
+public class ResultModel extends AuditModel {
 
     private static final long serialVersionUID = 1L;
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
+    @Column(name = "category_id")
     private long categoryId;
 
+    @Column(name = "item_id")
     private long itemId;
-
-    private Map<String, Object> detail = new HashMap<String, Object>();
-
-    private ResultStatus status = ResultStatus.MISSING;
     
+    @Column(name = "detail")
+    private String detail;
+
+    @Column(name = "status")
+    @Enumerated(EnumType.STRING)
+    private ResultStatus status;
+    
+    @Column(name = "url")
     private String url;
 
-    public CrawlResultModel() {
+    public ResultModel() {
     }
 
     public long getId() {
@@ -53,11 +68,11 @@ public class CrawlResultModel extends AuditModel {
         this.itemId = itemId;
     }
 
-    public Map<String, Object> getDetail() {
+    public String getDetail() {
         return detail;
     }
 
-    public void setDetail(Map<String, Object> detail) {
+    public void setDetail(String detail) {
         this.detail = detail;
     }
 

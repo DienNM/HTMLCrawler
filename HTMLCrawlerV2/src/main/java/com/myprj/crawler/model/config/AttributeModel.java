@@ -21,8 +21,6 @@ public class AttributeModel extends AuditModel {
 
     private static final long serialVersionUID = 1L;
     
-    public static final String TABLE_NAME = "item_attribute";
-    
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;

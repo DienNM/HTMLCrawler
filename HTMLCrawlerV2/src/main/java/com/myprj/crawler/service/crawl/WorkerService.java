@@ -1,10 +1,10 @@
 package com.myprj.crawler.service.crawl;
 
-import com.myprj.crawler.domain.WorkerContext;
+import com.myprj.crawler.domain.crawl.WorkerContext;
+import com.myprj.crawler.domain.crawl.WorkerData;
+import com.myprj.crawler.domain.crawl.WorkerItemData;
 import com.myprj.crawler.exception.WorkerException;
-import com.myprj.crawler.model.crawl.WorkerItemModel;
-import com.myprj.crawler.service.cache.AttributeCacheService;
-import com.myprj.crawler.service.event.CrawlEventPublisher;
+import com.myprj.crawler.model.crawl.WorkerModel;
 
 /**
  * @author DienNM (DEE)
@@ -12,9 +12,10 @@ import com.myprj.crawler.service.event.CrawlEventPublisher;
 
 public interface WorkerService {
 
-    void doCrawl(WorkerContext workerCtx, WorkerItemModel workerItem) throws WorkerException;
+    WorkerModel save(WorkerData worker);
     
-    void setAttributeCacheService(AttributeCacheService attributeCacheService);
+    void update(WorkerData worker);
     
-    void setCrawlEventPublisher(CrawlEventPublisher crawlEventPublisher);
+    void invoke(WorkerContext workerCtx, WorkerItemData workerItem) throws WorkerException;
+    
 }

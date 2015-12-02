@@ -1,11 +1,10 @@
 package com.myprj.crawler.service.crawl.impl;
 
 import static com.myprj.crawler.enumeration.Level.Level0;
-import static com.myprj.crawler.util.Serialization.deserialize;
 
+import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 
@@ -15,22 +14,24 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.myprj.crawler.domain.HtmlDocument;
-import com.myprj.crawler.domain.WorkerContext;
-import com.myprj.crawler.domain.worker.CssSelector;
+import com.myprj.crawler.domain.config.AttributeSelector;
+import com.myprj.crawler.domain.config.ItemAttributeData;
+import com.myprj.crawler.domain.config.ItemData;
+import com.myprj.crawler.domain.crawl.CrawlResultData;
+import com.myprj.crawler.domain.crawl.PagingConfig;
+import com.myprj.crawler.domain.crawl.WorkerContext;
+import com.myprj.crawler.domain.crawl.WorkerData;
+import com.myprj.crawler.domain.crawl.WorkerItemData;
 import com.myprj.crawler.domain.worker.ErrorLink;
-import com.myprj.crawler.domain.worker.ListWorkerTargetParameter;
-import com.myprj.crawler.domain.worker.WorkerItemConfig;
 import com.myprj.crawler.enumeration.ResultStatus;
-import com.myprj.crawler.enumeration.WorkerItemTargetType;
 import com.myprj.crawler.exception.WorkerException;
-import com.myprj.crawler.model.config.AttributeModel;
-import com.myprj.crawler.model.crawl.CrawlResultModel;
-import com.myprj.crawler.model.crawl.WorkerItemModel;
 import com.myprj.crawler.model.crawl.WorkerModel;
-import com.myprj.crawler.service.cache.AttributeCacheService;
+import com.myprj.crawler.repository.WorkerRepository;
 import com.myprj.crawler.service.crawl.WorkerService;
 import com.myprj.crawler.service.event.CrawlEventPublisher;
 import com.myprj.crawler.service.event.impl.CrawlDetailCompletedEvent;
@@ -45,57 +46,141 @@ public abstract class DefaultWorkerService implements WorkerService {
 
     private final Logger logger = LoggerFactory.getLogger(DefaultWorkerService.class);
 
-    private AttributeCacheService attributeCacheService;
+    @Autowired
+    protected CrawlEventPublisher crawlEventPublisher;
 
-    private CrawlEventPublisher crawlEventPublisher;
-    
+    @Autowired
+    private WorkerRepository workerRepository;
+
     @Override
-    public void doCrawl(WorkerContext workerCtx, WorkerItemModel workerItem) throws WorkerException {
-        switch (workerItem.getTargetType()) {
+    @Transactional
+    public WorkerModel save(WorkerData worker) {
+        WorkerModel workerModel = new WorkerModel();
+        WorkerData.toModel(worker, workerModel);
+        workerRepository.save(workerModel);
+        return workerModel;
+    }
+
+    @Override
+    public void update(WorkerData worker) {
+        WorkerModel workerModel = workerRepository.find(worker.getId());
+        if (workerModel == null) {
+            throw new InvalidParameterException("Cannot find worker: " + worker.getId());
+        }
+        WorkerData.toModel(worker, workerModel);
+        workerRepository.update(workerModel);
+    }
+
+    @Override
+    public void invoke(WorkerContext workerCtx, WorkerItemData workerItem) throws WorkerException {
+        switch (workerItem.getType()) {
         case LIST:
-            doWorkOnWorkerItemList(workerCtx, workerItem);
-            break;
-        case NAVIGATION:
-            doWorkOnWorkerItemList(workerCtx, workerItem);
+            invokeWorkerList(workerCtx, workerItem);
             break;
         case DETAIL:
-            doWorkOnWorkerItemDetail(workerCtx, workerItem);
+            invokeWorkerDetail(workerCtx, workerItem);
             break;
         default:
             throw new WorkerException("Worker Item target has not determined");
         }
     }
-    
-    protected abstract void doWorkOnWorkerItemList(WorkerContext workerCtx, WorkerItemModel workerItem) throws WorkerException;
-    
-    protected void processListItemsPerPage(WorkerContext workerCtx, WorkerItemModel workerItem,
-            ListWorkerTargetParameter workerTarget, Elements elements, CssSelector cssSelector) throws WorkerException {
+
+    protected void invokeWorkerDetail(WorkerContext workerCtx, WorkerItemData workerItem) throws WorkerException {
+        WorkerData worker = workerCtx.getWorker();
+        String url = getURL(workerItem.getUrl());
+        Document document = HtmlDownloader.download(url, worker.getDelayTime(), worker.getAttemptTimes());
+        if (!isDownloadSuccess(document)) {
+            String errorMessage = "Cannot download HTML from " + url;
+            ErrorLink errorLink = new ErrorLink(url);
+            errorLink.setMessage(errorMessage);
+            errorLink.setLevel(workerItem.getLevel());
+            errorLink.setTargetType(workerItem.getType());
+            workerCtx.getErrorLinks().add(errorLink);
+            logger.warn(errorMessage);
+        }
+        HtmlDocument htmlDocument = new HtmlDocument(document);
+        processWorkerDetail(url, htmlDocument, workerItem);
+    }
+
+    protected void invokeWorkerList(WorkerContext workerCtx, WorkerItemData workerItem) throws WorkerException {
+        List<String> urls = getURLs(workerItem.getPagingConfig(), workerItem.getUrl());
+        int numberOfContinuousFailures = 0;
+        for (String url : urls) {
+            logger.info("Start crawling: {}", url);
+            WorkerData worker = workerCtx.getWorker();
+            Document document = HtmlDownloader.download(url, worker.getDelayTime(), worker.getAttemptTimes());
+            if (!isDownloadSuccess(document)) {
+                String errorMessage = "Cannot download HTML from " + url;
+                ErrorLink error = new ErrorLink(url);
+                error.setMessage(errorMessage);
+                error.setLevel(workerItem.getLevel());
+                error.setTargetType(workerItem.getType());
+                workerCtx.getErrorLinks().add(error);
+                logger.warn(errorMessage);
+                numberOfContinuousFailures++;
+                if (numberOfContinuousFailures > 2) {
+                    return;
+                }
+                continue;
+            }
+            numberOfContinuousFailures = 0; // Reset
+
+            AttributeSelector linkSelector = workerItem.getLinkSelector();
+            Elements elements = document.body().select(linkSelector.getSelector());
+            if (elements == null) {
+                logger.warn("No Data. CSS-Selector={}, URL={}", linkSelector, url);
+                continue;
+            }
+            processListItemsPerPage(workerCtx, workerItem, elements);
+            logger.info("End crawling: {}", url);
+        }
+    }
+
+    protected List<String> getURLs(PagingConfig workerTarget, String url) {
+        int fromPage = Integer.valueOf(workerTarget.getStart());
+        int toPage = Integer.valueOf(workerTarget.getEnd());
+        List<String> urls = new ArrayList<String>();
+        String updatedURLPagingFormat = updateURLPagingFormat(url);
+        for (int page = fromPage; page <= toPage; page++) {
+            String formatedURLPaging = formatURLPaging(updatedURLPagingFormat, String.valueOf(page));
+            urls.add(formatedURLPaging);
+        }
+        return urls;
+    }
+
+    protected void processListItemsPerPage(WorkerContext workerCtx, WorkerItemData workerItem, Elements elements)
+            throws WorkerException {
+        AttributeSelector linkSelector = workerItem.getLinkSelector();
         List<Future<Object>> futureItems = new ArrayList<Future<Object>>();
         for (Element element : elements) {
             String nextLevelLink = null;
-            if(StringUtils.isEmpty(cssSelector.getTargetAttribute())) {
-                nextLevelLink = element.attr("href");
-            } else {
-                nextLevelLink = element.attr(cssSelector.getTargetAttribute());
+            String attribute = "href";
+            if (!StringUtils.isEmpty(linkSelector.getTargetAttribute())) {
+                attribute = linkSelector.getTargetAttribute();
             }
-            
-            if (!isValidLinkOfListTargetItem(nextLevelLink)) {
+            nextLevelLink = element.attr(attribute);
+            if (!isValidLink(nextLevelLink)) {
+                logger.warn("Invalid Link: {}. Level={}, CSS-Selector={}", nextLevelLink, workerItem.getLevel(),
+                        linkSelector.getText());
                 continue;
             }
-            WorkerItemModel nextWorkItems = workerCtx.nextWorkerItem(workerItem);
-            if (nextWorkItems == null) {
-                logger.error("Cannot go to the next level of " + workerItem.getId());
+            WorkerItemData nextWorkerItem = workerCtx.nextWorkerItem(workerItem);
+            if (nextWorkerItem == null) {
+                logger.warn("Worker Item: {} [Level={}] cannot go next level. Link={}", workerItem.getId(),
+                        workerItem.getLevel(), nextLevelLink);
                 continue;
             }
 
-            WorkerItemModel newWorkerItem = createNewWorkerItem(nextWorkItems);
-            newWorkerItem.setUrl(nextLevelLink);
-            
-            if(Level0.equals(workerItem.getLevel())) {
-                futureItems.add(workerCtx.getExecutorService().submit(new CrawlerJob(workerCtx, newWorkerItem)));
+            WorkerItemData newItem = new WorkerItemData();
+            WorkerItemData.copy(nextWorkerItem, newItem);
+            newItem.setUrl(nextLevelLink);
+
+            if (Level0.equals(workerItem.getLevel())) {
+                futureItems.add(workerCtx.getExecutorService().submit(new CrawlerJob(workerCtx, newItem)));
             } else {
-                doCrawl(workerCtx, workerItem);
+                invoke(workerCtx, workerItem);
             }
+
         }
         waitForCompleteThreads(futureItems);
     }
@@ -109,80 +194,57 @@ public abstract class DefaultWorkerService implements WorkerService {
             }
         }
     }
-    
-    protected void doWorkOnWorkerItemDetail(WorkerContext workerCtx, WorkerItemModel workerItem) throws WorkerException {
-        WorkerModel worker = workerCtx.getWorker();
-        String url = updateUrlBeforeCrawling(workerItem.getUrl());
 
-        Document document = HtmlDownloader.download(url, worker.getDelayTime(), worker.getAttemptTimes());
-        if (!isDownloadSuccess(document)) {
-            String errorMessage = "Cannot download HTML from " + url;
-            ErrorLink errorLink = new ErrorLink(url);
-            errorLink.setMessage(errorMessage);
-            errorLink.setLevel(workerItem.getLevel());
-            errorLink.setTargetType(WorkerItemTargetType.DETAIL);
-            workerCtx.getErrorLinks().add(errorLink);
-            logger.warn(errorMessage);
-        }
-        HtmlDocument htmlDocument = new HtmlDocument(document);
-        collectionDetail(url, htmlDocument, workerItem);
-    }
-    
-    protected void collectionDetail(String url, HtmlDocument htmlDocument, WorkerItemModel workerItem) {
-        WorkerItemConfig workerItemConfig = deserialize(workerItem.getcssSelectors(), WorkerItemConfig.class);
+    protected void processWorkerDetail(String url, HtmlDocument htmlDocument, WorkerItemData workerItem) {
+        ItemData item = workerItem.getItem();
+        ItemAttributeData rootItemAttribute = item.getRootItemAttribute();
 
-        CrawlResultModel crawlResult = new CrawlResultModel();
-        crawlResult.setUrl(url);
-        
-        crawlResult.setCategoryId(workerItemConfig.getCategoryId());
-        crawlResult.setItemId(workerItemConfig.getItemId());
+        CrawlResultData result = new CrawlResultData();
+        result.setUrl(url);
+        result.setItemId(item.getId());
+        result.setCategoryId(item.getCategoryId());
 
-        Map<Long, String> attributesCssSelectors = workerItemConfig.getAttributesCssSelectors();
-        Map<Long, AttributeModel> allAttributes = attributeCacheService.findAll(workerItemConfig.getItemId());
+        collectResult4Attribute(htmlDocument, rootItemAttribute, result);
 
-        for (Long attId : attributesCssSelectors.keySet()) {
-            AttributeModel attribute = allAttributes.get(attId);
-            if (attribute == null) {
-                continue;
-            }
-            String cssText = attributesCssSelectors.get(attId);
-            CssSelector cssSelector = new CssSelector(cssText);
-            Object data = HandlerRegister.getHandler(attribute.getType()).handle(htmlDocument, cssSelector);
-            if (data == null) {
-                logger.warn("No Data. Attribute: {}, CSS-Selector: {}, URL: {}", attribute.getName(), cssText, url);
-            }
-            crawlResult.getDetail().put(attribute.getName(), data);
-        }
-        if(crawlResult.getDetail().isEmpty()) {
-            crawlResult.setStatus(ResultStatus.MISSING);
+        if (result.getDetail().isEmpty()) {
+            result.setStatus(ResultStatus.MISSING);
         } else {
-            crawlResult.setStatus(ResultStatus.COMPLETED);
+            result.setStatus(ResultStatus.COMPLETED);
         }
-        crawlEventPublisher.publish(new CrawlDetailCompletedEvent(crawlResult));
+        crawlEventPublisher.publish(new CrawlDetailCompletedEvent(result));
     }
 
-    protected WorkerItemModel createNewWorkerItem(WorkerItemModel current) {
-        WorkerItemModel newItem = new WorkerItemModel();
-        newItem.setId(current.getId());
-        newItem.setCssSelectors(current.getcssSelectors());
-        newItem.setLevel(current.getLevel());
-        newItem.setNextUrl(current.getNextUrl());
-        newItem.setTargetType(current.getTargetType());
-        newItem.setUrl(current.getUrl());
-        newItem.setPagingConfig(current.getPagingConfig());
-        return newItem;
+    protected void collectResult4Attribute(HtmlDocument htmlDocument, ItemAttributeData current, CrawlResultData result) {
+        AttributeSelector selector = current.getAttributeSelector();
+        Object data = HandlerRegister.getHandler(current.getType()).handle(htmlDocument, selector);
+        if (data == null) {
+            logger.warn("No Data: Attribute={}, CSS-Selector={}, URL={}", current.getName(), selector.getText(),
+                    selector.getUrl());
+            return;
+        }
+        CrawlResultData.populate(result, current, data);
+        List<ItemAttributeData> children = current.getChildren();
+        if (!children.isEmpty()) {
+            for (ItemAttributeData child : children) {
+                collectResult4Attribute(htmlDocument, child, result);
+            }
+        }
     }
-    
-    protected String updateUrlFormat(String url) {
+
+    protected String getURL(String url) {
         return url;
     }
 
-    protected boolean isValidLinkOfListTargetItem(String url) {
+    protected String updateURLPagingFormat(String url) {
+        return url;
+    }
+
+    protected String formatURLPaging(String url, String page) {
+        return String.format(url, page);
+    }
+
+    protected boolean isValidLink(String url) {
         return url != null && url.startsWith("http://");
-    }
-
-    protected String updateUrlBeforeCrawling(String url) {
-        return url;
     }
 
     protected boolean isDownloadSuccess(Document document) {
@@ -192,9 +254,9 @@ public abstract class DefaultWorkerService implements WorkerService {
     class CrawlerJob implements Callable<Object> {
 
         private WorkerContext workerCtx;
-        private WorkerItemModel workerItem;
+        private WorkerItemData workerItem;
 
-        public CrawlerJob(WorkerContext workerCtx, WorkerItemModel workerItem) {
+        public CrawlerJob(WorkerContext workerCtx, WorkerItemData workerItem) {
             this.workerCtx = workerCtx;
             this.workerItem = workerItem;
         }
@@ -202,32 +264,17 @@ public abstract class DefaultWorkerService implements WorkerService {
         @Override
         public Object call() throws Exception {
             try {
-                doCrawl(workerCtx, workerItem);
+                invoke(workerCtx, workerItem);
             } catch (Exception e) {
                 String errorMessage = String.format("Error: URL=%s, Message=%s", workerItem.getUrl(), e.getMessage());
                 ErrorLink errorLink = new ErrorLink(workerItem.getUrl());
                 errorLink.setMessage(errorMessage);
                 errorLink.setLevel(workerItem.getLevel());
-                errorLink.setTargetType(workerItem.getTargetType());
+                errorLink.setTargetType(workerItem.getType());
                 workerCtx.getErrorLinks().add(errorLink);
                 logger.warn(errorMessage);
             }
             return null;
         }
     }
-
-    @Override
-    public void setAttributeCacheService(AttributeCacheService attributeCacheService) {
-        this.attributeCacheService = attributeCacheService;
-    }
-
-    @Override
-    public void setCrawlEventPublisher(CrawlEventPublisher crawlEventPublisher) {
-        this.crawlEventPublisher = crawlEventPublisher;
-    }
-
-    public AttributeCacheService getAttributeCacheService() {
-        return attributeCacheService;
-    }
-
 }

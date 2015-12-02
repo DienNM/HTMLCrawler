@@ -1,4 +1,4 @@
-package com.myprj.crawler.domain;
+package com.myprj.crawler.domain.crawl;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -8,50 +8,53 @@ import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import com.myprj.crawler.domain.ProxyTracer;
 import com.myprj.crawler.domain.worker.ErrorLink;
 import com.myprj.crawler.enumeration.Level;
-import com.myprj.crawler.model.crawl.WorkerItemModel;
-import com.myprj.crawler.model.crawl.WorkerModel;
 
 /**
  * @author DienNM (DEE)
  */
 
-public class WorkerContext implements Serializable{
-    
+public class WorkerContext implements Serializable {
+
     private static final long serialVersionUID = 1L;
-    
+
     private ExecutorService executorService;
-    
-    private WorkerModel worker;
-    
-    private Map<Level, WorkerItemModel> workerItems = new HashMap<Level, WorkerItemModel>();
-    
-    private List<ErrorLink> errorLinks = new ArrayList<ErrorLink>(); 
-    
+
+    private WorkerData worker;
+
+    private Map<Level, WorkerItemData> workerItems = new HashMap<Level, WorkerItemData>();
+
+    private List<ErrorLink> errorLinks = new ArrayList<ErrorLink>();
+
     private ProxyTracer proxyTracer;
-    
-    public WorkerContext(WorkerModel worker) {
+
+    public WorkerContext(WorkerData worker) {
         this.worker = worker;
-        for(WorkerItemModel workerItem : worker.getWorkerItems()) {
+        for (WorkerItemData workerItem : worker.getWorkerItems()) {
             workerItems.put(workerItem.getLevel(), workerItem);
         }
         executorService = Executors.newFixedThreadPool(worker.getThreads());
     }
-    
+
     public void destroyWorker() {
-        if(executorService == null || executorService.isShutdown()) {
+        if (executorService == null || executorService.isShutdown()) {
             return;
         }
         executorService.shutdown();
     }
     
-    public WorkerItemModel nextWorkerItem(WorkerItemModel workerItemModel) {
-        Level nextLevel = Level.goNextLevel(workerItemModel.getLevel());
-        if(nextLevel == null) {
+    public WorkerItemData getRootWorkerItem() {
+        return workerItems.get(Level.Level0);
+    }
+
+    public WorkerItemData nextWorkerItem(WorkerItemData workerItemData) {
+        Level nextLevel = Level.goNextLevel(workerItemData.getLevel());
+        if (nextLevel == null) {
             return null;
         }
-        
+
         return workerItems.get(nextLevel);
     }
 
@@ -63,11 +66,11 @@ public class WorkerContext implements Serializable{
         this.executorService = executorService;
     }
 
-    public WorkerModel getWorker() {
+    public WorkerData getWorker() {
         return worker;
     }
 
-    public void setWorker(WorkerModel worker) {
+    public void setWorker(WorkerData worker) {
         this.worker = worker;
     }
 
@@ -78,12 +81,12 @@ public class WorkerContext implements Serializable{
     public void setProxyTracer(ProxyTracer proxyTracer) {
         this.proxyTracer = proxyTracer;
     }
-    
-    public Map<Level, WorkerItemModel> getWorkerItems() {
+
+    public Map<Level, WorkerItemData> getWorkerItems() {
         return workerItems;
     }
-    
-    public void setWorkerItems(Map<Level, WorkerItemModel> workerItems) {
+
+    public void setWorkerItems(Map<Level, WorkerItemData> workerItems) {
         this.workerItems = workerItems;
     }
 

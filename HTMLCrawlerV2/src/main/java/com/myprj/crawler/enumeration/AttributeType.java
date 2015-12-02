@@ -8,7 +8,7 @@ public enum AttributeType {
     
     TEXT,
     HTML,
-    NUMBER,
     LIST,
-    LINK
+    LINK,
+    OBJECT
 }

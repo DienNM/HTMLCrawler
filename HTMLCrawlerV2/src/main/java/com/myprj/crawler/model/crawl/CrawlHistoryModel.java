@@ -22,8 +22,6 @@ public class CrawlHistoryModel implements Serializable {
 
     private static final long serialVersionUID = 1L;
     
-    public static final String TABLE_NAME = "crawl_history";
-    
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
@@ -39,6 +37,10 @@ public class CrawlHistoryModel implements Serializable {
     private CrawlStatus status = CrawlStatus.Created;
     
     private String message;
+    
+    private long timeTaken;
+    
+    private String errorLinks;
 
     public long getId() {
         return id;
@@ -78,6 +80,22 @@ public class CrawlHistoryModel implements Serializable {
 
     public void setEolDate(long eolDate) {
         this.eolDate = eolDate;
+    }
+
+    public long getTimeTaken() {
+        return timeTaken;
+    }
+
+    public void setTimeTaken(long timeTaken) {
+        this.timeTaken = timeTaken;
+    }
+
+    public String getErrorLinks() {
+        return errorLinks;
+    }
+
+    public void setErrorLinks(String errorLinks) {
+        this.errorLinks = errorLinks;
     } 
 
 }

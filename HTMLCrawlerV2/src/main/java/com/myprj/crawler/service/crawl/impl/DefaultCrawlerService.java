@@ -1,57 +1,51 @@
 package com.myprj.crawler.service.crawl.impl;
 
+import static com.myprj.crawler.util.Serialization.serialize;
+
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-import com.myprj.crawler.domain.WorkerContext;
-import com.myprj.crawler.domain.worker.ErrorLink;
+import com.myprj.crawler.domain.crawl.WorkerContext;
+import com.myprj.crawler.domain.crawl.WorkerData;
 import com.myprj.crawler.enumeration.CrawlStatus;
 import com.myprj.crawler.enumeration.WorkerStatus;
 import com.myprj.crawler.exception.CrawlerException;
 import com.myprj.crawler.exception.WorkerException;
 import com.myprj.crawler.model.crawl.CrawlHistoryModel;
-import com.myprj.crawler.model.crawl.WorkerItemModel;
-import com.myprj.crawler.model.crawl.WorkerModel;
 import com.myprj.crawler.repository.CrawlHistoryRepository;
-import com.myprj.crawler.repository.WorkerRepository;
 import com.myprj.crawler.service.crawl.CrawlerService;
 import com.myprj.crawler.service.crawl.WorkerService;
 
 /**
  * @author DienNM (DEE)
  */
-
+@Service("defaultCrawlerService")
 public class DefaultCrawlerService implements CrawlerService {
 
     private Logger logger = LoggerFactory.getLogger(DefaultCrawlerService.class);
 
     private static Map<Long, WorkerContext> workerContextCache = new HashMap<Long, WorkerContext>();
 
+    @Autowired
     private WorkerService workerService;
 
+    @Autowired
     private CrawlHistoryRepository crawlHistoryRepository;
-    
-    private WorkerRepository workerRepository;
 
     @Override
     public void crawl(long workerId) throws CrawlerException {
-        
         WorkerContext workerCtx = pickupWorkerContext(workerId);
-        WorkerModel worker = workerCtx.getWorker();
-        
+        WorkerData worker = workerCtx.getWorker();
         worker.setStatus(WorkerStatus.Running);
-        workerRepository.update(worker);
-        
-        logger.info("Worker {} [Id={}] starts crawling...", worker.getName(), worker.getId());
+        workerService.update(worker);
 
-        List<WorkerItemModel> workerItems = worker.getWorkerItems();
-        Collections.sort(workerItems);
+        logger.info("Worker {} [Id={}] starts crawling...", worker.getName(), worker.getId());
 
         CrawlHistoryModel crawlHistory = new CrawlHistoryModel();
         crawlHistory.setWorkerId(worker.getId());
@@ -60,7 +54,7 @@ public class DefaultCrawlerService implements CrawlerService {
 
         long starttime = Calendar.getInstance().getTimeInMillis();
         try {
-            workerService.doCrawl(workerCtx, workerItems.get(0));
+            workerService.invoke(workerCtx, workerCtx.getRootWorkerItem());
             crawlHistory.setStatus(CrawlStatus.Done);
             worker.setStatus(WorkerStatus.Done);
         } catch (WorkerException e) {
@@ -68,23 +62,19 @@ public class DefaultCrawlerService implements CrawlerService {
             worker.setStatus(WorkerStatus.Error);
             crawlHistory.setMessage(e.getMessage());
         } finally {
-            destroy(worker);
+            long took = (Calendar.getInstance().getTimeInMillis() - starttime) / 1000;
+            crawlHistory.setTimeTaken(took);
+            crawlHistory.setErrorLinks(serialize(workerCtx.getErrorLinks()));
 
-            worker.setUpdatedAt(Calendar.getInstance().getTimeInMillis());
-            workerRepository.update(worker);
+            workerService.update(worker);
             crawlHistoryRepository.save(crawlHistory);
-            long endtime = Calendar.getInstance().getTimeInMillis();
-            logger.info("Worker {} [Id={}] stops crawling. Took: {} second(s)", worker.getName(), worker.getId(),
-                    (endtime - starttime) / 1000);
-            
-            logger.error("All Error Links: ");
-            for(ErrorLink errorLink : workerCtx.getErrorLinks()) {
-                logger.error(errorLink.toString());
-            }
+
+            destroy(worker);
+            logger.info("Worker {} [Id={}] stops crawling. Took: {} second(s)", worker.getName(), worker.getId(), took);
         }
     }
-    
-    private synchronized WorkerContext pickupWorkerContext(long workerId) throws CrawlerException{
+
+    private synchronized WorkerContext pickupWorkerContext(long workerId) throws CrawlerException {
         WorkerContext workerCtx = workerContextCache.get(workerId);
         if (workerCtx == null) {
             throw new CrawlerException(String.format("Worker ID=%s has not registered yet", workerId));
@@ -93,7 +83,7 @@ public class DefaultCrawlerService implements CrawlerService {
     }
 
     @Override
-    public synchronized void init(WorkerModel worker) throws CrawlerException {
+    public synchronized void init(WorkerData worker) throws CrawlerException {
         WorkerContext workerCtx = workerContextCache.get(worker.getId());
         if (workerCtx == null || WorkerStatus.Created.equals(workerCtx.getWorker().getStatus())) {
             workerContextCache.put(worker.getId(), new WorkerContext(worker));
@@ -103,30 +93,12 @@ public class DefaultCrawlerService implements CrawlerService {
     }
 
     @Override
-    public synchronized void destroy(WorkerModel worker) {
+    public synchronized void destroy(WorkerData worker) {
         WorkerContext workerContext = workerContextCache.get(worker.getId());
         if (workerContext != null) {
             workerContextCache.remove(worker.getId());
             workerContext.destroyWorker();
         }
-    }
-
-    public WorkerService getWorkerService() {
-        return workerService;
-    }
-
-    public void setWorkerService(WorkerService workerService) {
-        this.workerService = workerService;
-    }
-
-    @Override
-    public void setCrawlHistoryRepository(CrawlHistoryRepository crawlHistoryRepository) {
-        this.crawlHistoryRepository = crawlHistoryRepository;
-    }
-    
-    @Override
-    public void setWorkerRepository(WorkerRepository workerRepository) {
-        this.workerRepository = workerRepository;
     }
 
 }

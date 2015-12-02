@@ -1,6 +1,6 @@
 package com.myprj.crawler.service.event.impl;
 
-import com.myprj.crawler.model.crawl.CrawlResultModel;
+import com.myprj.crawler.domain.crawl.CrawlResultData;
 
 
 /**
@@ -10,21 +10,21 @@ public class CrawlDetailCompletedEvent implements CrawlEvent {
 
     private static final long serialVersionUID = 1L;
     
-    private CrawlResultModel crawlResult;
+    private CrawlResultData crawlResult;
     
     public CrawlDetailCompletedEvent() {
     }
 
     
-    public CrawlDetailCompletedEvent(CrawlResultModel crawlResult) {
+    public CrawlDetailCompletedEvent(CrawlResultData crawlResult) {
         this.crawlResult = crawlResult;
     }
     
-    public CrawlResultModel getCrawlResult() {
+    public CrawlResultData getCrawlResult() {
         return crawlResult;
     }
 
-    public void setCrawlResult(CrawlResultModel crawlResult) {
+    public void setCrawlResult(CrawlResultData crawlResult) {
         this.crawlResult = crawlResult;
     }
 

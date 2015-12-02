@@ -12,7 +12,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 import com.myprj.crawler.enumeration.Level;
-import com.myprj.crawler.enumeration.WorkerItemTargetType;
+import com.myprj.crawler.enumeration.WorkerItemType;
 import com.myprj.crawler.model.AuditModel;
 
 /**
@@ -43,7 +43,7 @@ public class WorkerItemModel extends AuditModel implements Comparable<WorkerItem
     @Enumerated(EnumType.STRING)
     private Level level = Level0;
     
-    private WorkerItemTargetType targetType;
+    private WorkerItemType targetType;
 
     // JSON {"attribute1_id" : "@..."}
     private String cssSelectors;
@@ -67,15 +67,15 @@ public class WorkerItemModel extends AuditModel implements Comparable<WorkerItem
         this.url = url;
     }
 
-    public WorkerItemTargetType getTargetType() {
+    public WorkerItemType getTargetType() {
         return targetType;
     }
 
-    public void setTargetType(WorkerItemTargetType targetType) {
+    public void setTargetType(WorkerItemType targetType) {
         this.targetType = targetType;
     }
 
-    public String getcssSelectors() {
+    public String getCssSelectors() {
         return cssSelectors;
     }
 

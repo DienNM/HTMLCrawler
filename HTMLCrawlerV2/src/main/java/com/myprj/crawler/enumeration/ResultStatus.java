@@ -7,6 +7,7 @@ package com.myprj.crawler.enumeration;
 public enum ResultStatus {
     
     COMPLETED,
-    MISSING
+    MISSING,
+    NEW
     
 }

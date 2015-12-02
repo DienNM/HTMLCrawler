@@ -1,7 +1,7 @@
 package com.myprj.crawler.domain.worker;
 
 import com.myprj.crawler.enumeration.Level;
-import com.myprj.crawler.enumeration.WorkerItemTargetType;
+import com.myprj.crawler.enumeration.WorkerItemType;
 
 /**
  * @author DienNM (DEE)
@@ -12,7 +12,7 @@ public class ErrorLink {
     private String url;
     private String message;
     private Level level;
-    private WorkerItemTargetType targetType;
+    private WorkerItemType targetType;
     
     public ErrorLink() {
     }
@@ -44,10 +44,10 @@ public class ErrorLink {
     public void setLevel(Level level) {
         this.level = level;
     }
-    public WorkerItemTargetType getTargetType() {
+    public WorkerItemType getTargetType() {
         return targetType;
     }
-    public void setTargetType(WorkerItemTargetType targetType) {
+    public void setTargetType(WorkerItemType targetType) {
         this.targetType = targetType;
     }
     

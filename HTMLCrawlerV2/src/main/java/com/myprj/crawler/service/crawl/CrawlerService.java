@@ -1,23 +1,16 @@
 package com.myprj.crawler.service.crawl;
 
+import com.myprj.crawler.domain.crawl.WorkerData;
 import com.myprj.crawler.exception.CrawlerException;
-import com.myprj.crawler.model.crawl.WorkerModel;
-import com.myprj.crawler.repository.CrawlHistoryRepository;
-import com.myprj.crawler.repository.WorkerRepository;
 /**
  * @author DienNM (DEE)
  **/
 public interface CrawlerService {
     
+    void destroy(WorkerData worker);
+    
+    void init(WorkerData worker) throws CrawlerException;
+    
     void crawl(long workerId) throws CrawlerException;
     
-    void init(WorkerModel worker) throws CrawlerException;
-    
-    void destroy(WorkerModel worker);
-    
-    void setWorkerService(WorkerService workerService);
-    
-    void setCrawlHistoryRepository(CrawlHistoryRepository crawlHistoryRepository);
-    
-    void setWorkerRepository(WorkerRepository workerRepository);
 }

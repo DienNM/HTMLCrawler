@@ -5,7 +5,7 @@ package com.myprj.crawler.enumeration;
  * @author DienNM (DEE)
  */
 
-public enum WorkerItemTargetType {
+public enum WorkerItemType {
     
     DETAIL,
     LIST,

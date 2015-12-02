@@ -6,6 +6,7 @@ import java.util.List;
 import javax.persistence.TypedQuery;
 
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.myprj.crawler.model.crawl.CrawlHistoryModel;
 import com.myprj.crawler.repository.CrawlHistoryRepository;
@@ -23,6 +24,7 @@ public class DefaultCrawlHistoryRepository extends DefaultGenericDao<CrawlHistor
     }
 
     @Override
+    @Transactional
     public void save(CrawlHistoryModel crawlHistory) {
         CrawlHistoryModel latestCrawlHistory = findLatest(crawlHistory.getWorkerId());
         if (latestCrawlHistory != null) {

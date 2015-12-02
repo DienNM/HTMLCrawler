@@ -2,9 +2,6 @@ package com.myprj.crawler.model.crawl;
 
 import static com.myprj.crawler.enumeration.WorkerStatus.Created;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.Column;
@@ -15,7 +12,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 
 import com.myprj.crawler.enumeration.WorkerStatus;
 import com.myprj.crawler.model.AuditModel;
@@ -56,9 +52,6 @@ public class WorkerModel extends AuditModel {
     @Enumerated(EnumType.STRING)
     private WorkerStatus status = Created;
     
-    @Transient
-    private List<WorkerItemModel> workerItems = new ArrayList<WorkerItemModel>();
-
     public long getId() {
         return id;
     }
@@ -73,14 +66,6 @@ public class WorkerModel extends AuditModel {
 
     public void setThreads(int threads) {
         this.threads = threads;
-    }
-
-    public List<WorkerItemModel> getWorkerItems() {
-        return workerItems;
-    }
-
-    public void setWorkerItems(List<WorkerItemModel> workerItems) {
-        this.workerItems = workerItems;
     }
 
     public String getName() {

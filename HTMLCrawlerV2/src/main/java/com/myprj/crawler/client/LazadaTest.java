@@ -9,12 +9,12 @@ import java.util.List;
 import java.util.Map;
 
 import com.myprj.crawler.client.util.IdGenerator;
-import com.myprj.crawler.domain.worker.ListWorkerTargetParameter;
+import com.myprj.crawler.domain.crawl.PagingConfig;
 import com.myprj.crawler.domain.worker.WorkerItemConfig;
 import com.myprj.crawler.enumeration.AttributeType;
 import com.myprj.crawler.enumeration.GlobalStatus;
 import com.myprj.crawler.enumeration.Level;
-import com.myprj.crawler.enumeration.WorkerItemTargetType;
+import com.myprj.crawler.enumeration.WorkerItemType;
 import com.myprj.crawler.exception.CrawlerException;
 import com.myprj.crawler.model.config.AttributeModel;
 import com.myprj.crawler.model.config.CategoryModel;
@@ -83,9 +83,6 @@ public class LazadaTest {
         crawlEventPublisher.register(new CrawlDetailCompletedEventListener());
 
         crawlerService = new DefaultCrawlerService();
-        crawlerService.setWorkerService(workerService);
-        crawlerService.setWorkerRepository(workerRepository);
-        crawlerService.setCrawlHistoryRepository(crawlHistoryRepository);
     }
 
     public CategoryModel createCategory() {
@@ -184,7 +181,7 @@ public class LazadaTest {
     }
 
     public void createWorkerItem(WorkerModel worker, ItemModel item, List<AttributeModel> attributes) {
-        ListWorkerTargetParameter listParam = new ListWorkerTargetParameter();
+        PagingConfig listParam = new PagingConfig();
         listParam.setStart("1");
         listParam.setEnd("1");
 
@@ -194,7 +191,7 @@ public class LazadaTest {
         workerItem1.setWorkerId(worker.getId());
         workerItem1.setLevel(Level.Level0);
         workerItem1.setUrl("http://www.lazada.vn/trang-diem/?page=%s");
-        workerItem1.setTargetType(WorkerItemTargetType.LIST);
+        workerItem1.setTargetType(WorkerItemType.LIST);
         workerItem1.setPagingConfig(Serialization.serialize(listParam));
 
         Map<String, String> cssSelectors1 = new HashMap<String, String>();
@@ -208,7 +205,7 @@ public class LazadaTest {
         workerItem2.setId(IdGenerator.generateId());
         workerItem2.setWorkerId(worker.getId());
         workerItem2.setLevel(Level.Level1);
-        workerItem2.setTargetType(WorkerItemTargetType.DETAIL);
+        workerItem2.setTargetType(WorkerItemType.DETAIL);
 
         WorkerItemConfig workerItemConfig = new WorkerItemConfig();
         workerItemConfig.setCategoryId(item.getCategoryId());
@@ -240,8 +237,8 @@ public class LazadaTest {
         workerItem2.setCssSelectors(Serialization.serialize(workerItemConfig));
         workerItemRepository.save(workerItem2);
 
-        worker.getWorkerItems().add(workerItem1);
-        worker.getWorkerItems().add(workerItem2);
+        //worker.getWorkerItems().add(workerItem1);
+       // worker.getWorkerItems().add(workerItem2);
     }
 
     public static void main(String[] args) {
@@ -255,12 +252,12 @@ public class LazadaTest {
         WorkerModel worker = main.createWorker(item, attributes);
 
         try {
-            main.getCrawlerService().init(worker);
+           // main.getCrawlerService().init(worker);
             main.getCrawlerService().crawl(worker.getId());
         } catch (CrawlerException e) {
             e.printStackTrace();
         }
-        main.getCrawlerService().destroy(worker);
+       //main.getCrawlerService().destroy(worker);
     }
 
     public CrawlerService getCrawlerService() {

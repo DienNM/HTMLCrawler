@@ -1,6 +1,6 @@
-package com.myprj.crawler.domain.worker;
+package com.myprj.crawler.domain.crawl;
 
-import static com.myprj.crawler.domain.worker.ListWorkerTargetParameter.WorkerListType.PAGING;
+import static com.myprj.crawler.domain.crawl.PagingConfig.WorkerListType.PAGING;
 
 import java.io.Serializable;
 
@@ -8,7 +8,7 @@ import java.io.Serializable;
  * @author DienNM (DEE)
  */
 
-public class ListWorkerTargetParameter implements Serializable {
+public class PagingConfig implements Serializable {
     
     private static final long serialVersionUID = 1L;
 
@@ -23,7 +23,7 @@ public class ListWorkerTargetParameter implements Serializable {
         DATE
     }
     
-    public ListWorkerTargetParameter() {
+    public PagingConfig() {
     }
     
     public String getEnd() {

@@ -7,7 +7,7 @@ import org.jsoup.select.Elements;
 import org.springframework.stereotype.Service;
 
 import com.myprj.crawler.domain.HtmlDocument;
-import com.myprj.crawler.domain.worker.CssSelector;
+import com.myprj.crawler.domain.config.AttributeSelector;
 import com.myprj.crawler.enumeration.AttributeType;
 import com.myprj.crawler.service.handler.AttributeHandlerSupport;
 import com.myprj.crawler.service.handler.HandlerRegister;
@@ -31,7 +31,7 @@ public class LinkAttributeHandler extends AttributeHandlerSupport{
     }
 
     @Override
-    public Object handle(HtmlDocument document, CssSelector cssSelector) {
+    public Object handle(HtmlDocument document, AttributeSelector cssSelector) {
         Elements elements = document.getDocument().select(cssSelector.getSelector());
         if(elements == null || elements.isEmpty()) {
             return null;
