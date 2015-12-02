@@ -5,7 +5,6 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
-import javax.persistence.TypedQuery;
 
 import com.myprj.crawler.repository.GenericDao;
 
@@ -20,15 +19,19 @@ public abstract class DefaultGenericDao<E, Id>  implements GenericDao<E, Id> {
     
     private Class<E> clazz;
     
+    private String className;
+    
     public DefaultGenericDao() {
         setClazz(getTargetClass());
+        setClassName(clazz.getName());
     }
     
     protected abstract Class<E> getTargetClass();
     
+    @SuppressWarnings("unchecked")
     @Override
     public List<E> findAll() {
-        TypedQuery<E> query = entityManager.createNamedQuery("from " + clazz, clazz);
+        Query query = entityManager.createQuery("from " + getClassName());
         List<E> students = query.getResultList();
         return students;
     }
@@ -57,7 +60,8 @@ public abstract class DefaultGenericDao<E, Id>  implements GenericDao<E, Id> {
     
     @Override
     public void deleteById(Id id) {
-        Query query = entityManager.createQuery("DELETE FROM " + clazz + " WHERE id = :id");
+        Query query = entityManager.createQuery("DELETE FROM " + getClassName() + " WHERE id = :id");
+        query.setParameter("id", id);
         query.executeUpdate();
     }
 
@@ -67,6 +71,14 @@ public abstract class DefaultGenericDao<E, Id>  implements GenericDao<E, Id> {
 
     public void setClazz(Class<E> clazz) {
         this.clazz = clazz;
+    }
+
+    public String getClassName() {
+        return className;
+    }
+
+    public void setClassName(String className) {
+        this.className = className;
     }
 
 }
