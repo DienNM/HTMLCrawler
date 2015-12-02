@@ -17,11 +17,11 @@ public class ItemAttributeData extends AuditData {
     
     private static final long serialVersionUID = 1L;
 
-    private String id;
+    private long id;
     
     private long itemId;
     
-    private String parentId;
+    private long parentId = -1;
     
     private String attributeId;
     
@@ -72,11 +72,11 @@ public class ItemAttributeData extends AuditData {
         toAuditModel(source, dest);
     }
 
-    public String getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -128,11 +128,11 @@ public class ItemAttributeData extends AuditData {
         this.attribute = attribute;
     }
 
-    public String getParentId() {
+    public long getParentId() {
         return parentId;
     }
 
-    public void setParentId(String parentId) {
+    public void setParentId(long parentId) {
         this.parentId = parentId;
     }
 }

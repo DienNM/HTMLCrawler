@@ -1,5 +1,6 @@
 package com.myprj.crawler.service.impl;
 
+import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,7 +40,12 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     @Transactional
     public void update(CategoryData category) {
-        CategoryModel categoryModel = new CategoryModel();
+        CategoryModel categoryModel = categoryRepository.find(category.getId());
+        if(categoryModel == null) {
+            throw new InvalidParameterException("Cannot find category: " + category.getId());
+        }
+        
+        categoryModel = new CategoryModel();
         CategoryData.toModel(category, categoryModel);
         categoryRepository.update(categoryModel);
 

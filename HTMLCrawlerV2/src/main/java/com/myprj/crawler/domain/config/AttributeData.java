@@ -26,6 +26,8 @@ public class AttributeData extends AuditData {
     private String parentId;
 
     private AttributeData parent;
+    
+    private boolean root;
 
     private List<AttributeData> children = new ArrayList<AttributeData>();
 
@@ -120,5 +122,13 @@ public class AttributeData extends AuditData {
 
     public void setParentId(String parentId) {
         this.parentId = parentId;
+    }
+
+    public boolean isRoot() {
+        return root;
+    }
+
+    public void setRoot(boolean root) {
+        this.root = root;
     }
 }

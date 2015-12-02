@@ -1,5 +1,7 @@
 package com.myprj.crawler.repository;
 
+import java.util.List;
+
 import com.myprj.crawler.model.config.ItemAttributeModel;
 
 /**
@@ -7,5 +9,7 @@ import com.myprj.crawler.model.config.ItemAttributeModel;
  */
 
 public interface ItemAttributeRepository extends GenericDao<ItemAttributeModel, Long> {
+    
+    List<ItemAttributeModel> findChildren(long id);
     
 }

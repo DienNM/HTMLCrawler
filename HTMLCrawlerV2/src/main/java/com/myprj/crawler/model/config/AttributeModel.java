@@ -14,7 +14,7 @@ import com.myprj.crawler.model.AuditModel;
  * @author DienNM (DEE)
  */
 @Entity
-@Table(name = "item_attribute")
+@Table(name = "attribute")
 public class AttributeModel extends AuditModel {
 
     private static final long serialVersionUID = 1L;

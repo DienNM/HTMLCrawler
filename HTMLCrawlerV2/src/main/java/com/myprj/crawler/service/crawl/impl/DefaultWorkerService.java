@@ -224,7 +224,7 @@ public class DefaultWorkerService implements WorkerService {
                     selector.getUrl());
             return;
         }
-        ItemStructureUtil.populateValue2Attributes(result.getDetail(), current.getId(), data);
+        ItemStructureUtil.populateValue2Attribute(result.getDetail(), current.getAttributeId(), data);
         List<ItemAttributeData> children = current.getChildren();
         if (!children.isEmpty()) {
             for (ItemAttributeData child : children) {

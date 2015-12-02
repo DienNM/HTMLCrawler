@@ -86,7 +86,6 @@ public abstract class DefaultGenericDao<E, Id>  implements GenericDao<E, Id> {
     @Override
     public void save(E entity) {
         entityManager.persist(entity);
-        
     }
 
     @Override

@@ -1,0 +1,27 @@
+{              
+    "name":"",
+    "price":"",
+    "pastPrice":"",
+    "includedInBox":[""],
+    "specifications":[""], 
+    "descriptionDetails":[{ 
+        "key" : "",
+        "value" : ""
+    }]
+}
+
+// Create Selector
+{
+    "name" : "div.product-info-head div.product-info-name||I",
+    "price" : "div.product-prices span.product-price||I",
+    "pastPrice": "div.product-prices span.product-price-past||I",
+    "includedInBox": "div.catWrapper.whatisinbox div.description-detail ul li span||I",
+    "specifications": "div.catWrapper.specifications.specifications-detail div.description-detail ul li span||I",
+    "descriptionDetails" : [{
+        "key": "div.catWrapper div.description-detail ul li",
+        "value": "div.catWrapper div.description-detail ul li span"
+    }]
+}
+
+// String
+{\"name\":\"\",\"price\":\"\",\"pastPrice\":\"\",\"includedInBox\":[\"\"],\"specifications\":[\"\"],\"descriptionDetails\":[{\"key\" : \"\",\"value\" : \"\"}]}

@@ -2,6 +2,8 @@ package com.myprj.crawler.model.config;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
@@ -17,8 +19,8 @@ public class ItemAttributeModel extends AuditModel {
     private static final long serialVersionUID = 1L;
     
     @Id
-    @Column(length = 100)
-    private String id;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private long id;
     
     @Column(name = "item_id")
     private long itemId;
@@ -29,15 +31,14 @@ public class ItemAttributeModel extends AuditModel {
     @Column(name = "selector_json", length = 150)
     private String selectorJson;
     
-    @Column(name = "parent_id", length = 100)
-    private String parentId;
+    @Column(name = "parent_id")
+    private long parentId = -1;
     
-    public String getId() {
+    public long getId() {
         return id;
     }
 
-
-    public void setId(String id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -72,12 +73,12 @@ public class ItemAttributeModel extends AuditModel {
     }
 
 
-    public String getParentId() {
+    public long getParentId() {
         return parentId;
     }
 
 
-    public void setParentId(String parentId) {
+    public void setParentId(long parentId) {
         this.parentId = parentId;
     }
 }
