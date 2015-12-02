@@ -31,6 +31,8 @@ public class WorkerData extends AuditData {
     
     private WorkerStatus status = Created;
     
+    private List<ProxyData> proxies = new ArrayList<ProxyData>();
+    
     private List<WorkerItemData> workerItems = new ArrayList<WorkerItemData>();
     
     public WorkerData() {
@@ -138,6 +140,14 @@ public class WorkerData extends AuditData {
 
     public void setWorkerItems(List<WorkerItemData> workerItems) {
         this.workerItems = workerItems;
+    }
+
+    public List<ProxyData> getProxies() {
+        return proxies;
+    }
+
+    public void setProxies(List<ProxyData> proxies) {
+        this.proxies = proxies;
     }
 
 }

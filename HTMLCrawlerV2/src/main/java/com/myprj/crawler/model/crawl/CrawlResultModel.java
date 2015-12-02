@@ -7,6 +7,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.persistence.Table;
 
 import com.myprj.crawler.enumeration.ResultStatus;
@@ -17,7 +18,7 @@ import com.myprj.crawler.model.AuditModel;
  */
 @Entity
 @Table(name = "crawl_result")
-public class ResultModel extends AuditModel {
+public class CrawlResultModel extends AuditModel {
 
     private static final long serialVersionUID = 1L;
 
@@ -25,13 +26,14 @@ public class ResultModel extends AuditModel {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
-    @Column(name = "category_id")
-    private long categoryId;
-
     @Column(name = "item_id")
     private long itemId;
+
+    @Column(name = "category_id")
+    private long categoryId;
     
     @Column(name = "detail")
+    @Lob
     private String detail;
 
     @Column(name = "status")
@@ -41,7 +43,7 @@ public class ResultModel extends AuditModel {
     @Column(name = "url")
     private String url;
 
-    public ResultModel() {
+    public CrawlResultModel() {
     }
 
     public long getId() {

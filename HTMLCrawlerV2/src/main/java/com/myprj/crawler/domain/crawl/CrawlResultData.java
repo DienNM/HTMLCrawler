@@ -8,7 +8,8 @@ import java.util.Map;
 
 import com.myprj.crawler.domain.AuditData;
 import com.myprj.crawler.enumeration.ResultStatus;
-import com.myprj.crawler.model.crawl.ResultModel;
+import com.myprj.crawler.model.crawl.CrawlResultModel;
+import com.myprj.crawler.util.Serialization;
 
 /**
  * @author DienNM (DEE)
@@ -33,37 +34,40 @@ public class CrawlResultData extends AuditData {
     public CrawlResultData() {
     }
     
-    public static void toDatas(List<ResultModel> sources, List<CrawlResultData> dests) {
-        for(ResultModel source : sources) {
+    public static void toDatas(List<CrawlResultModel> sources, List<CrawlResultData> dests) {
+        for(CrawlResultModel source : sources) {
             CrawlResultData dest = new CrawlResultData();
             toData(source, dest);
             dests.add(dest);
         }
     }
     
-    public static void toModels(List<CrawlResultData> sources, List<ResultModel> dests) {
+    public static void toModels(List<CrawlResultData> sources, List<CrawlResultModel> dests) {
         for(CrawlResultData source : sources) {
-            ResultModel dest = new ResultModel();
+            CrawlResultModel dest = new CrawlResultModel();
             toModel(source, dest);
             dests.add(dest);
         }
     }
     
-    public static void toData(ResultModel source, CrawlResultData dest) {
+    @SuppressWarnings("unchecked")
+    public static void toData(CrawlResultModel source, CrawlResultData dest) {
         dest.setId(source.getId());
         dest.setCategoryId(source.getCategoryId());
         dest.setItemId(source.getId());
         dest.setStatus(source.getStatus());
         dest.setUrl(source.getUrl());
+        dest.setDetail(Serialization.deserialize(source.getDetail(), Map.class));
         toAuditData(source, dest);
     }
     
-    public static void toModel(CrawlResultData source, ResultModel dest) {
+    public static void toModel(CrawlResultData source, CrawlResultModel dest) {
         dest.setId(source.getId());
         dest.setCategoryId(source.getCategoryId());
         dest.setItemId(source.getId());
         dest.setStatus(source.getStatus());
         dest.setUrl(source.getUrl());
+        dest.setDetail(Serialization.serialize(source.getDetail()));
         toAuditModel(source, dest);
     }
     
