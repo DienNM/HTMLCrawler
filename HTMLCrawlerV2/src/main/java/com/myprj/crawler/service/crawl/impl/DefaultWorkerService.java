@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.myprj.crawler.domain.ErrorLink;
 import com.myprj.crawler.domain.HtmlDocument;
 import com.myprj.crawler.domain.config.AttributeSelector;
 import com.myprj.crawler.domain.config.ItemAttributeData;
@@ -27,7 +28,6 @@ import com.myprj.crawler.domain.crawl.PagingConfig;
 import com.myprj.crawler.domain.crawl.WorkerContext;
 import com.myprj.crawler.domain.crawl.WorkerData;
 import com.myprj.crawler.domain.crawl.WorkerItemData;
-import com.myprj.crawler.domain.worker.ErrorLink;
 import com.myprj.crawler.enumeration.ResultStatus;
 import com.myprj.crawler.exception.WorkerException;
 import com.myprj.crawler.model.crawl.WorkerModel;
@@ -42,7 +42,7 @@ import com.myprj.crawler.util.ItemStructureUtil;
 /**
  * @author DienNM (DEE)
  */
-@Service
+@Service("defaultWorkerService")
 public class DefaultWorkerService implements WorkerService {
 
     private final Logger logger = LoggerFactory.getLogger(DefaultWorkerService.class);

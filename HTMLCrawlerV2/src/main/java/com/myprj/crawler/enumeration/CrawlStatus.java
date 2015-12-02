@@ -6,10 +6,8 @@ package com.myprj.crawler.enumeration;
 
 public enum CrawlStatus {
     
-    Created,
-    Pending,
-    Running,
-    Done,
-    Error
+    CRAWLING,
+    CRAWLED,
+    ERROR
     
 }

@@ -1,7 +1,5 @@
 package com.myprj.crawler.domain.crawl;
 
-import static com.myprj.crawler.enumeration.CrawlStatus.Created;
-
 import java.util.List;
 
 import com.myprj.crawler.domain.AuditData;
@@ -26,7 +24,7 @@ public class CrawlHistoryData extends AuditData{
     
     private long timeTaken;
     
-    private CrawlStatus status = Created;
+    private CrawlStatus status;
     
     public CrawlHistoryData() {
     }

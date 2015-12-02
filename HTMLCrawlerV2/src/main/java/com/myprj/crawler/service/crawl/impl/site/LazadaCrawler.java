@@ -1,24 +1,25 @@
-package com.myprj.crawler.service.crawl.impl;
+package com.myprj.crawler.service.crawl.impl.site;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import com.myprj.crawler.service.crawl.WorkerService;
+import com.myprj.crawler.service.crawl.impl.AbstractCrawlerService;
 
 /**
  * @author DienNM (DEE)
  */
-@Service("defaultCrawlerService")
-public class DefaultCrawlerService extends AbstractCrawlerService {
-
+@Service("lazadaCrawler")
+public class LazadaCrawler extends AbstractCrawlerService {
+    
     @Autowired
-    @Qualifier("defaultWorkerService")
+    @Qualifier("lazadaWorker")
     private WorkerService workerService;
 
     @Override
-    protected WorkerService getWorkerService() {
+    public WorkerService getWorkerService() {
         return workerService;
     }
-
+    
 }

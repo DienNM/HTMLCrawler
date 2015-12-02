@@ -3,7 +3,7 @@ package com.myprj.crawler.domain.config;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.myprj.crawler.enumeration.SelectorSsource;
+import com.myprj.crawler.enumeration.SelectorSource;
 
 /**
  * @author DienNM (DEE)
@@ -11,7 +11,7 @@ import com.myprj.crawler.enumeration.SelectorSsource;
 
 public class AttributeSelector {
 
-    private SelectorSsource source = SelectorSsource.I;
+    private SelectorSource source = SelectorSource.I;
     
     private String url;
     
@@ -21,7 +21,7 @@ public class AttributeSelector {
 
     private String targetAttribute;
     
-    public AttributeSelector(String text, SelectorSsource source) {
+    public AttributeSelector(String text, SelectorSource source) {
         this.text = text;
         this.source = source;
         this.selector = text;
@@ -35,7 +35,7 @@ public class AttributeSelector {
     }
 
     public AttributeSelector(String text) {
-        this(text, SelectorSsource.I);
+        this(text, SelectorSource.I);
     }
 
     public String getSelector() {
@@ -54,11 +54,11 @@ public class AttributeSelector {
         this.targetAttribute = targetAttribute;
     }
 
-    public SelectorSsource getSource() {
+    public SelectorSource getSource() {
         return source;
     }
 
-    public void setSource(SelectorSsource source) {
+    public void setSource(SelectorSource source) {
         this.source = source;
     }
 

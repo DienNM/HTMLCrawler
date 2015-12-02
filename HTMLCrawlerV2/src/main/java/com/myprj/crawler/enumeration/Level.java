@@ -18,9 +18,7 @@ public enum Level {
     Level2("LEVEL_2", 2, "Level3"), 
     Level3("LEVEL_3", 3, "Level4"), 
     Level4("LEVEL_4", 4, "Level5"), 
-    Level5("LEVEL_5", 5, "Level6"), 
-    Level6("LEVEL_6", 6, "Level7"), 
-    Level7("LEVEL_7", 7, null);
+    Level5("LEVEL_5", 5, null);
 
     private String text;
 

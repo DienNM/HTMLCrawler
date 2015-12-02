@@ -1,6 +1,5 @@
 package com.myprj.crawler.domain.crawl;
 
-import static com.myprj.crawler.enumeration.Level.Level0;
 import static com.myprj.crawler.util.Serialization.deserialize;
 import static com.myprj.crawler.util.Serialization.serialize;
 
@@ -29,14 +28,17 @@ public class WorkerItemData extends AuditData {
 
     private String nextUrl;
 
-    private Level level = Level0;
-    
-    private ItemData item;
+    private Level level;
     
     private WorkerItemType type;
     
+    // For DETAIL
+    private ItemData item;
+    
+    // For List Crawler to get next link
     private AttributeSelector linkSelector;
-
+    
+    // For List Crawler
     private PagingConfig pagingConfig;
     
     public WorkerItemData() {

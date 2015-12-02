@@ -4,14 +4,14 @@ package com.myprj.crawler.enumeration;
  * @author DienNM (DEE)
  */
 
-public enum SelectorSsource {
+public enum SelectorSource {
     
     I("Internal"),
     E("External");
     
     private String text;
     
-    private SelectorSsource(String text) {
+    private SelectorSource(String text) {
         this.text = text;
     }
 

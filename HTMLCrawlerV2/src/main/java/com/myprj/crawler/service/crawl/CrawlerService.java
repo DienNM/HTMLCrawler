@@ -12,5 +12,4 @@ public interface CrawlerService {
     void init(WorkerData worker) throws CrawlerException;
     
     void crawl(long workerId) throws CrawlerException;
-    
 }

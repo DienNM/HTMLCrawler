@@ -1,9 +1,14 @@
-package com.myprj.crawler.service.crawl.impl;
+package com.myprj.crawler.service.crawl.impl.site;
+
+import org.springframework.stereotype.Service;
+
+import com.myprj.crawler.service.crawl.impl.DefaultWorkerService;
 
 /**
  * @author DienNM (DEE)
  */
 
+@Service("lazadaWorker")
 public class LazadaWorker extends DefaultWorkerService {
 
     @Override

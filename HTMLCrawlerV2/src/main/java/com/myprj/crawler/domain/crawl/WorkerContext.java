@@ -8,8 +8,8 @@ import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import com.myprj.crawler.domain.ErrorLink;
 import com.myprj.crawler.domain.ProxyTracer;
-import com.myprj.crawler.domain.worker.ErrorLink;
 import com.myprj.crawler.enumeration.Level;
 
 /**

@@ -1,4 +1,4 @@
-package com.myprj.crawler.domain.worker;
+package com.myprj.crawler.domain;
 
 import com.myprj.crawler.enumeration.Level;
 import com.myprj.crawler.enumeration.WorkerItemType;

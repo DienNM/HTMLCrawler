@@ -1,17 +1,12 @@
 package com.myprj.crawler.model.config;
 
-import static com.myprj.crawler.enumeration.GlobalStatus.STAGE;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import com.myprj.crawler.enumeration.GlobalStatus;
 import com.myprj.crawler.model.AuditModel;
 
 /**
@@ -34,10 +29,6 @@ public class CategoryModel extends AuditModel {
 
     @Column(name = "description", length = 150)
     private String description;
-
-    @Column(name = "status", length = 10)
-    @Enumerated(EnumType.STRING)
-    private GlobalStatus status = STAGE;
 
     @Column(name = "parent_ctg_id")
     private long parentCategoryId = -1;
@@ -76,13 +67,4 @@ public class CategoryModel extends AuditModel {
     public void setParentCategoryId(long parentCategoryId) {
         this.parentCategoryId = parentCategoryId;
     }
-
-    public GlobalStatus getStatus() {
-        return status;
-    }
-
-    public void setStatus(GlobalStatus status) {
-        this.status = status;
-    }
-
 }
