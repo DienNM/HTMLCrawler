@@ -37,6 +37,7 @@ import com.myprj.crawler.service.event.CrawlEventPublisher;
 import com.myprj.crawler.service.event.impl.CrawlDetailCompletedEvent;
 import com.myprj.crawler.service.handler.HandlerRegister;
 import com.myprj.crawler.util.HtmlDownloader;
+import com.myprj.crawler.util.ItemStructureUtil;
 
 /**
  * @author DienNM (DEE)
@@ -203,6 +204,7 @@ public class DefaultWorkerService implements WorkerService {
         result.setUrl(url);
         result.setItemId(item.getId());
         result.setCategoryId(item.getCategoryId());
+        result.getDetail().putAll(item.getItemContent().getContent());
 
         collectResult4Attribute(htmlDocument, rootItemAttribute, result);
 
@@ -222,7 +224,7 @@ public class DefaultWorkerService implements WorkerService {
                     selector.getUrl());
             return;
         }
-        CrawlResultData.populate(result, current, data);
+        ItemStructureUtil.populateValue2Attributes(result.getDetail(), current.getId(), data);
         List<ItemAttributeData> children = current.getChildren();
         if (!children.isEmpty()) {
             for (ItemAttributeData child : children) {

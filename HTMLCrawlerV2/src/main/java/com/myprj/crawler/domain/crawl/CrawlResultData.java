@@ -3,15 +3,12 @@ package com.myprj.crawler.domain.crawl;
 import static com.myprj.crawler.enumeration.ResultStatus.NEW;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 import com.myprj.crawler.domain.AuditData;
-import com.myprj.crawler.domain.config.ItemAttributeData;
 import com.myprj.crawler.enumeration.ResultStatus;
 import com.myprj.crawler.model.crawl.ResultModel;
-import com.myprj.crawler.util.AttributeUtil;
 
 /**
  * @author DienNM (DEE)
@@ -36,37 +33,6 @@ public class CrawlResultData extends AuditData {
     public CrawlResultData() {
     }
     
-    public static void populate(CrawlResultData result, ItemAttributeData attribute, Object value) {
-        Map<String, Object> detail = result.getDetail();
-        
-        // 1|detail|size|large
-        Iterator<String> attNames = AttributeUtil.parseAttributeNames(attribute.getId());
-        if(attNames.hasNext()) {
-            populate(detail, attNames, value);
-        }
-    }
-    
-    @SuppressWarnings("unchecked")
-    public static void populate(Map<String, Object> detail, Iterator<String> attNames, Object value) {
-        if(!attNames.hasNext()) {
-            return;
-        }
-        String attName = attNames.next();
-        if(detail.containsKey(attName)) {
-            Object object = detail.get(attName);
-            if(object instanceof Map) {
-                populate((Map<String, Object>) object, attNames, value);
-            } else if(object instanceof List) {
-                List<Object> list = (List<Object>) object;
-                list.add(value);
-            } else if(object instanceof String) {
-                detail.put(attName, object);
-            }
-        }
-        
-    }
-    
-
     public static void toDatas(List<ResultModel> sources, List<CrawlResultData> dests) {
         for(ResultModel source : sources) {
             CrawlResultData dest = new CrawlResultData();

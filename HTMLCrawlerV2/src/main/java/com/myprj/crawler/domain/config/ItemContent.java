@@ -13,7 +13,6 @@ public class ItemContent {
     public static final String EMPTY_TEXT = "EMPTY".intern();
     
     private Map<String, Object> content;
-    private String url;
     
     public ItemContent() {
         content = new HashMap<String, Object>();
@@ -26,11 +25,4 @@ public class ItemContent {
     public void setContent(Map<String, Object> content) {
         this.content = content;
     }
-    public String getUrl() {
-        return url;
-    }
-    public void setUrl(String url) {
-        this.url = url;
-    }
-    
 }
