@@ -1,0 +1,16 @@
+// Category
+
+{
+    "data":{
+        "createdAt":1449117669520,
+        "createdBy":"System",
+        "updatedAt":0,
+        "updatedBy":null,
+        "id":10,
+        "name":"Product",
+        "description":"All Product",
+        "parentCategoryId":1,
+        "parentCategory":null
+    },
+    "success":true
+}

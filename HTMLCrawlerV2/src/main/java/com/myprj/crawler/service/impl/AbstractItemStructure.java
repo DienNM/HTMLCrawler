@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import com.myprj.crawler.domain.config.ItemContent;
 import com.myprj.crawler.domain.config.ItemData;
 import com.myprj.crawler.enumeration.AttributeType;
 import com.myprj.crawler.service.ItemStructureService;

@@ -17,7 +17,7 @@ import com.myprj.crawler.service.AttributeService;
 /**
  * @author DienNM (DEE)
  */
-@Service
+@Service("attributeService")
 public class AttributeServiceImpl implements AttributeService {
 
     private Logger logger = LoggerFactory.getLogger(AttributeServiceImpl.class);

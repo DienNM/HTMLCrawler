@@ -2,7 +2,6 @@ package com.myprj.crawler.client;
 
 import com.myprj.crawler.domain.config.AttributeData;
 import com.myprj.crawler.domain.config.ItemAttributeData;
-import com.myprj.crawler.domain.config.ItemData;
 import com.myprj.crawler.service.AttributeService;
 import com.myprj.crawler.service.impl.InMemoryAttributeServiceImpl;
 import com.myprj.crawler.service.impl.ItemAttributeStructureServiceImpl;
