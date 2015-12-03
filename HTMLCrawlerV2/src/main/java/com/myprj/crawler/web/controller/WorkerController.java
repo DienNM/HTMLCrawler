@@ -121,7 +121,7 @@ public class WorkerController  extends AbstractController{
         }
         
         try {
-            workerService.addWorkerItems(workerData, workerItems);
+            workerService.buildSelector4Item(workerData, level, json);
             JsonResponse response = new JsonResponse(workerData, !workerData.getWorkerItems().isEmpty());
             return response;
         } catch(Exception e) {
