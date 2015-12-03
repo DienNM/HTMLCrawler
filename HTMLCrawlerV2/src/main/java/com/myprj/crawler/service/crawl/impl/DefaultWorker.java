@@ -2,7 +2,6 @@ package com.myprj.crawler.service.crawl.impl;
 
 import static com.myprj.crawler.enumeration.Level.Level0;
 
-import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -16,7 +15,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.myprj.crawler.domain.ErrorLink;
 import com.myprj.crawler.domain.HtmlDocument;
@@ -30,9 +28,7 @@ import com.myprj.crawler.domain.crawl.WorkerData;
 import com.myprj.crawler.domain.crawl.WorkerItemData;
 import com.myprj.crawler.enumeration.ResultStatus;
 import com.myprj.crawler.exception.WorkerException;
-import com.myprj.crawler.model.crawl.WorkerModel;
-import com.myprj.crawler.repository.WorkerRepository;
-import com.myprj.crawler.service.crawl.WorkerService;
+import com.myprj.crawler.service.crawl.Worker;
 import com.myprj.crawler.service.event.CrawlEventPublisher;
 import com.myprj.crawler.service.event.impl.CrawlDetailCompletedEvent;
 import com.myprj.crawler.service.handler.HandlerRegister;
@@ -42,35 +38,13 @@ import com.myprj.crawler.util.ItemStructureUtil;
 /**
  * @author DienNM (DEE)
  */
-@Service("defaultWorkerService")
-public class DefaultWorkerService implements WorkerService {
+@Service("defaultWorker")
+public class DefaultWorker implements Worker {
 
-    private final Logger logger = LoggerFactory.getLogger(DefaultWorkerService.class);
+    private final Logger logger = LoggerFactory.getLogger(DefaultWorker.class);
 
     @Autowired
     protected CrawlEventPublisher crawlEventPublisher;
-
-    @Autowired
-    private WorkerRepository workerRepository;
-
-    @Override
-    @Transactional
-    public WorkerModel save(WorkerData worker) {
-        WorkerModel workerModel = new WorkerModel();
-        WorkerData.toModel(worker, workerModel);
-        workerRepository.save(workerModel);
-        return workerModel;
-    }
-
-    @Override
-    public void update(WorkerData worker) {
-        WorkerModel workerModel = workerRepository.find(worker.getId());
-        if (workerModel == null) {
-            throw new InvalidParameterException("Cannot find worker: " + worker.getId());
-        }
-        WorkerData.toModel(worker, workerModel);
-        workerRepository.update(workerModel);
-    }
 
     @Override
     public void invoke(WorkerContext workerCtx, WorkerItemData workerItem) throws WorkerException {
@@ -220,8 +194,8 @@ public class DefaultWorkerService implements WorkerService {
         AttributeSelector selector = current.getSelector();
         Object data = HandlerRegister.getHandler(current.getAttribute().getType()).handle(htmlDocument, selector);
         if (data == null) {
-            logger.warn("No Data: Attribute={}, CSS-Selector={}, URL={}", current.getAttribute().getName(), selector.getText(),
-                    selector.getUrl());
+            logger.warn("No Data: Attribute={}, CSS-Selector={}, URL={}", current.getAttribute().getName(),
+                    selector.getText(), selector.getUrl());
             return;
         }
         ItemStructureUtil.populateValue2Attribute(result.getDetail(), current.getAttributeId(), data);

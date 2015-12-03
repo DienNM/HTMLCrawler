@@ -4,20 +4,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-import com.myprj.crawler.service.crawl.WorkerService;
+import com.myprj.crawler.service.crawl.Worker;
 
 /**
  * @author DienNM (DEE)
  */
 @Service("defaultCrawlerService")
-public class DefaultCrawlerService extends AbstractCrawlerService {
+public class DefaultCrawlerService extends AbstractCrawler {
 
     @Autowired
     @Qualifier("defaultWorkerService")
-    private WorkerService workerService;
+    private Worker workerService;
 
     @Override
-    protected WorkerService getWorkerService() {
+    protected Worker getWorker() {
         return workerService;
     }
 

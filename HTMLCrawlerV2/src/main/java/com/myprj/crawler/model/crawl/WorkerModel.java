@@ -37,6 +37,9 @@ public class WorkerModel extends AuditModel {
     @Column(name = "description", length = 10)
     private String description;
     
+    @Column(name = "site", length = 100)
+    private String site;
+    
     @Column(name = "threads")
     private int threads = 1;
 
@@ -104,5 +107,13 @@ public class WorkerModel extends AuditModel {
 
     public void setStatus(WorkerStatus status) {
         this.status = status;
+    }
+
+    public String getSite() {
+        return site;
+    }
+
+    public void setSite(String site) {
+        this.site = site;
     }
 }

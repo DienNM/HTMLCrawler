@@ -19,7 +19,7 @@ import com.myprj.crawler.web.dto.JsonResponse;
  */
 @Controller
 @RequestMapping(value = "/categories", produces = "application/json")
-public class CategoryController {
+public class CategoryController extends AbstractController{
     
     @Autowired
     private CategoryService categoryService;

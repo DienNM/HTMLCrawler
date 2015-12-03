@@ -18,27 +18,31 @@ import com.myprj.crawler.exception.CrawlerException;
 import com.myprj.crawler.exception.WorkerException;
 import com.myprj.crawler.model.crawl.CrawlHistoryModel;
 import com.myprj.crawler.repository.CrawlHistoryRepository;
+import com.myprj.crawler.service.WorkerService;
 import com.myprj.crawler.service.crawl.CrawlerService;
-import com.myprj.crawler.service.crawl.WorkerService;
+import com.myprj.crawler.service.crawl.Worker;
 
 /**
  * @author DienNM (DEE)
  */
-public abstract class AbstractCrawlerService implements CrawlerService {
+public abstract class AbstractCrawler implements CrawlerService {
 
-    private Logger logger = LoggerFactory.getLogger(AbstractCrawlerService.class);
+    private Logger logger = LoggerFactory.getLogger(AbstractCrawler.class);
 
     private static Map<Long, WorkerContext> workerContextCache = new HashMap<Long, WorkerContext>();
 
     @Autowired
     private CrawlHistoryRepository crawlHistoryRepository;
+    
+    @Autowired
+    private WorkerService workerService;
 
     @Override
     public void crawl(long workerId) throws CrawlerException {
         WorkerContext workerCtx = pickupWorkerContext(workerId);
         WorkerData worker = workerCtx.getWorker();
         worker.setStatus(WorkerStatus.Running);
-        getWorkerService().update(worker);
+        workerService.update(worker);
 
         logger.info("Worker {} [Id={}] starts crawling...", worker.getName(), worker.getId());
 
@@ -49,7 +53,7 @@ public abstract class AbstractCrawlerService implements CrawlerService {
 
         long starttime = Calendar.getInstance().getTimeInMillis();
         try {
-            getWorkerService().invoke(workerCtx, workerCtx.getRootWorkerItem());
+            getWorker().invoke(workerCtx, workerCtx.getRootWorkerItem());
             crawlHistory.setStatus(CrawlStatus.CRAWLED);
             worker.setStatus(WorkerStatus.Completed);
         } catch (WorkerException e) {
@@ -61,7 +65,7 @@ public abstract class AbstractCrawlerService implements CrawlerService {
             crawlHistory.setTimeTaken(took);
             crawlHistory.setErrorLinks(serialize(workerCtx.getErrorLinks()));
 
-            getWorkerService().update(worker);
+            workerService.update(worker);
             crawlHistoryRepository.save(crawlHistory);
 
             destroy(worker);
@@ -97,6 +101,6 @@ public abstract class AbstractCrawlerService implements CrawlerService {
         }
     }
 
-    protected abstract WorkerService getWorkerService();
+    protected abstract Worker getWorker();
     
 }

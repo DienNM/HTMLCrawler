@@ -23,6 +23,8 @@ public class WorkerData extends AuditData {
     
     private String description;
     
+    private String site;
+    
     private int threads = 1;
 
     private int attemptTimes = 3;
@@ -54,6 +56,12 @@ public class WorkerData extends AuditData {
         }
     }
     
+    public static WorkerData toData(WorkerModel source) {
+        WorkerData dest = new WorkerData();
+        toData(source, dest);
+        return dest;
+    }
+    
     public static void toData(WorkerModel source, WorkerData dest) {
         dest.setId(source.getId());
         dest.setName(source.getName());
@@ -62,6 +70,7 @@ public class WorkerData extends AuditData {
         dest.setDelayTime(source.getDelayTime());
         dest.setStatus(source.getStatus());
         dest.setThreads(source.getThreads());
+        dest.setSite(source.getSite());
         toAuditData(source, dest);
     }
     
@@ -75,6 +84,7 @@ public class WorkerData extends AuditData {
         dest.setDelayTime(source.getDelayTime());
         dest.setStatus(source.getStatus());
         dest.setThreads(source.getThreads());
+        dest.setSite(source.getSite());
         toAuditModel(source, dest);
     }
 
@@ -148,6 +158,14 @@ public class WorkerData extends AuditData {
 
     public void setProxies(List<ProxyData> proxies) {
         this.proxies = proxies;
+    }
+
+    public String getSite() {
+        return site;
+    }
+
+    public void setSite(String site) {
+        this.site = site;
     }
 
 }

@@ -4,6 +4,8 @@ import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,6 +22,8 @@ import com.myprj.crawler.service.CategoryService;
  */
 @Service
 public class CategoryServiceImpl implements CategoryService {
+    
+    private Logger logger = LoggerFactory.getLogger(CategoryServiceImpl.class);
 
     @Autowired
     private CategoryRepository categoryRepository;
@@ -56,6 +60,7 @@ public class CategoryServiceImpl implements CategoryService {
     public CategoryData getById(long id) {
         CategoryModel categoryModel = categoryRepository.find(id);
         if (categoryModel == null) {
+            logger.warn("Cannot find category: {}", id);
             return null;
         }
         CategoryData categoryData = new CategoryData();

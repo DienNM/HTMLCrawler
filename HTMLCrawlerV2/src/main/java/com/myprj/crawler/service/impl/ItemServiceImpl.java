@@ -60,6 +60,7 @@ public class ItemServiceImpl implements ItemService {
         ItemModel itemModel = itemRepository.find(id);
         if (itemModel == null) {
             logger.warn("Cannot find Item: {}", id);
+            return null;
         }
         ItemData itemData = new ItemData();
         ItemData.toData(itemModel, itemData);

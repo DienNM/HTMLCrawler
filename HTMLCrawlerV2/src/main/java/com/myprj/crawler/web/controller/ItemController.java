@@ -25,7 +25,7 @@ import com.myprj.crawler.web.dto.JsonResponse;
  */
 @Controller
 @RequestMapping(value = "/items", produces = "application/json")
-public class ItemController {
+public class ItemController extends AbstractController{
 
     @Autowired
     private ItemService itemService;
@@ -44,13 +44,7 @@ public class ItemController {
             @RequestParam(value = "pageSize", defaultValue = "10") int pageSize) {
         Pageable pageable = new Pageable(pageSize, currentPage);
         PageResult<ItemData> pageResult = itemService.getPaging(pageable);
-        JsonResponse response = new JsonResponse(true);
-        response.putData(pageResult.getContent());
-        response.put("pageSize", pageSize);
-        response.put("currentPage", currentPage);
-        response.put("totalPages", pageResult.getTotalPages());
-        response.put("totalRecords", pageResult.getTotalRecords());
-        return response;
+        return returnDataPaging(pageResult);
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
@@ -94,7 +88,7 @@ public class ItemController {
             response.putMessage(String.format("Item %s cannot find", id));
             return response;
         }
-        itemService.update(itemData);
+        itemService.update(item);
 
         JsonResponse response = new JsonResponse(true);
         return response;
