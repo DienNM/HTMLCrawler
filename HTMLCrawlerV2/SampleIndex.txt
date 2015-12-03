@@ -10,16 +10,18 @@
     }]
 }
 
+"name" : "I@css||E css||<E>css||<E>css||<E>css",
+
 // Create Selector
 {
-    "name" : "div.product-info-head div.product-info-name||I",
-    "price" : "div.product-prices span.product-price||I",
-    "pastPrice": "div.product-prices span.product-price-past||I",
-    "includedInBox": "div.catWrapper.whatisinbox div.description-detail ul li span||I",
-    "specifications": "div.catWrapper.specifications.specifications-detail div.description-detail ul li span||I",
+    "name" : "I@div.product-info-head div.product-info-name",
+    "price" : "I@div.product-prices span.product-price||E@div.product-prices||E@div.span.product-price",
+    "pastPrice": "I@div.product-prices span.product-price-past",
+    "includedInBox": ["I@div.catWrapper.whatisinbox div.description-detail ul li span"],
+    "specifications": ["I@div.catWrapper.specifications.specifications-detail div.description-detail ul li span"],
     "descriptionDetails" : [{
-        "key": "div.catWrapper div.description-detail ul li",
-        "value": "div.catWrapper div.description-detail ul li span"
+        "key": "I@div.catWrapper div.description-detail ul li",
+        "value": "I@div.catWrapper div.description-detail ul li span"
     }]
 }
 

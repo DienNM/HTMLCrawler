@@ -2,11 +2,14 @@ package com.myprj.crawler.model.config;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import com.myprj.crawler.enumeration.AttributeType;
 import com.myprj.crawler.model.AuditModel;
 
 /**
@@ -25,6 +28,10 @@ public class ItemAttributeModel extends AuditModel {
     @Column(name = "item_id")
     private long itemId;
     
+
+    @Column(name = "root")
+    private boolean root = false;
+    
     @Column(name = "attribute_id", length = 100)
     private String attributeId;
 
@@ -33,6 +40,10 @@ public class ItemAttributeModel extends AuditModel {
     
     @Column(name = "parent_id")
     private long parentId = -1;
+    
+    @Column(name = "att_type")
+    @Enumerated(EnumType.STRING)
+    private AttributeType type;
     
     public long getId() {
         return id;
@@ -80,5 +91,21 @@ public class ItemAttributeModel extends AuditModel {
 
     public void setParentId(long parentId) {
         this.parentId = parentId;
+    }
+
+    public AttributeType getType() {
+        return type;
+    }
+
+    public void setType(AttributeType type) {
+        this.type = type;
+    }
+
+    public boolean isRoot() {
+        return root;
+    }
+
+    public void setRoot(boolean root) {
+        this.root = root;
     }
 }

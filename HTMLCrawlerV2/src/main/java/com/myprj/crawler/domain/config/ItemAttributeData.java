@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.myprj.crawler.domain.AuditData;
+import com.myprj.crawler.enumeration.AttributeType;
 import com.myprj.crawler.model.config.ItemAttributeModel;
 import com.myprj.crawler.util.Serialization;
 
@@ -24,6 +25,10 @@ public class ItemAttributeData extends AuditData {
     private long parentId = -1;
     
     private String attributeId;
+    
+    private AttributeType type;
+    
+    private boolean root = false;
     
     private AttributeSelector selector;
     
@@ -57,6 +62,8 @@ public class ItemAttributeData extends AuditData {
         dest.setItemId(source.getItemId());
         dest.setAttributeId(source.getAttributeId());
         dest.setParentId(source.getParentId());
+        dest.setType(source.getType());
+        dest.setRoot(source.isRoot());
         dest.setSelector(deserialize(source.getSelectorJson(), AttributeSelector.class));
         toAuditData(source, dest);
     }
@@ -68,6 +75,8 @@ public class ItemAttributeData extends AuditData {
         dest.setItemId(source.getItemId());
         dest.setAttributeId(source.getAttributeId());
         dest.setParentId(source.getParentId());
+        dest.setType(source.getType());
+        dest.setRoot(source.isRoot());
         dest.setSelectorJson(Serialization.serialize(source.getSelector()));
         toAuditModel(source, dest);
     }
@@ -134,5 +143,21 @@ public class ItemAttributeData extends AuditData {
 
     public void setParentId(long parentId) {
         this.parentId = parentId;
+    }
+
+    public AttributeType getType() {
+        return type;
+    }
+
+    public void setType(AttributeType type) {
+        this.type = type;
+    }
+
+    public boolean isRoot() {
+        return root;
+    }
+
+    public void setRoot(boolean root) {
+        this.root = root;
     }
 }

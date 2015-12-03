@@ -1,9 +1,6 @@
 package com.myprj.crawler.util;
 
 import static com.myprj.crawler.domain.config.ItemContent.EMPTY_TEXT;
-import static com.myprj.crawler.enumeration.AttributeType.LIST;
-import static com.myprj.crawler.enumeration.AttributeType.OBJECT;
-import static com.myprj.crawler.enumeration.AttributeType.TEXT;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -14,7 +11,6 @@ import java.util.Map.Entry;
 
 import com.myprj.crawler.domain.config.AttributeData;
 import com.myprj.crawler.domain.config.ItemAttributeData;
-import com.myprj.crawler.domain.config.ItemContent;
 import com.myprj.crawler.domain.config.ItemData;
 import com.myprj.crawler.enumeration.AttributeType;
 
@@ -23,23 +19,6 @@ import com.myprj.crawler.enumeration.AttributeType;
  */
 public final class ItemStructureUtil {
 
-    @SuppressWarnings("unchecked")
-    public static AttributeData buildAttributes(ItemData item, String jsonText) {
-        Map<String, Object> inputObject = Serialization.deserialize(jsonText, Map.class);
-        
-        // Create Root Attribute: content
-        AttributeData rootAttribute = new AttributeData();
-        rootAttribute.setType(OBJECT);
-        rootAttribute.setName(ItemContent.ROOT);
-        rootAttribute.setId(String.valueOf(item.getId()) + "|" + ItemContent.ROOT);
-        rootAttribute.setRoot(true);
-        rootAttribute.setParent(null);
-        rootAttribute.setItemId(item.getId());
-        
-        item.setSampleContent(new ItemContent());
-        return build(item, rootAttribute, inputObject);
-    }
-    
     public static ItemAttributeData buildItemAttributes(ItemData item, Map<String, String> config) {
         Map<String, AttributeData> attributeRepo = new HashMap<String, AttributeData>();
         for(AttributeData attributeData : item.getAttributes()) {
@@ -128,84 +107,12 @@ public final class ItemStructureUtil {
         }
     }
 
-    @SuppressWarnings("unchecked")
-    private static AttributeData build(ItemData item, AttributeData current, Map<String, Object> obj) {
-        for (Entry<String, Object> entry : obj.entrySet()) {
-            String key = entry.getKey();
-            Object value = entry.getValue();
-            AttributeData childAttribute = null;
-            if (value instanceof Map) {
-                childAttribute = buildMap(item, current, key, (Map<String, Object>) value);
-            } else if (value instanceof List) {
-                childAttribute = buildList(item, current, key, (List<Object>) value);
-            } else if (value instanceof String) {
-                childAttribute = buildString(item, current, key);
-            }
-            current.getChildren().add(childAttribute);
-        }
-        return current;
-    }
-
-    private static AttributeData buildMap(ItemData item, AttributeData parent, String key, Map<String, Object> value) {
-        AttributeData current = createAttribute(parent, key);
-        current.setItemId(item.getId());
-        current.setType(OBJECT);
-
-        Map<String, Object> parentObject = AttributeUtil.getObject(item.getSampleContent(), parent.getId());
-        parentObject.put(key, new HashMap<String, Object>());
-
-        return build(item, current, value);
-    }
-
-    @SuppressWarnings("unchecked")
-    private static AttributeData buildList(ItemData item, AttributeData parent, String key, List<Object> value) {
-        AttributeData current = createAttribute(parent, key);
-        current.setItemId(item.getId());
-        current.setType(LIST);
-
-        Map<String, Object> parentObj = AttributeUtil.getObject(item.getSampleContent(), parent.getId());
-        List<Object> listValue = new ArrayList<Object>();
-        parentObj.put(key, listValue);
-
-        if (!AttributeUtil.contentObject(value)) {
-            listValue.add(EMPTY_TEXT);
-            return current;
-        }
-
-        Map<String, Object> elementList = new HashMap<String, Object>();
-        listValue.add(elementList);
-        AttributeData subAttribute = createAttribute(current, key);
-        subAttribute.setItemId(item.getId());
-        subAttribute.setType(OBJECT);
-        
-        AttributeData attribute = build(item, subAttribute, (Map<String, Object>) value.get(0));
-        current.getChildren().add(attribute);
-        return current;
-    }
-
-    private static AttributeData buildString(ItemData item, AttributeData parent, String key) {
-        AttributeData current = createAttribute(parent, key);
-        current.setItemId(item.getId());
-        current.setType(TEXT);
-        
-        Map<String, Object> parentObj = AttributeUtil.getObject(item.getSampleContent(), parent.getId());
-        parentObj.put(key, EMPTY_TEXT);
-        return current;
-    }
-
-    private static AttributeData createAttribute(AttributeData parent, String key) {
-        AttributeData attribute = new AttributeData();
-        attribute.setName(key);
-        attribute.setId(parent.getId() + "|" + key);
-        attribute.setParent(parent);
-        attribute.setParentId(parent.getId());
-        return attribute;
-    }
+    
 
     public static void print(AttributeData root) {
         print(root, 0);
     }
-
+    
     private static void print(AttributeData att, int indent) {
         int currentIndent = indent;
         System.out.println(getSpace(currentIndent) + "\"" + att.getName() + "\"" + " [" + att.getId() + "] " + " ("
@@ -218,6 +125,32 @@ public final class ItemStructureUtil {
             indent = indent + 4;
             for (AttributeData attributeData : att.getChildren()) {
                 print(attributeData, indent);
+            }
+        }
+        if (att.getType() == AttributeType.OBJECT) {
+            System.out.println(getSpace(currentIndent) + " } ");
+        }
+    }
+    
+
+    
+    public static void print(ItemAttributeData root) {
+        print(root, 0);
+    }
+
+    private static void print(ItemAttributeData att, int indent) {
+        int currentIndent = indent;
+        AttributeData attributeData = att.getAttribute();
+        System.out.println(getSpace(currentIndent) + "\"" + attributeData.getName() + "\"" + " [" + att.getAttributeId() + "] " + " ("
+                + att.getType() + ") " + " - Selector: " + (att.getSelector() != null ? att.getSelector().toString() : ""));
+        
+        if (att.getType() == AttributeType.OBJECT) {
+            System.out.println(getSpace(currentIndent) + " { ");
+        }
+        if (!att.getChildren().isEmpty()) {
+            indent = indent + 4;
+            for (ItemAttributeData itemAttribute : att.getChildren()) {
+                print(itemAttribute, indent);
             }
         }
         if (att.getType() == AttributeType.OBJECT) {

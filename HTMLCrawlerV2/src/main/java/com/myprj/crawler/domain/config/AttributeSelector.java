@@ -1,5 +1,7 @@
 package com.myprj.crawler.domain.config;
 
+import java.util.LinkedList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -21,6 +23,8 @@ public class AttributeSelector {
 
     private String targetAttribute;
     
+    private List<AttributeSelector> externalSelectors = new LinkedList<AttributeSelector>();
+    
     public AttributeSelector(String text, SelectorSource source) {
         this.text = text;
         this.source = source;
@@ -32,6 +36,11 @@ public class AttributeSelector {
             this.selector = text.substring(0, index);
             this.targetAttribute = matcher.group(1);
         }
+    }
+    
+    @Override
+    public String toString() {
+        return String.format("[S=%s], CSS=%s {{%s}}, Externals: %s", source, selector, targetAttribute, externalSelectors.toString());
     }
 
     public AttributeSelector(String text) {
@@ -76,6 +85,14 @@ public class AttributeSelector {
 
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    public List<AttributeSelector> getExternalSelectors() {
+        return externalSelectors;
+    }
+
+    public void setExternalSelectors(List<AttributeSelector> externalSelectors) {
+        this.externalSelectors = externalSelectors;
     }
 
 }
