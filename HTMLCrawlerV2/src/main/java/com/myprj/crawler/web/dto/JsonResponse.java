@@ -8,7 +8,7 @@ import java.util.List;
  * @author DienNM (DEE)
  */
 
-public class Response extends HashMap<String, Object> {
+public class JsonResponse extends HashMap<String, Object> {
 
     private static final long serialVersionUID = 1L;
 
@@ -16,15 +16,15 @@ public class Response extends HashMap<String, Object> {
     public static final String SUCCESS = "success";
     public static final String MESSAGE = "message";
 
-    public Response() {
+    public JsonResponse() {
         this(false);
     }
 
-    public Response(boolean success) {
+    public JsonResponse(boolean success) {
         put(SUCCESS, success);
     }
 
-    public Response(Object object, boolean success) {
+    public JsonResponse(Object object, boolean success) {
         put(SUCCESS, success);
         put(DATA, object);
     }

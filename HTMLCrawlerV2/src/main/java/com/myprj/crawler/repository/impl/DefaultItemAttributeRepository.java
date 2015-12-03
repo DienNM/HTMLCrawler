@@ -28,4 +28,11 @@ public class DefaultItemAttributeRepository extends DefaultGenericDao<ItemAttrib
         return query.getResultList();
     }
 
+    @Override
+    public void deleteByItemId(long itemId) {
+        Query query = entityManager.createQuery("DELETE FROM " + getClassName() + " WHERE itemId = :itemId");
+        query.setParameter("itemId", itemId);
+        query.executeUpdate();
+    }
+
 }

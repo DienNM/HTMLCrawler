@@ -24,6 +24,8 @@ public class ItemData extends AuditData {
     private long categoryId;
 
     private String description;
+    
+    private boolean built;
 
     private ItemContent sampleContent;
 
@@ -55,6 +57,7 @@ public class ItemData extends AuditData {
         dest.setName(source.getName());
         dest.setDescription(source.getDescription());
         dest.setCategoryId(source.getCategoryId());
+        dest.setBuilt(source.isBuilt());
         dest.setSampleContent(deserialize(source.getSampleContentJson(), ItemContent.class));
         toAuditData(source, dest);
     }
@@ -64,6 +67,7 @@ public class ItemData extends AuditData {
         dest.setName(source.getName());
         dest.setDescription(source.getDescription());
         dest.setCategoryId(source.getCategoryId());
+        dest.setBuilt(source.isBuilt());
         dest.setSampleContentJson(serialize(source.getSampleContent()));
         toAuditModel(source, dest);
     }
@@ -122,5 +126,13 @@ public class ItemData extends AuditData {
 
     public void setSampleContent(ItemContent sampleontent) {
         this.sampleContent = sampleontent;
+    }
+
+    public boolean isBuilt() {
+        return built;
+    }
+
+    public void setBuilt(boolean built) {
+        this.built = built;
     }
 }

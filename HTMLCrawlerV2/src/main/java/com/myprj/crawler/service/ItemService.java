@@ -16,12 +16,18 @@ public interface ItemService {
     
     List<ItemData> getAll();
     
-    PageResult<ItemData> getAll(Pageable pageable);
+    PageResult<ItemData> getPaging(Pageable pageable);
+    
+    void populateAttributes(ItemData item);
     
     ItemData save(ItemData item);
     
     ItemData update(ItemData item);
     
-    ItemData buildItem(ItemData item, String jsonAttributes);
+    void delete(long id);
+    
+    ItemData buildItem(long itemId, String jsonAttributes);
+    
+    ItemData buildItem(long itemId, String jsonAttributes, boolean forceBuilt);
     
 }

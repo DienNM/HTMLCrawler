@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.myprj.crawler.domain.config.CategoryData;
 import com.myprj.crawler.service.CategoryService;
-import com.myprj.crawler.web.dto.Response;
+import com.myprj.crawler.web.dto.JsonResponse;
 
 /**
  * @author DienNM (DEE)
@@ -26,25 +26,25 @@ public class CategoryController {
     
     @RequestMapping(method = RequestMethod.GET)
     @ResponseBody
-    public Response getCategoryAllCategories() {
+    public JsonResponse getCategoryAllCategories() {
         List<CategoryData> categories = categoryService.getAll();
-        Response response = new Response(categories , true);
+        JsonResponse response = new JsonResponse(categories , true);
         return response;
     }
     
     @RequestMapping(value = "/{categoryId}", method = RequestMethod.GET)
     @ResponseBody
-    public Response getCategoryByIdCategories(@PathVariable(value = "categoryId") long categoryId) {
+    public JsonResponse getCategoryByIdCategories(@PathVariable(value = "categoryId") long categoryId) {
         CategoryData category = categoryService.getById(categoryId);
-        Response response = new Response(category , category != null);
+        JsonResponse response = new JsonResponse(category , category != null);
         return response;
     }
     
     @RequestMapping(method = RequestMethod.POST)
     @ResponseBody
-    public Response addCategory(@RequestBody CategoryData categoryRequest) {
+    public JsonResponse addCategory(@RequestBody CategoryData categoryRequest) {
         CategoryData category = categoryService.save(categoryRequest);
-        Response response = new Response(category , category != null);
+        JsonResponse response = new JsonResponse(category , category != null);
         return response;
     }
 }

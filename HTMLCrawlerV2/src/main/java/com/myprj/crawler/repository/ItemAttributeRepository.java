@@ -12,4 +12,6 @@ public interface ItemAttributeRepository extends GenericDao<ItemAttributeModel, 
     
     List<ItemAttributeModel> findChildren(long id);
     
+    void deleteByItemId(long itemId);
+    
 }

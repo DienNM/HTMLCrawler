@@ -16,4 +16,6 @@ public interface AttributeRepository extends GenericDao<AttributeModel, String>{
     
     AttributeModel findRootByItemId(long itemId);
     
+    void deleteByItemId(long itemId);
+    
 }
