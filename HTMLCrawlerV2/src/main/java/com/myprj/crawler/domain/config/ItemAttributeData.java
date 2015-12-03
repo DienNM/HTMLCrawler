@@ -15,48 +15,56 @@ import com.myprj.crawler.util.Serialization;
  */
 
 public class ItemAttributeData extends AuditData {
-    
+
     private static final long serialVersionUID = 1L;
 
-    private long id;
-    
+    private String id;
+
     private long itemId;
-    
-    private long parentId = -1;
-    
+
+    private String parentId;
+
     private String attributeId;
-    
+
     private AttributeType type;
-    
+
     private boolean root = false;
-    
+
     private AttributeSelector selector;
-    
+
     private AttributeData attribute;
-    
+
     private ItemAttributeData parent;
-    
+
     private List<ItemAttributeData> children = new ArrayList<ItemAttributeData>();
-    
+
     public ItemAttributeData() {
     }
-    
+
+    public static void collectionAllItemAttributes(ItemAttributeData itemAttribute,
+            List<ItemAttributeData> itemAttributes) {
+        itemAttributes.add(itemAttribute);
+        for(ItemAttributeData itemAttributeData : itemAttribute.getChildren()) {
+            collectionAllItemAttributes(itemAttributeData, itemAttributes);
+        }
+    }
+
     public static void toDatas(List<ItemAttributeModel> sources, List<ItemAttributeData> dests) {
-        for(ItemAttributeModel source : sources) {
+        for (ItemAttributeModel source : sources) {
             ItemAttributeData dest = new ItemAttributeData();
             toData(source, dest);
             dests.add(dest);
         }
     }
-    
+
     public static void toModels(List<ItemAttributeData> sources, List<ItemAttributeModel> dests) {
-        for(ItemAttributeData source : sources) {
+        for (ItemAttributeData source : sources) {
             ItemAttributeModel dest = new ItemAttributeModel();
             toModel(source, dest);
             dests.add(dest);
         }
     }
-    
+
     public static void toData(ItemAttributeModel source, ItemAttributeData dest) {
         dest.setId(source.getId());
         dest.setItemId(source.getItemId());
@@ -67,9 +75,7 @@ public class ItemAttributeData extends AuditData {
         dest.setSelector(deserialize(source.getSelectorJson(), AttributeSelector.class));
         toAuditData(source, dest);
     }
-    
-    
-    
+
     public static void toModel(ItemAttributeData source, ItemAttributeModel dest) {
         dest.setId(source.getId());
         dest.setItemId(source.getItemId());
@@ -81,11 +87,11 @@ public class ItemAttributeData extends AuditData {
         toAuditModel(source, dest);
     }
 
-    public long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -137,11 +143,11 @@ public class ItemAttributeData extends AuditData {
         this.attribute = attribute;
     }
 
-    public long getParentId() {
+    public String getParentId() {
         return parentId;
     }
 
-    public void setParentId(long parentId) {
+    public void setParentId(String parentId) {
         this.parentId = parentId;
     }
 

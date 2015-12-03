@@ -40,7 +40,7 @@ public class WorkerItemData extends AuditData {
     private ItemAttributeData rootItemAttribute;
     
     // For List Crawler to get next link
-    private AttributeSelector linkSelector;
+    private AttributeSelector level0Selector;
     
     // For List Crawler
     private PagingConfig pagingConfig = new PagingConfig();
@@ -162,12 +162,12 @@ public class WorkerItemData extends AuditData {
         this.item = item;
     }
 
-    public AttributeSelector getLinkSelector() {
-        return linkSelector;
+    public AttributeSelector getLevel0Selector() {
+        return level0Selector;
     }
 
-    public void setLinkSelector(AttributeSelector linkSelector) {
-        this.linkSelector = linkSelector;
+    public void setLevel0Selector(AttributeSelector level0Selector) {
+        this.level0Selector = level0Selector;
     }
 
     public long getItemId() {

@@ -25,7 +25,7 @@ public class ItemAttributeServiceImpl implements ItemAttributeService {
     private ItemAttributeRepository itemAttributeRepository;
     
     @Override
-    public ItemAttributeData get(long id) {
+    public ItemAttributeData get(String id) {
         ItemAttributeModel itemAttributeModel = itemAttributeRepository.find(id);
         if(itemAttributeModel == null) {
             logger.warn("Cannot find Item Attribute: {}", id);
@@ -38,7 +38,7 @@ public class ItemAttributeServiceImpl implements ItemAttributeService {
     }
     
     @Override
-    public ItemAttributeData getAndPopulate(long id) {
+    public ItemAttributeData getAndPopulate(String id) {
         ItemAttributeData itemAttributeData = get(id);
         if(itemAttributeData == null) {
             return null;
@@ -69,8 +69,8 @@ public class ItemAttributeServiceImpl implements ItemAttributeService {
 
     @Override
     public void populateParent(ItemAttributeData itemAttribute) {
-        long parentId = itemAttribute.getParentId();
-        if(parentId == -1) {
+        String parentId = itemAttribute.getParentId();
+        if(parentId == null) {
             logger.warn("No Parent Item Attribute of {}. Cannot populate its parent", itemAttribute.getId());
             return;
         }
@@ -82,13 +82,12 @@ public class ItemAttributeServiceImpl implements ItemAttributeService {
     
     @Override
     public void populateAttribute(ItemAttributeData itemAttribute) {
-        // TODO Auto-generated method stub
         
     }
 
     @Override
     public List<ItemAttributeData> getByItemId(long itemId) {
-        // TODO Auto-generated method stub
+        
         return null;
     }
 

@@ -1,5 +1,7 @@
 package com.myprj.crawler.service.impl;
 
+import static com.myprj.crawler.domain.config.ItemAttributeData.collectionAllItemAttributes;
+
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -14,13 +16,17 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.myprj.crawler.domain.PageResult;
 import com.myprj.crawler.domain.Pageable;
+import com.myprj.crawler.domain.config.ItemAttributeData;
 import com.myprj.crawler.domain.crawl.WorkerData;
 import com.myprj.crawler.domain.crawl.WorkerItemData;
 import com.myprj.crawler.enumeration.Level;
+import com.myprj.crawler.model.config.ItemAttributeModel;
 import com.myprj.crawler.model.crawl.WorkerItemModel;
 import com.myprj.crawler.model.crawl.WorkerModel;
+import com.myprj.crawler.repository.ItemAttributeRepository;
 import com.myprj.crawler.repository.WorkerItemRepository;
 import com.myprj.crawler.repository.WorkerRepository;
+import com.myprj.crawler.service.ItemAttributeStructureService;
 import com.myprj.crawler.service.WorkerService;
 import com.myprj.crawler.util.WorkerItemValidator;
 
@@ -34,9 +40,15 @@ public class WorkerServiceImpl implements WorkerService {
 
     @Autowired
     private WorkerRepository workerRepository;
-    
+
     @Autowired
     private WorkerItemRepository workerItemRepository;
+    
+    @Autowired
+    private ItemAttributeRepository itemAttributeRepository;
+
+    @Autowired
+    private ItemAttributeStructureService itemAttrItemStructureService;
 
     @Override
     public WorkerData get(long id) {
@@ -99,20 +111,47 @@ public class WorkerServiceImpl implements WorkerService {
     @Transactional
     public void addWorkerItems(WorkerData worker, List<WorkerItemData> workerItems) {
         Map<Level, WorkerItemData> workerItemMap = new HashMap<Level, WorkerItemData>();
-        
-        for(WorkerItemData workerItem : workerItems) {
-            if(workerItemMap.containsKey(workerItem.getLevel())) {
+
+        for (WorkerItemData workerItem : workerItems) {
+            if (workerItemMap.containsKey(workerItem.getLevel())) {
                 throw new InvalidParameterException("Duplicated Level: " + workerItem.getLevel());
             }
             WorkerItemValidator.validateCreationPhase(workerItem);
             workerItem.setWorkerId(worker.getId());
             workerItemMap.put(workerItem.getLevel(), workerItem);
         }
-        
+
         List<WorkerItemModel> workerItemModels = new ArrayList<WorkerItemModel>();
         workerItemRepository.save(workerItemModels);
-        
+
         worker.setWorkerItems(WorkerItemData.toDatas(workerItemModels));
     }
+
+    @Override
+    public ItemAttributeData buildSelector4Item(WorkerData worker, Level level, String jsonSelector) {
+        WorkerItemModel workerItemModel = workerItemRepository.findByWorkerIdAndLevel(worker.getId(), level);
+        if (workerItemModel == null) {
+            throw new InvalidParameterException(String.format("Cannot find Worker Item: Worker=%s and Level=%s",
+                    worker.getId(), level));
+        }
+
+        WorkerItemData workerItemData = new WorkerItemData();
+        WorkerItemData.toData(workerItemModel, workerItemData);
+
+        ItemAttributeData itemAttribute = itemAttrItemStructureService.build(workerItemData, jsonSelector);
+        saveAllItemAttributesFromRoot(itemAttribute);
+        return itemAttribute;
+    }
     
+    @Transactional
+    private void saveAllItemAttributesFromRoot(ItemAttributeData itemAttribute) {
+        
+        List<ItemAttributeData> itemAttributes = new ArrayList<ItemAttributeData>();
+        ItemAttributeData.collectionAllItemAttributes(itemAttribute, itemAttributes);
+        List<ItemAttributeModel> itemAttributeModels = new ArrayList<ItemAttributeModel>();
+        ItemAttributeData.toModels(itemAttributes, itemAttributeModels);
+        
+        itemAttributeRepository.save(itemAttributeModels);
+    }
+
 }

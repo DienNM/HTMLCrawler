@@ -14,7 +14,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.myprj.crawler.domain.PageResult;
 import com.myprj.crawler.domain.Pageable;
 import com.myprj.crawler.domain.config.AttributeData;
-import com.myprj.crawler.domain.config.ItemAttributeData;
 import com.myprj.crawler.domain.config.ItemData;
 import com.myprj.crawler.model.config.ItemModel;
 import com.myprj.crawler.repository.AttributeRepository;
@@ -22,7 +21,7 @@ import com.myprj.crawler.repository.ItemAttributeRepository;
 import com.myprj.crawler.repository.ItemRepository;
 import com.myprj.crawler.service.AttributeService;
 import com.myprj.crawler.service.ItemService;
-import com.myprj.crawler.service.ItemStructureService;
+import com.myprj.crawler.service.AttributeStructureService;
 import com.myprj.crawler.util.ItemStructureUtil;
 
 /**
@@ -48,12 +47,7 @@ public class ItemServiceImpl implements ItemService {
     private AttributeService attributeService;
 
     @Autowired
-    @Qualifier("attributeStructureService")
-    private ItemStructureService<AttributeData> attributeStructureService;
-
-    @Autowired
-    @Qualifier("itemAttributeStructureService")
-    private ItemStructureService<ItemAttributeData> itemAttrItemStructureService;
+    private AttributeStructureService attributeStructureService;
 
     @Override
     public ItemData get(long id) {
@@ -154,7 +148,7 @@ public class ItemServiceImpl implements ItemService {
             throw new InvalidParameterException(String.format("Item %s is already built", itemId));
         }
 
-        AttributeData root = attributeStructureService.buildAttributes(itemData, jsonAttributes);
+        AttributeData root = attributeStructureService.build(itemData, jsonAttributes);
         List<AttributeData> attributeDatas = ItemStructureUtil.navigateAttribtesFromRoot(root);
         
         if(attributeDatas.isEmpty()) {

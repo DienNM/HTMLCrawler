@@ -13,7 +13,7 @@ import com.myprj.crawler.repository.ItemAttributeRepository;
  * @author DienNM (DEE)
  */
 @Repository
-public class DefaultItemAttributeRepository extends DefaultGenericDao<ItemAttributeModel, Long> implements ItemAttributeRepository{
+public class DefaultItemAttributeRepository extends DefaultGenericDao<ItemAttributeModel,String> implements ItemAttributeRepository{
 
     @Override
     protected Class<ItemAttributeModel> getTargetClass() {
@@ -22,7 +22,7 @@ public class DefaultItemAttributeRepository extends DefaultGenericDao<ItemAttrib
 
     @SuppressWarnings("unchecked")
     @Override
-    public List<ItemAttributeModel> findChildren(long id) {
+    public List<ItemAttributeModel> findChildren(String id) {
         Query query = entityManager.createQuery("FROM " + getClassName() + " WHERE parentId = :parentId");
         query.setParameter("parentId", id);
         return query.getResultList();

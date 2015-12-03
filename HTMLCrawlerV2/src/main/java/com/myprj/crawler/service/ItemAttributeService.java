@@ -10,9 +10,9 @@ import com.myprj.crawler.domain.config.ItemAttributeData;
 
 public interface ItemAttributeService {
 
-    ItemAttributeData get(long id);
+    ItemAttributeData get(String id);
     
-    ItemAttributeData getAndPopulate(long id);
+    ItemAttributeData getAndPopulate(String id);
 
     ItemAttributeData getRoot(long itemId);
 

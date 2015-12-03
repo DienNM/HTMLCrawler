@@ -4,7 +4,7 @@ import java.util.Map;
 
 import com.myprj.crawler.domain.config.AttributeData;
 import com.myprj.crawler.domain.config.ItemData;
-import com.myprj.crawler.service.ItemStructureService;
+import com.myprj.crawler.service.AttributeStructureService;
 import com.myprj.crawler.service.impl.AttributeStructureServiceImpl;
 import com.myprj.crawler.util.ItemStructureUtil;
 /**
@@ -40,9 +40,9 @@ public class TestAttributeBuilder2 {
     }
 
     public void buildAttributeStructure() {
-        ItemStructureService<AttributeData> attributeStructureService = new AttributeStructureServiceImpl();
+        AttributeStructureService<AttributeData> attributeStructureService = new AttributeStructureServiceImpl();
         String text = "{\"name\":\"\",\"price\":\"\",\"pastPrice\":\"\",\"includedInBox\":[\"\"],\"specifications\":[\"\"],\"descriptionDetails\":[{\"key\" : \"\",\"value\" : \"\"}]}";
-        root = attributeStructureService.buildAttributes(itemData, text);
+        root = attributeStructureService.build(itemData, text);
     }
 
     public void print() {

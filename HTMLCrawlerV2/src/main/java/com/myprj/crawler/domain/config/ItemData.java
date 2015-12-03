@@ -29,8 +29,6 @@ public class ItemData extends AuditData {
 
     private ItemContent sampleContent;
 
-    private ItemAttributeData rootItemAttribute;
-
     private List<AttributeData> attributes = new ArrayList<AttributeData>();
 
     public ItemData() {
@@ -110,14 +108,6 @@ public class ItemData extends AuditData {
 
     public void setAttributes(List<AttributeData> attributes) {
         this.attributes = attributes;
-    }
-
-    public ItemAttributeData getRootItemAttribute() {
-        return rootItemAttribute;
-    }
-
-    public void setRootItemAttribute(ItemAttributeData rootItemAttribute) {
-        this.rootItemAttribute = rootItemAttribute;
     }
 
     public ItemContent getSampleContent() {

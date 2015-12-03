@@ -4,8 +4,6 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
@@ -22,12 +20,11 @@ public class ItemAttributeModel extends AuditModel {
     private static final long serialVersionUID = 1L;
     
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
+    @Column(name = "id", length = 100)
+    private String id;
     
     @Column(name = "item_id")
     private long itemId;
-    
 
     @Column(name = "root")
     private boolean root = false;
@@ -39,17 +36,17 @@ public class ItemAttributeModel extends AuditModel {
     private String selectorJson;
     
     @Column(name = "parent_id")
-    private long parentId = -1;
+    private String parentId;
     
     @Column(name = "att_type")
     @Enumerated(EnumType.STRING)
     private AttributeType type;
     
-    public long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -84,12 +81,12 @@ public class ItemAttributeModel extends AuditModel {
     }
 
 
-    public long getParentId() {
+    public String getParentId() {
         return parentId;
     }
 
 
-    public void setParentId(long parentId) {
+    public void setParentId(String parentId) {
         this.parentId = parentId;
     }
 

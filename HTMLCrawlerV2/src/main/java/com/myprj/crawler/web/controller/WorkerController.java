@@ -2,6 +2,7 @@ package com.myprj.crawler.web.controller;
 
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -10,13 +11,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.myprj.crawler.domain.PageResult;
 import com.myprj.crawler.domain.Pageable;
 import com.myprj.crawler.domain.crawl.WorkerData;
 import com.myprj.crawler.domain.crawl.WorkerItemData;
+import com.myprj.crawler.enumeration.Level;
 import com.myprj.crawler.service.WorkerService;
 import com.myprj.crawler.web.dto.JsonResponse;
+import com.myprj.crawler.web.dto.WorkerItemDTO;
 
 /**
  * @author DienNM (DEE)
@@ -74,16 +78,45 @@ public class WorkerController  extends AbstractController{
     
     @RequestMapping(value = "/{id}/items", method = RequestMethod.POST)
     @ResponseBody
-    public JsonResponse addWorkerItems(@RequestBody List<WorkerItemData> workerItems, @PathVariable(value = "id") long id) {
-        WorkerData workerData = workerService.get(id);
+    public JsonResponse addWorkerItems(@RequestBody List<WorkerItemDTO> workerItemDTOs, @PathVariable(value = "id") long workerId) {
+        WorkerData workerData = workerService.get(workerId);
         if (workerData == null) {
             JsonResponse response = new JsonResponse(false);
-            response.putMessage(String.format("Worker Id %s not found", id));
+            response.putMessage(String.format("Worker Id %s not found", workerId));
             return response;
         }
-        if(workerItems == null || workerItems.isEmpty()) {
+        if(workerItemDTOs == null || workerItemDTOs.isEmpty()) {
             JsonResponse response = new JsonResponse(false);
             response.putMessage("No Worker Items");
+            return response;
+        }
+        List<WorkerItemData> workerItems = WorkerItemDTO.toDatas(workerItemDTOs); 
+        try {
+            workerService.addWorkerItems(workerData, workerItems);
+            JsonResponse response = new JsonResponse(workerData, !workerData.getWorkerItems().isEmpty());
+            return response;
+        } catch(Exception e) {
+            JsonResponse response = new JsonResponse(false);
+            response.putMessage(e.getMessage());
+            return response;
+        }
+    }
+    
+    @RequestMapping(value = "/{id}/items/{level}", method = RequestMethod.POST)
+    @ResponseBody
+    public JsonResponse buildSelector4WorkerItem(@PathVariable(value = "id") long workerId, 
+            @PathVariable(value = "level") Level level, @RequestParam(value = "file") MultipartFile file) {
+        WorkerData workerData = workerService.get(workerId);
+        if (workerData == null) {
+            JsonResponse response = new JsonResponse(false);
+            response.putMessage(String.format("Worker Id %s not found", workerId));
+            return response;
+        }
+        
+        String json = readLinesFile2String(file);
+        if(StringUtils.isEmpty(json)) {
+            JsonResponse response = new JsonResponse(false);
+            response.putMessage("Attributes and Selectors File is empty");
             return response;
         }
         

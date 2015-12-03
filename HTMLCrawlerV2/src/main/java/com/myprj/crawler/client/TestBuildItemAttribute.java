@@ -44,7 +44,7 @@ public class TestBuildItemAttribute {
                         + "\"value\": \"I@div.catWrapper div.description-detail ul li span\""
                     + "}]}";
         
-        root = attributeStructureService.buildAttributes(this.getAttributeBuilder().getItemData(), text);
+        root = attributeStructureService.build(this.getAttributeBuilder().getItemData(), text);
     }
 
     public static void main(String[] args) {

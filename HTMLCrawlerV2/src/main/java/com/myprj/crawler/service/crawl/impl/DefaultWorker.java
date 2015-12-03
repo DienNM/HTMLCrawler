@@ -100,7 +100,7 @@ public class DefaultWorker implements Worker {
             }
             numberOfContinuousFailures = 0; // Reset
 
-            AttributeSelector linkSelector = workerItem.getLinkSelector();
+            AttributeSelector linkSelector = workerItem.getLevel0Selector();
             Elements elements = document.body().select(linkSelector.getSelector());
             if (elements == null) {
                 logger.warn("No Data. CSS-Selector={}, URL={}", linkSelector, url);
@@ -125,7 +125,7 @@ public class DefaultWorker implements Worker {
 
     protected void processListItemsPerPage(WorkerContext workerCtx, WorkerItemData workerItem, Elements elements)
             throws WorkerException {
-        AttributeSelector linkSelector = workerItem.getLinkSelector();
+        AttributeSelector linkSelector = workerItem.getLevel0Selector();
         List<Future<Object>> futureItems = new ArrayList<Future<Object>>();
         for (Element element : elements) {
             String nextLevelLink = null;
@@ -172,7 +172,7 @@ public class DefaultWorker implements Worker {
 
     protected void processWorkerDetail(String url, HtmlDocument htmlDocument, WorkerItemData workerItem) {
         ItemData item = workerItem.getItem();
-        ItemAttributeData rootItemAttribute = item.getRootItemAttribute();
+        ItemAttributeData rootItemAttribute = workerItem.getRootItemAttribute();
 
         CrawlResultData result = new CrawlResultData();
         result.setUrl(url);

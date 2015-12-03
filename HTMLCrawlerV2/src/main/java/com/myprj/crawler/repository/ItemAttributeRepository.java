@@ -8,9 +8,9 @@ import com.myprj.crawler.model.config.ItemAttributeModel;
  * @author DienNM (DEE)
  */
 
-public interface ItemAttributeRepository extends GenericDao<ItemAttributeModel, Long> {
+public interface ItemAttributeRepository extends GenericDao<ItemAttributeModel, String> {
     
-    List<ItemAttributeModel> findChildren(long id);
+    List<ItemAttributeModel> findChildren(String id);
     
     void deleteByItemId(long itemId);
     

@@ -17,7 +17,6 @@ import com.myprj.crawler.domain.PageResult;
 import com.myprj.crawler.domain.Pageable;
 import com.myprj.crawler.domain.config.ItemData;
 import com.myprj.crawler.service.ItemService;
-import com.myprj.crawler.util.StreamUtil;
 import com.myprj.crawler.web.dto.JsonResponse;
 
 /**
@@ -105,7 +104,7 @@ public class ItemController extends AbstractController{
             return response;
         }
         
-        String json = readLines2String(file);
+        String json = readLinesFile2String(file);
         if(StringUtils.isEmpty(json)) {
             JsonResponse response = new JsonResponse(false);
             response.putMessage("Attribute File is empty");
@@ -121,18 +120,6 @@ public class ItemController extends AbstractController{
             JsonResponse response = new JsonResponse(false);
             response.putMessage(e.getMessage());
             return response;
-        }
-    }
-    
-    private String readLines2String(MultipartFile file) {
-        try {
-            String content = StreamUtil.readFile2String(file.getInputStream());
-            if(content == null) {
-                return "";
-            }
-            return content.trim();
-        } catch (Exception e) {
-            return "";
         }
     }
 }

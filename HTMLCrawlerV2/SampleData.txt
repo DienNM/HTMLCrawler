@@ -57,4 +57,28 @@
     "delayTime":"500"
 }
 
+// WorkerItem
+[
+    {
+        "level": "Level0",
+        "crawlType": "LIST",
+        "pagingConfig": {
+            "end" : "3",
+            "start": "1"
+        },
+        "level0Selector": ""
+    },
+    {
+        "level": "Level1",
+        "crawlType": "LIST",
+        "pagingConfig": {
+            "end" : "3",
+            "start": "1"
+        },
+        "level0Selector": ""
+    },
+    
+
+]
+
 

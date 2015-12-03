@@ -83,7 +83,7 @@ public final class WorkerItemValidator {
             errors.add(String.format("%s [CrawlType = %s] is missing Paging Information", workerItem.getLevel(), workerItem.getClass()));
         }
         
-        AttributeSelector selector = workerItem.getLinkSelector();
+        AttributeSelector selector = workerItem.getLevel0Selector();
         if(selector == null || StringUtils.isEmpty(selector.getSelector())) {
             errors.add(String.format("%s [CrawlType = %s] is missing Link Selector", workerItem.getLevel(), workerItem.getClass()));
         }

@@ -1,7 +1,5 @@
 package com.myprj.crawler.domain.crawl;
 
-import static com.myprj.crawler.domain.crawl.PagingConfig.WorkerListType.PAGING;
-
 import java.io.Serializable;
 
 /**
@@ -15,8 +13,6 @@ public class PagingConfig implements Serializable {
     private String end = "1";
     
     private String start = "1";
-    
-    private WorkerListType workerListType = PAGING;
     
     enum WorkerListType {
         PAGING,
@@ -40,14 +36,6 @@ public class PagingConfig implements Serializable {
 
     public void setStart(String start) {
         this.start = start;
-    }
-
-    public WorkerListType getWorkerListType() {
-        return workerListType;
-    }
-
-    public void setWorkerListType(WorkerListType workerListType) {
-        this.workerListType = workerListType;
     }
 
 }

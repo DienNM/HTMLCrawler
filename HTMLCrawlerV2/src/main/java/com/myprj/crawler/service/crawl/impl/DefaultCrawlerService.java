@@ -13,7 +13,7 @@ import com.myprj.crawler.service.crawl.Worker;
 public class DefaultCrawlerService extends AbstractCrawler {
 
     @Autowired
-    @Qualifier("defaultWorkerService")
+    @Qualifier("defaultWorker")
     private Worker workerService;
 
     @Override
