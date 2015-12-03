@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.myprj.crawler.domain.PageResult;
 import com.myprj.crawler.domain.Pageable;
 import com.myprj.crawler.domain.crawl.WorkerData;
+import com.myprj.crawler.domain.crawl.WorkerItemData;
 import com.myprj.crawler.service.WorkerService;
 import com.myprj.crawler.web.dto.JsonResponse;
 
@@ -47,14 +48,14 @@ public class WorkerController  extends AbstractController{
     
     @RequestMapping(method = RequestMethod.POST)
     @ResponseBody
-    public JsonResponse addItem(@RequestBody WorkerData worker) {
+    public JsonResponse addWorker(@RequestBody WorkerData worker) {
         WorkerData itemData = workerService.save(worker);
         return new JsonResponse(itemData, itemData != null);
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.POST)
     @ResponseBody
-    public JsonResponse updateItem(@RequestBody WorkerData worker, @PathVariable(value = "id") long id) {
+    public JsonResponse updateWorker(@RequestBody WorkerData worker, @PathVariable(value = "id") long id) {
         if (id != worker.getId()) {
             JsonResponse response = new JsonResponse(false);
             response.putMessage("Worker Ids do not match: " + id + " vs " + worker.getId());
@@ -70,5 +71,32 @@ public class WorkerController  extends AbstractController{
         JsonResponse response = new JsonResponse(true);
         return response;
     }
+    
+    @RequestMapping(value = "/{id}/items", method = RequestMethod.POST)
+    @ResponseBody
+    public JsonResponse addWorkerItems(@RequestBody List<WorkerItemData> workerItems, @PathVariable(value = "id") long id) {
+        WorkerData workerData = workerService.get(id);
+        if (workerData == null) {
+            JsonResponse response = new JsonResponse(false);
+            response.putMessage(String.format("Worker Id %s not found", id));
+            return response;
+        }
+        if(workerItems == null || workerItems.isEmpty()) {
+            JsonResponse response = new JsonResponse(false);
+            response.putMessage("No Worker Items");
+            return response;
+        }
+        
+        try {
+            workerService.addWorkerItems(workerData, workerItems);
+            JsonResponse response = new JsonResponse(workerData, !workerData.getWorkerItems().isEmpty());
+            return response;
+        } catch(Exception e) {
+            JsonResponse response = new JsonResponse(false);
+            response.putMessage(e.getMessage());
+            return response;
+        }
+    }
+    
     
 }

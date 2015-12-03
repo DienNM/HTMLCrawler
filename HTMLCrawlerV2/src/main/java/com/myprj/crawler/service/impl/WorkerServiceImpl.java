@@ -2,7 +2,9 @@ package com.myprj.crawler.service.impl;
 
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,9 +15,14 @@ import org.springframework.transaction.annotation.Transactional;
 import com.myprj.crawler.domain.PageResult;
 import com.myprj.crawler.domain.Pageable;
 import com.myprj.crawler.domain.crawl.WorkerData;
+import com.myprj.crawler.domain.crawl.WorkerItemData;
+import com.myprj.crawler.enumeration.Level;
+import com.myprj.crawler.model.crawl.WorkerItemModel;
 import com.myprj.crawler.model.crawl.WorkerModel;
+import com.myprj.crawler.repository.WorkerItemRepository;
 import com.myprj.crawler.repository.WorkerRepository;
 import com.myprj.crawler.service.WorkerService;
+import com.myprj.crawler.util.WorkerItemValidator;
 
 /**
  * @author DienNM (DEE)
@@ -27,6 +34,9 @@ public class WorkerServiceImpl implements WorkerService {
 
     @Autowired
     private WorkerRepository workerRepository;
+    
+    @Autowired
+    private WorkerItemRepository workerItemRepository;
 
     @Override
     public WorkerData get(long id) {
@@ -73,6 +83,7 @@ public class WorkerServiceImpl implements WorkerService {
     }
 
     @Override
+    @Transactional
     public WorkerData update(WorkerData worker) {
         WorkerModel workerModel = workerRepository.find(worker.getId());
         if (workerModel == null) {
@@ -83,4 +94,25 @@ public class WorkerServiceImpl implements WorkerService {
 
         return WorkerData.toData(workerModel);
     }
+
+    @Override
+    @Transactional
+    public void addWorkerItems(WorkerData worker, List<WorkerItemData> workerItems) {
+        Map<Level, WorkerItemData> workerItemMap = new HashMap<Level, WorkerItemData>();
+        
+        for(WorkerItemData workerItem : workerItems) {
+            if(workerItemMap.containsKey(workerItem.getLevel())) {
+                throw new InvalidParameterException("Duplicated Level: " + workerItem.getLevel());
+            }
+            WorkerItemValidator.validateCreationPhase(workerItem);
+            workerItem.setWorkerId(worker.getId());
+            workerItemMap.put(workerItem.getLevel(), workerItem);
+        }
+        
+        List<WorkerItemModel> workerItemModels = new ArrayList<WorkerItemModel>();
+        workerItemRepository.save(workerItemModels);
+        
+        worker.setWorkerItems(WorkerItemData.toDatas(workerItemModels));
+    }
+    
 }

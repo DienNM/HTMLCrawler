@@ -40,6 +40,12 @@ public class WorkerData extends AuditData {
     public WorkerData() {
     }
     
+    public static List<WorkerData> toDatas(List<WorkerModel> sources) {
+        List<WorkerData> dests = new ArrayList<WorkerData>();
+        toDatas(sources, dests);
+        return dests;
+    }
+    
     public static void toDatas(List<WorkerModel> sources, List<WorkerData> dests) {
         for(WorkerModel source : sources) {
             WorkerData dest = new WorkerData();

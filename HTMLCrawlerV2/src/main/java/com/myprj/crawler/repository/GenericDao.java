@@ -23,6 +23,8 @@ public interface GenericDao<E, Id> {
     
     void save(E entity);
     
+    void save(List<E> entities);
+    
     void update(E entity);
     
     void delete(E entity);

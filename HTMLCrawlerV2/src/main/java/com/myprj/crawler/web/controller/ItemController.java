@@ -85,7 +85,7 @@ public class ItemController extends AbstractController{
         ItemData itemData = itemService.get(id);
         if (itemData == null) {
             JsonResponse response = new JsonResponse(false);
-            response.putMessage(String.format("Item %s cannot find", id));
+            response.putMessage(String.format("Item %s  not found", id));
             return response;
         }
         itemService.update(item);

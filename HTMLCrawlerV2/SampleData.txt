@@ -14,3 +14,47 @@
     },
     "success":true
 }
+11
+// Create
+{
+    "name":"Sample Product",
+    "description":"Get Sample information of Product",
+    "parentCategoryId": 12
+}
+
+
+// Item
+{
+    "createdAt": 0,
+    "createdBy": "",
+    "updatedAt": 0,
+    "updatedBy": null,
+    "id": 1,
+    "name": "4234234",
+    "categoryId": 0,
+    "description": "e3eqw3234",
+    "built": false,
+    "sampleContent": null,
+    "rootItemAttribute": null,
+    "attributes": [ ]
+}
+
+// Create
+{
+    "name": "Sample Product",
+    "categoryId": 13,
+    "description": "Sample Product: Name, Price, Detail information",
+    "built": false
+}
+
+// Worker
+{
+    "name":"Lazada_Product",
+    "description":"",
+    "site":"lazada",
+    "threads":"2",
+    "attemptTimes":"3",
+    "delayTime":"500"
+}
+
+

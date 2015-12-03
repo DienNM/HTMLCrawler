@@ -31,6 +31,9 @@ public class WorkerItemModel extends AuditModel implements Comparable<WorkerItem
     @Column(name = "worker_id")
     private long workerId;
 
+    @Column(name = "item_id")
+    private long itemId = -1;
+
     @Column(name = "url", length = 150)
     private String url;
 
@@ -111,6 +114,14 @@ public class WorkerItemModel extends AuditModel implements Comparable<WorkerItem
 
     public void setPagingConfig(String pagingConfig) {
         this.pagingConfig = pagingConfig;
+    }
+
+    public long getItemId() {
+        return itemId;
+    }
+
+    public void setItemId(long itemId) {
+        this.itemId = itemId;
     }
 
 }

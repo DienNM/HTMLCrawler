@@ -3,13 +3,15 @@ package com.myprj.crawler.domain.crawl;
 import static com.myprj.crawler.util.Serialization.deserialize;
 import static com.myprj.crawler.util.Serialization.serialize;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.myprj.crawler.domain.AuditData;
 import com.myprj.crawler.domain.config.AttributeSelector;
+import com.myprj.crawler.domain.config.ItemAttributeData;
 import com.myprj.crawler.domain.config.ItemData;
-import com.myprj.crawler.enumeration.Level;
 import com.myprj.crawler.enumeration.CrawlType;
+import com.myprj.crawler.enumeration.Level;
 import com.myprj.crawler.model.crawl.WorkerItemModel;
 
 /**
@@ -23,6 +25,8 @@ public class WorkerItemData extends AuditData {
     private long id;
 
     private long workerId;
+    
+    private long itemId = -1;
 
     private String url;
 
@@ -33,13 +37,21 @@ public class WorkerItemData extends AuditData {
     // For DETAIL
     private ItemData item;
     
+    private ItemAttributeData rootItemAttribute;
+    
     // For List Crawler to get next link
     private AttributeSelector linkSelector;
     
     // For List Crawler
-    private PagingConfig pagingConfig;
+    private PagingConfig pagingConfig = new PagingConfig();
     
     public WorkerItemData() {
+    }
+    
+    public static List<WorkerItemData> toDatas(List<WorkerItemModel> sources) {
+        List<WorkerItemData> dests = new ArrayList<WorkerItemData>();
+        toDatas(sources, dests);
+        return dests;
     }
     
     public static void toDatas(List<WorkerItemModel> sources, List<WorkerItemData> dests) {
@@ -64,6 +76,7 @@ public class WorkerItemData extends AuditData {
         dest.setCrawlType(source.getCrawlType());
         dest.setUrl(source.getUrl());
         dest.setWorkerId(source.getWorkerId());
+        dest.setItemId(source.getItemId());
         dest.setPagingConfig(source.getPagingConfig());
     }
     
@@ -74,6 +87,7 @@ public class WorkerItemData extends AuditData {
         dest.setCrawlType(source.getCrawlType());
         dest.setUrl(source.getUrl());
         dest.setWorkerId(source.getWorkerId());
+        dest.setItemId(source.getItemId());
         if(source.getPagingConfig() != null) {
             dest.setPagingConfig(deserialize(source.getPagingConfig(), PagingConfig.class));
         }
@@ -154,6 +168,22 @@ public class WorkerItemData extends AuditData {
 
     public void setLinkSelector(AttributeSelector linkSelector) {
         this.linkSelector = linkSelector;
+    }
+
+    public long getItemId() {
+        return itemId;
+    }
+
+    public void setItemId(long itemId) {
+        this.itemId = itemId;
+    }
+
+    public ItemAttributeData getRootItemAttribute() {
+        return rootItemAttribute;
+    }
+
+    public void setRootItemAttribute(ItemAttributeData rootItemAttribute) {
+        this.rootItemAttribute = rootItemAttribute;
     }
 
 }

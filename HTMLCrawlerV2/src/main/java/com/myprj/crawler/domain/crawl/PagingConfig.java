@@ -12,9 +12,9 @@ public class PagingConfig implements Serializable {
     
     private static final long serialVersionUID = 1L;
 
-    private String end;
+    private String end = "1";
     
-    private String start;
+    private String start = "1";
     
     private WorkerListType workerListType = PAGING;
     
