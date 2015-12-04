@@ -16,6 +16,7 @@
     <context:component-scan base-package="com.myprj.crawler.repository" />
     
     <import resource="orm-context.xml"/>
+    <import resource="dto-context.xml"/>
     <import resource="service-context.xml"/>
     
 </beans>

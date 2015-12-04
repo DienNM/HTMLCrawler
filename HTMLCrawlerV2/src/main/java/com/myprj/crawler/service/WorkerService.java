@@ -21,6 +21,8 @@ public interface WorkerService {
     
     PageResult<WorkerData> getPaging(Pageable pageable);
     
+    void populateWorkerItems(WorkerData worker);
+    
     WorkerData save(WorkerData worker);
     
     WorkerData update(WorkerData worker);

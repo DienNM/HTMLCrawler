@@ -5,6 +5,7 @@ import static com.myprj.crawler.enumeration.WorkerStatus.Created;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.myprj.crawler.annotation.DataTransfer;
 import com.myprj.crawler.domain.AuditData;
 import com.myprj.crawler.enumeration.WorkerStatus;
 import com.myprj.crawler.model.crawl.WorkerModel;
@@ -17,20 +18,28 @@ public class WorkerData extends AuditData {
 
     private static final long serialVersionUID = 1L;
     
+    @DataTransfer(value = "id")
     private long id;
-    
+
+    @DataTransfer(value = "name")
     private String name;
-    
+
+    @DataTransfer(value = "description")
     private String description;
-    
+
+    @DataTransfer(value = "site")
     private String site;
-    
+
+    @DataTransfer(value = "threads")
     private int threads = 1;
 
+    @DataTransfer(value = "attemptTimes")
     private int attemptTimes = 3;
 
+    @DataTransfer(value = "id")
     private int delayTime = 1000;
-    
+
+    @DataTransfer(value = "id")
     private WorkerStatus status = Created;
     
     private List<ProxyData> proxies = new ArrayList<ProxyData>();

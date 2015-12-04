@@ -31,6 +31,31 @@ public class WorkerItemDTO implements Serializable{
     public WorkerItemDTO() {
     }
     
+    public static List<WorkerItemDTO> toDTOs(List<WorkerItemData> soures) {
+        List<WorkerItemDTO> dests = new  ArrayList<WorkerItemDTO>();
+        toDTOs(soures, dests);
+        return dests;
+    }
+    
+    public static void toDTOs(List<WorkerItemData> soures, List<WorkerItemDTO> dests) {
+        for(WorkerItemData source : soures) {
+            WorkerItemDTO dest = new WorkerItemDTO();
+            toDTO(source, dest);
+            dests.add(dest);
+        }
+    }
+    
+    public static void toDTO(WorkerItemData source, WorkerItemDTO dest) {
+        dest.setCrawlType(source.getCrawlType());
+        dest.setLevel(source.getLevel());
+        if(source.getPagingConfig() != null) {
+            dest.setPagingConfig(source.getPagingConfig());
+        }
+        if(source.getLevel0Selector() != null) {
+            dest.setLevel0Selector(source.getLevel0Selector().getText());
+        }
+    }
+    
     public static List<WorkerItemData> toDatas(List<WorkerItemDTO> soures) {
         List<WorkerItemData> dests = new  ArrayList<WorkerItemData>();
         toDatas(soures, dests);

@@ -1,7 +1,5 @@
 package com.myprj.crawler.service.impl;
 
-import static com.myprj.crawler.domain.config.ItemAttributeData.collectionAllItemAttributes;
-
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -83,6 +81,13 @@ public class WorkerServiceImpl implements WorkerService {
         results.setContent(workerDatas);
 
         return results;
+    }
+    
+    @Override
+    public void populateWorkerItems(WorkerData worker) {
+        List<WorkerItemModel> workerItemModels = workerItemRepository.findByWorkerId(worker.getId());
+        List<WorkerItemData> workerItems = WorkerItemData.toDatas(workerItemModels);
+        worker.setWorkerItems(workerItems);
     }
 
     @Override
