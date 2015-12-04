@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import com.myprj.crawler.annotation.DataTransfer;
 import com.myprj.crawler.util.ReflectionUtil;
 import com.myprj.crawler.util.converter.TypeConverter;
+import com.myprj.crawler.web.enumeration.TargetDTOType;
 import com.myprj.crawler.web.exception.DtoConvertException;
 import com.myprj.crawler.web.mapping.DTOField.DTOFieldType;
 
@@ -28,6 +29,15 @@ public final class DTOHandler {
 
     public static void register(String dtoClassName, DTOMapping dtoMapping) {
         dtoMappings.put(dtoClassName, dtoMapping);
+    }
+    
+    public static <T> Map<String, Object> convert(T dto, String targetClass, TargetDTOType targetDTOType) throws DtoConvertException {
+        DTOMapping dtoMapping = dtoMappings.get(targetClass);
+        if(dtoMapping == null) {
+            throw new DtoConvertException(String.format("DTOMapping for %s has not been supported yet", targetClass));
+        }
+        Map<String, DTOField> destFieldsMap = dtoMapping.getTargetMapping(targetDTOType);
+        return convert(dto, destFieldsMap);
     }
 
     public static <T> Map<String, Object> convert(T dto, Map<String, DTOField> destFieldsMap)
