@@ -6,6 +6,7 @@ import static com.myprj.crawler.util.Serialization.serialize;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.myprj.crawler.annotation.DataTransfer;
 import com.myprj.crawler.domain.AuditData;
 import com.myprj.crawler.model.config.ItemModel;
 
@@ -17,18 +18,23 @@ public class ItemData extends AuditData {
 
     private static final long serialVersionUID = 1L;
 
+    @DataTransfer("id")
     private long id;
 
+    @DataTransfer("name")
     private String name;
 
+    @DataTransfer("categoryId")
     private long categoryId;
 
+    @DataTransfer("description")
     private String description;
-    
+
+    @DataTransfer("built")
     private boolean built;
 
     private ItemContent sampleContent;
-
+    
     private List<AttributeData> attributes = new ArrayList<AttributeData>();
 
     public ItemData() {

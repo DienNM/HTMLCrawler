@@ -1,7 +1,7 @@
 package com.myprj.crawler.web.mapping;
 
-import static com.myprj.crawler.web.enumeration.TargetDTOType.DEFAULT;
-import static com.myprj.crawler.web.enumeration.TargetDTOType.SIMPLE;
+import static com.myprj.crawler.web.enumeration.TargetDTOLevel.DEFAULT;
+import static com.myprj.crawler.web.enumeration.TargetDTOLevel.SIMPLE;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -9,7 +9,7 @@ import java.util.Map;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.myprj.crawler.web.enumeration.TargetDTOType;
+import com.myprj.crawler.web.enumeration.TargetDTOLevel;
 
 /**
  * @author DienNM (DEE)
@@ -21,8 +21,8 @@ public class DTOMappingTest {
     public void testDTOMapping1() {
         DTOMapping dtoMapping = new DTOMapping();
         
-        Map<TargetDTOType, String> targetMappings = new HashMap<TargetDTOType, String>();
-        targetMappings.put(TargetDTOType.SIMPLE, "a1,a2,a3");
+        Map<TargetDTOLevel, String> targetMappings = new HashMap<TargetDTOLevel, String>();
+        targetMappings.put(TargetDTOLevel.SIMPLE, "a1,a2,a3");
         
         dtoMapping.setTargetMappings(targetMappings);
         dtoMapping.setTargetClassName("a.b.c.ABC");
@@ -37,10 +37,10 @@ public class DTOMappingTest {
     public void testDTOMapping2() {
         DTOMapping dtoMapping = new DTOMapping();
         
-        Map<TargetDTOType, String> targetMappings = new HashMap<TargetDTOType, String>();
-        targetMappings.put(TargetDTOType.SIMPLE, "a1,a2,a3");
-        targetMappings.put(TargetDTOType.DEFAULT, "SIMPLE,a4,ref(SIMPLE)");
-        targetMappings.put(TargetDTOType.FULL, "DEFAULT,a5,a6(DEFAULT)");
+        Map<TargetDTOLevel, String> targetMappings = new HashMap<TargetDTOLevel, String>();
+        targetMappings.put(TargetDTOLevel.SIMPLE, "a1,a2,a3");
+        targetMappings.put(TargetDTOLevel.DEFAULT, "SIMPLE,a4,ref(SIMPLE)");
+        targetMappings.put(TargetDTOLevel.FULL, "DEFAULT,a5,a6(DEFAULT)");
         
         dtoMapping.setTargetMappings(targetMappings);
         dtoMapping.setTargetClassName("a.b.c.ABC");

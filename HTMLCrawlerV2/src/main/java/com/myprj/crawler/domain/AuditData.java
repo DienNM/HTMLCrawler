@@ -2,6 +2,7 @@ package com.myprj.crawler.domain;
 
 import java.io.Serializable;
 
+import com.myprj.crawler.annotation.DataTransfer;
 import com.myprj.crawler.model.AuditModel;
 
 /**
@@ -12,12 +13,16 @@ public class AuditData implements Serializable{
 
     private static final long serialVersionUID = 1L;
     
+    @DataTransfer("createdAt")
     private long createdAt;
-    
+
+    @DataTransfer("createdBy")
     private String createdBy;
-    
+
+    @DataTransfer("updatedAt")
     private long updatedAt;
-    
+
+    @DataTransfer("updatedBy")
     private String updatedBy;
     
     public static void toAuditData(AuditModel source, AuditData dest) {

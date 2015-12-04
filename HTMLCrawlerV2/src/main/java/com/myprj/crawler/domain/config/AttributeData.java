@@ -3,6 +3,7 @@ package com.myprj.crawler.domain.config;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.myprj.crawler.annotation.DataTransfer;
 import com.myprj.crawler.domain.AuditData;
 import com.myprj.crawler.enumeration.AttributeType;
 import com.myprj.crawler.model.config.AttributeModel;
@@ -15,18 +16,24 @@ public class AttributeData extends AuditData {
 
     private static final long serialVersionUID = 1L;
 
+    @DataTransfer("id")
     private String id;
 
+    @DataTransfer("itemId")
     private long itemId;
 
+    @DataTransfer("name")
     private String name;
 
+    @DataTransfer("type")
     private AttributeType type;
 
+    @DataTransfer("parentId")
     private String parentId;
 
     private AttributeData parent;
-    
+
+    @DataTransfer("root")
     private boolean root;
 
     private List<AttributeData> children = new ArrayList<AttributeData>();

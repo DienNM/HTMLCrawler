@@ -1,6 +1,8 @@
 package com.myprj.crawler.web.controller;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,49 +19,70 @@ import com.myprj.crawler.domain.PageResult;
 import com.myprj.crawler.domain.Pageable;
 import com.myprj.crawler.domain.config.ItemData;
 import com.myprj.crawler.service.ItemService;
+import com.myprj.crawler.web.dto.ItemDTO;
 import com.myprj.crawler.web.dto.JsonResponse;
+import com.myprj.crawler.web.enumeration.TargetDTOLevel;
+import com.myprj.crawler.web.mapping.DTOHandler;
+import com.myprj.crawler.web.mapping.ObjectConverterUtil;
 
 /**
  * @author DienNM (DEE)
  */
 @Controller
 @RequestMapping(value = "/items", produces = "application/json")
-public class ItemController extends AbstractController{
+public class ItemController extends AbstractController {
 
     @Autowired
     private ItemService itemService;
 
     @RequestMapping(value = "/all", method = RequestMethod.GET)
     @ResponseBody
-    public JsonResponse getAll() {
+    public JsonResponse getAll(@RequestParam(value = "level", defaultValue = "SIMPLE") TargetDTOLevel target) {
         List<ItemData> itemDatas = itemService.getAll();
-        JsonResponse response = new JsonResponse(itemDatas, true);
-        return response;
+
+        List<ItemDTO> itemDTOs = new ArrayList<ItemDTO>();
+        ObjectConverterUtil.convert(itemDatas, itemDTOs, ItemDTO.creation());
+
+        return returnResponses(itemDTOs, target);
     }
 
     @RequestMapping(method = RequestMethod.GET)
     @ResponseBody
     public JsonResponse getPaging(@RequestParam(value = "currentPage", defaultValue = "0") int currentPage,
-            @RequestParam(value = "pageSize", defaultValue = "10") int pageSize) {
+            @RequestParam(value = "pageSize", defaultValue = "10") int pageSize,
+            @RequestParam(value = "level", defaultValue = "SIMPLE") TargetDTOLevel target) {
         Pageable pageable = new Pageable(pageSize, currentPage);
         PageResult<ItemData> pageResult = itemService.getPaging(pageable);
-        return returnDataPaging(pageResult);
+
+        JsonResponse jsonResponse = returnDataPaging(pageResult);
+
+        List<ItemDTO> itemDTOs = new ArrayList<ItemDTO>();
+        ObjectConverterUtil.convert(pageResult.getContent(), itemDTOs, ItemDTO.creation());
+        List<Map<String, Object>> json = DTOHandler.convert(itemDTOs, target);
+
+        jsonResponse.putData(json);
+        jsonResponse.put(JsonResponse.SUCCESS, !json.isEmpty());
+        return jsonResponse;
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     @ResponseBody
-    public JsonResponse getItem(@PathVariable(value = "id") long id) {
+    public JsonResponse getItem(@PathVariable(value = "id") long id,
+            @RequestParam(value = "level", defaultValue = "SIMPLE") TargetDTOLevel target) {
         ItemData itemData = itemService.get(id);
-        return new JsonResponse(itemData, itemData != null);
+        ItemDTO itemDTO = new ItemDTO();
+        ObjectConverterUtil.convert(itemData, itemDTO);
+
+        return returnResponse(itemDTO, target);
     }
-    
+
     @RequestMapping(value = "/delete/{id}", method = RequestMethod.POST)
     @ResponseBody
     public JsonResponse deleteItem(@PathVariable(value = "id") long id) {
         try {
             itemService.delete(id);
             return new JsonResponse(true);
-        } catch(Exception e) {
+        } catch (Exception e) {
             JsonResponse response = new JsonResponse(false);
             response.putMessage(e.getMessage());
             return response;
@@ -95,28 +118,29 @@ public class ItemController extends AbstractController{
 
     @RequestMapping(value = "/{id}/build", method = RequestMethod.POST)
     @ResponseBody
-    public JsonResponse buildItem(@RequestParam(value = "file") MultipartFile file, @PathVariable(value = "id") long id,
+    public JsonResponse buildItem(@RequestParam(value = "file") MultipartFile file,
+            @PathVariable(value = "id") long id,
             @RequestParam(value = "forceBuilt", defaultValue = "false") boolean forceBuilt) {
-        
-        if(file == null) {
+
+        if (file == null) {
             JsonResponse response = new JsonResponse(false);
             response.putMessage("Attributes are missing");
             return response;
         }
-        
+
         String json = readLinesFile2String(file);
-        if(StringUtils.isEmpty(json)) {
+        if (StringUtils.isEmpty(json)) {
             JsonResponse response = new JsonResponse(false);
             response.putMessage("Attribute File is empty");
             return response;
         }
-        
+
         try {
             ItemData itemData = itemService.buildItem(id, json, forceBuilt);
             itemService.populateAttributes(itemData);
             JsonResponse response = new JsonResponse(itemData, true);
             return response;
-        } catch(Exception e) {
+        } catch (Exception e) {
             JsonResponse response = new JsonResponse(false);
             response.putMessage(e.getMessage());
             return response;

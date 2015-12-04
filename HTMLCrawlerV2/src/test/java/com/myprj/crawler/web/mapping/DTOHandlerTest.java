@@ -1,5 +1,8 @@
 package com.myprj.crawler.web.mapping;
 
+import static com.myprj.crawler.web.enumeration.TargetDTOLevel.DEFAULT;
+import static com.myprj.crawler.web.enumeration.TargetDTOLevel.FULL;
+
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
@@ -8,7 +11,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.myprj.crawler.web.enumeration.TargetDTOType;
+import com.myprj.crawler.web.enumeration.TargetDTOLevel;
 import com.myprj.crawler.web.exception.DtoConvertException;
 
 /**
@@ -20,10 +23,10 @@ public class DTOHandlerTest {
     @Before
     public void startUp() {
         DTOMapping class1Mapping = new DTOMapping();
-        Map<TargetDTOType, String> class1TargetMapping = new HashMap<TargetDTOType, String>();
-        class1TargetMapping.put(TargetDTOType.SIMPLE, "value1");
-        class1TargetMapping.put(TargetDTOType.DEFAULT, "SIMPLE,value2,value3(DEFAULT)");
-        class1TargetMapping.put(TargetDTOType.FULL, "SIMPLE,value2,value3(FULL)");
+        Map<TargetDTOLevel, String> class1TargetMapping = new HashMap<TargetDTOLevel, String>();
+        class1TargetMapping.put(TargetDTOLevel.SIMPLE, "value1");
+        class1TargetMapping.put(TargetDTOLevel.DEFAULT, "SIMPLE,value2,value3(DEFAULT)");
+        class1TargetMapping.put(TargetDTOLevel.FULL, "SIMPLE,value2,value3(FULL)");
         class1Mapping.setTargetMappings(class1TargetMapping);
         class1Mapping.setTargetClassName("com.myprj.crawler.web.mapping.Class1");
         class1Mapping.init();
@@ -31,9 +34,9 @@ public class DTOHandlerTest {
         DTOHandler.register(class1Mapping.getTargetClassName(), class1Mapping);
         
         DTOMapping class2Mapping = new DTOMapping();
-        Map<TargetDTOType, String> class2TargetMapping = new HashMap<TargetDTOType, String>();
-        class2TargetMapping.put(TargetDTOType.DEFAULT, "classValue1");
-        class2TargetMapping.put(TargetDTOType.FULL, "classValue1,classValue2");
+        Map<TargetDTOLevel, String> class2TargetMapping = new HashMap<TargetDTOLevel, String>();
+        class2TargetMapping.put(TargetDTOLevel.DEFAULT, "classValue1");
+        class2TargetMapping.put(TargetDTOLevel.FULL, "classValue1,classValue2");
         class2Mapping.setTargetMappings(class2TargetMapping);
         class2Mapping.setTargetClassName("com.myprj.crawler.web.mapping.Class2");
         class2Mapping.init();
@@ -41,9 +44,9 @@ public class DTOHandlerTest {
         DTOHandler.register(class2Mapping.getTargetClassName(), class2Mapping);
         
         DTOMapping class3Mapping = new DTOMapping();
-        Map<TargetDTOType, String> class3TargetMapping = new HashMap<TargetDTOType, String>();
-        class3TargetMapping.put(TargetDTOType.DEFAULT, "class3Value1,class3Value2");
-        class3TargetMapping.put(TargetDTOType.FULL, "class3Value1,class3Value2,class3Value3");
+        Map<TargetDTOLevel, String> class3TargetMapping = new HashMap<TargetDTOLevel, String>();
+        class3TargetMapping.put(TargetDTOLevel.DEFAULT, "class3Value1,class3Value2");
+        class3TargetMapping.put(TargetDTOLevel.FULL, "class3Value1,class3Value2,class3Value3");
         class3Mapping.setTargetMappings(class3TargetMapping);
         class3Mapping.setTargetClassName("com.myprj.crawler.web.mapping.Class3");
         class2Mapping.init();
@@ -57,17 +60,17 @@ public class DTOHandlerTest {
         Class1 class1 = createClass1();
         try {
             
-            Map<String, Object> result = DTOHandler.convert(class1, Class1.class.getName(), TargetDTOType.SIMPLE);
+            Map<String, Object> result = DTOHandler.convert(class1, TargetDTOLevel.SIMPLE);
             Assert.assertEquals(1, result.size());
             Assert.assertEquals("Class1 Value1", result.get("value1"));
             
-            result = DTOHandler.convert(class1, Class1.class.getName(), TargetDTOType.DEFAULT);
+            result = DTOHandler.convert(class1, DEFAULT);
             Assert.assertEquals(3, result.size());
             Assert.assertEquals("Class1 Value1", result.get("value1"));
             Assert.assertEquals("Class1 Value2", result.get("value2"));
             Assert.assertEquals("Class2 Value1", ((Map<String, Object>)result.get("value3")).get("classValue1") );
             
-            result = DTOHandler.convert(class1, Class1.class.getName(), TargetDTOType.FULL);
+            result = DTOHandler.convert(class1, FULL);
             Assert.assertEquals(3, result.size());
             Assert.assertEquals("Class1 Value1", result.get("value1"));
             Assert.assertEquals("Class1 Value2", result.get("value2"));

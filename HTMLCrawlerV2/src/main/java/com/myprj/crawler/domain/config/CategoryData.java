@@ -2,6 +2,7 @@ package com.myprj.crawler.domain.config;
 
 import java.util.List;
 
+import com.myprj.crawler.annotation.DataTransfer;
 import com.myprj.crawler.domain.AuditData;
 import com.myprj.crawler.model.config.CategoryModel;
 
@@ -13,12 +14,16 @@ public class CategoryData extends AuditData {
 
     private static final long serialVersionUID = 1L;
 
+    @DataTransfer("id")
     private long id;
 
+    @DataTransfer("name")
     private String name;
 
+    @DataTransfer("description")
     private String description;
 
+    @DataTransfer("parentCategoryId")
     private long parentCategoryId;
 
     private CategoryData parentCategory;

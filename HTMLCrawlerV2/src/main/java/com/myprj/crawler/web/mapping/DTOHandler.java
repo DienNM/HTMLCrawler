@@ -3,6 +3,7 @@ package com.myprj.crawler.web.mapping;
 import static com.myprj.crawler.util.ReflectionUtil.getFieldWithAncestors;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,7 +14,7 @@ import org.slf4j.LoggerFactory;
 import com.myprj.crawler.annotation.DataTransfer;
 import com.myprj.crawler.util.ReflectionUtil;
 import com.myprj.crawler.util.converter.TypeConverter;
-import com.myprj.crawler.web.enumeration.TargetDTOType;
+import com.myprj.crawler.web.enumeration.TargetDTOLevel;
 import com.myprj.crawler.web.exception.DtoConvertException;
 import com.myprj.crawler.web.mapping.DTOField.DTOFieldType;
 
@@ -31,17 +32,35 @@ public final class DTOHandler {
         dtoMappings.put(dtoClassName, dtoMapping);
     }
     
-    public static <T> Map<String, Object> convert(T dto, String targetClass, TargetDTOType targetDTOType) throws DtoConvertException {
+    public static <S> List<Map<String, Object>> convert(List<S> dtos, TargetDTOLevel targetDTOType) {
+        return convert(dtos, targetDTOType, null);
+    }
+
+    public static <S> List<Map<String, Object>> convert(List<S> dtos, TargetDTOLevel targetDTOType, DTOConverter<S> dtoConverter) {
+        List<Map<String, Object>> results = new ArrayList<Map<String, Object>>();
+        for(S dto : dtos) {
+            Map<String, Object> result = convert(dto, dto.getClass().getName(), targetDTOType, dtoConverter);
+            results.add(result);
+        }
+        return results;
+    }
+    
+    public static <S> Map<String, Object> convert(S dto, TargetDTOLevel targetDTOType) {
+        return convert(dto, dto.getClass().getName(), targetDTOType, null);
+    }
+
+    public static <S> Map<String, Object> convert(S dto, String targetClass, TargetDTOLevel targetDTOType,
+            DTOConverter<S> dtoConverter) {
         DTOMapping dtoMapping = dtoMappings.get(targetClass);
-        if(dtoMapping == null) {
+        if (dtoMapping == null) {
             throw new DtoConvertException(String.format("DTOMapping for %s has not been supported yet", targetClass));
         }
         Map<String, DTOField> destFieldsMap = dtoMapping.getTargetMapping(targetDTOType);
-        return convert(dto, destFieldsMap);
+        return convert(dto, destFieldsMap, dtoConverter);
     }
 
-    public static <T> Map<String, Object> convert(T dto, Map<String, DTOField> destFieldsMap)
-            throws DtoConvertException {
+    public static <S> Map<String, Object> convert(S dto, Map<String, DTOField> destFieldsMap,
+            DTOConverter<S> dtoConverter) throws DtoConvertException {
         if (dto == null || destFieldsMap == null) {
             throw new DtoConvertException("DTO Object or Mapping is null");
         }
@@ -79,7 +98,7 @@ public final class DTOHandler {
                                 destField.getFieldName());
                         continue;
                     }
-                    Map<String, Object> resultRef = convert(value, refDestFieldMap);
+                    Map<String, Object> resultRef = convert(value, refDestFieldMap, null);
                     result.put(destField.getFieldName(), resultRef);
                 } else {
                     String valueString = TypeConverter.convertObject2String(value);
@@ -91,6 +110,11 @@ public final class DTOHandler {
                         destFieldsMap.toString());
             }
         }
+
+        if (dtoConverter != null) {
+            dtoConverter.convert(dto, result);
+        }
+
         return result;
     }
 
