@@ -30,6 +30,8 @@ import com.myprj.crawler.web.enumeration.DTOLevel;
 @Controller
 @RequestMapping(value = "/categories", produces = "application/json")
 public class CategoryController extends AbstractController {
+    
+    private static final long DEFAULT_CTG_ID = -1000;
 
     @Autowired
     private CategoryService categoryService;
@@ -84,7 +86,7 @@ public class CategoryController extends AbstractController {
     @RequestMapping(method = RequestMethod.POST)
     @ResponseBody
     public JsonResponse addCategory(@RequestParam(value = "name") String name,
-            @RequestParam(value = "description") String description,
+            @RequestParam(value = "description", required = false) String description,
             @RequestParam(value = "parentCategoryId", defaultValue = "-1") long parentId) {
 
         List<RequestError> errors = new ArrayList<RequestError>();
@@ -109,6 +111,48 @@ public class CategoryController extends AbstractController {
         categoryData.setName(name);
         categoryData.setDescription(description);
         categoryData.setParentCategoryId(parentId);
+        CategoryData category = categoryService.save(categoryData);
+
+        return new JsonResponse(category != null);
+    }
+    
+    @RequestMapping(value = "/{id}", method = RequestMethod.POST)
+    @ResponseBody
+    public JsonResponse updateParentCategory(
+            @PathVariable(value = "id") long id,
+            @RequestParam(value = "parentCategoryId", defaultValue = "-1000", required = false) long parentId,
+            @RequestParam(value = "name", required = false) String name,
+            @RequestParam(value = "description", required = false) String description) {
+
+        List<RequestError> errors = new ArrayList<RequestError>();
+        
+        CategoryData categoryData = categoryService.getById(id);
+        if(categoryData == null) {
+            errors.add(new RequestError("id", "Category " + id + " not found"));
+        }
+        
+        if(categoryData.getParentCategoryId() != parentId && parentId != -1 && parentId != DEFAULT_CTG_ID) {
+            CategoryData parentCtg = categoryService.getById(parentId);
+            if(parentCtg == null) {
+                errors.add(new RequestError("parentCategoryId", "Category Parent " + parentId + " not found"));
+            }
+        }
+        
+        if (!errors.isEmpty()) {
+            JsonResponse jsonResponse = new JsonResponse(false);
+            jsonResponse.putErrors(errors);
+            return jsonResponse;
+        }
+        
+        if(!StringUtils.isEmpty(name)) {
+            categoryData.setName(name);
+        }
+        if(!StringUtils.isEmpty(description)) {
+            categoryData.setDescription(description);
+        }
+        if(parentId != DEFAULT_CTG_ID) {
+            categoryData.setParentCategoryId(parentId);
+        }
         CategoryData category = categoryService.save(categoryData);
 
         return new JsonResponse(category != null);

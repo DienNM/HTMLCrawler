@@ -21,4 +21,7 @@ public interface CategoryService {
     PageResult<CategoryData> getAllWithPaging(Pageable pageable);
     
     CategoryData save(CategoryData category);
+    
+    CategoryData update(CategoryData category);
+    
 }

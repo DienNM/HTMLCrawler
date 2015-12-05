@@ -39,6 +39,19 @@ public class CategoryServiceImpl implements CategoryService {
 
         return persitedCategory;
     }
+    
+    @Override
+    @Transactional
+    public CategoryData update(CategoryData category) {
+        CategoryModel categoryModel = new CategoryModel();
+        CategoryData.toModel(category, categoryModel);
+        categoryRepository.update(categoryModel);
+        
+        CategoryData persitedCategory = new CategoryData();
+        CategoryData.toData(categoryModel, persitedCategory);
+
+        return persitedCategory;
+    }
 
     @Override
     public CategoryData getById(long id) {
