@@ -23,6 +23,8 @@ public class ItemAttributeData extends AuditData {
     private long itemId;
 
     private String parentId;
+    
+    private String name;
 
     private String attributeId;
 
@@ -40,7 +42,7 @@ public class ItemAttributeData extends AuditData {
 
     public ItemAttributeData() {
     }
-
+    
     public static void collectionAllItemAttributes(ItemAttributeData itemAttribute,
             List<ItemAttributeData> itemAttributes) {
         itemAttributes.add(itemAttribute);
@@ -101,6 +103,14 @@ public class ItemAttributeData extends AuditData {
 
     public void setItemId(long itemId) {
         this.itemId = itemId;
+    }
+    
+    public String getName() {
+        return name;
+    }
+    
+    public void setName(String name) {
+        this.name = name;
     }
 
     public ItemAttributeData getParent() {

@@ -12,7 +12,8 @@ public class DTOField {
     
     public enum DTOFieldType {
         field,
-        ref
+        ref,
+        list
     }
     
     private String fieldName;
@@ -20,6 +21,8 @@ public class DTOField {
     private DTOLevel targetRefType;
     
     private DTOFieldType type = field;
+    
+    private DTOFieldType subType;
     
     public DTOField() {
     }
@@ -55,6 +58,14 @@ public class DTOField {
 
     public void setTargetRefType(DTOLevel targetRefType) {
         this.targetRefType = targetRefType;
+    }
+
+    public DTOFieldType getSubType() {
+        return subType;
+    }
+
+    public void setSubType(DTOFieldType subType) {
+        this.subType = subType;
     }
     
 }

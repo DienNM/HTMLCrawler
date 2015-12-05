@@ -48,20 +48,24 @@ public class WorkerDTO extends AuditTDO {
     public WorkerDTO() {
     }
 
-    public static List<WorkerDTO> toDTOs(List<WorkerData> sources) {
+    public static List<WorkerDTO> toDTOsDeeply(List<WorkerData> sources) {
         List<WorkerDTO> dests = new ArrayList<WorkerDTO>();
         for(WorkerData source : sources) {
-            dests.add(toDTO(source));
+            dests.add(toDTOsDeeply(source));
         }
         return dests;
     }
     
-    public static WorkerDTO toDTO(WorkerData source) {
+    public static WorkerDTO toDTOsDeeply(WorkerData source) {
         WorkerDTO dest = new WorkerDTO();
         DomainConverter.convert(source, dest, new ObjectConverter<WorkerData, WorkerDTO>() {
             @Override
             public void convert(WorkerData src, WorkerDTO dest) {
-                dest.setWorkerItems(WorkerItemDTO.toDTOs(src.getWorkerItems()));
+                List<WorkerItemDTO> workerItemDTOs = new ArrayList<WorkerItemDTO>();
+                if(!src.getWorkerItems().isEmpty()) {
+                    WorkerItemDTO.toDTOs(src.getWorkerItems(), workerItemDTOs);
+                    dest.setWorkerItems(workerItemDTOs);
+                }
             }
         });
         return dest;

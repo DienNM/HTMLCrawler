@@ -19,7 +19,7 @@ import com.myprj.crawler.web.mapping.DTOField.DTOFieldType;
 
 public class DTOMapping {
 
-    private Pattern patten = Pattern.compile("\\w+\\(\\w+\\)");
+    private static Pattern pattenRef = Pattern.compile("\\w+\\(\\w+\\)");
 
     private Map<DTOLevel, String> targetMappings;
     
@@ -65,6 +65,9 @@ public class DTOMapping {
                 intFields(map, targetMappings.get(DEFAULT));
             } else if (DTOLevel.FULL.name().equalsIgnoreCase(field)) {
                 intFields(map, targetMappings.get(FULL));
+            } else if(isListField(field)) {
+                DTOField dtoField = createDTOFieldList(field);
+                map.put(dtoField.getFieldName(), dtoField);
             } else if (isReferenceField(field)) {
                 DTOField dtoField = createDTOFieldRef(field);
                 map.put(dtoField.getFieldName(), dtoField);
@@ -75,6 +78,26 @@ public class DTOMapping {
         }
     }
 
+    // LIST;field(DEFAULT)
+    private static DTOField createDTOFieldList(String input) {
+        String subInput = input.substring(input.indexOf(";") + 1);
+        DTOField dtoField = null;
+        if(isReferenceField(subInput)) {
+            String[] results = new String[2];
+            results[0] = subInput.substring(0, subInput.indexOf("("));
+            results[1] = subInput.substring(subInput.indexOf("(") + 1, subInput.indexOf(")"));
+
+            dtoField = new DTOField(results[0], DTOFieldType.list);
+            dtoField.setTargetRefType(DTOLevel.valueOf(results[1]));
+            dtoField.setSubType(DTOFieldType.ref);
+        } else {
+            dtoField = new DTOField(subInput, DTOFieldType.list);
+            dtoField.setSubType(DTOFieldType.field);
+        }
+        return dtoField;
+    }
+    
+    //field(DEFAULT)
     private static DTOField createDTOFieldRef(String input) {
         String[] results = new String[2];
         results[0] = input.substring(0, input.indexOf("("));
@@ -91,8 +114,12 @@ public class DTOMapping {
         return dtoField;
     }
 
-    private boolean isReferenceField(String field) {
-        return patten.matcher(field).matches();
+    private static boolean isListField(String field) {
+        return field.startsWith("LIST;");
+    }
+    
+    private static boolean isReferenceField(String field) {
+        return pattenRef.matcher(field).matches();
     }
 
     public Map<String, DTOField> getSimpleMap() {

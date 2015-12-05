@@ -22,11 +22,11 @@ public final class DomainConverter {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DomainConverter.class.getName());
 
-    public static <S, D> void convert(List<S> sources, List<D> dests, Class<D> clazz) {
-        convert(sources, dests, clazz, null);
+    public static <S, D> void convertList(List<S> sources, List<D> dests, Class<D> clazz) {
+        convertList(sources, dests, clazz, null);
     }
 
-    public static <S, D> void convert(List<S> sources, List<D> dests, Class<D> clazz,
+    public static <S, D> void convertList(List<S> sources, List<D> dests, Class<D> clazz,
             ObjectConverter<S, D> callbackConverter) {
         for (S source : sources) {
             D dest = createInstance(clazz);

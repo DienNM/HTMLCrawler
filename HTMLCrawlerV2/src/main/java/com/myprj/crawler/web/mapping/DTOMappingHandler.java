@@ -3,6 +3,7 @@ package com.myprj.crawler.web.mapping;
 import static com.myprj.crawler.util.ReflectionUtil.getFieldWithAncestors;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -102,26 +103,25 @@ public final class DTOMappingHandler {
 
             try {
                 Object value = srcField.get(dtoSource);
-                if (DTOFieldType.ref.equals(destField.getType())) {
-                    DTOMapping dtoMapping = dtoMappings.get(value.getClass().getName());
-                    if (dtoMapping == null) {
-                        LOGGER.warn("There is no DTOMapping for " + destField.getFieldName());
+                if (DTOFieldType.list.equals(destField.getType())) {
+                    
+                    if(!(value instanceof List)) {
+                        LOGGER.warn("Field " + destField.getFieldName() + " is not LIST");
                         continue;
                     }
-                    Map<String, DTOField> refDestFieldMap = dtoMapping.getTargetMapping(destField.getTargetRefType());
-                    if (refDestFieldMap.isEmpty()) {
-                        LOGGER.warn("There is no DTOMapping on {} for {}", destField.getTargetRefType(),
-                                destField.getFieldName());
-                        continue;
-                    }
-
-                    Map<String, Object> destRefs = new HashMap<String, Object>();
-                    doMap(value, destRefs, refDestFieldMap, null);
-
+                    List<Object> destRefs = handleListRefField(destField, value);
                     dest.put(destField.getFieldName(), destRefs);
+                    
+                } else if (DTOFieldType.ref.equals(destField.getType())) {
+                    
+                    Map<String, Object> destRefs = handleRefField(destField, value);
+                    dest.put(destField.getFieldName(), destRefs);
+                    
                 } else {
+                    
                     String valueString = TypeConverter.convertObject2String(value);
                     dest.put(destField.getFieldName(), ReflectionUtil.getValueFromField(srcField, valueString));
+                    
                 }
                 mappedFieldsValues.put(destField.getFieldName(), null);
             } catch (IllegalAccessException e) {
@@ -133,5 +133,38 @@ public final class DTOMappingHandler {
         if (callback != null) {
             callback.map(dtoSource, dest);
         }
+    }
+    
+    @SuppressWarnings("unchecked")
+    private static List<Object> handleListRefField(DTOField destField, Object value) {
+        List<Object> destRefs = new ArrayList<Object>();
+        List<Object> sourceObjects = (List<Object>) value;
+        for(Object sourceObject : sourceObjects) {
+            if(DTOFieldType.field.equals(destField.getType())) {
+                String valueString = TypeConverter.convertObject2String(sourceObject);
+                destRefs.add(ReflectionUtil.getValueFromField(sourceObject.getClass(), valueString));
+            } else if(DTOFieldType.ref.equals(destField.getSubType())) {
+                Map<String, Object> refDestFieldMap =  handleRefField(destField, sourceObject);
+                destRefs.add(refDestFieldMap);
+            }
+        }
+        return destRefs;
+    }
+    
+    private static Map<String, Object> handleRefField(DTOField destField, Object value) {
+        Map<String, Object> destRefs = new HashMap<String, Object>();
+        DTOMapping dtoMapping = dtoMappings.get(value.getClass().getName());
+        if (dtoMapping == null) {
+            LOGGER.warn("There is no DTOMapping for " + destField.getFieldName());
+            return destRefs;
+        }
+        Map<String, DTOField> refDestFieldMap = dtoMapping.getTargetMapping(destField.getTargetRefType());
+        if (refDestFieldMap.isEmpty()) {
+            LOGGER.warn("There is no DTOMapping on {} for {}", destField.getTargetRefType(),
+                    destField.getFieldName());
+            return destRefs;
+        }
+        doMap(value, destRefs, refDestFieldMap, null);
+        return destRefs;
     }
 }

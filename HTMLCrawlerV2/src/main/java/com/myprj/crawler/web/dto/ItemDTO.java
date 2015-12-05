@@ -32,7 +32,16 @@ public class ItemDTO extends AuditTDO {
     @DataTransfer("built")
     private boolean built;
     
+    @DataTransfer("attributes")
     private List<AttributeDTO> attributes = new ArrayList<AttributeDTO>();
+    
+    public static void toItemDTOs(List<ItemData> sources, List<ItemDTO> dests) {
+        for(ItemData source : sources) {
+            ItemDTO dest = new ItemDTO();
+            toItemDTO(source, dest);
+            dests.add(dest);
+        }
+    }
     
     public static void toItemDTO(ItemData item, ItemDTO itemDTO) {
         DomainConverter.convert(item, itemDTO, new ObjectConverter<ItemData, ItemDTO>() {

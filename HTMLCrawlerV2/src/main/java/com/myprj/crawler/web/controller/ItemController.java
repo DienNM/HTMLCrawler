@@ -1,5 +1,7 @@
 package com.myprj.crawler.web.controller;
 
+import static com.myprj.crawler.web.enumeration.DTOLevel.SIMPLE;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -50,10 +52,10 @@ public class ItemController extends AbstractController {
 
     @RequestMapping(value = "/all", method = RequestMethod.GET)
     @ResponseBody
-    public JsonResponse getAll(@RequestParam(value = "level", defaultValue = "SIMPLE") DTOLevel level) {
+    public JsonResponse getAll() {
         List<ItemData> itemDatas = itemService.getAll();
 
-        List<Map<String, Object>> results = getListMapResult(itemDatas, ItemDTO.class, level);
+        List<Map<String, Object>> results = getListMapResult(itemDatas, ItemDTO.class, SIMPLE);
         JsonResponse response = new JsonResponse(results, !results.isEmpty());
 
         return response;
@@ -63,15 +65,15 @@ public class ItemController extends AbstractController {
     @ResponseBody
     public JsonResponse getPaging(@RequestParam(value = "currentPage", defaultValue = "0") int currentPage,
             @RequestParam(value = "pageSize", defaultValue = "10") int pageSize,
-            @RequestParam(value = "level", defaultValue = "SIMPLE") DTOLevel level) {
+            @RequestParam(value = "level", defaultValue = "DEFAULT") DTOLevel level) {
         Pageable pageable = new Pageable(pageSize, currentPage);
         PageResult<ItemData> pageResult = itemService.getAllWithPaging(pageable);
 
-        List<Map<String, Object>> listData = getListMapResult(pageResult.getContent(), ItemDTO.class, level);
-        JsonResponse jsonResponse = new JsonResponse(listData, !listData.isEmpty());
-        jsonResponse.putPaging(pageResult.getPageable());
+        List<Map<String, Object>> listDatas = getListMapResult(pageResult.getContent(), ItemDTO.class, level);
+        JsonResponse response = new JsonResponse(listDatas, !listDatas.isEmpty());
+        response.putPaging(pageResult.getPageable());
 
-        return jsonResponse;
+        return response;
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
@@ -139,12 +141,12 @@ public class ItemController extends AbstractController {
         ItemData itemData = itemService.save(item);
         return new JsonResponse(itemData != null);
     }
-
+    
     @RequestMapping(value = "/{id}/build", method = RequestMethod.POST)
     @ResponseBody
-    public JsonResponse buildItem(@RequestParam(value = "file") MultipartFile file,
+    public JsonResponse buildItemAttributes(@RequestParam(value = "file") MultipartFile file,
             @PathVariable(value = "id") long id,
-            @RequestParam(value = "forceBuilt", defaultValue = "false") boolean forceBuilt) {
+            @RequestParam(value = "forceBuild", defaultValue = "false") boolean forceBuild) {
 
         if (file == null) {
             JsonResponse response = new JsonResponse(false);
@@ -158,12 +160,11 @@ public class ItemController extends AbstractController {
             response.putMessage("Attribute File is empty");
             return response;
         }
-
         try {
-            ItemData itemData = itemService.buildItem(id, json, forceBuilt);
-            itemService.populateAttributes(itemData);
             
-            JsonResponse response = new JsonResponse(itemData, true);
+            ItemData itemData = itemService.buildItem(id, json, forceBuild);
+            JsonResponse response = new JsonResponse(itemData, itemData != null);
+            
             return response;
         } catch (Exception e) {
             JsonResponse response = new JsonResponse(false);

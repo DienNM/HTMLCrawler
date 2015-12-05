@@ -1,5 +1,7 @@
 package com.myprj.crawler.web.controller;
 
+import static com.myprj.crawler.web.enumeration.DTOLevel.SIMPLE;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -50,10 +52,10 @@ public class WorkerController extends AbstractController {
 
     @RequestMapping(value = "/all", method = RequestMethod.GET)
     @ResponseBody
-    public JsonResponse getAll(@RequestParam(value = "level", defaultValue = "DEFAULT") DTOLevel level) {
+    public JsonResponse getAll() {
         List<WorkerData> workerDatas = workerService.getAll();
 
-        List<Map<String, Object>> results = getListMapResult(workerDatas, WorkerDTO.class, level);
+        List<Map<String, Object>> results = getListMapResult(workerDatas, WorkerDTO.class, SIMPLE);
         JsonResponse response = new JsonResponse(results, !results.isEmpty());
         return response;
     }
@@ -144,7 +146,8 @@ public class WorkerController extends AbstractController {
             response.putMessage("No Worker Items");
             return response;
         }
-        List<WorkerItemData> workerItems = WorkerItemDTO.toDatas(workerItemDTOs);
+        List<WorkerItemData> workerItems = new ArrayList<WorkerItemData>();
+        //WorkerItemDTO.toDatas(workerItemDTOs, workerItems);
         try {
             workerService.addWorkerItems(workerData, workerItems);
             JsonResponse response = new JsonResponse(workerData, !workerData.getWorkerItems().isEmpty());

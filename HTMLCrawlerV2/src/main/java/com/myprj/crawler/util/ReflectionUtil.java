@@ -78,14 +78,18 @@ public final class ReflectionUtil {
     }
     
     public static Object getValueFromField(Field objField, String data) {
+        return getValueFromField(objField.getType(), data);
+    }
+    
+    public static Object getValueFromField(Class<?> objCLass, String data) {
         try {
-            if (objField.getType().equals(Integer.class) || objField.getType().equals(int.class)) {
+            if (objCLass.equals(Integer.class) || objCLass.equals(int.class)) {
                 return convertString2Int(data);
-            } else if (objField.getType().equals(Long.class) || objField.getType().equals(long.class)) {
+            } else if (objCLass.equals(Long.class) || objCLass.equals(long.class)) {
                 return convertString2Long(data);
-            } else if (objField.getType().equals(Date.class)) {
+            } else if (objCLass.equals(Date.class)) {
                 return convertString2Date(data);
-            } else if (objField.getType().equals(Boolean.class) || objField.getType().equals(boolean.class)) {
+            } else if (objCLass.equals(Boolean.class) || objCLass.equals(boolean.class)) {
                 return convertString2Boolean(data);
             }
         } catch (Exception e) {

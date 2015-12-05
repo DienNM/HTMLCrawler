@@ -27,7 +27,7 @@
             <map>
                 <entry key="SIMPLE" value="id,name,categoryId,built" />
                 <entry key="DEFAULT" value="SIMPLE,description,createdAt,createdBy" />
-                <entry key="FULL" value="DEFAULT,updatedAt,updatedBy" />
+                <entry key="FULL" value="DEFAULT,LIST;attributes(DEFAULT),updatedAt,updatedBy" />
             </map>
         </property>
     </bean>

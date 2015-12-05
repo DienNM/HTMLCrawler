@@ -16,7 +16,8 @@ public class Class2 {
 
     @DataTransfer("classValue2")
     private double classValue2;
-    
+
+    @DataTransfer("classValue3s")
     private List<Class3> classValue3s = new ArrayList<Class3>(); 
     
     public String getClassValue1() {

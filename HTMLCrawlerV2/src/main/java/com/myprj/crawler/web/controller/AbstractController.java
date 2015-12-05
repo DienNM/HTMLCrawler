@@ -21,7 +21,7 @@ public abstract class AbstractController {
     
     protected <S, D> List<Map<String, Object>> getListMapResult(List<S> sources, Class<D> targetClass, DTOLevel level) {
         List<D> dtos = new ArrayList<D>();
-        DomainConverter.convert(sources, dtos, targetClass);
+        DomainConverter.convertList(sources, dtos, targetClass);
         List<Map<String, Object>> listDatas = new ArrayList<Map<String, Object>>();
         DTOMappingHandler.mapList(dtos, listDatas, level);
         return listDatas;

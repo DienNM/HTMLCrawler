@@ -6,6 +6,7 @@ import static com.myprj.crawler.util.Serialization.serialize;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.myprj.crawler.annotation.DataTransfer;
 import com.myprj.crawler.domain.AuditData;
 import com.myprj.crawler.domain.config.AttributeSelector;
 import com.myprj.crawler.domain.config.ItemAttributeData;
@@ -22,27 +23,36 @@ public class WorkerItemData extends AuditData {
 
     private static final long serialVersionUID = 1L;
     
+    @DataTransfer("id")
     private long id;
 
+    @DataTransfer("workerId")
     private long workerId;
-    
+
+    @DataTransfer("itemId")
     private long itemId = -1;
 
+    @DataTransfer("url")
     private String url;
 
+    @DataTransfer("level")
     private Level level;
-    
+
+    @DataTransfer("crawlType")
     private CrawlType crawlType;
     
     // For DETAIL
     private ItemData item;
-    
+
+    @DataTransfer("rootItemAttribute")
     private ItemAttributeData rootItemAttribute;
     
     // For List Crawler to get next link
+    @DataTransfer("level0Selector")
     private AttributeSelector level0Selector;
     
     // For List Crawler
+    @DataTransfer("pagingConfig")
     private PagingConfig pagingConfig = new PagingConfig();
     
     public WorkerItemData() {

@@ -23,6 +23,9 @@ public class ItemAttributeModel extends AuditModel {
     @Column(name = "id", length = 100)
     private String id;
     
+    @Column(name = "name", length = 20)
+    private String name;
+    
     @Column(name = "item_id")
     private long itemId;
 
@@ -104,5 +107,13 @@ public class ItemAttributeModel extends AuditModel {
 
     public void setRoot(boolean root) {
         this.root = root;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

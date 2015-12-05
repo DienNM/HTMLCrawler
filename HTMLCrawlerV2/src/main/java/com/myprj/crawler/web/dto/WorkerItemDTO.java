@@ -1,15 +1,16 @@
 package com.myprj.crawler.web.dto;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
-import org.apache.commons.lang3.StringUtils;
-
-import com.myprj.crawler.domain.config.AttributeSelector;
+import com.myprj.crawler.annotation.DataTransfer;
+import com.myprj.crawler.domain.config.ItemAttributeData;
 import com.myprj.crawler.domain.crawl.PagingConfig;
 import com.myprj.crawler.domain.crawl.WorkerItemData;
 import com.myprj.crawler.enumeration.CrawlType;
 import com.myprj.crawler.enumeration.Level;
+import com.myprj.crawler.util.converter.DomainConverter;
+import com.myprj.crawler.util.converter.ObjectConverter;
 
 /**
  * @author DienNM (DEE)
@@ -19,21 +20,44 @@ public class WorkerItemDTO extends AuditTDO {
 
     private static final long serialVersionUID = 1L;
     
+    @DataTransfer("level")
     private Level level;
-    
+
+    @DataTransfer("crawlType")
     private CrawlType crawlType;
-    
+
+    @DataTransfer("level0Selector")
     private String level0Selector;
-    
+
+    @DataTransfer("pagingConfig")
     private PagingConfig pagingConfig = new PagingConfig();
+    
+    private Map<String, Object> detailSelectors;
     
     public WorkerItemDTO() {
     }
     
-    public static List<WorkerItemDTO> toDTOs(List<WorkerItemData> soures) {
-        List<WorkerItemDTO> dests = new  ArrayList<WorkerItemDTO>();
-        toDTOs(soures, dests);
-        return dests;
+    public static void toDTOsDeeply(List<WorkerItemData> soures, List<WorkerItemDTO> dests) {
+        for(WorkerItemData source : soures) {
+            WorkerItemDTO dest = new WorkerItemDTO();
+            toDTODeeply(source, dest);
+            dests.add(dest);
+        }
+    }
+    
+    public static void toDTODeeply(WorkerItemData source, WorkerItemDTO dest) {
+        DomainConverter.convert(source, dest, new ObjectConverter<WorkerItemData, WorkerItemDTO>() {
+            @Override
+            public void convert(WorkerItemData src, WorkerItemDTO dest) {
+                ItemAttributeData root = src.getRootItemAttribute();
+                if(root != null) {
+                    //TODO
+                }
+                if(dest.getLevel0Selector() != null) {
+                    dest.setLevel0Selector(src.getLevel0Selector().getText());
+                }
+            }
+        });
     }
     
     public static void toDTOs(List<WorkerItemData> soures, List<WorkerItemDTO> dests) {
@@ -45,40 +69,14 @@ public class WorkerItemDTO extends AuditTDO {
     }
     
     public static void toDTO(WorkerItemData source, WorkerItemDTO dest) {
-        dest.setCrawlType(source.getCrawlType());
-        dest.setLevel(source.getLevel());
-        if(source.getPagingConfig() != null) {
-            dest.setPagingConfig(source.getPagingConfig());
-        }
-        if(source.getLevel0Selector() != null) {
-            dest.setLevel0Selector(source.getLevel0Selector().getText());
-        }
-    }
-    
-    public static List<WorkerItemData> toDatas(List<WorkerItemDTO> soures) {
-        List<WorkerItemData> dests = new  ArrayList<WorkerItemData>();
-        toDatas(soures, dests);
-        return dests;
-    }
-    
-    public static void toDatas(List<WorkerItemDTO> soures, List<WorkerItemData> dests) {
-        for(WorkerItemDTO source : soures) {
-            WorkerItemData dest = new WorkerItemData();
-            toData(source, dest);
-            dests.add(dest);
-        }
-    }
-    
-    public static void toData(WorkerItemDTO source, WorkerItemData dest) {
-        dest.setCrawlType(source.getCrawlType());
-        dest.setLevel(source.getLevel());
-        if(source.getPagingConfig() != null) {
-            dest.setPagingConfig(source.getPagingConfig());
-        }
-        if(!StringUtils.isEmpty(source.getLevel0Selector())) {
-            AttributeSelector selector = new AttributeSelector(source.getLevel0Selector());
-            dest.setLevel0Selector(selector);
-        }
+        DomainConverter.convert(source, dest, new ObjectConverter<WorkerItemData, WorkerItemDTO>() {
+            @Override
+            public void convert(WorkerItemData src, WorkerItemDTO dest) {
+                if(dest.getLevel0Selector() != null) {
+                    dest.setLevel0Selector(src.getLevel0Selector().getText());
+                }
+            }
+        });
     }
     
     public Level getLevel() {
@@ -111,5 +109,13 @@ public class WorkerItemDTO extends AuditTDO {
 
     public void setLevel0Selector(String level0Selector) {
         this.level0Selector = level0Selector;
+    }
+
+    public Map<String, Object> getDetailSelectors() {
+        return detailSelectors;
+    }
+
+    public void setDetailSelectors(Map<String, Object> detailSelectors) {
+        this.detailSelectors = detailSelectors;
     }
 }

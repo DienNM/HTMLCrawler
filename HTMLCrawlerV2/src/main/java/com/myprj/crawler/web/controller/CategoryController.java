@@ -1,5 +1,7 @@
 package com.myprj.crawler.web.controller;
 
+import static com.myprj.crawler.web.enumeration.DTOLevel.SIMPLE;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -32,13 +34,14 @@ public class CategoryController extends AbstractController {
     @Autowired
     private CategoryService categoryService;
 
-    @RequestMapping(method = RequestMethod.GET)
+    @RequestMapping(value = "/all", method = RequestMethod.GET)
     @ResponseBody
-    public JsonResponse getAll(@RequestParam(value = "level", defaultValue = "SIMPLE") DTOLevel level) {
+    public JsonResponse getAll() {
         List<CategoryData> categories = categoryService.getAll();
-        List<Map<String, Object>> results = getListMapResult(categories, CategoryDTO.class, level);
-
+        
+        List<Map<String, Object>> results = getListMapResult(categories, CategoryDTO.class, SIMPLE);
         JsonResponse response = new JsonResponse(results, !results.isEmpty());
+        
         return response;
     }
 
@@ -47,6 +50,7 @@ public class CategoryController extends AbstractController {
     public JsonResponse getPaging(@RequestParam(value = "currentPage", defaultValue = "0") int currentPage,
             @RequestParam(value = "pageSize", defaultValue = "10") int pageSize,
             @RequestParam(value = "level", defaultValue = "SIMPLE") DTOLevel level) {
+        
         Pageable pageable = new Pageable(pageSize, currentPage);
         PageResult<CategoryData> pageResult = categoryService.getAllWithPaging(pageable);
 

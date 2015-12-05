@@ -38,7 +38,7 @@ public class DTOMappingHandlerTest {
         DTOMapping class2Mapping = new DTOMapping();
         Map<DTOLevel, String> class2TargetMapping = new HashMap<DTOLevel, String>();
         class2TargetMapping.put(DTOLevel.DEFAULT, "classValue1");
-        class2TargetMapping.put(DTOLevel.FULL, "classValue1,classValue2");
+        class2TargetMapping.put(DTOLevel.FULL, "classValue1,classValue2,LIST;classValue3s(FULL)");
         class2Mapping.setTargetMappings(class2TargetMapping);
         class2Mapping.setTargetClassName("com.myprj.crawler.web.mapping.Class2");
         class2Mapping.init();
@@ -51,7 +51,7 @@ public class DTOMappingHandlerTest {
         class3TargetMapping.put(DTOLevel.FULL, "class3Value1,class3Value2,class3Value3");
         class3Mapping.setTargetMappings(class3TargetMapping);
         class3Mapping.setTargetClassName("com.myprj.crawler.web.mapping.Class3");
-        class2Mapping.init();
+        class3Mapping.init();
 
         DTOMappingHandler.register(class3Mapping.getTargetClassName(), class3Mapping);
     }
@@ -76,11 +76,19 @@ public class DTOMappingHandlerTest {
 
             result = new HashMap<String, Object>();
             DTOMappingHandler.map(class1, result, FULL);
+            System.out.println(result);
+            
             Assert.assertEquals(3, result.size());
             Assert.assertEquals("Class1 Value1", result.get("value1"));
             Assert.assertEquals("Class1 Value2", result.get("value2"));
+            
+            Assert.assertEquals(3, ((Map<String, Object>) result.get("value3")).size());
             Assert.assertEquals("Class2 Value1", ((Map<String, Object>) result.get("value3")).get("classValue1"));
             Assert.assertEquals("12.6", ((Map<String, Object>) result.get("value3")).get("classValue2"));
+            
+            List<Class3> class3s = (List<Class3>) ((Map<String, Object>) result.get("value3")).get("classValue3s");
+            
+            Assert.assertEquals(2, class3s.size());
         } catch (DtoConvertException e) {
             System.out.println(e.getMessage());
         }

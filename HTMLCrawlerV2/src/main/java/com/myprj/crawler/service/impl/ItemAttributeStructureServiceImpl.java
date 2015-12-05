@@ -51,6 +51,7 @@ public class ItemAttributeStructureServiceImpl implements ItemAttributeStructure
         ItemAttributeData root = new ItemAttributeData();
         root.setId(workerItem.getId() + "|" + attributeId);
         root.setRoot(true);
+        root.setName(ItemContent.ROOT);
         root.setType(OBJECT);
         root.setParent(null);
         root.setParentId(null);
@@ -89,6 +90,7 @@ public class ItemAttributeStructureServiceImpl implements ItemAttributeStructure
         }
         ItemAttributeData attribute = new ItemAttributeData();
         attribute.setId(workerItem + "|" + attributeId);
+        attribute.setName(key);
         attribute.setAttributeId(attributeId);
         attribute.setAttribute(attributeData);
         attribute.setParent(parent);
