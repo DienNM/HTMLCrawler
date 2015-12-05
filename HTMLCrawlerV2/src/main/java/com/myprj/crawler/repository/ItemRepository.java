@@ -1,5 +1,7 @@
 package com.myprj.crawler.repository;
 
+import java.util.List;
+
 import com.myprj.crawler.model.config.ItemModel;
 
 /**
@@ -7,5 +9,7 @@ import com.myprj.crawler.model.config.ItemModel;
  */
 
 public interface ItemRepository extends GenericDao<ItemModel, Long> {
+    
+    List<ItemModel> findByCategory(long category);
     
 }

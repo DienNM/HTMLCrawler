@@ -3,7 +3,7 @@ package com.myprj.crawler.repository.impl;
 import java.util.Calendar;
 import java.util.List;
 
-import javax.persistence.TypedQuery;
+import javax.persistence.Query;
 
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,27 +34,30 @@ public class DefaultCrawlHistoryRepository extends DefaultGenericDao<CrawlHistor
         super.save(crawlHistory);
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public CrawlHistoryModel findLatest(long workerId) {
         StringBuilder queryStr = new StringBuilder("FROM CrawlHistoryModel ");
         queryStr.append(" WHERE workerId = :workerId AND eolDate = 0");
 
-        TypedQuery<CrawlHistoryModel> query = entityManager.createNamedQuery(queryStr.toString(), getClazz());
+        Query query = entityManager.createQuery(queryStr.toString(), getClazz());
         query.setParameter("workerId", workerId);
 
         List<CrawlHistoryModel> list = query.getResultList();
         if (list.isEmpty()) {
             return null;
         }
+
         return list.get(0);
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public List<CrawlHistoryModel> findByWorkerId(long workerId) {
         StringBuilder queryStr = new StringBuilder("FROM CrawlHistoryModel ");
         queryStr.append(" WHERE workerId = :workerId ");
 
-        TypedQuery<CrawlHistoryModel> query = entityManager.createNamedQuery(queryStr.toString(), getClazz());
+        Query query = entityManager.createQuery(queryStr.toString(), getClazz());
         query.setParameter("workerId", workerId);
 
         return query.getResultList();

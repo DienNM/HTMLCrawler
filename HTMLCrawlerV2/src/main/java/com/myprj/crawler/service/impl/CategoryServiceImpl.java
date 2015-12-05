@@ -1,6 +1,5 @@
 package com.myprj.crawler.service.impl;
 
-import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,7 +21,7 @@ import com.myprj.crawler.service.CategoryService;
  */
 @Service
 public class CategoryServiceImpl implements CategoryService {
-    
+
     private Logger logger = LoggerFactory.getLogger(CategoryServiceImpl.class);
 
     @Autowired
@@ -39,21 +38,6 @@ public class CategoryServiceImpl implements CategoryService {
         CategoryData.toData(categoryModel, persitedCategory);
 
         return persitedCategory;
-    }
-
-    @Override
-    @Transactional
-    public void update(CategoryData category) {
-        CategoryModel categoryModel = categoryRepository.find(category.getId());
-        if(categoryModel == null) {
-            throw new InvalidParameterException("Cannot find category: " + category.getId());
-        }
-        
-        categoryModel = new CategoryModel();
-        CategoryData.toModel(category, categoryModel);
-        categoryRepository.update(categoryModel);
-
-        CategoryData.toData(categoryModel, category);
     }
 
     @Override
@@ -82,7 +66,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public PageResult<CategoryData> getAllWithPaging(Pageable pageable) {
         PageResult<CategoryModel> pageResult = categoryRepository.findAll(pageable);
-        
+
         PageResult<CategoryData> results = new PageResult<CategoryData>(pageResult.getPageable());
         List<CategoryData> categoryDatas = new ArrayList<CategoryData>();
         CategoryData.toDatas(pageResult.getContent(), categoryDatas);

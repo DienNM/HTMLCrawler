@@ -12,9 +12,7 @@ import com.myprj.crawler.domain.config.CategoryData;
 
 public interface CategoryService {
     
-    CategoryData save(CategoryData category);
-    
-    void update(CategoryData category);
+    long count();
     
     CategoryData getById(long id);
     
@@ -22,6 +20,5 @@ public interface CategoryService {
     
     PageResult<CategoryData> getAllWithPaging(Pageable pageable);
     
-    long count();
-    
+    CategoryData save(CategoryData category);
 }

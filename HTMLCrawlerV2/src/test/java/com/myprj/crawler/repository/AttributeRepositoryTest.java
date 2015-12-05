@@ -35,6 +35,7 @@ public class AttributeRepositoryTest extends AbstractTest {
         attribute1.setItemId(1);
         attribute1.setParentId(null);
         attribute1.setType(AttributeType.OBJECT);
+        attribute1.setRoot(true);
         
         AttributeModel attribute2 = new AttributeModel();
         attribute2.setId("1|content|name");
@@ -55,6 +56,7 @@ public class AttributeRepositoryTest extends AbstractTest {
         attribute4.setName("content");
         attribute4.setParentId(null);
         attribute4.setType(AttributeType.OBJECT);
+        attribute4.setItemId(2);
         
         attributeRepository.save(attribute1);
         attributeRepository.save(attribute2);
@@ -63,8 +65,9 @@ public class AttributeRepositoryTest extends AbstractTest {
     }
     
     @After
+    @Transactional
     public void tearDown() {
-        
+        attributeRepository.deleteAll();
     }
     
     @Test
@@ -81,7 +84,27 @@ public class AttributeRepositoryTest extends AbstractTest {
                 Assert.fail();
             }
         }
+    }
+    
+    @Test
+    @Transactional
+    public void testFindByItemId() {
+        List<AttributeModel> attributes = attributeRepository.findByItemId(1);
+        Assert.assertEquals(3, attributes.size());
         
+        attributes = attributeRepository.findByItemId(2);
+        Assert.assertEquals(1, attributes.size());
+        
+        attributes = attributeRepository.findByItemId(3);
+        Assert.assertEquals(0, attributes.size());
+    }
+    
+    @Test
+    @Transactional
+    public void testFindRootByItemId() {
+        AttributeModel attribute = attributeRepository.findRootByItemId(1);
+        Assert.assertNotNull(attribute);
+        Assert.assertEquals("1|content", attribute.getId());
     }
     
 }
