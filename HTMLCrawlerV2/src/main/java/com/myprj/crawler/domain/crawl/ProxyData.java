@@ -2,8 +2,10 @@ package com.myprj.crawler.domain.crawl;
 
 import java.util.List;
 
+import com.myprj.crawler.annotation.EntityTransfer;
 import com.myprj.crawler.domain.AuditData;
 import com.myprj.crawler.model.ProxyModel;
+import com.myprj.crawler.util.converter.EntityConverter;
 
 /**
  * @author DienNM (DEE)
@@ -13,12 +15,16 @@ public class ProxyData extends AuditData {
 
     private static final long serialVersionUID = 1L;
 
+    @EntityTransfer("id")
     private long id;
 
+    @EntityTransfer("ip")
     private String ip;
 
+    @EntityTransfer("port")
     private int port;
 
+    @EntityTransfer("reachable")
     private boolean reachable = false;
 
     public ProxyData() {
@@ -52,15 +58,11 @@ public class ProxyData extends AuditData {
     }
 
     public static void toData(ProxyModel source, ProxyData dest) {
-        dest.setId(source.getId());
-        dest.setPort(source.getPort());
-        dest.setReachable(source.isReachable());
+        EntityConverter.convert2Data(source, dest);
     }
 
     public static void toModel(ProxyData source, ProxyModel dest) {
-        dest.setId(source.getId());
-        dest.setPort(source.getPort());
-        dest.setReachable(source.isReachable());
+        EntityConverter.convert2Entity(source, dest);
     }
 
     public long getId() {

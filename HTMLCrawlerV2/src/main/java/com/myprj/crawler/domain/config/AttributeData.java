@@ -19,7 +19,7 @@ public class AttributeData extends AuditData {
     private static final long serialVersionUID = 1L;
 
     @DataTransfer("id")
-    @EntityTransfer("")
+    @EntityTransfer("id")
     private String id;
 
     @DataTransfer("itemId")

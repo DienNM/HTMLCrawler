@@ -54,7 +54,6 @@ public final class EntityConverter {
             if (srcAnnotationField == null || !destFieldsMap.containsKey(srcAnnotationField.value())) {
                 continue;
             }
-            System.out.println(srcAnnotationField.value());
             srcField.setAccessible(true);
 
             Field destField = destFieldsMap.get(srcAnnotationField.value());

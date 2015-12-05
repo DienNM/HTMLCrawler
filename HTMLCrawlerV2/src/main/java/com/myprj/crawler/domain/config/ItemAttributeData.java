@@ -5,6 +5,7 @@ import static com.myprj.crawler.util.Serialization.deserialize;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.myprj.crawler.annotation.DataTransfer;
 import com.myprj.crawler.annotation.EntityTransfer;
 import com.myprj.crawler.domain.AuditData;
 import com.myprj.crawler.enumeration.AttributeType;
@@ -21,24 +22,31 @@ public class ItemAttributeData extends AuditData {
 
     private static final long serialVersionUID = 1L;
 
+    @DataTransfer("id")
     @EntityTransfer("id")
     private String id;
 
+    @DataTransfer("itemId")
     @EntityTransfer("item_id")
     private long itemId;
 
+    @DataTransfer("parentId")
     @EntityTransfer("parent_id")
     private String parentId;
 
+    @DataTransfer("name")
     @EntityTransfer("name")
     private String name;
 
+    @DataTransfer("attributeId")
     @EntityTransfer("attribute_id")
     private String attributeId;
 
-    @EntityTransfer("type")
+    @DataTransfer("type")
+    @EntityTransfer("att_type")
     private AttributeType type;
 
+    @DataTransfer("root")
     @EntityTransfer("is_root")
     private boolean root = false;
 

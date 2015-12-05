@@ -3,68 +3,65 @@ package com.myprj.crawler.domain.crawl;
 import java.io.Serializable;
 import java.util.List;
 
+import com.myprj.crawler.annotation.EntityTransfer;
 import com.myprj.crawler.enumeration.CrawlStatus;
 import com.myprj.crawler.model.crawl.CrawlHistoryModel;
+import com.myprj.crawler.util.converter.EntityConverter;
 
 /**
  * @author DienNM (DEE)
  */
 
 public class CrawlHistoryData implements Serializable {
-    
+
     private static final long serialVersionUID = 1L;
 
+    @EntityTransfer("id")
     private long id;
-    
+
+    @EntityTransfer("worker_id")
     private long workerId;
-    
+
+    @EntityTransfer("eol_date")
     private long eolDate = 0;
-    
+
+    @EntityTransfer("message")
     private String message;
-    
+
+    @EntityTransfer("time_taken")
     private long timeTaken;
-    
+
+    @EntityTransfer("status")
     private CrawlStatus status;
-    
+
+    @EntityTransfer("error_links")
     private String errorLinks;
-    
+
     public CrawlHistoryData() {
     }
-    
+
     public static void toDatas(List<CrawlHistoryModel> sources, List<CrawlHistoryData> dests) {
-        for(CrawlHistoryModel source : sources) {
+        for (CrawlHistoryModel source : sources) {
             CrawlHistoryData dest = new CrawlHistoryData();
             toData(source, dest);
             dests.add(dest);
         }
     }
-    
+
     public static void toModels(List<CrawlHistoryData> sources, List<CrawlHistoryModel> dests) {
-        for(CrawlHistoryData source : sources) {
+        for (CrawlHistoryData source : sources) {
             CrawlHistoryModel dest = new CrawlHistoryModel();
             toModel(source, dest);
             dests.add(dest);
         }
     }
-    
+
     public static void toData(CrawlHistoryModel source, CrawlHistoryData dest) {
-        dest.setId(source.getId());
-        dest.setWorkerId(source.getWorkerId());
-        dest.setEolDate(source.getEolDate());
-        dest.setMessage(source.getMessage());
-        dest.setStatus(source.getStatus());
-        dest.setTimeTaken(source.getTimeTaken());
-        dest.setErrorLinks(source.getErrorLinks());
+        EntityConverter.convert2Data(source, dest);
     }
-    
+
     public static void toModel(CrawlHistoryData source, CrawlHistoryModel dest) {
-        dest.setId(source.getId());
-        dest.setWorkerId(source.getWorkerId());
-        dest.setEolDate(source.getEolDate());
-        dest.setMessage(source.getMessage());
-        dest.setStatus(source.getStatus());
-        dest.setTimeTaken(source.getTimeTaken());
-        dest.setErrorLinks(source.getErrorLinks());
+        EntityConverter.convert2Entity(source, dest);
     }
 
     public long getId() {
@@ -122,5 +119,5 @@ public class CrawlHistoryData implements Serializable {
     public void setErrorLinks(String errorLinks) {
         this.errorLinks = errorLinks;
     }
-    
+
 }

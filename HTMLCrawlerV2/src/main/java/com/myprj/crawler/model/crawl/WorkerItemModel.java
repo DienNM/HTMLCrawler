@@ -11,8 +11,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import com.myprj.crawler.enumeration.Level;
 import com.myprj.crawler.enumeration.CrawlType;
+import com.myprj.crawler.enumeration.Level;
 import com.myprj.crawler.model.AuditModel;
 
 /**
@@ -26,6 +26,7 @@ public class WorkerItemModel extends AuditModel implements Comparable<WorkerItem
     
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id")
     private long id;
 
     @Column(name = "worker_id")
@@ -41,12 +42,16 @@ public class WorkerItemModel extends AuditModel implements Comparable<WorkerItem
     @Enumerated(EnumType.STRING)
     private Level level = Level0;
     
+    @Column(name = "crawl_type", length = 15)
+    @Enumerated(EnumType.STRING)
     private CrawlType crawlType;
 
     // JSON {"attribute1_id" : "@..."}
-    private String cssSelectors;
+    @Column(name = "level0_selector", length = 400)
+    private String level0Selector;
 
     // JSON {"toPage" : "1"}
+    @Column(name = "paging_config", length = 150)
     private String pagingConfig;
     
     public Level getLevel() {
@@ -73,12 +78,12 @@ public class WorkerItemModel extends AuditModel implements Comparable<WorkerItem
         this.crawlType = crawlType;
     }
 
-    public String getCssSelectors() {
-        return cssSelectors;
+    public String getLevel0Selector() {
+        return level0Selector;
     }
 
-    public void setCssSelectors(String cssSelectors) {
-        this.cssSelectors = cssSelectors;
+    public void setLevel0Selector(String level0Selector) {
+        this.level0Selector = level0Selector;
     }
 
     public long getId() {

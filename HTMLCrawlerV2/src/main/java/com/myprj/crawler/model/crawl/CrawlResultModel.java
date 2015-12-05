@@ -24,6 +24,7 @@ public class CrawlResultModel extends AuditModel {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id")
     private long id;
 
     @Column(name = "item_id")

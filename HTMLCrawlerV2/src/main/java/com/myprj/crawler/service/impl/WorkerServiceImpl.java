@@ -41,7 +41,7 @@ public class WorkerServiceImpl implements WorkerService {
 
     @Autowired
     private WorkerItemRepository workerItemRepository;
-    
+
     @Autowired
     private ItemAttributeRepository itemAttributeRepository;
 
@@ -81,11 +81,12 @@ public class WorkerServiceImpl implements WorkerService {
 
         return results;
     }
-    
+
     @Override
     public void populateWorkerItems(WorkerData worker) {
         List<WorkerItemModel> workerItemModels = workerItemRepository.findByWorkerId(worker.getId());
-        List<WorkerItemData> workerItems = WorkerItemData.toDatas(workerItemModels);
+        List<WorkerItemData> workerItems = new ArrayList<WorkerItemData>();
+        WorkerItemData.toDatas(workerItemModels, workerItems);
         worker.setWorkerItems(workerItems);
     }
 
@@ -95,7 +96,10 @@ public class WorkerServiceImpl implements WorkerService {
         WorkerModel workerModel = new WorkerModel();
         WorkerData.toModel(worker, workerModel);
         workerRepository.save(workerModel);
-        return WorkerData.toData(workerModel);
+
+        WorkerData workerData = new WorkerData();
+        WorkerData.toData(workerModel, workerData);
+        return workerData;
     }
 
     @Override
@@ -108,7 +112,9 @@ public class WorkerServiceImpl implements WorkerService {
         WorkerData.toModel(worker, workerModel);
         workerRepository.update(workerModel);
 
-        return WorkerData.toData(workerModel);
+        WorkerData workerData = new WorkerData();
+        WorkerData.toData(workerModel, workerData);
+        return workerData;
     }
 
     @Override
@@ -128,7 +134,9 @@ public class WorkerServiceImpl implements WorkerService {
         List<WorkerItemModel> workerItemModels = new ArrayList<WorkerItemModel>();
         workerItemRepository.save(workerItemModels);
 
-        worker.setWorkerItems(WorkerItemData.toDatas(workerItemModels));
+        List<WorkerItemData> workerItemDatas = new ArrayList<WorkerItemData>();
+        WorkerItemData.toDatas(workerItemModels, workerItemDatas);
+        worker.setWorkerItems(workerItemDatas);
     }
 
     @Override
@@ -146,15 +154,15 @@ public class WorkerServiceImpl implements WorkerService {
         saveAllItemAttributesFromRoot(itemAttribute);
         return itemAttribute;
     }
-    
+
     @Transactional
     private void saveAllItemAttributesFromRoot(ItemAttributeData itemAttribute) {
-        
+
         List<ItemAttributeData> itemAttributes = new ArrayList<ItemAttributeData>();
         ItemAttributeData.collectionAllItemAttributes(itemAttribute, itemAttributes);
         List<ItemAttributeModel> itemAttributeModels = new ArrayList<ItemAttributeModel>();
         ItemAttributeData.toModels(itemAttributes, itemAttributeModels);
-        
+
         itemAttributeRepository.save(itemAttributeModels);
     }
 
