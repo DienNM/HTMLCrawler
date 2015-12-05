@@ -103,6 +103,12 @@ public abstract class DefaultGenericDao<E, Id>  implements GenericDao<E, Id> {
         query.setParameter("id", id);
         query.executeUpdate();
     }
+    
+    @Override
+    public void deleteAll() {
+        Query query = entityManager.createQuery("DELETE FROM " + getClassName());
+        query.executeUpdate();
+    }
 
     public Class<E> getClazz() {
         return clazz;

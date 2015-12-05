@@ -1,5 +1,8 @@
 package com.myprj.crawler.repository;
 
+import java.util.List;
+
+import com.myprj.crawler.enumeration.WorkerStatus;
 import com.myprj.crawler.model.crawl.WorkerModel;
 
 /**
@@ -7,5 +10,7 @@ import com.myprj.crawler.model.crawl.WorkerModel;
  */
 
 public interface WorkerRepository extends GenericDao<WorkerModel, Long> {
+    
+    List<WorkerModel> findByStatus(WorkerStatus status);
     
 }
