@@ -29,7 +29,7 @@ public class ItemAttributeModel extends AuditModel {
     @Column(name = "item_id")
     private long itemId;
 
-    @Column(name = "root")
+    @Column(name = "is_root")
     private boolean root = false;
     
     @Column(name = "attribute_id", length = 100)

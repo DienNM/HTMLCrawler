@@ -3,8 +3,10 @@ package com.myprj.crawler.domain.config;
 import java.util.List;
 
 import com.myprj.crawler.annotation.DataTransfer;
+import com.myprj.crawler.annotation.EntityTransfer;
 import com.myprj.crawler.domain.AuditData;
 import com.myprj.crawler.model.config.CategoryModel;
+import com.myprj.crawler.util.converter.EntityConverter;
 
 /**
  * @author DienNM (DEE)
@@ -15,15 +17,19 @@ public class CategoryData extends AuditData {
     private static final long serialVersionUID = 1L;
 
     @DataTransfer("id")
+    @EntityTransfer("id")
     private long id;
 
     @DataTransfer("name")
+    @EntityTransfer("name")
     private String name;
 
     @DataTransfer("description")
+    @EntityTransfer("description")
     private String description;
 
     @DataTransfer("parentCategoryId")
+    @EntityTransfer("parent_ctg_id")
     private long parentCategoryId;
 
     private CategoryData parentCategory;
@@ -48,19 +54,11 @@ public class CategoryData extends AuditData {
     }
 
     public static void toData(CategoryModel source, CategoryData dest) {
-        dest.setId(source.getId());
-        dest.setName(source.getName());
-        dest.setDescription(source.getDescription());
-        dest.setParentCategoryId(source.getParentCategoryId());
-        toAuditData(source, dest);
+        EntityConverter.convert2Data(source, dest);
     }
 
     public static void toModel(CategoryData source, CategoryModel dest) {
-        dest.setId(source.getId());
-        dest.setName(source.getName());
-        dest.setDescription(source.getDescription());
-        dest.setParentCategoryId(source.getParentCategoryId());
-        toAuditModel(source, dest);
+        EntityConverter.convert2Entity(source, dest);
     }
 
     public long getId() {

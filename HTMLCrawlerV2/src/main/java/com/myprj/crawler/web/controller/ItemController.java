@@ -40,8 +40,8 @@ public class ItemController extends AbstractController {
     @Autowired
     private CategoryService categoryService;
     
-    private void populateObjectByLevel(ItemData itemData, DTOLevel target) {
-        switch (target) {
+    private void populateObjectByLevel(ItemData itemData, DTOLevel level) {
+        switch (level) {
         case FULL:
             itemService.populateAttributes(itemData);
             break;
@@ -68,8 +68,16 @@ public class ItemController extends AbstractController {
             @RequestParam(value = "level", defaultValue = "DEFAULT") DTOLevel level) {
         Pageable pageable = new Pageable(pageSize, currentPage);
         PageResult<ItemData> pageResult = itemService.getAllWithPaging(pageable);
+        
+        for(ItemData itemData : pageResult.getContent()) {
+            populateObjectByLevel(itemData, level);
+        }
+        
 
-        List<Map<String, Object>> listDatas = getListMapResult(pageResult.getContent(), ItemDTO.class, level);
+        List<ItemDTO> itemDTOs = new ArrayList<ItemDTO>();
+        ItemDTO.toItemDTOs(pageResult.getContent(), itemDTOs);
+
+        List<Map<String, Object>> listDatas = getListMapResult(itemDTOs, level);
         JsonResponse response = new JsonResponse(listDatas, !listDatas.isEmpty());
         response.putPaging(pageResult.getPageable());
 
@@ -88,7 +96,10 @@ public class ItemController extends AbstractController {
         }
         populateObjectByLevel(itemData, level);
         
-        Map<String, Object> datas = getMapResult(itemData, ItemDTO.class, level);
+        ItemDTO itemDTO = new ItemDTO();
+        ItemDTO.toItemDTO(itemData, itemDTO);
+        
+        Map<String, Object> datas = getMapResult(itemDTO, level);
         JsonResponse response = new JsonResponse(!datas.isEmpty());
         response.putData(datas);
 
@@ -111,26 +122,22 @@ public class ItemController extends AbstractController {
     @RequestMapping(method = RequestMethod.POST)
     @ResponseBody
     public JsonResponse addItem(@RequestParam(value = "name") String name,
-            @RequestParam(value = "categoryId", defaultValue = "-1") long categoryId,
+            @RequestParam(value = "categoryId") long categoryId,
             @RequestParam(value = "description") String description) {
 
         List<RequestError> errors = new ArrayList<RequestError>();
-        if (!StringUtils.isEmpty(name)) {
+        if (StringUtils.isEmpty(name)) {
             errors.add(new RequestError("name", "Item Name is required"));
         }
-        if (categoryId <= 0) {
-            errors.add(new RequestError("categoryId", "Category Id is required"));
-        } else {
-            CategoryData categoryData = categoryService.getById(categoryId);
-            if(categoryData == null) {
-                errors.add(new RequestError("categoryId", "Category Id " + categoryId + " not found"));
-            }
+        CategoryData categoryData = categoryService.getById(categoryId);
+        if(categoryData == null) {
+            errors.add(new RequestError("categoryId", "Category Id " + categoryId + " not found"));
         }
         
         if (!errors.isEmpty()) {
-            JsonResponse jsonResponse = new JsonResponse(false);
-            jsonResponse.putErrors(errors);
-            return jsonResponse;
+            JsonResponse response = new JsonResponse(false);
+            response.putErrors(errors);
+            return response;
         }
         
         ItemData item = new ItemData();

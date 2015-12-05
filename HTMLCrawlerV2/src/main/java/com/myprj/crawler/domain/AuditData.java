@@ -3,7 +3,7 @@ package com.myprj.crawler.domain;
 import java.io.Serializable;
 
 import com.myprj.crawler.annotation.DataTransfer;
-import com.myprj.crawler.model.AuditModel;
+import com.myprj.crawler.annotation.EntityTransfer;
 
 /**
  * @author DienNM (DEE)
@@ -14,31 +14,21 @@ public class AuditData implements Serializable{
     private static final long serialVersionUID = 1L;
     
     @DataTransfer("createdAt")
+    @EntityTransfer("createdAt")
     private long createdAt;
 
     @DataTransfer("createdBy")
+    @EntityTransfer("createdBy")
     private String createdBy;
 
     @DataTransfer("updatedAt")
+    @EntityTransfer("updatedAt")
     private long updatedAt;
 
     @DataTransfer("updatedBy")
+    @EntityTransfer("updatedBy")
     private String updatedBy;
     
-    public static void toAuditData(AuditModel source, AuditData dest) {
-        dest.setCreatedAt(source.getCreatedAt());
-        dest.setCreatedBy(source.getCreatedBy());
-        dest.setUpdatedAt(source.getUpdatedAt());
-        dest.setUpdatedBy(source.getUpdatedBy());
-    }
-    
-    public static void toAuditModel(AuditData source, AuditModel dest) {
-        dest.setCreatedAt(source.getCreatedAt());
-        dest.setCreatedBy(source.getCreatedBy());
-        dest.setUpdatedAt(source.getUpdatedAt());
-        dest.setUpdatedBy(source.getUpdatedBy());
-    }
-
     public long getCreatedAt() {
         return createdAt;
     }

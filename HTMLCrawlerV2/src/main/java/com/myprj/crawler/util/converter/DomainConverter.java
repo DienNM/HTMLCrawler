@@ -75,8 +75,7 @@ public final class DomainConverter {
             }
             destField.setAccessible(true);
             try {
-                String value = TypeConverter.convertObject2String(srcField.get(source));
-                ReflectionUtil.setValue2Field(destField, dest, value);
+                ReflectionUtil.setValue2Field(destField, dest, srcField.get(source));
                 mappedFieldsValues.put(destField, srcAnnotationField.value());
             } catch (IllegalAccessException e) {
                 LOGGER.error("Count not init " + dest.getClass().getName() + " Source from Dest ", e);

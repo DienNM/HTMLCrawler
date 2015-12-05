@@ -20,7 +20,7 @@ public class AttributeModel extends AuditModel {
     private static final long serialVersionUID = 1L;
     
     @Id
-    @Column(length = 100)
+    @Column(name = "id", length = 100)
     private String id;
     
     @Column(name = "item_id", nullable = false)
@@ -29,15 +29,15 @@ public class AttributeModel extends AuditModel {
     @Column(name = "name", nullable = false, length = 50)
     private String name;
     
-    @Column(name = "description", length = 100)
-    private String description;
-    
     @Column(name = "parent_id", length = 100)
     private String parentId;
     
     @Column(name = "att_type", length = 15)
     @Enumerated(EnumType.STRING)
     private AttributeType type;
+    
+    @Column(name = "is_root")
+    private boolean root;
     
     public AttributeModel() {
     }
@@ -66,14 +66,6 @@ public class AttributeModel extends AuditModel {
         this.name = name;
     }
 
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
     public AttributeType getType() {
         return type;
     }
@@ -88,5 +80,13 @@ public class AttributeModel extends AuditModel {
 
     public void setParentId(String parentId) {
         this.parentId = parentId;
+    }
+
+    public boolean isRoot() {
+        return root;
+    }
+
+    public void setRoot(boolean root) {
+        this.root = root;
     }
 }

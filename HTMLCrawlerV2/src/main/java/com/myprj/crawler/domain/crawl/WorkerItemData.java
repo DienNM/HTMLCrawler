@@ -101,7 +101,6 @@ public class WorkerItemData extends AuditData {
         if(source.getPagingConfig() != null) {
             dest.setPagingConfig(deserialize(source.getPagingConfig(), PagingConfig.class));
         }
-        toAuditData(source, dest);
     }
     
     public static void toModel(WorkerItemData source, WorkerItemModel dest) {
@@ -113,7 +112,6 @@ public class WorkerItemData extends AuditData {
         if(source.getPagingConfig() != null) {
             dest.setPagingConfig(serialize(source.getPagingConfig()));
         }
-        toAuditModel(source, dest);
     }
 
     public long getId() {

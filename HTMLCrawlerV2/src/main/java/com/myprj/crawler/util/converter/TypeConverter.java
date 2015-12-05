@@ -116,6 +116,16 @@ public final class TypeConverter {
             return null;
         }
     }
+    
+    public static Date convertObject2Date(Object value) {
+        if (value == null) {
+           return null;
+        }
+        if(value instanceof Date) {
+            return (Date) value;
+        }
+        return convertString2Date(value.toString());
+    }
 
     public static boolean convertString2Boolean(String value) {
         if (value == null) {

@@ -55,14 +55,12 @@ public class ProxyData extends AuditData {
         dest.setId(source.getId());
         dest.setPort(source.getPort());
         dest.setReachable(source.isReachable());
-        toAuditData(source, dest);
     }
 
     public static void toModel(ProxyData source, ProxyModel dest) {
         dest.setId(source.getId());
         dest.setPort(source.getPort());
         dest.setReachable(source.isReachable());
-        toAuditModel(source, dest);
     }
 
     public long getId() {

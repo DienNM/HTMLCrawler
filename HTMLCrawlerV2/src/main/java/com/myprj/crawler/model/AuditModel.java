@@ -3,6 +3,7 @@ package com.myprj.crawler.model;
 import java.io.Serializable;
 import java.util.Calendar;
 
+import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
@@ -16,12 +17,16 @@ public class AuditModel implements Serializable {
 
     private static final long serialVersionUID = 1L;
     
+    @Column(name = "createdAt")
     private long createdAt;
-    
+
+    @Column(name = "createdBy", length = 50)
     private String createdBy;
-    
+
+    @Column(name = "updatedAt")
     private long updatedAt;
-    
+
+    @Column(name = "updatedBy", length = 50)
     private String updatedBy;
     
     public AuditModel() {

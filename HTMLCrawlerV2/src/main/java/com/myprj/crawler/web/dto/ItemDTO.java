@@ -43,8 +43,8 @@ public class ItemDTO extends AuditTDO {
         }
     }
     
-    public static void toItemDTO(ItemData item, ItemDTO itemDTO) {
-        DomainConverter.convert(item, itemDTO, new ObjectConverter<ItemData, ItemDTO>() {
+    public static void toItemDTO(ItemData source, ItemDTO dest) {
+        DomainConverter.convert(source, dest, new ObjectConverter<ItemData, ItemDTO>() {
 
             @Override
             public void convert(ItemData src, ItemDTO dest) {

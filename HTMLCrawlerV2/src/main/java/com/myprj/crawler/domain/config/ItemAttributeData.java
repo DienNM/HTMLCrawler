@@ -5,10 +5,13 @@ import static com.myprj.crawler.util.Serialization.deserialize;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.myprj.crawler.annotation.EntityTransfer;
 import com.myprj.crawler.domain.AuditData;
 import com.myprj.crawler.enumeration.AttributeType;
 import com.myprj.crawler.model.config.ItemAttributeModel;
 import com.myprj.crawler.util.Serialization;
+import com.myprj.crawler.util.converter.EntityConverter;
+import com.myprj.crawler.util.converter.ObjectConverter;
 
 /**
  * @author DienNM (DEE)
@@ -18,18 +21,25 @@ public class ItemAttributeData extends AuditData {
 
     private static final long serialVersionUID = 1L;
 
+    @EntityTransfer("id")
     private String id;
 
+    @EntityTransfer("item_id")
     private long itemId;
 
+    @EntityTransfer("parent_id")
     private String parentId;
-    
+
+    @EntityTransfer("name")
     private String name;
 
+    @EntityTransfer("attribute_id")
     private String attributeId;
 
+    @EntityTransfer("type")
     private AttributeType type;
 
+    @EntityTransfer("is_root")
     private boolean root = false;
 
     private AttributeSelector selector;
@@ -42,11 +52,11 @@ public class ItemAttributeData extends AuditData {
 
     public ItemAttributeData() {
     }
-    
+
     public static void collectionAllItemAttributes(ItemAttributeData itemAttribute,
             List<ItemAttributeData> itemAttributes) {
         itemAttributes.add(itemAttribute);
-        for(ItemAttributeData itemAttributeData : itemAttribute.getChildren()) {
+        for (ItemAttributeData itemAttributeData : itemAttribute.getChildren()) {
             collectionAllItemAttributes(itemAttributeData, itemAttributes);
         }
     }
@@ -68,25 +78,21 @@ public class ItemAttributeData extends AuditData {
     }
 
     public static void toData(ItemAttributeModel source, ItemAttributeData dest) {
-        dest.setId(source.getId());
-        dest.setItemId(source.getItemId());
-        dest.setAttributeId(source.getAttributeId());
-        dest.setParentId(source.getParentId());
-        dest.setType(source.getType());
-        dest.setRoot(source.isRoot());
-        dest.setSelector(deserialize(source.getSelectorJson(), AttributeSelector.class));
-        toAuditData(source, dest);
+        EntityConverter.convert2Data(source, dest, new ObjectConverter<ItemAttributeModel, ItemAttributeData>() {
+            @Override
+            public void convert(ItemAttributeModel src, ItemAttributeData dest) {
+                dest.setSelector(deserialize(src.getSelectorJson(), AttributeSelector.class));
+            }
+        });
     }
 
     public static void toModel(ItemAttributeData source, ItemAttributeModel dest) {
-        dest.setId(source.getId());
-        dest.setItemId(source.getItemId());
-        dest.setAttributeId(source.getAttributeId());
-        dest.setParentId(source.getParentId());
-        dest.setType(source.getType());
-        dest.setRoot(source.isRoot());
-        dest.setSelectorJson(Serialization.serialize(source.getSelector()));
-        toAuditModel(source, dest);
+        EntityConverter.convert2Entity(source, dest, new ObjectConverter<ItemAttributeData, ItemAttributeModel>() {
+            @Override
+            public void convert(ItemAttributeData src, ItemAttributeModel dest) {
+                dest.setSelectorJson(Serialization.serialize(src.getSelector()));
+            }
+        });
     }
 
     public String getId() {
@@ -104,11 +110,11 @@ public class ItemAttributeData extends AuditData {
     public void setItemId(long itemId) {
         this.itemId = itemId;
     }
-    
+
     public String getName() {
         return name;
     }
-    
+
     public void setName(String name) {
         this.name = name;
     }

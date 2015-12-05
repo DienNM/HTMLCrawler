@@ -7,8 +7,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.myprj.crawler.annotation.DataTransfer;
+import com.myprj.crawler.annotation.EntityTransfer;
 import com.myprj.crawler.domain.AuditData;
 import com.myprj.crawler.model.config.ItemModel;
+import com.myprj.crawler.util.converter.EntityConverter;
+import com.myprj.crawler.util.converter.ObjectConverter;
 
 /**
  * @author DienNM (DEE)
@@ -19,22 +22,27 @@ public class ItemData extends AuditData {
     private static final long serialVersionUID = 1L;
 
     @DataTransfer("id")
+    @EntityTransfer("id")
     private long id;
 
     @DataTransfer("name")
+    @EntityTransfer("name")
     private String name;
 
     @DataTransfer("categoryId")
+    @EntityTransfer("category_id")
     private long categoryId;
 
     @DataTransfer("description")
+    @EntityTransfer("description")
     private String description;
 
     @DataTransfer("built")
+    @EntityTransfer("is_built")
     private boolean built;
 
     private ItemContent sampleContent;
-    
+
     private List<AttributeData> attributes = new ArrayList<AttributeData>();
 
     public ItemData() {
@@ -57,23 +65,21 @@ public class ItemData extends AuditData {
     }
 
     public static void toData(ItemModel source, ItemData dest) {
-        dest.setId(source.getId());
-        dest.setName(source.getName());
-        dest.setDescription(source.getDescription());
-        dest.setCategoryId(source.getCategoryId());
-        dest.setBuilt(source.isBuilt());
-        dest.setSampleContent(deserialize(source.getSampleContentJson(), ItemContent.class));
-        toAuditData(source, dest);
+        EntityConverter.convert2Data(source, dest, new ObjectConverter<ItemModel, ItemData>() {
+            @Override
+            public void convert(ItemModel src, ItemData dest) {
+                dest.setSampleContent(deserialize(src.getSampleContentJson(), ItemContent.class));
+            }
+        });
     }
 
     public static void toModel(ItemData source, ItemModel dest) {
-        dest.setId(source.getId());
-        dest.setName(source.getName());
-        dest.setDescription(source.getDescription());
-        dest.setCategoryId(source.getCategoryId());
-        dest.setBuilt(source.isBuilt());
-        dest.setSampleContentJson(serialize(source.getSampleContent()));
-        toAuditModel(source, dest);
+        EntityConverter.convert2Entity(source, dest, new ObjectConverter<ItemData, ItemModel>() {
+            @Override
+            public void convert(ItemData src, ItemModel dest) {
+                dest.setSampleContentJson(serialize(src.getSampleContent()));
+            }
+        });
     }
 
     public long getId() {

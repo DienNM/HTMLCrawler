@@ -4,9 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.myprj.crawler.annotation.DataTransfer;
+import com.myprj.crawler.annotation.EntityTransfer;
 import com.myprj.crawler.domain.AuditData;
 import com.myprj.crawler.enumeration.AttributeType;
 import com.myprj.crawler.model.config.AttributeModel;
+import com.myprj.crawler.util.converter.EntityConverter;
 
 /**
  * @author DienNM (DEE)
@@ -17,23 +19,29 @@ public class AttributeData extends AuditData {
     private static final long serialVersionUID = 1L;
 
     @DataTransfer("id")
+    @EntityTransfer("")
     private String id;
 
     @DataTransfer("itemId")
+    @EntityTransfer("item_id")
     private long itemId;
 
     @DataTransfer("name")
+    @EntityTransfer("name")
     private String name;
 
     @DataTransfer("type")
+    @EntityTransfer("att_type")
     private AttributeType type;
 
     @DataTransfer("parentId")
+    @EntityTransfer("parent_id")
     private String parentId;
 
     private AttributeData parent;
 
     @DataTransfer("root")
+    @EntityTransfer("is_root")
     private boolean root;
 
     private List<AttributeData> children = new ArrayList<AttributeData>();
@@ -58,21 +66,11 @@ public class AttributeData extends AuditData {
     }
 
     public static void toData(AttributeModel source, AttributeData dest) {
-        dest.setId(source.getId());
-        dest.setName(source.getName());
-        dest.setItemId(source.getItemId());
-        dest.setType(source.getType());
-        dest.setParentId(source.getParentId());
-        toAuditData(source, dest);
+        EntityConverter.convert2Data(source, dest);
     }
 
     public static void toModel(AttributeData source, AttributeModel dest) {
-        dest.setId(source.getId());
-        dest.setName(source.getName());
-        dest.setItemId(source.getItemId());
-        dest.setType(source.getType());
-        dest.setParentId(source.getParentId());
-        toAuditModel(source, dest);
+        EntityConverter.convert2Entity(source, dest);
     }
 
     public String getId() {

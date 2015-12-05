@@ -22,6 +22,7 @@ public class CategoryModel extends AuditModel {
     
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id")
     private long id;
 
     @Column(name = "name", length = 50)

@@ -58,7 +58,6 @@ public class CrawlResultData extends AuditData {
         dest.setStatus(source.getStatus());
         dest.setUrl(source.getUrl());
         dest.setDetail(Serialization.deserialize(source.getDetail(), Map.class));
-        toAuditData(source, dest);
     }
     
     public static void toModel(CrawlResultData source, CrawlResultModel dest) {
@@ -68,7 +67,6 @@ public class CrawlResultData extends AuditData {
         dest.setStatus(source.getStatus());
         dest.setUrl(source.getUrl());
         dest.setDetail(Serialization.serialize(source.getDetail()));
-        toAuditModel(source, dest);
     }
     
     public long getId() {

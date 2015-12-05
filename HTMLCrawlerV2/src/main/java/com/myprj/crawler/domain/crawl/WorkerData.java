@@ -86,7 +86,6 @@ public class WorkerData extends AuditData {
         dest.setStatus(source.getStatus());
         dest.setThreads(source.getThreads());
         dest.setSite(source.getSite());
-        toAuditData(source, dest);
     }
     
     
@@ -100,7 +99,6 @@ public class WorkerData extends AuditData {
         dest.setStatus(source.getStatus());
         dest.setThreads(source.getThreads());
         dest.setSite(source.getSite());
-        toAuditModel(source, dest);
     }
 
     public long getId() {

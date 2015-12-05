@@ -27,12 +27,21 @@ public abstract class AbstractController {
         return listDatas;
     }
     
+    protected <DTO> List<Map<String, Object>> getListMapResult(List<DTO> sources, DTOLevel level) {
+        List<Map<String, Object>> listDatas = new ArrayList<Map<String, Object>>();
+        DTOMappingHandler.mapList(sources, listDatas, level);
+        return listDatas;
+    }
+    
     protected <S, D> Map<String, Object> getMapResult(S source, Class<D> targetClass, DTOLevel level) {
         D dto = ReflectionUtil.createInstance(targetClass);
         DomainConverter.convert(source, dto);
-        
+        return getMapResult(dto, level);
+    }
+    
+    protected Map<String, Object> getMapResult(Object object, DTOLevel level) {
         Map<String, Object> datas = new HashMap<String, Object>();
-        DTOMappingHandler.map(dto, datas, level);
+        DTOMappingHandler.map(object, datas, level);
         
         return datas;
     }

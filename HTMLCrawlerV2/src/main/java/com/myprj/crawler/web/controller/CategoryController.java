@@ -88,9 +88,17 @@ public class CategoryController extends AbstractController {
             @RequestParam(value = "parentCategoryId", defaultValue = "-1") long parentId) {
 
         List<RequestError> errors = new ArrayList<RequestError>();
-        if (!StringUtils.isEmpty(name)) {
+        if (StringUtils.isEmpty(name)) {
             errors.add(new RequestError("name", "Category Name is required"));
         }
+        
+        if(parentId != -1) {
+            CategoryData parentCtg = categoryService.getById(parentId);
+            if(parentCtg == null) {
+                errors.add(new RequestError("parentCategoryId", "Category Parent " + parentId + " not found"));
+            }
+        }
+        
         if (!errors.isEmpty()) {
             JsonResponse jsonResponse = new JsonResponse(false);
             jsonResponse.putErrors(errors);
