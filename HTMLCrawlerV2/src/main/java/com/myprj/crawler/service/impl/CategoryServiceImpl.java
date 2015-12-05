@@ -80,11 +80,10 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public PageResult<CategoryData> getAll(Pageable pageable) {
-        PageResult<CategoryModel> pageResult = categoryRepository.find(pageable);
-
-        PageResult<CategoryData> results = new PageResult<CategoryData>();
-        PageResult.copy(pageResult, results);
+    public PageResult<CategoryData> getAllWithPaging(Pageable pageable) {
+        PageResult<CategoryModel> pageResult = categoryRepository.findAll(pageable);
+        
+        PageResult<CategoryData> results = new PageResult<CategoryData>(pageResult.getPageable());
         List<CategoryData> categoryDatas = new ArrayList<CategoryData>();
         CategoryData.toDatas(pageResult.getContent(), categoryDatas);
         results.setContent(categoryDatas);

@@ -16,7 +16,7 @@ public interface ItemService {
     
     List<ItemData> getAll();
     
-    PageResult<ItemData> getPaging(Pageable pageable);
+    PageResult<ItemData> getAllWithPaging(Pageable pageable);
     
     void populateAttributes(ItemData item);
     

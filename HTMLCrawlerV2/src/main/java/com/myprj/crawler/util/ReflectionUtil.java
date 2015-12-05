@@ -5,7 +5,9 @@ import static com.myprj.crawler.util.converter.TypeConverter.convertString2Date;
 import static com.myprj.crawler.util.converter.TypeConverter.convertString2Int;
 import static com.myprj.crawler.util.converter.TypeConverter.convertString2Long;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
+import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -24,6 +26,15 @@ public final class ReflectionUtil {
 
     private ReflectionUtil() {
         throw new UnsupportedOperationException();
+    }
+    
+    public static <T> T createInstance(Class<T> clazz) {
+        try {
+            Constructor<T> constructor = clazz.getConstructor();
+            return constructor.newInstance();
+        } catch (Exception e) {
+            throw new InvalidParameterException("Cannot create instance of class: " + clazz);
+        }
     }
 
     public static List<Field> getFieldWithAncestors(Class<?> clazz) {

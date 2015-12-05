@@ -13,20 +13,17 @@ public class PageResult<T> {
     
     private Pageable pageable;
     
-    private long totalPages;
+    public PageResult() {
+    }
     
-    private long totalRecords;
+    public PageResult(Pageable pageable) {
+        this.pageable = pageable;
+    }
 
     public List<T> getContent() {
         return content;
     }
     
-    public static <S, D> void copy(PageResult<S> source, PageResult<D> dest) {
-        dest.setPageable(source.getPageable());
-        dest.setTotalPages(source.getTotalPages());
-        dest.setTotalRecords(source.getTotalRecords());
-    }
-
     public void setContent(List<T> content) {
         this.content = content;
     }
@@ -37,22 +34,6 @@ public class PageResult<T> {
 
     public void setPageable(Pageable pageable) {
         this.pageable = pageable;
-    }
-
-    public long getTotalPages() {
-        return totalPages;
-    }
-
-    public void setTotalPages(long totalPages) {
-        this.totalPages = totalPages;
-    }
-
-    public long getTotalRecords() {
-        return totalRecords;
-    }
-
-    public void setTotalRecords(long totalRecords) {
-        this.totalRecords = totalRecords;
     }
     
 }

@@ -1,8 +1,8 @@
 package com.myprj.crawler.web.mapping;
 
-import static com.myprj.crawler.web.enumeration.TargetDTOLevel.DEFAULT;
-import static com.myprj.crawler.web.enumeration.TargetDTOLevel.FULL;
-import static com.myprj.crawler.web.enumeration.TargetDTOLevel.SIMPLE;
+import static com.myprj.crawler.web.enumeration.DTOLevel.DEFAULT;
+import static com.myprj.crawler.web.enumeration.DTOLevel.FULL;
+import static com.myprj.crawler.web.enumeration.DTOLevel.SIMPLE;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -10,7 +10,7 @@ import java.util.regex.Pattern;
 
 import javax.annotation.PostConstruct;
 
-import com.myprj.crawler.web.enumeration.TargetDTOLevel;
+import com.myprj.crawler.web.enumeration.DTOLevel;
 import com.myprj.crawler.web.mapping.DTOField.DTOFieldType;
 
 /**
@@ -21,7 +21,7 @@ public class DTOMapping {
 
     private Pattern patten = Pattern.compile("\\w+\\(\\w+\\)");
 
-    private Map<TargetDTOLevel, String> targetMappings;
+    private Map<DTOLevel, String> targetMappings;
     
     private String targetClassName;
 
@@ -32,14 +32,14 @@ public class DTOMapping {
     public DTOMapping() {
     }
 
-    public Map<String, DTOField> getTargetMapping(TargetDTOLevel targetType) {
-        if (TargetDTOLevel.SIMPLE.equals(targetType)) {
+    public Map<String, DTOField> getTargetMapping(DTOLevel targetType) {
+        if (DTOLevel.SIMPLE.equals(targetType)) {
             return simpleMap;
         }
-        if (TargetDTOLevel.DEFAULT.equals(targetType)) {
+        if (DTOLevel.DEFAULT.equals(targetType)) {
             return defaultMap;
         }
-        if (TargetDTOLevel.FULL.equals(targetType)) {
+        if (DTOLevel.FULL.equals(targetType)) {
             return fullMap;
         }
         return new HashMap<String, DTOField>();
@@ -50,7 +50,7 @@ public class DTOMapping {
         intFields(simpleMap, targetMappings.get(SIMPLE));
         intFields(defaultMap, targetMappings.get(DEFAULT));
         intFields(fullMap, targetMappings.get(FULL));
-        DTOHandler.register(getTargetClassName(), this);
+        DTOMappingHandler.register(getTargetClassName(), this);
     }
 
     private void intFields(Map<String, DTOField> map, String FIELD) {
@@ -59,11 +59,11 @@ public class DTOMapping {
         }
         String[] fields = FIELD.split(",");
         for (String field : fields) {
-            if (TargetDTOLevel.SIMPLE.name().equalsIgnoreCase(field)) {
+            if (DTOLevel.SIMPLE.name().equalsIgnoreCase(field)) {
                 intFields(map, targetMappings.get(SIMPLE));
-            } else if (TargetDTOLevel.DEFAULT.name().equalsIgnoreCase(field)) {
+            } else if (DTOLevel.DEFAULT.name().equalsIgnoreCase(field)) {
                 intFields(map, targetMappings.get(DEFAULT));
-            } else if (TargetDTOLevel.FULL.name().equalsIgnoreCase(field)) {
+            } else if (DTOLevel.FULL.name().equalsIgnoreCase(field)) {
                 intFields(map, targetMappings.get(FULL));
             } else if (isReferenceField(field)) {
                 DTOField dtoField = createDTOFieldRef(field);
@@ -81,7 +81,7 @@ public class DTOMapping {
         results[1] = input.substring(input.indexOf("(") + 1, input.indexOf(")"));
 
         DTOField dtoField = new DTOField(results[0], DTOFieldType.ref);
-        dtoField.setTargetRefType(TargetDTOLevel.valueOf(results[1]));
+        dtoField.setTargetRefType(DTOLevel.valueOf(results[1]));
 
         return dtoField;
     }
@@ -115,11 +115,11 @@ public class DTOMapping {
         this.targetClassName = targetClassName;
     }
 
-    public Map<TargetDTOLevel, String> getTargetMappings() {
+    public Map<DTOLevel, String> getTargetMappings() {
         return targetMappings;
     }
 
-    public void setTargetMappings(Map<TargetDTOLevel, String> targetMappings) {
+    public void setTargetMappings(Map<DTOLevel, String> targetMappings) {
         this.targetMappings = targetMappings;
     }
 

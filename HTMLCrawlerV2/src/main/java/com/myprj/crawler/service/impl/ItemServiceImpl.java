@@ -20,8 +20,8 @@ import com.myprj.crawler.repository.AttributeRepository;
 import com.myprj.crawler.repository.ItemAttributeRepository;
 import com.myprj.crawler.repository.ItemRepository;
 import com.myprj.crawler.service.AttributeService;
-import com.myprj.crawler.service.ItemService;
 import com.myprj.crawler.service.AttributeStructureService;
+import com.myprj.crawler.service.ItemService;
 import com.myprj.crawler.util.ItemStructureUtil;
 
 /**
@@ -70,15 +70,14 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public PageResult<ItemData> getPaging(Pageable pageable) {
-        PageResult<ItemModel> pageResult = itemRepository.find(pageable);
+    public PageResult<ItemData> getAllWithPaging(Pageable pageable) {
+        PageResult<ItemModel> pageResult = itemRepository.findAll(pageable);
 
-        PageResult<ItemData> results = new PageResult<ItemData>();
-        PageResult.copy(pageResult, results);
+        PageResult<ItemData> results = new PageResult<ItemData>(pageResult.getPageable());
         List<ItemData> itemDatas = new ArrayList<ItemData>();
         ItemData.toDatas(pageResult.getContent(), itemDatas);
         results.setContent(itemDatas);
-
+        
         return results;
     }
     

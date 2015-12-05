@@ -4,7 +4,7 @@ package com.myprj.crawler.web.enumeration;
  * @author DienNM (DEE)
  */
 
-public enum TargetDTOLevel {
+public enum DTOLevel {
     
     SIMPLE,
     DEFAULT,

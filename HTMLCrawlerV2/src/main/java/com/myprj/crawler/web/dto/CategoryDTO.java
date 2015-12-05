@@ -1,15 +1,12 @@
 package com.myprj.crawler.web.dto;
 
-import java.io.Serializable;
-
 import com.myprj.crawler.annotation.DataTransfer;
-import com.myprj.crawler.web.mapping.ObjectCreation;
 
 /**
  * @author DienNM (DEE)
  */
 
-public class CategoryDTO implements Serializable {
+public class CategoryDTO extends AuditTDO {
 
     private static final long serialVersionUID = 1L;
 
@@ -25,16 +22,6 @@ public class CategoryDTO implements Serializable {
     @DataTransfer("parentCategoryId")
     private long parentCategoryId;
     
-    public static ObjectCreation<CategoryDTO> creation() {
-        return new ObjectCreation<CategoryDTO>() {
-            
-            @Override
-            public CategoryDTO create() {
-                return new CategoryDTO();
-            }
-        };
-    }
-
     public CategoryDTO() {
     }
 

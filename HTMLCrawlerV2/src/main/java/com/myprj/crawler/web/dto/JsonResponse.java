@@ -5,8 +5,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
-import com.myprj.crawler.util.converter.TypeConverter;
-
 /**
  * @author DienNM (DEE)
  */
@@ -16,8 +14,10 @@ public class JsonResponse extends HashMap<String, Object> {
     private static final long serialVersionUID = 1L;
 
     public static final String DATA = "data";
+    public static final String PAGING = "paging";
     public static final String SUCCESS = "success";
     public static final String MESSAGE = "message";
+    public static final String ERRORS = "errors";
 
     public JsonResponse() {
         this(false);
@@ -27,34 +27,29 @@ public class JsonResponse extends HashMap<String, Object> {
         put(SUCCESS, success);
     }
 
-    @SuppressWarnings("rawtypes")
-    public void putSuccess(Object object) {
-        if (object instanceof Boolean) {
-            put(SUCCESS, TypeConverter.convertObject2Boolean(object));
-        } else if (object == null) {
-            put(SUCCESS, false);
-        } else if (object instanceof Collection) {
-            put(SUCCESS, ((Collection) object).iterator().hasNext());
-        } else {
-            put(SUCCESS, true);
-        }
-    }
-
     public JsonResponse(Object object) {
-        put(DATA, object);
-        putSuccess(object);
+        putDataAsCollection(object);
+        put(SUCCESS, object != null);
     }
 
     public JsonResponse(Object object, boolean success) {
         put(SUCCESS, success);
         put(DATA, object);
     }
+    
+    public void putPaging(Object pageble) {
+        put(PAGING, pageble);
+    }
 
     public void putMessage(String message) {
         put(MESSAGE, message);
     }
-
+    
     public void putData(Object data) {
+        put(DATA, data);
+    }
+
+    public void putDataAsCollection(Object data) {
         if (data == null) {
             put(DATA, new ArrayList<String>());
         } else if (data instanceof Collection) {
@@ -64,7 +59,10 @@ public class JsonResponse extends HashMap<String, Object> {
             list.add(data);
             put(DATA, list);
         }
-
+    }
+    
+    public void putErrors(List<?> errors) {
+        put(ERRORS, errors);
     }
 
 }

@@ -15,8 +15,8 @@
         <property name="targetMappings">
             <map>
                 <entry key="SIMPLE" value="id,name,parentCategoryId" />
-                <entry key="DEFAULT" value="SIMPLE,description" />
-                <entry key="FULL" value="DEFAULT" />
+                <entry key="DEFAULT" value="SIMPLE,description,createdAt" />
+                <entry key="FULL" value="DEFAULT,createdBy,updatedAt,updatedBy" />
             </map>
         </property>
     </bean>
@@ -25,9 +25,20 @@
         <property name="targetClassName" value="com.myprj.crawler.web.dto.ItemDTO" />
         <property name="targetMappings">
             <map>
-                <entry key="SIMPLE" value="id,name,categoryId" />
-                <entry key="DEFAULT" value="SIMPLE,description,built" />
-                <entry key="FULL" value="DEFAULT" />
+                <entry key="SIMPLE" value="id,name,categoryId,built" />
+                <entry key="DEFAULT" value="SIMPLE,description,createdAt,createdBy" />
+                <entry key="FULL" value="DEFAULT,updatedAt,updatedBy" />
+            </map>
+        </property>
+    </bean>
+    
+    <bean id="com.myprj.crawler.web.dto.AttributeDTO" class = "com.myprj.crawler.web.mapping.DTOMapping">
+        <property name="targetClassName" value="com.myprj.crawler.web.dto.AttributeDTO" />
+        <property name="targetMappings">
+            <map>
+                <entry key="SIMPLE" value="id,name,itemId,type,parentId,root" />
+                <entry key="DEFAULT" value="SIMPLE,createdAt,createdBy" />
+                <entry key="FULL" value="DEFAULT,updatedAt,updatedBy" />
             </map>
         </property>
     </bean>
@@ -37,8 +48,8 @@
         <property name="targetMappings">
             <map>
                 <entry key="SIMPLE" value="id,name,site" />
-                <entry key="DEFAULT" value="SIMPLE,description,threads,attemptTimes,delayTime,status" />
-                <entry key="FULL" value="DEFAULT" />
+                <entry key="DEFAULT" value="SIMPLE,description,threads,attemptTimes,delayTime,status,createdAt,createdBy" />
+                <entry key="FULL" value="DEFAULT,updatedAt,updatedBy" />
             </map>
         </property>
     </bean>
@@ -48,8 +59,8 @@
         <property name="targetMappings">
             <map>
                 <entry key="SIMPLE" value="level,crawlType" />
-                <entry key="DEFAULT" value="SIMPLE" />
-                <entry key="FULL" value="DEFAULT" />
+                <entry key="DEFAULT" value="SIMPLE,createdAt,createdBy" />
+                <entry key="FULL" value="DEFAULT,updatedAt,updatedBy" />
             </map>
         </property>
     </bean>

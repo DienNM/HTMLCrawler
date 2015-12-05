@@ -1,15 +1,19 @@
 package com.myprj.crawler.web.dto;
 
-import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.myprj.crawler.annotation.DataTransfer;
-import com.myprj.crawler.web.mapping.ObjectCreation;
+import com.myprj.crawler.domain.config.AttributeData;
+import com.myprj.crawler.domain.config.ItemData;
+import com.myprj.crawler.util.converter.DomainConverter;
+import com.myprj.crawler.util.converter.ObjectConverter;
 
 /**
  * @author DienNM (DEE)
  */
 
-public class ItemDTO implements Serializable {
+public class ItemDTO extends AuditTDO {
 
     private static final long serialVersionUID = 1L;
 
@@ -28,14 +32,20 @@ public class ItemDTO implements Serializable {
     @DataTransfer("built")
     private boolean built;
     
-    public static ObjectCreation<ItemDTO> creation() {
-        return new ObjectCreation<ItemDTO>() {
-            
+    private List<AttributeDTO> attributes = new ArrayList<AttributeDTO>();
+    
+    public static void toItemDTO(ItemData item, ItemDTO itemDTO) {
+        DomainConverter.convert(item, itemDTO, new ObjectConverter<ItemData, ItemDTO>() {
+
             @Override
-            public ItemDTO create() {
-                return new ItemDTO();
+            public void convert(ItemData src, ItemDTO dest) {
+                List<AttributeData> attributeDatas = src.getAttributes();
+                List<AttributeDTO>  attributeDTOs = new ArrayList<AttributeDTO>();
+                AttributeDTO.toDTOs(attributeDatas, attributeDTOs);
+                dest.setAttributes(attributeDTOs);
             }
-        };
+            
+        });
     }
 
     public long getId() {
@@ -76,5 +86,13 @@ public class ItemDTO implements Serializable {
 
     public void setBuilt(boolean built) {
         this.built = built;
+    }
+
+    public List<AttributeDTO> getAttributes() {
+        return attributes;
+    }
+
+    public void setAttributes(List<AttributeDTO> attributes) {
+        this.attributes = attributes;
     }
 }

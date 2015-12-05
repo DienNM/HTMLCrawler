@@ -1,7 +1,7 @@
 package com.myprj.crawler.web.mapping;
 
-import static com.myprj.crawler.web.enumeration.TargetDTOLevel.DEFAULT;
-import static com.myprj.crawler.web.enumeration.TargetDTOLevel.SIMPLE;
+import static com.myprj.crawler.web.enumeration.DTOLevel.DEFAULT;
+import static com.myprj.crawler.web.enumeration.DTOLevel.SIMPLE;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -9,7 +9,7 @@ import java.util.Map;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.myprj.crawler.web.enumeration.TargetDTOLevel;
+import com.myprj.crawler.web.enumeration.DTOLevel;
 
 /**
  * @author DienNM (DEE)
@@ -21,8 +21,8 @@ public class DTOMappingTest {
     public void testDTOMapping1() {
         DTOMapping dtoMapping = new DTOMapping();
         
-        Map<TargetDTOLevel, String> targetMappings = new HashMap<TargetDTOLevel, String>();
-        targetMappings.put(TargetDTOLevel.SIMPLE, "a1,a2,a3");
+        Map<DTOLevel, String> targetMappings = new HashMap<DTOLevel, String>();
+        targetMappings.put(DTOLevel.SIMPLE, "a1,a2,a3");
         
         dtoMapping.setTargetMappings(targetMappings);
         dtoMapping.setTargetClassName("a.b.c.ABC");
@@ -37,10 +37,10 @@ public class DTOMappingTest {
     public void testDTOMapping2() {
         DTOMapping dtoMapping = new DTOMapping();
         
-        Map<TargetDTOLevel, String> targetMappings = new HashMap<TargetDTOLevel, String>();
-        targetMappings.put(TargetDTOLevel.SIMPLE, "a1,a2,a3");
-        targetMappings.put(TargetDTOLevel.DEFAULT, "SIMPLE,a4,ref(SIMPLE)");
-        targetMappings.put(TargetDTOLevel.FULL, "DEFAULT,a5,a6(DEFAULT)");
+        Map<DTOLevel, String> targetMappings = new HashMap<DTOLevel, String>();
+        targetMappings.put(DTOLevel.SIMPLE, "a1,a2,a3");
+        targetMappings.put(DTOLevel.DEFAULT, "SIMPLE,a4,ref(SIMPLE)");
+        targetMappings.put(DTOLevel.FULL, "DEFAULT,a5,a6(DEFAULT)");
         
         dtoMapping.setTargetMappings(targetMappings);
         dtoMapping.setTargetClassName("a.b.c.ABC");

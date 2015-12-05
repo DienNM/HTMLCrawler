@@ -1,6 +1,8 @@
 package com.myprj.crawler.web.controller;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,9 +22,10 @@ import com.myprj.crawler.domain.crawl.WorkerItemData;
 import com.myprj.crawler.enumeration.Level;
 import com.myprj.crawler.service.WorkerService;
 import com.myprj.crawler.web.dto.JsonResponse;
+import com.myprj.crawler.web.dto.RequestError;
 import com.myprj.crawler.web.dto.WorkerDTO;
 import com.myprj.crawler.web.dto.WorkerItemDTO;
-import com.myprj.crawler.web.enumeration.QueryLevel;
+import com.myprj.crawler.web.enumeration.DTOLevel;
 
 /**
  * @author DienNM (DEE)
@@ -35,62 +38,95 @@ public class WorkerController extends AbstractController {
     @Autowired
     private WorkerService workerService;
 
+    private void populateObjectByLevel(WorkerData worker, DTOLevel level) {
+        switch (level) {
+        case FULL:
+            workerService.populateWorkerItems(worker);
+            break;
+        default:
+            break;
+        }
+    }
+
     @RequestMapping(value = "/all", method = RequestMethod.GET)
     @ResponseBody
-    public JsonResponse getAll() {
+    public JsonResponse getAll(@RequestParam(value = "level", defaultValue = "DEFAULT") DTOLevel level) {
         List<WorkerData> workerDatas = workerService.getAll();
-        JsonResponse response = new JsonResponse(workerDatas, true);
+
+        List<Map<String, Object>> results = getListMapResult(workerDatas, WorkerDTO.class, level);
+        JsonResponse response = new JsonResponse(results, !results.isEmpty());
         return response;
     }
 
     @RequestMapping(method = RequestMethod.GET)
     @ResponseBody
     public JsonResponse getPaging(@RequestParam(value = "currentPage", defaultValue = "0") int currentPage,
-            @RequestParam(value = "pageSize", defaultValue = "10") int pageSize) {
+            @RequestParam(value = "pageSize", defaultValue = "10") int pageSize,
+            @RequestParam(value = "level", defaultValue = "SIMPLE") DTOLevel level) {
+
         Pageable pageable = new Pageable(pageSize, currentPage);
-        PageResult<WorkerData> pageResult = workerService.getPaging(pageable);
-        return returnDataPaging(pageResult);
+        PageResult<WorkerData> pageResult = workerService.getAllWithPaging(pageable);
+
+        List<WorkerData> sources = pageResult.getContent();
+        List<Map<String, Object>> listDatas = getListMapResult(sources, WorkerDTO.class, level);
+        JsonResponse response = new JsonResponse(listDatas, !listDatas.isEmpty());
+        response.putPaging(pageResult.getPageable());
+
+        return response;
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public JsonResponse getWorker(@PathVariable(value = "id") long id,
-            @RequestParam(value = "level", defaultValue = "DEFAULT") QueryLevel level) {
-        JsonResponse response = new JsonResponse(false);
-        if(QueryLevel.DEFAULT.equals(level)) {
-            WorkerData workerData = workerService.get(id);
-            response = new JsonResponse(WorkerDTO.toDTO(workerData), response != null);
-        } else if(QueryLevel.FULL.equals(level)) {
-            WorkerData workerData = workerService.get(id);
-            workerService.populateWorkerItems(workerData);
-            response = new JsonResponse(WorkerDTO.toDTO(workerData), response != null);
-        } 
+            @RequestParam(value = "level", defaultValue = "DEFAULT") DTOLevel level) {
+
+        WorkerData workerData = workerService.get(id);
+        if (workerData == null) {
+            JsonResponse response = new JsonResponse(false);
+            response.putMessage("Worker Id " + id + " not found");
+            return response;
+        }
+
+        populateObjectByLevel(workerData, level);
+        
+        Map<String, Object> datas = getMapResult(workerData, WorkerDTO.class, level);
+        JsonResponse response = new JsonResponse(!datas.isEmpty());
+        response.putData(datas);
+
         return response;
     }
 
     @RequestMapping(method = RequestMethod.POST)
     @ResponseBody
-    public JsonResponse addWorker(@RequestBody WorkerData worker) {
+    public JsonResponse addWorker(@RequestParam(value = "name") String name, 
+            @RequestParam(value = "site") String site, 
+            @RequestParam(value = "description") String description, 
+            @RequestParam(value = "threads", defaultValue = "1") int threads, 
+            @RequestParam(value = "attemptTimes", defaultValue = "3") int attemptTimes) {
+        
+        List<RequestError> errors = new ArrayList<RequestError>();
+        
+        if(StringUtils.isEmpty(name)) {
+            errors.add(new RequestError("name", "Name is required"));
+        }
+        if(StringUtils.isEmpty(name)) {
+            errors.add(new RequestError("site", "Site is required"));
+        }
+        
+        if(!errors.isEmpty()) {
+            JsonResponse jsonResponse = new JsonResponse(false);
+            jsonResponse.putErrors(errors);
+            return jsonResponse;
+        }
+        
+        WorkerData worker = new WorkerData();
+        worker.setName(name);
+        worker.setSite(site);
+        worker.setDescription(description);
+        worker.setThreads(threads);
+        worker.setAttemptTimes(attemptTimes);
+        
         WorkerData itemData = workerService.save(worker);
-        return new JsonResponse(itemData, itemData != null);
-    }
-
-    @RequestMapping(value = "/{id}", method = RequestMethod.POST)
-    @ResponseBody
-    public JsonResponse updateWorker(@RequestBody WorkerData worker, @PathVariable(value = "id") long id) {
-        if (id != worker.getId()) {
-            JsonResponse response = new JsonResponse(false);
-            response.putMessage("Worker Ids do not match: " + id + " vs " + worker.getId());
-            return response;
-        }
-        WorkerData workerData = workerService.get(id);
-        if (workerData == null) {
-            JsonResponse response = new JsonResponse(false);
-            response.putMessage(String.format("WorkerId %s cannot find", id));
-            return response;
-        }
-        workerService.update(worker);
-        JsonResponse response = new JsonResponse(true);
-        return response;
+        return new JsonResponse(itemData != null);
     }
 
     @RequestMapping(value = "/{id}/items", method = RequestMethod.POST)
@@ -148,5 +184,4 @@ public class WorkerController extends AbstractController {
             return response;
         }
     }
-
 }

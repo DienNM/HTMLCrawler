@@ -47,18 +47,9 @@ public abstract class DefaultGenericDao<E, Id>  implements GenericDao<E, Id> {
     
     @SuppressWarnings("unchecked")
     @Override
-    public List<E> findAll(Pageable pageable) {
+    public PageResult<E> findAll(Pageable pageable) {
         Query query = entityManager.createQuery("from " + getClassName());
-        query.setFirstResult(pageable.getPageIndex() *  pageable.getPageSize());
-        query.setMaxResults(pageable.getPageSize());
-        return query.getResultList();
-    }
-    
-    @SuppressWarnings("unchecked")
-    @Override
-    public PageResult<E> find(Pageable pageable) {
-        Query query = entityManager.createQuery("from " + getClassName());
-        query.setFirstResult(pageable.getPageIndex() *  pageable.getPageSize());
+        query.setFirstResult(pageable.getCurrentPage() *  pageable.getPageSize());
         query.setMaxResults(pageable.getPageSize());
         List<E> entities = query.getResultList();
         
@@ -68,15 +59,16 @@ public abstract class DefaultGenericDao<E, Id>  implements GenericDao<E, Id> {
             totalPages += 1;
         }
         
-        PageResult<E> pageResult = new PageResult<>();
+        Pageable resultPageable = new Pageable(pageable);
+        resultPageable.setTotalPages(totalPages);
+        resultPageable.setTotalRecords(totalRecords);
+        
+        PageResult<E> pageResult = new PageResult<>(resultPageable);
         pageResult.setContent(entities);
-        pageResult.setPageable(pageable);
-        pageResult.setTotalPages(totalPages);
-        pageResult.setTotalRecords(totalRecords);
         
         return pageResult;
     }
-
+    
     @Override
     public E find(Id id) {
         E entity = entityManager.find(clazz, id);

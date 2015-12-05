@@ -6,8 +6,8 @@ import java.util.Map;
  * @author DienNM (DEE)
  */
 
-public interface DTOConverter<S> {
+public interface DTOMapper<S> {
     
-    void convert(S src, Map<String, Object> dest);
+    void map(S src, Map<String, Object> dest);
     
 }

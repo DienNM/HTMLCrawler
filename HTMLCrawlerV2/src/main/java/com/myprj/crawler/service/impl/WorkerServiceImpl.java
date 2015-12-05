@@ -71,11 +71,10 @@ public class WorkerServiceImpl implements WorkerService {
     }
 
     @Override
-    public PageResult<WorkerData> getPaging(Pageable pageable) {
-        PageResult<WorkerModel> pageResult = workerRepository.find(pageable);
+    public PageResult<WorkerData> getAllWithPaging(Pageable pageable) {
+        PageResult<WorkerModel> pageResult = workerRepository.findAll(pageable);
 
-        PageResult<WorkerData> results = new PageResult<WorkerData>();
-        PageResult.copy(pageResult, results);
+        PageResult<WorkerData> results = new PageResult<WorkerData>(pageResult.getPageable());
         List<WorkerData> workerDatas = new ArrayList<WorkerData>();
         WorkerData.toDatas(pageResult.getContent(), workerDatas);
         results.setContent(workerDatas);

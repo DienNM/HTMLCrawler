@@ -20,7 +20,7 @@ public interface CategoryService {
     
     List<CategoryData> getAll();
     
-    PageResult<CategoryData> getAll(Pageable pageable);
+    PageResult<CategoryData> getAllWithPaging(Pageable pageable);
     
     long count();
     

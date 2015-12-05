@@ -2,7 +2,7 @@ package com.myprj.crawler.web.mapping;
 
 import static com.myprj.crawler.web.mapping.DTOField.DTOFieldType.field;
 
-import com.myprj.crawler.web.enumeration.TargetDTOLevel;
+import com.myprj.crawler.web.enumeration.DTOLevel;
 
 /**
  * @author DienNM (DEE)
@@ -17,7 +17,7 @@ public class DTOField {
     
     private String fieldName;
     
-    private TargetDTOLevel targetRefType;
+    private DTOLevel targetRefType;
     
     private DTOFieldType type = field;
     
@@ -49,11 +49,11 @@ public class DTOField {
         this.type = type;
     }
 
-    public TargetDTOLevel getTargetRefType() {
+    public DTOLevel getTargetRefType() {
         return targetRefType;
     }
 
-    public void setTargetRefType(TargetDTOLevel targetRefType) {
+    public void setTargetRefType(DTOLevel targetRefType) {
         this.targetRefType = targetRefType;
     }
     

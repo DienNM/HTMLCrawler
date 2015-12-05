@@ -19,7 +19,7 @@ public interface WorkerService {
     
     List<WorkerData> getAll();
     
-    PageResult<WorkerData> getPaging(Pageable pageable);
+    PageResult<WorkerData> getAllWithPaging(Pageable pageable);
     
     void populateWorkerItems(WorkerData worker);
     

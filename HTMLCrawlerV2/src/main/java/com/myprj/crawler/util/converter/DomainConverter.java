@@ -1,5 +1,6 @@
 package com.myprj.crawler.util.converter;
 
+import static com.myprj.crawler.util.ReflectionUtil.createInstance;
 import static com.myprj.crawler.util.ReflectionUtil.getFieldWithAncestors;
 
 import java.lang.reflect.Field;
@@ -21,15 +22,24 @@ public final class DomainConverter {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DomainConverter.class.getName());
 
-    private DomainConverter() {
-        throw new UnsupportedOperationException();
+    public static <S, D> void convert(List<S> sources, List<D> dests, Class<D> clazz) {
+        convert(sources, dests, clazz, null);
+    }
+
+    public static <S, D> void convert(List<S> sources, List<D> dests, Class<D> clazz,
+            ObjectConverter<S, D> callbackConverter) {
+        for (S source : sources) {
+            D dest = createInstance(clazz);
+            convert(source, dest, callbackConverter);
+            dests.add(dest);
+        }
     }
 
     public static <S, D> void convert(S source, D dest) {
         convert(source, dest, null);
     }
 
-    public static <S, D> void convert(S source, D dest, ObjectConverter<S, D> customConverter) {
+    public static <S, D> void convert(S source, D dest, ObjectConverter<S, D> callbackConverter) {
         if (source == null || dest == null) {
             return;
         }
@@ -72,8 +82,8 @@ public final class DomainConverter {
                 LOGGER.error("Count not init " + dest.getClass().getName() + " Source from Dest ", e);
             }
         }
-        if (customConverter != null) {
-            customConverter.convert(source, dest);
+        if (callbackConverter != null) {
+            callbackConverter.convert(source, dest);
         }
     }
 

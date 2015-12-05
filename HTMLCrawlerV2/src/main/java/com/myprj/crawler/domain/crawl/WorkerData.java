@@ -36,10 +36,10 @@ public class WorkerData extends AuditData {
     @DataTransfer(value = "attemptTimes")
     private int attemptTimes = 3;
 
-    @DataTransfer(value = "id")
+    @DataTransfer(value = "delayTime")
     private int delayTime = 1000;
 
-    @DataTransfer(value = "id")
+    @DataTransfer(value = "status")
     private WorkerStatus status = Created;
     
     private List<ProxyData> proxies = new ArrayList<ProxyData>();
