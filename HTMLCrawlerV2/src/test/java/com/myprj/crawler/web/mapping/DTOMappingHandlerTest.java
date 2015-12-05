@@ -3,8 +3,10 @@ package com.myprj.crawler.web.mapping;
 import static com.myprj.crawler.web.enumeration.DTOLevel.DEFAULT;
 import static com.myprj.crawler.web.enumeration.DTOLevel.FULL;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.junit.Assert;
@@ -75,6 +77,50 @@ public class DTOMappingHandlerTest {
             result = new HashMap<String, Object>();
             DTOMappingHandler.map(class1, result, FULL);
             Assert.assertEquals(3, result.size());
+            Assert.assertEquals("Class1 Value1", result.get("value1"));
+            Assert.assertEquals("Class1 Value2", result.get("value2"));
+            Assert.assertEquals("Class2 Value1", ((Map<String, Object>) result.get("value3")).get("classValue1"));
+            Assert.assertEquals("12.6", ((Map<String, Object>) result.get("value3")).get("classValue2"));
+        } catch (DtoConvertException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+    
+    @SuppressWarnings("unchecked")
+    @Test
+    public void testConvertList() {
+        Class1 class1 = createClass1();
+        try {
+            List<Class1> listClass1 = new ArrayList<Class1>();
+            listClass1.add(class1);
+            
+            List<Map<String, Object>> results = new ArrayList<Map<String, Object>>();
+            DTOMappingHandler.mapList(listClass1, results, DTOLevel.SIMPLE);
+            Assert.assertEquals(1, results.size());
+            
+            Map<String, Object> result = results.get(0);
+            Assert.assertEquals(1, result.size());
+            
+            Assert.assertEquals("Class1 Value1", result.get("value1"));
+
+            results = new ArrayList<Map<String, Object>>();
+            DTOMappingHandler.mapList(listClass1, results, DEFAULT);
+            Assert.assertEquals(1, results.size());
+            
+            result = results.get(0);
+            Assert.assertEquals(3, result.size());
+            
+            Assert.assertEquals("Class1 Value1", result.get("value1"));
+            Assert.assertEquals("Class1 Value2", result.get("value2"));
+            Assert.assertEquals("Class2 Value1", ((Map<String, Object>) result.get("value3")).get("classValue1"));
+
+            results = new ArrayList<Map<String, Object>>();
+            DTOMappingHandler.mapList(listClass1, results, FULL);
+            Assert.assertEquals(1, results.size());
+            
+            result = results.get(0);
+            Assert.assertEquals(3, result.size());
+            
             Assert.assertEquals("Class1 Value1", result.get("value1"));
             Assert.assertEquals("Class1 Value2", result.get("value2"));
             Assert.assertEquals("Class2 Value1", ((Map<String, Object>) result.get("value3")).get("classValue1"));
