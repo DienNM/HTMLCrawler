@@ -1,5 +1,6 @@
 package com.myprj.crawler.service.crawl;
 
+import com.myprj.crawler.domain.RequestCrawl;
 import com.myprj.crawler.domain.crawl.WorkerData;
 import com.myprj.crawler.exception.CrawlerException;
 /**
@@ -7,9 +8,11 @@ import com.myprj.crawler.exception.CrawlerException;
  **/
 public interface CrawlerService {
     
+    void registerHandler();
+    
     void destroy(WorkerData worker);
     
     void init(WorkerData worker) throws CrawlerException;
     
-    void crawl(long workerId) throws CrawlerException;
+    void crawl(RequestCrawl request) throws CrawlerException;
 }

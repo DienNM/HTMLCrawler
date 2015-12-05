@@ -8,6 +8,7 @@ import java.util.Map;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.myprj.crawler.util.ReflectionUtil;
+import com.myprj.crawler.util.Serialization;
 import com.myprj.crawler.util.StreamUtil;
 import com.myprj.crawler.util.converter.DomainConverter;
 import com.myprj.crawler.web.enumeration.DTOLevel;
@@ -55,6 +56,19 @@ public abstract class AbstractController {
             return content.trim();
         } catch (Exception e) {
             return "";
+        }
+    }
+
+    protected <T> List<T>  readLinesFile2List(MultipartFile file, Class<T> clazz) {
+        List<T> targets = new ArrayList<T>();
+        try {
+            List<String> lines = StreamUtil.readFile2Strings(file.getInputStream());
+            for(String line : lines) {
+                targets.add(Serialization.deserialize(line, clazz));
+            }
+            return targets;
+        } catch (Exception e) {
+            return new ArrayList<T>();
         }
     }
 

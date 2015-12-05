@@ -1,0 +1,2 @@
+{"level": "Level0", "crawlType": "LIST", "pagingConfig": {"end" : "1", "start": "1"},"level0Selector": "div.product-description a.product-name{{href}}"}
+{"level": "Level1","crawlType": "DETAIL"}

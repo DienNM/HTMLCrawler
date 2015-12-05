@@ -10,7 +10,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -133,21 +132,34 @@ public class WorkerController extends AbstractController {
 
     @RequestMapping(value = "/{id}/items", method = RequestMethod.POST)
     @ResponseBody
-    public JsonResponse addWorkerItems(@RequestBody List<WorkerItemDTO> workerItemDTOs,
+    public JsonResponse addWorkerItems(
+            @RequestParam(value = "file") MultipartFile file,
             @PathVariable(value = "id") long workerId) {
+        
+        if (file == null) {
+            JsonResponse response = new JsonResponse(false);
+            response.putMessage("Worker Items File are missing");
+            return response;
+        }
+
+        List<WorkerItemDTO> workerItemDTOs = readLinesFile2List(file, WorkerItemDTO.class);
+        if (workerItemDTOs.isEmpty()) {
+            JsonResponse response = new JsonResponse(false);
+            response.putMessage("No Worker Items");
+            return response;
+        }
+        
+        List<WorkerItemData> workerItems = new ArrayList<WorkerItemData>();
+        WorkerItemDTO.toDatasDeeply(workerItemDTOs, workerItems);
+        
         WorkerData workerData = workerService.get(workerId);
+        
         if (workerData == null) {
             JsonResponse response = new JsonResponse(false);
             response.putMessage(String.format("Worker Id %s not found", workerId));
             return response;
         }
-        if (workerItemDTOs == null || workerItemDTOs.isEmpty()) {
-            JsonResponse response = new JsonResponse(false);
-            response.putMessage("No Worker Items");
-            return response;
-        }
-        List<WorkerItemData> workerItems = new ArrayList<WorkerItemData>();
-        //WorkerItemDTO.toDatas(workerItemDTOs, workerItems);
+        
         try {
             workerService.addWorkerItems(workerData, workerItems);
             JsonResponse response = new JsonResponse(workerData, !workerData.getWorkerItems().isEmpty());

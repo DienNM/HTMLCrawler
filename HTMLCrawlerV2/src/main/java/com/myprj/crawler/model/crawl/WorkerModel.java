@@ -35,7 +35,7 @@ public class WorkerModel extends AuditModel {
     @Column(name = "name", length = 50)
     private String name;
     
-    @Column(name = "description", length = 10)
+    @Column(name = "description", length = 100)
     private String description;
     
     @Column(name = "site", length = 100)
@@ -53,6 +53,9 @@ public class WorkerModel extends AuditModel {
     @Column(name = "status")
     @Enumerated(EnumType.STRING)
     private WorkerStatus status = Created;
+    
+    @Column(name = "request_id", length = 25)
+    private String requestId;
     
     public long getId() {
         return id;
@@ -116,5 +119,13 @@ public class WorkerModel extends AuditModel {
 
     public void setSite(String site) {
         this.site = site;
+    }
+
+    public String getRequestId() {
+        return requestId;
+    }
+
+    public void setRequestId(String requestId) {
+        this.requestId = requestId;
     }
 }

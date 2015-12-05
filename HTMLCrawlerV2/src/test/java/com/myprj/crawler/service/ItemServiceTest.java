@@ -51,15 +51,6 @@ public class ItemServiceTest extends AbstractTest {
     
     @Test
     @Transactional
-    public void testGetById() {
-        ItemData item = itemService.get(item1.getId());
-        Assert.assertEquals(item.getId(), item.getId());
-        Assert.assertEquals(item.getCategoryId(), item.getCategoryId());
-        Assert.assertEquals(item.getName(), item.getName());
-    }
-    
-    @Test
-    @Transactional
     public void testGetAll() {
         List<ItemData> items = itemService.getAll();
         Assert.assertEquals(2, items.size());

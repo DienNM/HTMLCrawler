@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.myprj.crawler.domain.RequestCrawl;
 import com.myprj.crawler.domain.crawl.WorkerContext;
 import com.myprj.crawler.domain.crawl.WorkerData;
 import com.myprj.crawler.enumeration.CrawlStatus;
@@ -19,6 +20,7 @@ import com.myprj.crawler.exception.WorkerException;
 import com.myprj.crawler.model.crawl.CrawlHistoryModel;
 import com.myprj.crawler.repository.CrawlHistoryRepository;
 import com.myprj.crawler.service.WorkerService;
+import com.myprj.crawler.service.crawl.CrawlerHandler;
 import com.myprj.crawler.service.crawl.CrawlerService;
 import com.myprj.crawler.service.crawl.Worker;
 
@@ -30,7 +32,10 @@ public abstract class AbstractCrawler implements CrawlerService {
     private Logger logger = LoggerFactory.getLogger(AbstractCrawler.class);
 
     private static Map<Long, WorkerContext> workerContextCache = new HashMap<Long, WorkerContext>();
-
+    
+    @Autowired
+    protected CrawlerHandler crawlerHandler;
+    
     @Autowired
     private CrawlHistoryRepository crawlHistoryRepository;
     
@@ -38,8 +43,8 @@ public abstract class AbstractCrawler implements CrawlerService {
     private WorkerService workerService;
 
     @Override
-    public void crawl(long workerId) throws CrawlerException {
-        WorkerContext workerCtx = pickupWorkerContext(workerId);
+    public void crawl(RequestCrawl request) throws CrawlerException {
+        WorkerContext workerCtx = pickupWorkerContext(request.getWorkerId());
         WorkerData worker = workerCtx.getWorker();
         worker.setStatus(WorkerStatus.Running);
         workerService.update(worker);

@@ -107,8 +107,6 @@ public final class ItemStructureUtil {
         }
     }
 
-    
-
     public static void print(AttributeData root) {
         print(root, 0);
     }

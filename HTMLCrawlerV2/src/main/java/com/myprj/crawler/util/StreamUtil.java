@@ -61,4 +61,24 @@ public final class StreamUtil {
         }
     }
     
+    public static List<String> readFile2Strings(InputStream inputStream) {
+        BufferedReader br = null;
+        try {
+            br = new BufferedReader(new InputStreamReader(inputStream));
+            String line = null;
+            List<String> lines = new ArrayList<String>();
+            while ((line = br.readLine()) != null) {
+                if(line == null || line.trim().isEmpty()) {
+                    continue;
+                }
+                lines.add(line);
+            }
+            return lines;
+        } catch (Exception ex) {
+            return new ArrayList<String>();
+        } finally {
+            IOUtils.closeQuietly(br);
+        }
+    }
+    
 }

@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
+import com.myprj.crawler.enumeration.CrawlerHandlerType;
 import com.myprj.crawler.service.crawl.Worker;
 import com.myprj.crawler.service.crawl.impl.AbstractCrawler;
 
@@ -22,5 +23,9 @@ public class ChoTotCrawler extends AbstractCrawler{
     protected Worker getWorker() {
         return workerService;
     }
-
+    
+    @Override
+    public void registerHandler() {
+        crawlerHandler.register(CrawlerHandlerType.chotot.name(), this);
+    }
 }

@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.myprj.crawler.annotation.DataTransfer;
+import com.myprj.crawler.domain.config.AttributeSelector;
 import com.myprj.crawler.domain.config.ItemAttributeData;
 import com.myprj.crawler.domain.crawl.PagingConfig;
 import com.myprj.crawler.domain.crawl.WorkerItemData;
@@ -28,6 +29,9 @@ public class WorkerItemDTO extends AuditTDO {
 
     @DataTransfer("level0Selector")
     private String level0Selector;
+    
+    @DataTransfer("url")
+    private String url;
 
     @DataTransfer("pagingConfig")
     private PagingConfig pagingConfig = new PagingConfig();
@@ -35,6 +39,26 @@ public class WorkerItemDTO extends AuditTDO {
     private Map<String, Object> detailSelectors;
     
     public WorkerItemDTO() {
+    }
+    
+    public static void toDatasDeeply(List<WorkerItemDTO> soures, List<WorkerItemData> dests) {
+        for(WorkerItemDTO source : soures) {
+            WorkerItemData dest = new WorkerItemData();
+            toDataDeeply(source, dest);
+            dests.add(dest);
+        }
+    }
+    
+    public static void toDataDeeply(WorkerItemDTO source, WorkerItemData dest) {
+        DomainConverter.convert(source, dest, new ObjectConverter<WorkerItemDTO, WorkerItemData>() {
+            @Override
+            public void convert(WorkerItemDTO src, WorkerItemData dest) {
+                if(src.getLevel0Selector() != null) {
+                    AttributeSelector attributeSelector = new AttributeSelector(src.getLevel0Selector());
+                    dest.setLevel0Selector(attributeSelector);
+                }
+            }
+        });
     }
     
     public static void toDTOsDeeply(List<WorkerItemData> soures, List<WorkerItemDTO> dests) {
@@ -117,5 +141,13 @@ public class WorkerItemDTO extends AuditTDO {
 
     public void setDetailSelectors(Map<String, Object> detailSelectors) {
         this.detailSelectors = detailSelectors;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
     }
 }

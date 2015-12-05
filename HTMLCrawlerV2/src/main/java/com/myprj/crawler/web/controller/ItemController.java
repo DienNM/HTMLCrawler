@@ -72,7 +72,6 @@ public class ItemController extends AbstractController {
         for(ItemData itemData : pageResult.getContent()) {
             populateObjectByLevel(itemData, level);
         }
-        
 
         List<ItemDTO> itemDTOs = new ArrayList<ItemDTO>();
         ItemDTO.toItemDTOs(pageResult.getContent(), itemDTOs);

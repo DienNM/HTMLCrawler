@@ -1,6 +1,7 @@
 package com.myprj.crawler.service.impl;
 
 import static com.myprj.crawler.domain.config.ItemContent.EMPTY_TEXT;
+import static com.myprj.crawler.enumeration.AttributeType.HTML;
 import static com.myprj.crawler.enumeration.AttributeType.LIST;
 import static com.myprj.crawler.enumeration.AttributeType.OBJECT;
 import static com.myprj.crawler.enumeration.AttributeType.TEXT;
@@ -11,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import com.myprj.crawler.domain.config.AttributeData;
@@ -113,9 +115,15 @@ public class AttributeStructureServiceImpl implements AttributeStructureService 
     }
 
     private AttributeData buildString(ItemData item, AttributeData parent, String key, String value) {
-        AttributeData current = createAttribute(parent, TEXT, item, key);
-
+        AttributeData current = null;
+        
+        if(StringUtils.isEmpty(value) || AttributeType.TEXT.name().equalsIgnoreCase(value)) {
+            current = createAttribute(parent, TEXT, item, key);
+        } else {
+            current = createAttribute(parent, HTML, item, key);
+        }
         Map<String, Object> parentObj = AttributeUtil.getObject(item.getSampleContent(), parent.getId());
+        
         parentObj.put(key, EMPTY_TEXT);
         return current;
     }

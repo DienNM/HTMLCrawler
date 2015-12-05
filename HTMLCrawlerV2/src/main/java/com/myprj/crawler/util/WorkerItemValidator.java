@@ -60,12 +60,6 @@ public final class WorkerItemValidator {
                 errors.add("Level0 is missing URL");
             }
         }
-        
-        if(LIST.equals(crawlType)) {
-            validateDetailType(workerItem, errors);
-        } else if(DETAIL.equals(crawlType)) {
-            validateListType(workerItem, errors);
-        }
     }
     
     public static void validateDetailType(WorkerItemData workerItem, List<String> errors) {

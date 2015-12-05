@@ -52,6 +52,10 @@ public class WorkerData extends AuditData {
     @EntityTransfer("status")
     private WorkerStatus status = Created;
 
+    @DataTransfer(value = "requestId")
+    @EntityTransfer("request_id")
+    private String requestId;
+
     private List<ProxyData> proxies = new ArrayList<ProxyData>();
 
     private List<WorkerItemData> workerItems = new ArrayList<WorkerItemData>();
@@ -161,6 +165,14 @@ public class WorkerData extends AuditData {
 
     public void setSite(String site) {
         this.site = site;
+    }
+
+    public String getRequestId() {
+        return requestId;
+    }
+
+    public void setRequestId(String requestId) {
+        this.requestId = requestId;
     }
 
 }

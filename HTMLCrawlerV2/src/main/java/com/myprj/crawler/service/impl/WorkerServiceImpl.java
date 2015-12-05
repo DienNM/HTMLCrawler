@@ -127,11 +127,13 @@ public class WorkerServiceImpl implements WorkerService {
                 throw new InvalidParameterException("Duplicated Level: " + workerItem.getLevel());
             }
             WorkerItemValidator.validateCreationPhase(workerItem);
+            
             workerItem.setWorkerId(worker.getId());
             workerItemMap.put(workerItem.getLevel(), workerItem);
         }
 
         List<WorkerItemModel> workerItemModels = new ArrayList<WorkerItemModel>();
+        WorkerItemData.toModels(new ArrayList<WorkerItemData>(workerItemMap.values()), workerItemModels);
         workerItemRepository.save(workerItemModels);
 
         List<WorkerItemData> workerItemDatas = new ArrayList<WorkerItemData>();
