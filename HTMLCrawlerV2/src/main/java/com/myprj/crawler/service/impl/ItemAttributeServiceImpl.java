@@ -120,9 +120,15 @@ public class ItemAttributeServiceImpl implements ItemAttributeService {
     
     private void populateTree(ItemAttributeData current, Map<String, List<ItemAttributeData>> mapParents) {
         List<ItemAttributeData> children = mapParents.get(current.getId());
+        if(children == null) {
+            return;
+        }
         for(ItemAttributeData child : children) {
             child.setParent(current);
             populateTree(child, mapParents);
+            if(current.getChildren() == null) {
+                current.setChildren(new ArrayList<ItemAttributeData>());
+            }
             current.getChildren().add(child);
         }
     }

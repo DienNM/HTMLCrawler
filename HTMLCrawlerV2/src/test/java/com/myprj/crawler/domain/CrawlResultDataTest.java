@@ -31,8 +31,6 @@ public class CrawlResultDataTest extends AbstractDomain {
         source.setStatus(ResultStatus.COMPLETED);
         source.setUrl("http://test");
 
-        setAudit(source);
-
         CrawlResultModel dest = new CrawlResultModel();
         CrawlResultData.toModel(source, dest);
 
@@ -43,7 +41,6 @@ public class CrawlResultDataTest extends AbstractDomain {
         Assert.assertEquals(source.getUrl(), dest.getUrl());
         Assert.assertEquals(serialize(source.getDetail()), dest.getDetail());
 
-        assertAudilt(source, dest);
     }
 
     @Test
@@ -60,8 +57,6 @@ public class CrawlResultDataTest extends AbstractDomain {
         source.setStatus(ResultStatus.COMPLETED);
         source.setUrl("http://test");
 
-        setAudit(source);
-
         CrawlResultData dest = new CrawlResultData();
         CrawlResultData.toData(source, dest);
 
@@ -72,7 +67,6 @@ public class CrawlResultDataTest extends AbstractDomain {
         Assert.assertEquals(source.getUrl(), dest.getUrl());
         Assert.assertEquals(source.getDetail(), serialize(dest.getDetail()));
 
-        assertAudilt(source, dest);
     }
 
 }

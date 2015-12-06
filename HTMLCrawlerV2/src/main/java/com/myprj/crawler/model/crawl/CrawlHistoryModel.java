@@ -9,6 +9,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.persistence.Table;
 
 import com.myprj.crawler.enumeration.CrawlStatus;
@@ -43,8 +44,12 @@ public class CrawlHistoryModel implements Serializable {
     @Column(name = "time_taken")
     private long timeTaken;
     
-    @Column(name = "error_links", length = 4000)
+    @Column(name = "error_links")
+    @Lob
     private String errorLinks;
+    
+    @Column(name = "request_id", length = 20)
+    private String requestId;
     
     public long getId() {
         return id;
@@ -100,6 +105,14 @@ public class CrawlHistoryModel implements Serializable {
 
     public void setErrorLinks(String errorLinks) {
         this.errorLinks = errorLinks;
+    }
+
+    public String getRequestId() {
+        return requestId;
+    }
+
+    public void setRequestId(String requestId) {
+        this.requestId = requestId;
     }
 
 }

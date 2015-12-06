@@ -51,7 +51,11 @@ public class WorkerItemData extends AuditData {
     @EntityTransfer("crawl_type")
     private CrawlType crawlType;
 
+    @DataTransfer("requestId")
+    private String requestId;
+
     // For DETAIL
+    @DataTransfer("item")
     private ItemData item;
 
     @DataTransfer("rootItemAttribute")
@@ -67,19 +71,7 @@ public class WorkerItemData extends AuditData {
 
     public WorkerItemData() {
     }
-
-    public static void copy(WorkerItemData source, WorkerItemData dest) {
-        dest.setId(source.getId());
-        dest.setLevel(source.getLevel());
-        dest.setCrawlType(source.getCrawlType());
-        dest.setUrl(source.getUrl());
-        dest.setWorkerId(source.getWorkerId());
-        dest.setItemId(source.getItemId());
-        dest.setPagingConfig(source.getPagingConfig());
-        dest.setRootItemAttribute(source.getRootItemAttribute());
-        dest.setLevel0Selector(source.getLevel0Selector());
-    }
-
+    
     public static void toDatas(List<WorkerItemModel> sources, List<WorkerItemData> dests) {
         for (WorkerItemModel source : sources) {
             WorkerItemData dest = new WorkerItemData();
@@ -203,6 +195,14 @@ public class WorkerItemData extends AuditData {
 
     public void setRootItemAttribute(ItemAttributeData rootItemAttribute) {
         this.rootItemAttribute = rootItemAttribute;
+    }
+
+    public String getRequestId() {
+        return requestId;
+    }
+
+    public void setRequestId(String requestId) {
+        this.requestId = requestId;
     }
 
 }

@@ -34,6 +34,7 @@ import com.myprj.crawler.service.event.impl.CrawlDetailCompletedEvent;
 import com.myprj.crawler.service.handler.HandlerRegister;
 import com.myprj.crawler.util.HtmlDownloader;
 import com.myprj.crawler.util.ItemStructureUtil;
+import com.myprj.crawler.util.converter.DomainCopy;
 
 /**
  * @author DienNM (DEE)
@@ -147,7 +148,8 @@ public class DefaultWorker implements Worker {
             }
 
             WorkerItemData newItem = new WorkerItemData();
-            WorkerItemData.copy(nextWorkerItem, newItem);
+            DomainCopy.copy(nextWorkerItem, newItem);
+            
             newItem.setUrl(nextLevelLink);
 
             if (Level0.equals(workerItem.getLevel())) {
@@ -178,6 +180,7 @@ public class DefaultWorker implements Worker {
         result.setUrl(url);
         result.setItemId(item.getId());
         result.setCategoryId(item.getCategoryId());
+        result.setRequestId(workerItem.getRequestId());
         result.getDetail().putAll(item.getSampleContent().getContent());
 
         collectResult4Attribute(htmlDocument, rootItemAttribute, result);
@@ -192,11 +195,14 @@ public class DefaultWorker implements Worker {
 
     protected void collectResult4Attribute(HtmlDocument htmlDocument, ItemAttributeData current, CrawlResultData result) {
         AttributeSelector selector = current.getSelector();
-        Object data = HandlerRegister.getHandler(current.getAttribute().getType()).handle(htmlDocument, selector);
-        if (data == null) {
-            logger.warn("No Data: Attribute={}, CSS-Selector={}, URL={}", current.getAttribute().getName(),
+        Object data = null;
+        if(selector != null) {
+            data = HandlerRegister.getHandler(current.getType()).handle(htmlDocument, selector);
+        }
+        
+        if (data == null && selector != null) {
+            logger.warn("No Data: Attribute={}, CSS-Selector={}, URL={}", current.getName(),
                     selector.getText(), selector.getUrl());
-            return;
         }
         ItemStructureUtil.populateValue2Attribute(result.getDetail(), current.getAttributeId(), data);
         List<ItemAttributeData> children = current.getChildren();

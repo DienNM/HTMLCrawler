@@ -1,5 +1,8 @@
 package com.myprj.crawler.model.crawl;
 
+import java.io.Serializable;
+import java.util.Calendar;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -8,17 +11,17 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Lob;
+import javax.persistence.PrePersist;
 import javax.persistence.Table;
 
 import com.myprj.crawler.enumeration.ResultStatus;
-import com.myprj.crawler.model.AuditModel;
 
 /**
  * @author DienNM (DEE)
  */
 @Entity
 @Table(name = "crawl_result")
-public class CrawlResultModel extends AuditModel {
+public class CrawlResultModel implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -26,6 +29,9 @@ public class CrawlResultModel extends AuditModel {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
     private long id;
+
+    @Column(name = "request_id")
+    private String requestId;
 
     @Column(name = "item_id")
     private long itemId;
@@ -43,6 +49,14 @@ public class CrawlResultModel extends AuditModel {
     
     @Column(name = "url")
     private String url;
+    
+    @Column(name = "createdAt")
+    private long createdAt;
+    
+    @PrePersist
+    public void prePersistAudit() {
+        createdAt = Calendar.getInstance().getTimeInMillis();
+    }
 
     public CrawlResultModel() {
     }
@@ -93,6 +107,22 @@ public class CrawlResultModel extends AuditModel {
 
     public void setUrl(String url) {
         this.url = url;
+    }
+    
+    public long getCreatedAt() {
+        return this.createdAt;
+    }
+    
+    public void setCreatedAt(long createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public String getRequestId() {
+        return requestId;
+    }
+
+    public void setRequestId(String requestId) {
+        this.requestId = requestId;
     }
 
 }

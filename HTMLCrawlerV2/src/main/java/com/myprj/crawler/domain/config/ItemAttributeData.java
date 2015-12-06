@@ -57,8 +57,6 @@ public class ItemAttributeData extends AuditData {
 
     private AttributeSelector selector;
 
-    private AttributeData attribute;
-
     private ItemAttributeData parent;
 
     private List<ItemAttributeData> children = new ArrayList<ItemAttributeData>();
@@ -162,14 +160,6 @@ public class ItemAttributeData extends AuditData {
 
     public void setAttributeId(String attributeId) {
         this.attributeId = attributeId;
-    }
-
-    public AttributeData getAttribute() {
-        return attribute;
-    }
-
-    public void setAttribute(AttributeData attribute) {
-        this.attribute = attribute;
     }
 
     public String getParentId() {

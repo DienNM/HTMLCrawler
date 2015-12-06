@@ -72,7 +72,10 @@ public final class ItemStructureUtil {
     private static void populate(Map<String, Object> detail, Iterator<String> attNames, Object value) {
         String attName = attNames.next();
         Object object = detail.get(attName);
-        if(object == null || object instanceof String) {
+        if(object == null || value == null) {
+            return;
+        }
+        if(object instanceof String) {
             detail.put(attName, value);
         }
         if(object instanceof List) {
@@ -138,8 +141,7 @@ public final class ItemStructureUtil {
 
     private static void print(ItemAttributeData att, int indent) {
         int currentIndent = indent;
-        AttributeData attributeData = att.getAttribute();
-        System.out.println(getSpace(currentIndent) + "\"" + attributeData.getName() + "\"" + " [" + att.getAttributeId() + "] " + " ("
+        System.out.println(getSpace(currentIndent) + "\"" + att.getName() + "\"" + " [" + att.getAttributeId() + "] " + " ("
                 + att.getType() + ") " + " - Selector: " + (att.getSelector() != null ? att.getSelector().toString() : ""));
         
         if (att.getType() == AttributeType.OBJECT) {

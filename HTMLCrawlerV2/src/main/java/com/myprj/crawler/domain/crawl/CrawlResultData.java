@@ -4,13 +4,13 @@ import static com.myprj.crawler.enumeration.ResultStatus.NEW;
 import static com.myprj.crawler.util.Serialization.deserialize;
 import static com.myprj.crawler.util.Serialization.serialize;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import com.myprj.crawler.annotation.DataTransfer;
 import com.myprj.crawler.annotation.EntityTransfer;
-import com.myprj.crawler.domain.AuditData;
 import com.myprj.crawler.enumeration.ResultStatus;
 import com.myprj.crawler.model.crawl.CrawlResultModel;
 import com.myprj.crawler.util.converter.EntityConverter;
@@ -20,7 +20,7 @@ import com.myprj.crawler.util.converter.ObjectConverter;
  * @author DienNM (DEE)
  */
 
-public class CrawlResultData extends AuditData {
+public class CrawlResultData implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -31,6 +31,11 @@ public class CrawlResultData extends AuditData {
     @DataTransfer("itemId")
     @EntityTransfer("item_id")
     private long itemId;
+    
+
+    @DataTransfer("requestId")
+    @EntityTransfer("request_id")
+    private String requestId;
 
     @DataTransfer("categoryId")
     @EntityTransfer("category_id")
@@ -45,6 +50,9 @@ public class CrawlResultData extends AuditData {
     private ResultStatus status = NEW;
 
     private Map<String, Object> detail = new HashMap<String, Object>();
+
+    @EntityTransfer("createdAt")
+    private long createdAt;
 
     public CrawlResultData() {
     }
@@ -130,6 +138,22 @@ public class CrawlResultData extends AuditData {
 
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    public long getCreatedAt() {
+        return this.createdAt;
+    }
+
+    public void setCreatedAt(long createdAt) {
+        this.createdAt = createdAt;
+    }
+    
+    public String getRequestId() {
+        return requestId;
+    }
+    
+    public void setRequestId(String requestId) {
+        this.requestId = requestId;
     }
 
 }

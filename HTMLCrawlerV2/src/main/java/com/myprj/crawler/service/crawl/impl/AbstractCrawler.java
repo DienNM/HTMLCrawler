@@ -64,6 +64,7 @@ public abstract class AbstractCrawler implements CrawlerService {
         logger.info("Worker {} [Id={}] starts crawling...", worker.getName(), worker.getId());
 
         CrawlHistoryData crawlHistory = new CrawlHistoryData();
+        crawlHistory.setRequestId(request.getRequestId());
         crawlHistory.setWorkerId(worker.getId());
         crawlHistory.setStatus(CrawlStatus.CRAWLING);
         crawlHistoryService.save(crawlHistory);
@@ -73,6 +74,7 @@ public abstract class AbstractCrawler implements CrawlerService {
             // Load Worker Items
             workerService.populateWorkerItems(worker);
             for(WorkerItemData workerItem : worker.getWorkerItems()) {
+                workerItem.setRequestId(request.getRequestId());
                 if(DETAIL.equals(workerItem.getCrawlType())) {
                     ItemAttributeData root = itemAttributeService.getRootWithPopulateTree(workerItem.getId());
                     workerItem.setRootItemAttribute(root);
@@ -84,6 +86,8 @@ public abstract class AbstractCrawler implements CrawlerService {
             }
             
             getWorker().invoke(workerCtx, workerCtx.getRootWorkerItem());
+            
+            crawlHistory = crawlHistoryService.getLatest(request.getWorkerId());
             crawlHistory.setStatus(CrawlStatus.CRAWLED);
             worker.setStatus(WorkerStatus.Completed);
         } catch (Exception e) {
@@ -99,12 +103,11 @@ public abstract class AbstractCrawler implements CrawlerService {
             
             crawlHistory.setTimeTaken(took);
             crawlHistory.setErrorLinks(serialize(workerCtx.getErrorLinks()));
-            crawlHistory = crawlHistoryService.getLatest(request.getWorkerId());
             crawlHistoryService.update(crawlHistory);
 
             workerService.update(worker);
-
             destroy(worker);
+            
             logger.info("Worker {} [Id={}] stops crawling. Took: {} second(s)", worker.getName(), worker.getId(), took);
         }
     }

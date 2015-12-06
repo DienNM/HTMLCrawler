@@ -36,6 +36,9 @@ public class CrawlHistoryData implements Serializable {
 
     @EntityTransfer("error_links")
     private String errorLinks;
+    
+    @EntityTransfer("request_id")
+    private String requestId;
 
     public CrawlHistoryData() {
     }
@@ -118,6 +121,14 @@ public class CrawlHistoryData implements Serializable {
 
     public void setErrorLinks(String errorLinks) {
         this.errorLinks = errorLinks;
+    }
+
+    public String getRequestId() {
+        return requestId;
+    }
+
+    public void setRequestId(String requestId) {
+        this.requestId = requestId;
     }
 
 }
