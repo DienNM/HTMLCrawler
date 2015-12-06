@@ -1,7 +1,9 @@
 package com.myprj.crawler.web.dto;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.myprj.crawler.annotation.DataTransfer;
 import com.myprj.crawler.domain.config.AttributeData;
@@ -34,6 +36,9 @@ public class ItemDTO extends AuditTDO {
     
     @DataTransfer("attributes")
     private List<AttributeDTO> attributes = new ArrayList<AttributeDTO>();
+
+    @DataTransfer("sampleContent")
+    private Map<String, Object> sampleContent = new HashMap<String, Object>();
     
     public static void toItemDTOs(List<ItemData> sources, List<ItemDTO> dests) {
         for(ItemData source : sources) {
@@ -51,6 +56,10 @@ public class ItemDTO extends AuditTDO {
                 List<AttributeDTO>  attributeDTOs = new ArrayList<AttributeDTO>();
                 AttributeDTO.toDTOs(attributeDatas, attributeDTOs);
                 dest.setAttributes(attributeDTOs);
+                
+                if(src.getSampleContent() != null) {
+                    dest.setSampleContent(src.getSampleContent().getContent());
+                }
             }
             
         });
@@ -102,5 +111,13 @@ public class ItemDTO extends AuditTDO {
 
     public void setAttributes(List<AttributeDTO> attributes) {
         this.attributes = attributes;
+    }
+    
+    public Map<String, Object> getSampleContent() {
+        return sampleContent;
+    }
+    
+    public void setSampleContent(Map<String, Object> sampleContent) {
+        this.sampleContent = sampleContent;
     }
 }

@@ -19,9 +19,11 @@ import org.springframework.web.multipart.MultipartFile;
 import com.myprj.crawler.domain.PageResult;
 import com.myprj.crawler.domain.Pageable;
 import com.myprj.crawler.domain.config.CategoryData;
+import com.myprj.crawler.domain.config.ItemContent;
 import com.myprj.crawler.domain.config.ItemData;
 import com.myprj.crawler.service.CategoryService;
 import com.myprj.crawler.service.ItemService;
+import com.myprj.crawler.util.Serialization;
 import com.myprj.crawler.web.dto.ItemDTO;
 import com.myprj.crawler.web.dto.JsonResponse;
 import com.myprj.crawler.web.dto.RequestError;
@@ -104,6 +106,28 @@ public class ItemController extends AbstractController {
         JsonResponse response = new JsonResponse(!datas.isEmpty());
         response.putData(datas);
 
+        return response;
+    }
+
+    @RequestMapping(value = "/{id}/sample-content", method = RequestMethod.GET)
+    @ResponseBody
+    public JsonResponse getSampleContent(@PathVariable(value = "id") long id) {
+
+        ItemData itemData = itemService.get(id);
+        if (itemData == null) {
+            JsonResponse response = new JsonResponse(false);
+            response.putMessage("Item Id " + id + " not found");
+            return response;
+        }
+        if (!itemData.isBuilt()) {
+            JsonResponse response = new JsonResponse(false);
+            response.putMessage("Item Id " + id + " has not built yet.");
+            return response;
+        }
+
+        ItemContent itemContent = itemData.getSampleContent();
+        JsonResponse response = new JsonResponse(Serialization.serialize(itemContent.getContent()), itemContent != null);
+        response.put("itemId", response);
         return response;
     }
 

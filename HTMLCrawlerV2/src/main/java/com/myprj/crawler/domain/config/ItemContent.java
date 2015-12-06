@@ -1,5 +1,6 @@
 package com.myprj.crawler.domain.config;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -7,7 +8,9 @@ import java.util.Map;
  * @author DienNM (DEE)
  */
 
-public class ItemContent {
+public class ItemContent implements Serializable {
+    
+    private static final long serialVersionUID = 1L;
     
     public static final String ROOT = "content".intern();
     public static final String EMPTY_TEXT = "EMPTY".intern();
