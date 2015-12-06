@@ -151,7 +151,7 @@ public class WorkerController extends AbstractController {
         }
         
         List<WorkerItemData> workerItems = new ArrayList<WorkerItemData>();
-        WorkerItemDTO.toDatasDeeply(workerItemDTOs, workerItems);
+        WorkerItemDTO.toDatas(workerItemDTOs, workerItems);
         
         WorkerData workerData = workerService.get(workerId);
         

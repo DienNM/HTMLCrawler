@@ -5,7 +5,6 @@ import java.util.Map;
 
 import com.myprj.crawler.annotation.DataTransfer;
 import com.myprj.crawler.domain.config.AttributeSelector;
-import com.myprj.crawler.domain.config.ItemAttributeData;
 import com.myprj.crawler.domain.crawl.PagingConfig;
 import com.myprj.crawler.domain.crawl.WorkerItemData;
 import com.myprj.crawler.enumeration.CrawlType;
@@ -41,44 +40,21 @@ public class WorkerItemDTO extends AuditTDO {
     public WorkerItemDTO() {
     }
     
-    public static void toDatasDeeply(List<WorkerItemDTO> soures, List<WorkerItemData> dests) {
+    public static void toDatas(List<WorkerItemDTO> soures, List<WorkerItemData> dests) {
         for(WorkerItemDTO source : soures) {
             WorkerItemData dest = new WorkerItemData();
-            toDataDeeply(source, dest);
+            toData(source, dest);
             dests.add(dest);
         }
     }
     
-    public static void toDataDeeply(WorkerItemDTO source, WorkerItemData dest) {
+    public static void toData(WorkerItemDTO source, WorkerItemData dest) {
         DomainConverter.convert(source, dest, new ObjectConverter<WorkerItemDTO, WorkerItemData>() {
             @Override
             public void convert(WorkerItemDTO src, WorkerItemData dest) {
                 if(src.getLevel0Selector() != null) {
                     AttributeSelector attributeSelector = new AttributeSelector(src.getLevel0Selector());
                     dest.setLevel0Selector(attributeSelector);
-                }
-            }
-        });
-    }
-    
-    public static void toDTOsDeeply(List<WorkerItemData> soures, List<WorkerItemDTO> dests) {
-        for(WorkerItemData source : soures) {
-            WorkerItemDTO dest = new WorkerItemDTO();
-            toDTODeeply(source, dest);
-            dests.add(dest);
-        }
-    }
-    
-    public static void toDTODeeply(WorkerItemData source, WorkerItemDTO dest) {
-        DomainConverter.convert(source, dest, new ObjectConverter<WorkerItemData, WorkerItemDTO>() {
-            @Override
-            public void convert(WorkerItemData src, WorkerItemDTO dest) {
-                ItemAttributeData root = src.getRootItemAttribute();
-                if(root != null) {
-                    //TODO
-                }
-                if(dest.getLevel0Selector() != null) {
-                    dest.setLevel0Selector(src.getLevel0Selector().getText());
                 }
             }
         });
@@ -96,7 +72,7 @@ public class WorkerItemDTO extends AuditTDO {
         DomainConverter.convert(source, dest, new ObjectConverter<WorkerItemData, WorkerItemDTO>() {
             @Override
             public void convert(WorkerItemData src, WorkerItemDTO dest) {
-                if(dest.getLevel0Selector() != null) {
+                if(src.getLevel0Selector() != null) {
                     dest.setLevel0Selector(src.getLevel0Selector().getText());
                 }
             }
