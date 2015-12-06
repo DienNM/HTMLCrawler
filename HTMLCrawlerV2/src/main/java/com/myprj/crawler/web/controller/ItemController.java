@@ -34,12 +34,14 @@ import com.myprj.crawler.web.enumeration.DTOLevel;
 @RequestMapping(value = "/items", produces = "application/json")
 public class ItemController extends AbstractController {
 
+    private static final long DEFAULT_CTG_ID = -1000;
+
     @Autowired
     private ItemService itemService;
-    
+
     @Autowired
     private CategoryService categoryService;
-    
+
     private void populateObjectByLevel(ItemData itemData, DTOLevel level) {
         switch (level) {
         case FULL:
@@ -68,8 +70,8 @@ public class ItemController extends AbstractController {
             @RequestParam(value = "level", defaultValue = "DEFAULT") DTOLevel level) {
         Pageable pageable = new Pageable(pageSize, currentPage);
         PageResult<ItemData> pageResult = itemService.getAllWithPaging(pageable);
-        
-        for(ItemData itemData : pageResult.getContent()) {
+
+        for (ItemData itemData : pageResult.getContent()) {
             populateObjectByLevel(itemData, level);
         }
 
@@ -94,10 +96,10 @@ public class ItemController extends AbstractController {
             return response;
         }
         populateObjectByLevel(itemData, level);
-        
+
         ItemDTO itemDTO = new ItemDTO();
         ItemDTO.toItemDTO(itemData, itemDTO);
-        
+
         Map<String, Object> datas = getMapResult(itemDTO, level);
         JsonResponse response = new JsonResponse(!datas.isEmpty());
         response.putData(datas);
@@ -120,25 +122,25 @@ public class ItemController extends AbstractController {
 
     @RequestMapping(method = RequestMethod.POST)
     @ResponseBody
-    public JsonResponse addItem(@RequestParam(value = "name") String name,
-            @RequestParam(value = "categoryId") long categoryId,
-            @RequestParam(value = "description") String description) {
+    public JsonResponse addItem(@RequestParam(value = "name", required = true) String name,
+            @RequestParam(value = "categoryId", required = true) long categoryId,
+            @RequestParam(value = "description", required = false) String description) {
 
         List<RequestError> errors = new ArrayList<RequestError>();
         if (StringUtils.isEmpty(name)) {
             errors.add(new RequestError("name", "Item Name is required"));
         }
         CategoryData categoryData = categoryService.getById(categoryId);
-        if(categoryData == null) {
+        if (categoryData == null) {
             errors.add(new RequestError("categoryId", "Category Id " + categoryId + " not found"));
         }
-        
+
         if (!errors.isEmpty()) {
             JsonResponse response = new JsonResponse(false);
             response.putErrors(errors);
             return response;
         }
-        
+
         ItemData item = new ItemData();
         item.setName(name);
         item.setCategoryId(categoryId);
@@ -147,10 +149,53 @@ public class ItemController extends AbstractController {
         ItemData itemData = itemService.save(item);
         return new JsonResponse(itemData != null);
     }
-    
+
+    @RequestMapping(value = "/{id}", method = RequestMethod.POST)
+    @ResponseBody
+    public JsonResponse updateItem(@PathVariable(value = "id") long id,
+            @RequestParam(value = "name", required = false) String name,
+            @RequestParam(value = "categoryId", required = false, defaultValue = "-1000") long categoryId,
+            @RequestParam(value = "description", required = false) String description) {
+
+        ItemData itemData = itemService.get(id);
+        if (itemData == null) {
+            JsonResponse response = new JsonResponse(false);
+            response.putMessage("Item Id " + id + " not found");
+            return response;
+        }
+
+        List<RequestError> errors = new ArrayList<RequestError>();
+
+        if (itemData.getCategoryId() != categoryId && categoryId != -1 && categoryId != DEFAULT_CTG_ID) {
+            CategoryData parentCtg = categoryService.getById(categoryId);
+            if (parentCtg == null) {
+                errors.add(new RequestError("categoryId", "Category " + categoryId + " not found"));
+            }
+        }
+
+        if (!StringUtils.isEmpty(name)) {
+            itemData.setName(name);
+        }
+        if (categoryId != DEFAULT_CTG_ID) {
+            itemData.setCategoryId(categoryId);
+        }
+        if (!StringUtils.isEmpty(description)) {
+            itemData.setDescription(description);
+        }
+
+        if (!errors.isEmpty()) {
+            JsonResponse response = new JsonResponse(false);
+            response.putErrors(errors);
+            return response;
+        }
+
+        itemData = itemService.update(itemData);
+        return new JsonResponse(itemData != null);
+    }
+
     @RequestMapping(value = "/{id}/build", method = RequestMethod.POST)
     @ResponseBody
-    public JsonResponse buildItemAttributes(@RequestParam(value = "file") MultipartFile file,
+    public JsonResponse buildItemAttributes(@RequestParam(value = "file", required = true) MultipartFile file,
             @PathVariable(value = "id") long id,
             @RequestParam(value = "forceBuild", defaultValue = "false") boolean forceBuild) {
 
@@ -167,10 +212,10 @@ public class ItemController extends AbstractController {
             return response;
         }
         try {
-            
+
             ItemData itemData = itemService.buildItem(id, json, forceBuild);
             JsonResponse response = new JsonResponse(itemData, itemData != null);
-            
+
             return response;
         } catch (Exception e) {
             JsonResponse response = new JsonResponse(false);

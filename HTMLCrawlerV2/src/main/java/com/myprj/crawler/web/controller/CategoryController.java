@@ -153,7 +153,7 @@ public class CategoryController extends AbstractController {
         if(parentId != DEFAULT_CTG_ID) {
             categoryData.setParentCategoryId(parentId);
         }
-        CategoryData category = categoryService.save(categoryData);
+        CategoryData category = categoryService.update(categoryData);
 
         return new JsonResponse(category != null);
     }

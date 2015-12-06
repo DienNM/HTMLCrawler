@@ -103,11 +103,7 @@ public class ItemServiceImpl implements ItemService {
     @Override
     @Transactional
     public ItemData update(ItemData item) {
-        ItemModel itemModel = itemRepository.find(item.getId());
-        if (itemModel == null) {
-            throw new InvalidParameterException("Cannot find item: " + item.getId());
-        }
-
+        ItemModel itemModel = new ItemModel();
         ItemData.toModel(item, itemModel);
 
         itemRepository.update(itemModel);
