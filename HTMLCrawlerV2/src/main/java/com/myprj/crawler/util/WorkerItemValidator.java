@@ -34,9 +34,9 @@ public final class WorkerItemValidator {
         
         CrawlType crawlType = workerItem.getCrawlType();
         if(LIST.equals(crawlType)) {
-            validateDetailType(workerItem, errors);
-        } else if(DETAIL.equals(crawlType)) {
             validateListType(workerItem, errors);
+        } else if(DETAIL.equals(crawlType)) {
+            validateDetailType(workerItem, errors);
         }
         
         if(!errors.isEmpty()) {

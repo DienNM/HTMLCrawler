@@ -19,7 +19,6 @@ import com.myprj.crawler.domain.crawl.WorkerContext;
 import com.myprj.crawler.domain.crawl.WorkerData;
 import com.myprj.crawler.domain.crawl.WorkerItemData;
 import com.myprj.crawler.enumeration.CrawlStatus;
-import com.myprj.crawler.enumeration.CrawlType;
 import com.myprj.crawler.enumeration.WorkerStatus;
 import com.myprj.crawler.exception.CrawlerException;
 import com.myprj.crawler.service.CrawlHistoryService;
@@ -64,24 +63,16 @@ public abstract class AbstractCrawler implements CrawlerService {
 
         logger.info("Worker {} [Id={}] starts crawling...", worker.getName(), worker.getId());
 
-        CrawlHistoryData crawlHistory = crawlHistoryService.getLatest(request.getWorkerId());
-        if(crawlHistory == null) {
-            crawlHistory = new CrawlHistoryData();
-            crawlHistory.setWorkerId(worker.getId());
-            crawlHistory.setStatus(CrawlStatus.CRAWLING);
-            crawlHistoryService.save(crawlHistory);
-        } else {
-            crawlHistory.setWorkerId(worker.getId());
-            crawlHistory.setStatus(CrawlStatus.CRAWLING);
-            crawlHistoryService.update(crawlHistory);
-        }
+        CrawlHistoryData crawlHistory = new CrawlHistoryData();
+        crawlHistory.setWorkerId(worker.getId());
+        crawlHistory.setStatus(CrawlStatus.CRAWLING);
+        crawlHistoryService.save(crawlHistory);
 
         long starttime = Calendar.getInstance().getTimeInMillis();
         try {
             // Load Worker Items
             workerService.populateWorkerItems(worker);
             for(WorkerItemData workerItem : worker.getWorkerItems()) {
-                WorkerItemValidator.validateCrawlPhase(workerItem);
                 if(DETAIL.equals(workerItem.getCrawlType())) {
                     ItemAttributeData root = itemAttributeService.getRootWithPopulateTree(workerItem.getId());
                     workerItem.setRootItemAttribute(root);
@@ -89,6 +80,7 @@ public abstract class AbstractCrawler implements CrawlerService {
                     ItemData itemData = itemService.get(workerItem.getItemId());
                     workerItem.setItem(itemData);
                 }
+                WorkerItemValidator.validateCrawlPhase(workerItem);
             }
             
             getWorker().invoke(workerCtx, workerCtx.getRootWorkerItem());
