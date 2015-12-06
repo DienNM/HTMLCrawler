@@ -214,8 +214,13 @@ public class ItemController extends AbstractController {
         try {
 
             ItemData itemData = itemService.buildItem(id, json, forceBuild);
-            JsonResponse response = new JsonResponse(itemData, itemData != null);
+            ItemDTO itemDTO = new ItemDTO();
+            ItemDTO.toItemDTO(itemData, itemDTO);
 
+            Map<String, Object> datas = getMapResult(itemDTO, ItemDTO.class, DTOLevel.FULL);
+
+            JsonResponse response = new JsonResponse(true);
+            response.putData(datas);
             return response;
         } catch (Exception e) {
             JsonResponse response = new JsonResponse(false);

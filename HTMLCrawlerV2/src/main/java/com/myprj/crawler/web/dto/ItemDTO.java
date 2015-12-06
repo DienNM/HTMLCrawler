@@ -45,7 +45,6 @@ public class ItemDTO extends AuditTDO {
     
     public static void toItemDTO(ItemData source, ItemDTO dest) {
         DomainConverter.convert(source, dest, new ObjectConverter<ItemData, ItemDTO>() {
-
             @Override
             public void convert(ItemData src, ItemDTO dest) {
                 List<AttributeData> attributeDatas = src.getAttributes();

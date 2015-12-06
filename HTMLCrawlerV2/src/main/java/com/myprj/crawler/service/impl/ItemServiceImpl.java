@@ -96,6 +96,9 @@ public class ItemServiceImpl implements ItemService {
         itemRepository.save(itemModel);
         ItemData persisted = new ItemData();
         ItemData.toData(itemModel, persisted);
+        
+        persisted.setAttributes(item.getAttributes());
+        persisted.setSampleContent(item.getSampleContent());
 
         return persisted;
     }
@@ -109,6 +112,9 @@ public class ItemServiceImpl implements ItemService {
         itemRepository.update(itemModel);
         ItemData persisted = new ItemData();
         ItemData.toData(itemModel, persisted);
+        
+        persisted.setAttributes(item.getAttributes());
+        persisted.setSampleContent(item.getSampleContent());
 
         return persisted;
     }
