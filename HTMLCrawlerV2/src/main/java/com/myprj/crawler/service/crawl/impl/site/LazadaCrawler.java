@@ -1,5 +1,7 @@
 package com.myprj.crawler.service.crawl.impl.site;
 
+import javax.annotation.PostConstruct;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -24,6 +26,7 @@ public class LazadaCrawler extends AbstractCrawler {
     }
     
     @Override
+    @PostConstruct
     public void registerHandler() {
         crawlerHandler.register(CrawlerHandlerType.lazada.name(), this);
     }

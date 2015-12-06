@@ -11,14 +11,14 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.myprj.crawler.domain.RequestCrawl;
+import com.myprj.crawler.domain.crawl.CrawlHistoryData;
 import com.myprj.crawler.domain.crawl.WorkerContext;
 import com.myprj.crawler.domain.crawl.WorkerData;
 import com.myprj.crawler.enumeration.CrawlStatus;
 import com.myprj.crawler.enumeration.WorkerStatus;
 import com.myprj.crawler.exception.CrawlerException;
 import com.myprj.crawler.exception.WorkerException;
-import com.myprj.crawler.model.crawl.CrawlHistoryModel;
-import com.myprj.crawler.repository.CrawlHistoryRepository;
+import com.myprj.crawler.service.CrawlHistoryService;
 import com.myprj.crawler.service.WorkerService;
 import com.myprj.crawler.service.crawl.CrawlerHandler;
 import com.myprj.crawler.service.crawl.CrawlerService;
@@ -37,7 +37,7 @@ public abstract class AbstractCrawler implements CrawlerService {
     protected CrawlerHandler crawlerHandler;
     
     @Autowired
-    private CrawlHistoryRepository crawlHistoryRepository;
+    private CrawlHistoryService crawlHistoryService;
     
     @Autowired
     private WorkerService workerService;
@@ -51,10 +51,10 @@ public abstract class AbstractCrawler implements CrawlerService {
 
         logger.info("Worker {} [Id={}] starts crawling...", worker.getName(), worker.getId());
 
-        CrawlHistoryModel crawlHistory = new CrawlHistoryModel();
+        CrawlHistoryData crawlHistory = new CrawlHistoryData();
         crawlHistory.setWorkerId(worker.getId());
         crawlHistory.setStatus(CrawlStatus.CRAWLING);
-        crawlHistoryRepository.save(crawlHistory);
+        crawlHistoryService.save(crawlHistory);
 
         long starttime = Calendar.getInstance().getTimeInMillis();
         try {
@@ -71,7 +71,7 @@ public abstract class AbstractCrawler implements CrawlerService {
             crawlHistory.setErrorLinks(serialize(workerCtx.getErrorLinks()));
 
             workerService.update(worker);
-            crawlHistoryRepository.save(crawlHistory);
+            crawlHistoryService.update(crawlHistory);
 
             destroy(worker);
             logger.info("Worker {} [Id={}] stops crawling. Took: {} second(s)", worker.getName(), worker.getId(), took);

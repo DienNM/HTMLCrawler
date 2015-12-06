@@ -6,6 +6,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.myprj.crawler.domain.RequestCrawl;
 import com.myprj.crawler.service.crawl.CrawlerHandler;
@@ -27,6 +28,7 @@ public class CrawlerController extends AbstractController {
     private CrawlerHandler crawlerHandler;
 
     @RequestMapping(value = "/{workerId}")
+    @ResponseBody
     public JsonResponse crawl(@PathVariable(value = "workerId") long workerId,
             @RequestParam(value = "type", defaultValue = "none") String type) {
 
@@ -35,13 +37,18 @@ public class CrawlerController extends AbstractController {
             requestCrawl.setWorkerId(workerId);
             requestCrawl.getType();
             
-            crawlerHandler.handle(type, requestCrawl);
+            String requestId = crawlerHandler.handle(type, requestCrawl);
+            if(requestId != null) {
+                JsonResponse response = new JsonResponse(true);
+                response.putMessage("Crawler is running with request Id=" + requestId);
+                return response;
+            }
+            return new JsonResponse(false);
         } catch (Exception e) {
             JsonResponse response = new JsonResponse(false);
             response.putMessage(e.getMessage());
             return response;
         }
-        return null;
     }
 
 }
