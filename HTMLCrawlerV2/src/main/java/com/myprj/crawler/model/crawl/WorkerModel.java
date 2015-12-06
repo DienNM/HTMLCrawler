@@ -56,6 +56,9 @@ public class WorkerModel extends AuditModel {
     
     @Column(name = "request_id", length = 25)
     private String requestId;
+
+    @Column(name = "is_built")
+    private boolean built;
     
     public long getId() {
         return id;
@@ -127,5 +130,13 @@ public class WorkerModel extends AuditModel {
 
     public void setRequestId(String requestId) {
         this.requestId = requestId;
+    }
+
+    public boolean isBuilt() {
+        return built;
+    }
+
+    public void setBuilt(boolean built) {
+        this.built = built;
     }
 }

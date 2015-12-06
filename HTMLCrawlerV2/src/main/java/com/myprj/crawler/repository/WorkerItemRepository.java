@@ -15,4 +15,6 @@ public interface WorkerItemRepository extends GenericDao<WorkerItemModel, Long> 
     
     WorkerItemModel findByWorkerIdAndLevel(long workerId, Level level);
     
+    void deleteByWorkerId(long workerId);
+    
 }

@@ -27,7 +27,7 @@ public interface WorkerService {
     
     WorkerData update(WorkerData worker);
     
-    void addWorkerItems(WorkerData worker, List<WorkerItemData> workerItems);
+    void buildWorkerItems(WorkerData worker, List<WorkerItemData> workerItems);
     
     ItemAttributeData buildSelector4Item(WorkerData worker, Level level, String jsonSelector);
     

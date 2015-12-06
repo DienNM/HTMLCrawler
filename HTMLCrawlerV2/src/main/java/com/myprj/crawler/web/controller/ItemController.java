@@ -217,7 +217,7 @@ public class ItemController extends AbstractController {
             ItemDTO itemDTO = new ItemDTO();
             ItemDTO.toItemDTO(itemData, itemDTO);
 
-            Map<String, Object> datas = getMapResult(itemDTO, ItemDTO.class, DTOLevel.FULL);
+            Map<String, Object> datas = getMapResult(itemDTO, DTOLevel.FULL);
 
             JsonResponse response = new JsonResponse(true);
             response.putData(datas);

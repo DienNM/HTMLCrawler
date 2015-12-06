@@ -49,7 +49,7 @@
             <map>
                 <entry key="SIMPLE" value="id,name,site" />
                 <entry key="DEFAULT" value="SIMPLE,description,threads,attemptTimes,delayTime,status,createdAt,createdBy" />
-                <entry key="FULL" value="DEFAULT,updatedAt,updatedBy" />
+                <entry key="FULL" value="DEFAULT,updatedAt,updatedBy,LIST;workerItems(DEFAULT)" />
             </map>
         </property>
     </bean>
@@ -59,7 +59,7 @@
         <property name="targetMappings">
             <map>
                 <entry key="SIMPLE" value="level,crawlType" />
-                <entry key="DEFAULT" value="SIMPLE,createdAt,createdBy" />
+                <entry key="DEFAULT" value="SIMPLE,level0Selector,pagingConfig,createdAt,createdBy" />
                 <entry key="FULL" value="DEFAULT,updatedAt,updatedBy" />
             </map>
         </property>

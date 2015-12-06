@@ -42,22 +42,22 @@ public class WorkerDTO extends AuditTDO {
 
     @DataTransfer("status")
     private WorkerStatus status = Created;
-    
+
+    @DataTransfer("workerItems")
     private List<WorkerItemDTO> workerItems = new ArrayList<WorkerItemDTO>();
     
     public WorkerDTO() {
     }
 
-    public static List<WorkerDTO> toDTOsDeeply(List<WorkerData> sources) {
-        List<WorkerDTO> dests = new ArrayList<WorkerDTO>();
+    public static void toDTOs(List<WorkerData> sources, List<WorkerDTO> dests) {
         for(WorkerData source : sources) {
-            dests.add(toDTOsDeeply(source));
+            WorkerDTO dest = new WorkerDTO();
+            toDTO(source, dest);
+            dests.add(dest);
         }
-        return dests;
     }
     
-    public static WorkerDTO toDTOsDeeply(WorkerData source) {
-        WorkerDTO dest = new WorkerDTO();
+    public static void toDTO(WorkerData source, WorkerDTO dest) {
         DomainConverter.convert(source, dest, new ObjectConverter<WorkerData, WorkerDTO>() {
             @Override
             public void convert(WorkerData src, WorkerDTO dest) {
@@ -68,7 +68,6 @@ public class WorkerDTO extends AuditTDO {
                 }
             }
         });
-        return dest;
     }
     
     public long getId() {

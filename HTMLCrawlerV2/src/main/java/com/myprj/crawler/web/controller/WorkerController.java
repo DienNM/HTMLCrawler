@@ -130,11 +130,12 @@ public class WorkerController extends AbstractController {
         return new JsonResponse(itemData != null);
     }
 
-    @RequestMapping(value = "/{id}/items", method = RequestMethod.POST)
+    @RequestMapping(value = "/{id}/items/build", method = RequestMethod.POST)
     @ResponseBody
-    public JsonResponse addWorkerItems(
+    public JsonResponse buildWorkerItems(
             @RequestParam(value = "file") MultipartFile file,
-            @PathVariable(value = "id") long workerId) {
+            @PathVariable(value = "id") long workerId,
+            @RequestParam(value = "forceBuild", defaultValue = "false") boolean forceBuild) {
         
         if (file == null) {
             JsonResponse response = new JsonResponse(false);
@@ -160,9 +161,19 @@ public class WorkerController extends AbstractController {
             return response;
         }
         
+        if (workerData.isBuilt() && !forceBuild) {
+            JsonResponse response = new JsonResponse(false);
+            response.putMessage(String.format("Worker Id %s is aleady built", workerId));
+            return response;
+        }
+        
         try {
-            workerService.addWorkerItems(workerData, workerItems);
-            JsonResponse response = new JsonResponse(workerData, !workerData.getWorkerItems().isEmpty());
+            workerService.buildWorkerItems(workerData, workerItems);
+            WorkerDTO workerDTO = new WorkerDTO();
+            WorkerDTO.toDTO(workerData, workerDTO);
+            
+            Map<String, Object> datas = getMapResult(workerDTO, DTOLevel.FULL);
+            JsonResponse response = new JsonResponse(datas, true);
             return response;
         } catch (Exception e) {
             JsonResponse response = new JsonResponse(false);

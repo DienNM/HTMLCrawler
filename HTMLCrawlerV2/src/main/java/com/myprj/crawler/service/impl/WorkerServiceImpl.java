@@ -1,5 +1,7 @@
 package com.myprj.crawler.service.impl;
 
+import static com.myprj.crawler.enumeration.CrawlType.DETAIL;
+
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -17,6 +19,7 @@ import com.myprj.crawler.domain.Pageable;
 import com.myprj.crawler.domain.config.ItemAttributeData;
 import com.myprj.crawler.domain.crawl.WorkerData;
 import com.myprj.crawler.domain.crawl.WorkerItemData;
+import com.myprj.crawler.enumeration.CrawlType;
 import com.myprj.crawler.enumeration.Level;
 import com.myprj.crawler.model.config.ItemAttributeModel;
 import com.myprj.crawler.model.crawl.WorkerItemModel;
@@ -47,7 +50,7 @@ public class WorkerServiceImpl implements WorkerService {
 
     @Autowired
     private ItemAttributeStructureService itemAttrItemStructureService;
-
+    
     @Override
     public WorkerData get(long id) {
         WorkerModel workerModel = workerRepository.find(id);
@@ -119,7 +122,7 @@ public class WorkerServiceImpl implements WorkerService {
 
     @Override
     @Transactional
-    public void addWorkerItems(WorkerData worker, List<WorkerItemData> workerItems) {
+    public void buildWorkerItems(WorkerData worker, List<WorkerItemData> workerItems) {
         Map<Level, WorkerItemData> workerItemMap = new HashMap<Level, WorkerItemData>();
 
         for (WorkerItemData workerItem : workerItems) {
@@ -128,17 +131,26 @@ public class WorkerServiceImpl implements WorkerService {
             }
             WorkerItemValidator.validateCreationPhase(workerItem);
             
+            if(DETAIL.equals(workerItem.getCrawlType())) {
+                workerItem.setPagingConfig(null);
+            }
+            
             workerItem.setWorkerId(worker.getId());
             workerItemMap.put(workerItem.getLevel(), workerItem);
         }
 
         List<WorkerItemModel> workerItemModels = new ArrayList<WorkerItemModel>();
         WorkerItemData.toModels(new ArrayList<WorkerItemData>(workerItemMap.values()), workerItemModels);
+        
+        workerItemRepository.deleteByWorkerId(worker.getId());
         workerItemRepository.save(workerItemModels);
+        worker.setBuilt(true);
 
         List<WorkerItemData> workerItemDatas = new ArrayList<WorkerItemData>();
         WorkerItemData.toDatas(workerItemModels, workerItemDatas);
         worker.setWorkerItems(workerItemDatas);
+        
+        update(worker);
     }
 
     @Override

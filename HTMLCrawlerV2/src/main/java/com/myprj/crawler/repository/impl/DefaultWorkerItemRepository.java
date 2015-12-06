@@ -44,4 +44,12 @@ public class DefaultWorkerItemRepository extends DefaultGenericDao<WorkerItemMod
         return workerItemModels.get(0);
     }
 
+    @Override
+    public void deleteByWorkerId(long workerId) {
+        Query query = entityManager.createQuery("DELETE FROM " + getClassName() + 
+                " WHERE workerId = :workerId ");
+        query.setParameter("workerId", workerId);
+        query.executeUpdate();
+    }
+
 }

@@ -51,6 +51,10 @@ public class WorkerData extends AuditData {
     @DataTransfer(value = "status")
     @EntityTransfer("status")
     private WorkerStatus status = Created;
+    
+    @DataTransfer(value = "built")
+    @EntityTransfer("is_built")
+    private boolean built;
 
     @DataTransfer(value = "requestId")
     @EntityTransfer("request_id")
@@ -173,6 +177,14 @@ public class WorkerData extends AuditData {
 
     public void setRequestId(String requestId) {
         this.requestId = requestId;
+    }
+
+    public boolean isBuilt() {
+        return built;
+    }
+
+    public void setBuilt(boolean built) {
+        this.built = built;
     }
 
 }
