@@ -4,7 +4,6 @@ import java.util.List;
 
 import com.myprj.crawler.domain.PageResult;
 import com.myprj.crawler.domain.Pageable;
-import com.myprj.crawler.domain.config.ItemAttributeData;
 import com.myprj.crawler.domain.crawl.WorkerData;
 import com.myprj.crawler.domain.crawl.WorkerItemData;
 import com.myprj.crawler.enumeration.Level;
@@ -29,6 +28,8 @@ public interface WorkerService {
     
     void buildWorkerItems(WorkerData worker, List<WorkerItemData> workerItems);
     
-    ItemAttributeData buildSelector4Item(WorkerData worker, Level level, String jsonSelector);
+    WorkerItemData getWorkerItem(WorkerData worker, Level level);
+    
+    WorkerItemData buildSelector4Item(WorkerItemData workerItem, String jsonSelector);
     
 }

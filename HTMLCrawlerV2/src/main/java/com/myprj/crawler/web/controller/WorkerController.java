@@ -1,5 +1,6 @@
 package com.myprj.crawler.web.controller;
 
+import static com.myprj.crawler.enumeration.CrawlType.DETAIL;
 import static com.myprj.crawler.web.enumeration.DTOLevel.SIMPLE;
 
 import java.util.ArrayList;
@@ -7,6 +8,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,9 +21,11 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.myprj.crawler.domain.PageResult;
 import com.myprj.crawler.domain.Pageable;
+import com.myprj.crawler.domain.config.ItemData;
 import com.myprj.crawler.domain.crawl.WorkerData;
 import com.myprj.crawler.domain.crawl.WorkerItemData;
 import com.myprj.crawler.enumeration.Level;
+import com.myprj.crawler.service.ItemService;
 import com.myprj.crawler.service.WorkerService;
 import com.myprj.crawler.web.dto.JsonResponse;
 import com.myprj.crawler.web.dto.RequestError;
@@ -35,11 +40,16 @@ import com.myprj.crawler.web.enumeration.DTOLevel;
 @Controller
 @RequestMapping(value = "/workers", produces = "application/json")
 public class WorkerController extends AbstractController {
+    
+    private Logger logger = LoggerFactory.getLogger(WorkerController.class);
 
     @Autowired
     private WorkerService workerService;
+    
+    @Autowired
+    private ItemService itemService;
 
-    private void populateObjectByLevel(WorkerData worker, DTOLevel level) {
+    private void populateWorkerByLevel(WorkerData worker, DTOLevel level) {
         switch (level) {
         case FULL:
             workerService.populateWorkerItems(worker);
@@ -87,7 +97,7 @@ public class WorkerController extends AbstractController {
             return response;
         }
 
-        populateObjectByLevel(workerData, level);
+        populateWorkerByLevel(workerData, level);
         
         Map<String, Object> datas = getMapResult(workerData, WorkerDTO.class, level);
         JsonResponse response = new JsonResponse(!datas.isEmpty());
@@ -95,7 +105,7 @@ public class WorkerController extends AbstractController {
 
         return response;
     }
-
+    
     @RequestMapping(method = RequestMethod.POST)
     @ResponseBody
     public JsonResponse addWorker(@RequestParam(value = "name") String name, 
@@ -176,6 +186,7 @@ public class WorkerController extends AbstractController {
             JsonResponse response = new JsonResponse(datas, true);
             return response;
         } catch (Exception e) {
+            logger.error("{}", e);
             JsonResponse response = new JsonResponse(false);
             response.putMessage(e.getMessage());
             return response;
@@ -185,11 +196,20 @@ public class WorkerController extends AbstractController {
     @RequestMapping(value = "/{id}/items/{level}", method = RequestMethod.POST)
     @ResponseBody
     public JsonResponse buildSelector4WorkerItem(@PathVariable(value = "id") long workerId,
-            @PathVariable(value = "level") Level level, @RequestParam(value = "file") MultipartFile file) {
+            @PathVariable(value = "level") Level level, 
+            @RequestParam(value = "itemId", required = true) long itemId, 
+            @RequestParam(value = "file") MultipartFile file) {
         WorkerData workerData = workerService.get(workerId);
         if (workerData == null) {
             JsonResponse response = new JsonResponse(false);
             response.putMessage(String.format("Worker Id %s not found", workerId));
+            return response;
+        }
+        
+        ItemData itemData = itemService.get(itemId);
+        if (itemData == null) {
+            JsonResponse response = new JsonResponse(false);
+            response.putMessage(String.format("Item Id %s not found", itemId));
             return response;
         }
 
@@ -200,11 +220,30 @@ public class WorkerController extends AbstractController {
             return response;
         }
 
+        WorkerItemData workerItemData = workerService.getWorkerItem(workerData, level);
+        if(workerItemData == null) {
+            JsonResponse response = new JsonResponse(false);
+            response.putMessage("Cannot find worker item for: WorkerId=" + workerId + " and Level=" + level);
+            return response;
+        }
+        
+        if(!DETAIL.equals(workerItemData.getCrawlType())) {
+            JsonResponse response = new JsonResponse(false);
+            response.putMessage("Only be able to build selectors for DETAIL type");
+            return response;
+        }
+        
+        workerItemData.setItemId(itemId);
         try {
-            workerService.buildSelector4Item(workerData, level, json);
-            JsonResponse response = new JsonResponse(workerData, !workerData.getWorkerItems().isEmpty());
+            
+            workerItemData = workerService.buildSelector4Item(workerItemData, json);
+            WorkerItemDTO workerItemDTO = new WorkerItemDTO();
+            WorkerItemDTO.toDTO(workerItemData, workerItemDTO);
+            Map<String, Object> datas = getMapResult(workerItemDTO, DTOLevel.FULL);
+            JsonResponse response = new JsonResponse(datas, true);
             return response;
         } catch (Exception e) {
+            logger.error("{}", e);
             JsonResponse response = new JsonResponse(false);
             response.putMessage(e.getMessage());
             return response;

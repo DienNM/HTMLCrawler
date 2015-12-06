@@ -50,6 +50,7 @@ public class ItemAttributeStructureServiceImpl implements ItemAttributeStructure
 
         ItemAttributeData root = new ItemAttributeData();
         root.setId(workerItem.getId() + "|" + attributeId);
+        root.setWorkerItemId(workerItem.getId());
         root.setRoot(true);
         root.setName(ItemContent.ROOT);
         root.setType(OBJECT);
@@ -89,7 +90,8 @@ public class ItemAttributeStructureServiceImpl implements ItemAttributeStructure
                     + " not found");
         }
         ItemAttributeData attribute = new ItemAttributeData();
-        attribute.setId(workerItem + "|" + attributeId);
+        attribute.setWorkerItemId(workerItem.getId());
+        attribute.setId(workerItem.getId() + "|" + attributeId);
         attribute.setName(key);
         attribute.setAttributeId(attributeId);
         attribute.setAttribute(attributeData);

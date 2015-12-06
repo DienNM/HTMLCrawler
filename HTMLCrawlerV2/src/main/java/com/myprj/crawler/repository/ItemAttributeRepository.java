@@ -14,4 +14,6 @@ public interface ItemAttributeRepository extends GenericDao<ItemAttributeModel, 
     
     void deleteByItemId(long itemId);
     
+    void deleteByWorkerItemId(long workerId);
+    
 }

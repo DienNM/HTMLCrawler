@@ -29,6 +29,11 @@ public class ItemAttributeData extends AuditData {
     @DataTransfer("itemId")
     @EntityTransfer("item_id")
     private long itemId;
+    
+
+    @DataTransfer("workerItemId")
+    @EntityTransfer("worker_item_id")
+    private long workerItemId;
 
     @DataTransfer("parentId")
     @EntityTransfer("parent_id")
@@ -189,5 +194,13 @@ public class ItemAttributeData extends AuditData {
 
     public void setRoot(boolean root) {
         this.root = root;
+    }
+
+    public long getWorkerItemId() {
+        return workerItemId;
+    }
+
+    public void setWorkerItemId(long workerItemId) {
+        this.workerItemId = workerItemId;
     }
 }

@@ -19,7 +19,6 @@ import com.myprj.crawler.domain.Pageable;
 import com.myprj.crawler.domain.config.ItemAttributeData;
 import com.myprj.crawler.domain.crawl.WorkerData;
 import com.myprj.crawler.domain.crawl.WorkerItemData;
-import com.myprj.crawler.enumeration.CrawlType;
 import com.myprj.crawler.enumeration.Level;
 import com.myprj.crawler.model.config.ItemAttributeModel;
 import com.myprj.crawler.model.crawl.WorkerItemModel;
@@ -50,7 +49,7 @@ public class WorkerServiceImpl implements WorkerService {
 
     @Autowired
     private ItemAttributeStructureService itemAttrItemStructureService;
-    
+
     @Override
     public WorkerData get(long id) {
         WorkerModel workerModel = workerRepository.find(id);
@@ -130,18 +129,18 @@ public class WorkerServiceImpl implements WorkerService {
                 throw new InvalidParameterException("Duplicated Level: " + workerItem.getLevel());
             }
             WorkerItemValidator.validateCreationPhase(workerItem);
-            
-            if(DETAIL.equals(workerItem.getCrawlType())) {
+
+            if (DETAIL.equals(workerItem.getCrawlType())) {
                 workerItem.setPagingConfig(null);
             }
-            
+
             workerItem.setWorkerId(worker.getId());
             workerItemMap.put(workerItem.getLevel(), workerItem);
         }
 
         List<WorkerItemModel> workerItemModels = new ArrayList<WorkerItemModel>();
         WorkerItemData.toModels(new ArrayList<WorkerItemData>(workerItemMap.values()), workerItemModels);
-        
+
         workerItemRepository.deleteByWorkerId(worker.getId());
         workerItemRepository.save(workerItemModels);
         worker.setBuilt(true);
@@ -149,35 +148,47 @@ public class WorkerServiceImpl implements WorkerService {
         List<WorkerItemData> workerItemDatas = new ArrayList<WorkerItemData>();
         WorkerItemData.toDatas(workerItemModels, workerItemDatas);
         worker.setWorkerItems(workerItemDatas);
-        
+
         update(worker);
     }
 
     @Override
-    public ItemAttributeData buildSelector4Item(WorkerData worker, Level level, String jsonSelector) {
-        WorkerItemModel workerItemModel = workerItemRepository.findByWorkerIdAndLevel(worker.getId(), level);
-        if (workerItemModel == null) {
-            throw new InvalidParameterException(String.format("Cannot find Worker Item: Worker=%s and Level=%s",
-                    worker.getId(), level));
-        }
-
-        WorkerItemData workerItemData = new WorkerItemData();
-        WorkerItemData.toData(workerItemModel, workerItemData);
-
-        ItemAttributeData itemAttribute = itemAttrItemStructureService.build(workerItemData, jsonSelector);
-        saveAllItemAttributesFromRoot(itemAttribute);
-        return itemAttribute;
-    }
-
     @Transactional
-    private void saveAllItemAttributesFromRoot(ItemAttributeData itemAttribute) {
-
+    public WorkerItemData buildSelector4Item(WorkerItemData workerItem, String jsonSelector) {
+        ItemAttributeData itemAttribute = itemAttrItemStructureService.build(workerItem, jsonSelector);
+       
+        if(itemAttribute == null) {
+            return workerItem;
+        }
+        
+        itemAttributeRepository.deleteByWorkerItemId(workerItem.getId());
+        
         List<ItemAttributeData> itemAttributes = new ArrayList<ItemAttributeData>();
         ItemAttributeData.collectionAllItemAttributes(itemAttribute, itemAttributes);
         List<ItemAttributeModel> itemAttributeModels = new ArrayList<ItemAttributeModel>();
         ItemAttributeData.toModels(itemAttributes, itemAttributeModels);
-
         itemAttributeRepository.save(itemAttributeModels);
+        
+        workerItem.setRootItemAttribute(itemAttribute);
+        
+        WorkerItemModel workerItemModel = new WorkerItemModel();
+        WorkerItemData.toModel(workerItem, workerItemModel);
+        
+        workerItemRepository.update(workerItemModel);
+        
+        return workerItem;
+    }
+
+    @Override
+    public WorkerItemData getWorkerItem(WorkerData worker, Level level) {
+        WorkerItemModel workerItemModel = workerItemRepository.findByWorkerIdAndLevel(worker.getId(), level);
+        if (workerItemModel == null) {
+            logger.warn("Cannot find Worker Item: Worker={} and Level={}", worker.getId(), level);
+            return null;
+        }
+        WorkerItemData workerItemData = new WorkerItemData();
+        WorkerItemData.toData(workerItemModel, workerItemData);
+        return workerItemData;
     }
 
 }

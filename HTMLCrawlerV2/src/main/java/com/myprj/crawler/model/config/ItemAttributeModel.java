@@ -29,13 +29,16 @@ public class ItemAttributeModel extends AuditModel {
     @Column(name = "item_id")
     private long itemId;
 
+    @Column(name = "worker_item_id")
+    private long workerItemId;
+
     @Column(name = "is_root")
     private boolean root = false;
     
     @Column(name = "attribute_id", length = 100)
     private String attributeId;
 
-    @Column(name = "selector_json", length = 150)
+    @Column(name = "selector_json", length = 1000)
     private String selectorJson;
     
     @Column(name = "parent_id")
@@ -115,5 +118,13 @@ public class ItemAttributeModel extends AuditModel {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public long getWorkerItemId() {
+        return workerItemId;
+    }
+
+    public void setWorkerItemId(long workerItemId) {
+        this.workerItemId = workerItemId;
     }
 }

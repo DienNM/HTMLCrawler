@@ -14,6 +14,11 @@ public class PagingConfig implements Serializable {
     
     private String start = "1";
     
+    @Override
+    public String toString() {
+        return String.format("start=%s, end=%s", start, end);
+    }
+    
     enum WorkerListType {
         PAGING,
         DATE

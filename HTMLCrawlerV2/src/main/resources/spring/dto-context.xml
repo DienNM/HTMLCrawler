@@ -60,6 +60,17 @@
             <map>
                 <entry key="SIMPLE" value="level,crawlType" />
                 <entry key="DEFAULT" value="SIMPLE,level0Selector,pagingConfig,createdAt,createdBy" />
+                <entry key="FULL" value="DEFAULT,LIST;itemAttributeDTOs(FULL),updatedAt,updatedBy" />
+            </map>
+        </property>
+    </bean>
+    
+    <bean id="com.myprj.crawler.web.dto.ItemAttributeDTO" class = "com.myprj.crawler.web.mapping.DTOMapping">
+        <property name="targetClassName" value="com.myprj.crawler.web.dto.ItemAttributeDTO" />
+        <property name="targetMappings">
+            <map>
+                <entry key="SIMPLE" value="id,itemId,name,parentId,attributeId,type,root,workerItemId" />
+                <entry key="DEFAULT" value="SIMPLE,,selector,createdAt,createdBy" />
                 <entry key="FULL" value="DEFAULT,updatedAt,updatedBy" />
             </map>
         </property>

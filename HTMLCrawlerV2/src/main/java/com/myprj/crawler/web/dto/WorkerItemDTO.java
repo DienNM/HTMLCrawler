@@ -1,10 +1,12 @@
 package com.myprj.crawler.web.dto;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import com.myprj.crawler.annotation.DataTransfer;
 import com.myprj.crawler.domain.config.AttributeSelector;
+import com.myprj.crawler.domain.config.ItemAttributeData;
 import com.myprj.crawler.domain.crawl.PagingConfig;
 import com.myprj.crawler.domain.crawl.WorkerItemData;
 import com.myprj.crawler.enumeration.CrawlType;
@@ -34,6 +36,9 @@ public class WorkerItemDTO extends AuditTDO {
 
     @DataTransfer("pagingConfig")
     private PagingConfig pagingConfig = new PagingConfig();
+    
+    @DataTransfer("itemAttributeDTOs")
+    private List<ItemAttributeDTO> itemAttributeDTOs = new ArrayList<ItemAttributeDTO>();
     
     private Map<String, Object> detailSelectors;
     
@@ -74,6 +79,13 @@ public class WorkerItemDTO extends AuditTDO {
             public void convert(WorkerItemData src, WorkerItemDTO dest) {
                 if(src.getLevel0Selector() != null) {
                     dest.setLevel0Selector(src.getLevel0Selector().getText());
+                }
+                if(src.getRootItemAttribute() != null) {
+                    List<ItemAttributeData> itemAttributes = new ArrayList<ItemAttributeData>();
+                    ItemAttributeData.collectionAllItemAttributes(src.getRootItemAttribute(), itemAttributes);
+                    List<ItemAttributeDTO> itemAttributeDTOs = new ArrayList<ItemAttributeDTO>();
+                    ItemAttributeDTO.toDTOs(itemAttributes, itemAttributeDTOs);
+                    dest.setItemAttributeDTOs(itemAttributeDTOs);
                 }
             }
         });
@@ -125,5 +137,13 @@ public class WorkerItemDTO extends AuditTDO {
 
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    public List<ItemAttributeDTO> getItemAttributeDTOs() {
+        return itemAttributeDTOs;
+    }
+
+    public void setItemAttributeDTOs(List<ItemAttributeDTO> itemAttributeDTOs) {
+        this.itemAttributeDTOs = itemAttributeDTOs;
     }
 }
