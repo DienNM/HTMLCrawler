@@ -28,6 +28,10 @@ public class WorkerData extends AuditData {
     @EntityTransfer("name")
     private String name;
 
+    @DataTransfer(value = "category")
+    @EntityTransfer("category")
+    private String category;
+    
     @DataTransfer(value = "description")
     @EntityTransfer("description")
     private String description;
@@ -185,6 +189,14 @@ public class WorkerData extends AuditData {
 
     public void setBuilt(boolean built) {
         this.built = built;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
     }
 
 }

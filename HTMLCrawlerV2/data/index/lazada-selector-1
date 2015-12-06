@@ -1,3 +1,6 @@
+#category,itemId
+
+>1,2,3|1
 {
     "name" : "I@div.product-info-head div.product-info-name",
     "price" : "I@div.product-prices span.product-price||E@div.product-prices||E@div.span.product-price",
@@ -5,7 +8,9 @@
     "includedInBox": ["I@div.catWrapper.whatisinbox div.description-detail ul li span"],
     "specifications": ["I@div.catWrapper.specifications.specifications-detail div.description-detail ul li span"],
     "descriptionDetails" : [{
-        "key": "I@div.catWrapper div.description-detail ul li",
-        "value": "I@div.catWrapper div.description-detail ul li span"
-    }]
+        "value": "I@span"
+    },"I@div.catWrapper div.description-detail ul li"]
 }
+
+
+<END

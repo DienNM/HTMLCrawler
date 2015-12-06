@@ -71,5 +71,17 @@ public abstract class AbstractController {
             return new ArrayList<T>();
         }
     }
+    
+    protected <T> List<T>  convertStrings2Objects(List<String> lines, Class<T> clazz) {
+        List<T> targets = new ArrayList<T>();
+        try {
+            for(String line : lines) {
+                targets.add(Serialization.deserialize(line, clazz));
+            }
+            return targets;
+        } catch (Exception e) {
+            return new ArrayList<T>();
+        }
+    }
 
 }

@@ -140,7 +140,12 @@ public class WorkerServiceImpl implements WorkerService {
 
         List<WorkerItemModel> workerItemModels = new ArrayList<WorkerItemModel>();
         WorkerItemData.toModels(new ArrayList<WorkerItemData>(workerItemMap.values()), workerItemModels);
-
+        
+        List<WorkerItemModel> workerItemModelOlds = workerItemRepository.findByWorkerId(worker.getId());
+        for(WorkerItemModel workerItemModelOld : workerItemModelOlds) {
+            itemAttributeRepository.deleteByWorkerItemId(workerItemModelOld.getId());
+        }
+        
         workerItemRepository.deleteByWorkerId(worker.getId());
         workerItemRepository.save(workerItemModels);
         worker.setBuilt(true);

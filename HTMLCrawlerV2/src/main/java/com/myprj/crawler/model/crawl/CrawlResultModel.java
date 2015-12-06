@@ -30,7 +30,7 @@ public class CrawlResultModel implements Serializable {
     @Column(name = "id")
     private long id;
 
-    @Column(name = "request_id")
+    @Column(name = "request_id", length = 30)
     private String requestId;
 
     @Column(name = "item_id")
@@ -38,6 +38,9 @@ public class CrawlResultModel implements Serializable {
 
     @Column(name = "category_id")
     private long categoryId;
+
+    @Column(name = "category_worker")
+    private String categoryWorker;
     
     @Column(name = "detail")
     @Lob
@@ -123,6 +126,14 @@ public class CrawlResultModel implements Serializable {
 
     public void setRequestId(String requestId) {
         this.requestId = requestId;
+    }
+
+    public String getCategoryWorker() {
+        return categoryWorker;
+    }
+
+    public void setCategoryWorker(String categoryWorker) {
+        this.categoryWorker = categoryWorker;
     }
 
 }

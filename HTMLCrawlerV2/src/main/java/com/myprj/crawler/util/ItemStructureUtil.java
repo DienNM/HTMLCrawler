@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import com.myprj.crawler.domain.TargetObject;
 import com.myprj.crawler.domain.config.AttributeData;
 import com.myprj.crawler.domain.config.ItemAttributeData;
 import com.myprj.crawler.domain.config.ItemData;
@@ -61,18 +62,26 @@ public final class ItemStructureUtil {
     }
     
     public static void populateValue2Attribute(Map<String, Object> detail, String attributeId, Object value) {
+        populateValue2Attribute(detail, attributeId, value, null);
+    }
+    
+    public static void populateValue2Attribute(Map<String, Object> detail, String attributeId, Object value, TargetObject targetObject) {
         Iterator<String> attNames = AttributeUtil.parseAttributeNames(attributeId);
         attNames.next();
         if(attNames.hasNext()) {
-            populate(detail, attNames, value);
+            populate(detail, attNames, value, targetObject);
         }
     }
     
     @SuppressWarnings("unchecked")
-    private static void populate(Map<String, Object> detail, Iterator<String> attNames, Object value) {
+    private static void populate(Map<String, Object> detail, Iterator<String> attNames, Object value, TargetObject targetObject) {
         String attName = attNames.next();
         Object object = detail.get(attName);
         if(object == null || value == null) {
+            return;
+        }
+        if(targetObject != null && attName.equals(targetObject.getAttributeName())) {
+            detail.put(attName, value);
             return;
         }
         if(object instanceof String) {
@@ -84,7 +93,11 @@ public final class ItemStructureUtil {
                 if(listObjects.size() == 1 && listObjects.get(0).equals(EMPTY_TEXT)) {
                     listObjects.remove(0);
                 }
-                listObjects.add(value);
+                if(value instanceof List) {
+                    listObjects.addAll((List<Object>)value);
+                } else {
+                    listObjects.add(value);
+                }
                 return;
             }
             int attIndex = Integer.valueOf(attNames.next());
@@ -98,14 +111,14 @@ public final class ItemStructureUtil {
             if(!attNames.hasNext()) {
                 itemValue.put(attName, value);
             } else {
-                populate(itemValue, attNames, value);
+                populate(itemValue, attNames, value, targetObject);
             }
         } else if(object instanceof Map) {
             Map<String, Object> itemValue = (Map<String, Object>) object;
             if(!attNames.hasNext()) {
                 itemValue.put(attName, value);
             } else {
-                populate(itemValue, attNames, value);
+                populate(itemValue, attNames, value, targetObject);
             }
         }
     }

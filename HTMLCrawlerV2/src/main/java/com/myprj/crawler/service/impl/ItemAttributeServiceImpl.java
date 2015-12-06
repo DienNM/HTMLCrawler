@@ -1,5 +1,6 @@
 package com.myprj.crawler.service.impl;
 
+import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -97,6 +98,9 @@ public class ItemAttributeServiceImpl implements ItemAttributeService {
     public ItemAttributeData getRootWithPopulateTree(long workerItemId) {
         
         List<ItemAttributeData> itemAttributeDatas = getByWorkerItemId(workerItemId);
+        if(itemAttributeDatas.isEmpty()) {
+            throw new InvalidParameterException("Worker Item " + workerItemId + " has not been built Selectors yet.");
+        }
         
         Map<String, List<ItemAttributeData>> mapParents = new HashMap<String, List<ItemAttributeData>>();
         for(ItemAttributeData itemAtt : itemAttributeDatas) {

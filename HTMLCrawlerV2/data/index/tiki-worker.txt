@@ -1,0 +1,15 @@
+#item|site|threads|attemptTimes|name|description
+
+>1|Tiki|3|5|1000|dien-thoai-di-dong|tiki-1|Dien thoai di dong
+{"level": "Level0", "crawlType": "LIST", "pagingConfig": {"end" : "1", "start": "1"},"level0Selector": "div.product-col-2 div.infomation p.title a{{href}}", "url" : "http://tiki.vn/dien-thoai-di-dong/c1793?mode=list&page=%s"}
+{"level": "Level1","crawlType": "DETAIL"}
+
+>1|Tiki|3|5|1000|may-tinh-bang|tiki-1|May Tinh Bang
+{"level": "Level0", "crawlType": "LIST", "pagingConfig": {"end" : "1", "start": "1"},"level0Selector": "div.product-col-2 div.infomation p.title a{{href}}", "url" : "http://tiki.vn/may-tinh-bang/c1794?mode=list&page=%s"}
+{"level": "Level1","crawlType": "DETAIL"}
+
+>1|Tiki|3|5|1000|laptop-macbook|tiki-1|Laptop Macbook
+{"level": "Level0", "crawlType": "LIST", "pagingConfig": {"end" : "1", "start": "1"},"level0Selector": "div.product-col-2 div.infomation p.title a{{href}}", "url" : "http://tiki.vn/laptop-macbook/c1846?mode=list&page=%s"}
+{"level": "Level1","crawlType": "DETAIL"}
+
+<END

@@ -31,7 +31,10 @@ public class CrawlResultData implements Serializable {
     @DataTransfer("itemId")
     @EntityTransfer("item_id")
     private long itemId;
-    
+
+    @DataTransfer("categoryWorker")
+    @EntityTransfer("category_worker")
+    private String categoryWorker;
 
     @DataTransfer("requestId")
     @EntityTransfer("request_id")
@@ -49,8 +52,10 @@ public class CrawlResultData implements Serializable {
     @EntityTransfer("status")
     private ResultStatus status = NEW;
 
+    @DataTransfer("detail")
     private Map<String, Object> detail = new HashMap<String, Object>();
 
+    @DataTransfer("createdAt")
     @EntityTransfer("createdAt")
     private long createdAt;
 
@@ -154,6 +159,14 @@ public class CrawlResultData implements Serializable {
     
     public void setRequestId(String requestId) {
         this.requestId = requestId;
+    }
+
+    public String getCategoryWorker() {
+        return categoryWorker;
+    }
+
+    public void setCategoryWorker(String categoryWorker) {
+        this.categoryWorker = categoryWorker;
     }
 
 }

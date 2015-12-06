@@ -10,7 +10,7 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.myprj.crawler.annotation.DataTransfer;
+import com.myprj.crawler.annotation.DataCopy;
 
 /**
  * @author DienNM (DEE)
@@ -35,7 +35,7 @@ public final class DomainCopy {
 
         // Get Map of annotated name and Field in DestinationField annotation
         for (Field destField : destFields) {
-            DataTransfer destAnnotationField = destField.getAnnotation(DataTransfer.class);
+            DataCopy destAnnotationField = destField.getAnnotation(DataCopy.class);
             if (destAnnotationField == null) {
                 continue;
             }
@@ -44,7 +44,7 @@ public final class DomainCopy {
 
         Map<Field, String> mappedFieldsValues = new HashMap<Field, String>();
         for (Field srcField : srcFields) {
-            DataTransfer srcAnnotationField = srcField.getAnnotation(DataTransfer.class);
+            DataCopy srcAnnotationField = srcField.getAnnotation(DataCopy.class);
 
             // Check whether setting a mapping
             if (srcAnnotationField == null || !destFieldsMap.containsKey(srcAnnotationField.value())) {

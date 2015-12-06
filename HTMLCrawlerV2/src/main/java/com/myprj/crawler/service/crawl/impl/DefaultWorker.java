@@ -1,5 +1,6 @@
 package com.myprj.crawler.service.crawl.impl;
 
+import static com.myprj.crawler.enumeration.AttributeType.LIST_OBJECT;
 import static com.myprj.crawler.enumeration.Level.Level0;
 
 import java.util.ArrayList;
@@ -18,6 +19,7 @@ import org.springframework.stereotype.Service;
 
 import com.myprj.crawler.domain.ErrorLink;
 import com.myprj.crawler.domain.HtmlDocument;
+import com.myprj.crawler.domain.TargetObject;
 import com.myprj.crawler.domain.config.AttributeSelector;
 import com.myprj.crawler.domain.config.ItemAttributeData;
 import com.myprj.crawler.domain.config.ItemData;
@@ -75,7 +77,7 @@ public class DefaultWorker implements Worker {
             logger.warn(errorMessage);
         }
         HtmlDocument htmlDocument = new HtmlDocument(document);
-        processWorkerDetail(url, htmlDocument, workerItem);
+        processWorkerDetail(url, htmlDocument, workerItem, worker);
     }
 
     protected void invokeWorkerList(WorkerContext workerCtx, WorkerItemData workerItem) throws WorkerException {
@@ -172,13 +174,14 @@ public class DefaultWorker implements Worker {
         }
     }
 
-    protected void processWorkerDetail(String url, HtmlDocument htmlDocument, WorkerItemData workerItem) {
+    protected void processWorkerDetail(String url, HtmlDocument htmlDocument, WorkerItemData workerItem, WorkerData worker) {
         ItemData item = workerItem.getItem();
         ItemAttributeData rootItemAttribute = workerItem.getRootItemAttribute();
 
         CrawlResultData result = new CrawlResultData();
         result.setUrl(url);
         result.setItemId(item.getId());
+        result.setCategoryWorker(worker.getCategory());
         result.setCategoryId(item.getCategoryId());
         result.setRequestId(workerItem.getRequestId());
         result.getDetail().putAll(item.getSampleContent().getContent());
@@ -196,8 +199,14 @@ public class DefaultWorker implements Worker {
     protected void collectResult4Attribute(HtmlDocument htmlDocument, ItemAttributeData current, CrawlResultData result) {
         AttributeSelector selector = current.getSelector();
         Object data = null;
-        if(selector != null) {
-            data = HandlerRegister.getHandler(current.getType()).handle(htmlDocument, selector);
+        if(LIST_OBJECT.equals(current.getType())) {
+            data = HandlerRegister.getHandler(current.getType()).handle(htmlDocument, current);
+            TargetObject targetObject = new TargetObject();
+            targetObject.setAttributeName(current.getName());
+            ItemStructureUtil.populateValue2Attribute(result.getDetail(), current.getAttributeId(), data, targetObject);
+            return;
+        } else if(selector != null) {
+            data = HandlerRegister.getHandler(current.getType()).handle(htmlDocument, current);
         }
         
         if (data == null && selector != null) {

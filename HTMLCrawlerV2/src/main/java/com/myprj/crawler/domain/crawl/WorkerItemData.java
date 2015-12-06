@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 
+import com.myprj.crawler.annotation.DataCopy;
 import com.myprj.crawler.annotation.DataTransfer;
 import com.myprj.crawler.annotation.EntityTransfer;
 import com.myprj.crawler.domain.AuditData;
@@ -29,44 +30,51 @@ public class WorkerItemData extends AuditData {
 
     @DataTransfer("id")
     @EntityTransfer("id")
+    @DataCopy("id")
     private long id;
 
     @DataTransfer("workerId")
     @EntityTransfer("worker_id")
+    @DataCopy("workerId")
     private long workerId;
 
     @DataTransfer("itemId")
     @EntityTransfer("item_id")
+    @DataCopy("itemId")
     private long itemId = -1;
 
     @DataTransfer("url")
     @EntityTransfer("url")
+    @DataCopy("url")
     private String url;
 
     @DataTransfer("level")
     @EntityTransfer("level")
+    @DataCopy("level")
     private Level level;
 
     @DataTransfer("crawlType")
     @EntityTransfer("crawl_type")
+    @DataCopy("crawlType")
     private CrawlType crawlType;
 
-    @DataTransfer("requestId")
+    @DataCopy("requestId")
     private String requestId;
 
     // For DETAIL
-    @DataTransfer("item")
+    @DataCopy("item")
     private ItemData item;
 
-    @DataTransfer("rootItemAttribute")
+    @DataCopy("rootItemAttribute")
     private ItemAttributeData rootItemAttribute;
 
     // For List Crawler to get next link
-    @DataTransfer("level0Selector")
+    @DataCopy("level0Selector")
     private AttributeSelector level0Selector;
 
     // For List Crawler
     @DataTransfer("pagingConfig")
+    @DataCopy("pagingConfig")
     private PagingConfig pagingConfig = new PagingConfig();
 
     public WorkerItemData() {

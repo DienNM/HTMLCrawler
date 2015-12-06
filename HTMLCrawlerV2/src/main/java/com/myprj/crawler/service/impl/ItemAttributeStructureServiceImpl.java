@@ -1,6 +1,7 @@
 package com.myprj.crawler.service.impl;
 
 import static com.myprj.crawler.enumeration.AttributeType.LIST;
+import static com.myprj.crawler.enumeration.AttributeType.LIST_OBJECT;
 import static com.myprj.crawler.enumeration.AttributeType.OBJECT;
 import static com.myprj.crawler.enumeration.AttributeType.TEXT;
 
@@ -117,17 +118,27 @@ public class ItemAttributeStructureServiceImpl implements ItemAttributeStructure
     @SuppressWarnings("unchecked")
     private ItemAttributeData buildList(WorkerItemData workerItem, ItemAttributeData parent, String key,
             List<Object> value) {
-        ItemAttributeData current = createAttribute(parent, LIST, workerItem, key);
 
         if (!AttributeUtil.contentObject(value)) {
+         // [...]
+            ItemAttributeData current = createAttribute(parent, LIST, workerItem, key);
             if (value != null && !value.isEmpty()) {
                 AttributeSelector attributeSelector = parseAttritbuteSelectors(value.get(0).toString());
                 current.setSelector(attributeSelector);
             }
             return current;
         }
-
+        
+        // [{key:value,...}]
+        if(value.size() != 2) {
+            throw new InvalidParameterException("Error build attribute: " + key + " - LIST_OBJECT needs 2 params");
+        }
+        ItemAttributeData current = createAttribute(parent, LIST_OBJECT, workerItem, key);
+        AttributeSelector attributeSelector = parseAttritbuteSelectors(value.get(1).toString());
+        current.setSelector(attributeSelector);
+        
         ItemAttributeData attribute = createAttribute(current, OBJECT, workerItem, key);
+        
         ItemAttributeData child = build(workerItem, attribute, (Map<String, Object>) value.get(0));
         addChild(current, child);
         return current;

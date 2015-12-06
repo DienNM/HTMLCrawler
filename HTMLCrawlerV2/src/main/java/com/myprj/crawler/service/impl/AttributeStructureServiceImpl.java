@@ -3,6 +3,7 @@ package com.myprj.crawler.service.impl;
 import static com.myprj.crawler.domain.config.ItemContent.EMPTY_TEXT;
 import static com.myprj.crawler.enumeration.AttributeType.HTML;
 import static com.myprj.crawler.enumeration.AttributeType.LIST;
+import static com.myprj.crawler.enumeration.AttributeType.LIST_OBJECT;
 import static com.myprj.crawler.enumeration.AttributeType.OBJECT;
 import static com.myprj.crawler.enumeration.AttributeType.TEXT;
 
@@ -95,17 +96,18 @@ public class AttributeStructureServiceImpl implements AttributeStructureService 
 
     @SuppressWarnings("unchecked")
     private AttributeData buildList(ItemData item, AttributeData parent, String key, List<Object> value) {
-        AttributeData current = createAttribute(parent, LIST, item, key);
 
         Map<String, Object> parentObj = AttributeUtil.getObject(item.getSampleContent(), parent.getId());
         List<Object> listValue = new ArrayList<Object>();
         parentObj.put(key, listValue);
 
         if (!AttributeUtil.contentObject(value)) {
+            AttributeData current = createAttribute(parent, LIST, item, key);
             listValue.add(EMPTY_TEXT);
             return current;
         }
 
+        AttributeData current = createAttribute(parent, LIST_OBJECT, item, key);
         Map<String, Object> elementList = new HashMap<String, Object>();
         listValue.add(elementList);
         AttributeData attribute = createAttribute(current, OBJECT, item, key);

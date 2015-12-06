@@ -48,7 +48,7 @@ public class CrawlHistoryModel implements Serializable {
     @Lob
     private String errorLinks;
     
-    @Column(name = "request_id", length = 20)
+    @Column(name = "request_id", length = 30)
     private String requestId;
     
     public long getId() {

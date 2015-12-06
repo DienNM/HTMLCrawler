@@ -10,5 +10,6 @@ public enum AttributeType {
     HTML,
     LIST,
     LINK,
-    OBJECT
+    OBJECT,
+    LIST_OBJECT
 }

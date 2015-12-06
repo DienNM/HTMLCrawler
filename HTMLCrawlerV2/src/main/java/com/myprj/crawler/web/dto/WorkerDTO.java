@@ -28,6 +28,9 @@ public class WorkerDTO extends AuditTDO {
     @DataTransfer("site")
     private String site;
 
+    @DataTransfer("category")
+    private String category;
+
     @DataTransfer("description")
     private String description;
 
@@ -140,6 +143,14 @@ public class WorkerDTO extends AuditTDO {
 
     public void setWorkerItems(List<WorkerItemDTO> workerItems) {
         this.workerItems = workerItems;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
     }
     
 }

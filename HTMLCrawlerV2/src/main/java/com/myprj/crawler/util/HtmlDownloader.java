@@ -25,7 +25,6 @@ public class HtmlDownloader {
             try {
                 Thread.sleep(pausedTime);
                 Document doc = Jsoup.connect(url)
-                        .ignoreContentType(true)
                         .userAgent("Mozilla")
                         .referrer("http://www.google.com")
                         .timeout(10000).get();
@@ -51,7 +50,7 @@ public class HtmlDownloader {
     }
     
     public static void main(String[] args) {
-        HtmlDownloader.downloadAndStore2File("http://www.lazada.vn/phan-trang-diem-hut-dau-sang-min-maybelline-white-super-fresh-spf-34-3-natural-9g-1058415.html"
+        HtmlDownloader.downloadAndStore2File("http://www.lazada.vn/laptop-apple-macbook-air-mjve2-13inch-bac-1299964.html"
                 + "", "/media/diennm/Working/abc.txt");
     }
     
