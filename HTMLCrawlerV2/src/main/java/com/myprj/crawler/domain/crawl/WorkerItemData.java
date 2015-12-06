@@ -76,6 +76,8 @@ public class WorkerItemData extends AuditData {
         dest.setWorkerId(source.getWorkerId());
         dest.setItemId(source.getItemId());
         dest.setPagingConfig(source.getPagingConfig());
+        dest.setRootItemAttribute(source.getRootItemAttribute());
+        dest.setLevel0Selector(source.getLevel0Selector());
     }
 
     public static void toDatas(List<WorkerItemModel> sources, List<WorkerItemData> dests) {

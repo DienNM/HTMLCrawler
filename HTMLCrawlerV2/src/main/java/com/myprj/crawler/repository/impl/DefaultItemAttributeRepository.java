@@ -42,4 +42,12 @@ public class DefaultItemAttributeRepository extends DefaultGenericDao<ItemAttrib
         query.executeUpdate();
     }
 
+    @SuppressWarnings("unchecked")
+    @Override
+    public List<ItemAttributeModel> findByWorkerItemId(long workerItemId) {
+        Query query = entityManager.createQuery("FROM " + getClassName() + " WHERE workerItemId = :workerItemId");
+        query.setParameter("workerItemId", workerItemId);
+        return query.getResultList();
+    }
+
 }

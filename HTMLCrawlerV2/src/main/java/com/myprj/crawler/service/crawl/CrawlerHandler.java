@@ -26,6 +26,7 @@ import org.springframework.stereotype.Service;
 
 import com.myprj.crawler.domain.RequestCrawl;
 import com.myprj.crawler.domain.crawl.WorkerData;
+import com.myprj.crawler.enumeration.WorkerStatus;
 import com.myprj.crawler.exception.CrawlerException;
 import com.myprj.crawler.service.WorkerService;
 
@@ -67,12 +68,14 @@ public class CrawlerHandler {
         if (crawlerService == null) {
             throw new UnsupportedOperationException("Crawler type " + type + " not support yet");
         }
-        String requestId = generateId();
-        request.setRequestId(requestId);
 
         final WorkerData workerData = workerService.get(request.getWorkerId());
         try {
             crawlerService.init(workerData);
+            String requestId = generateId();
+            request.setRequestId(requestId);
+            workerData.setRequestId(requestId);
+            workerData.setStatus(WorkerStatus.Pending);
             executorService.submit(new Runnable() {
                 @Override
                 public void run() {
@@ -85,6 +88,7 @@ public class CrawlerHandler {
                     }
                 }
             });
+            workerService.update(workerData);
             return requestId;
         } catch (CrawlerException e1) {
             logger.error("{}", e1);

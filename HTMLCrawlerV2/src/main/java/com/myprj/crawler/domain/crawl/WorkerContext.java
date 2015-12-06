@@ -32,9 +32,7 @@ public class WorkerContext implements Serializable {
 
     public WorkerContext(WorkerData worker) {
         this.worker = worker;
-        for (WorkerItemData workerItem : worker.getWorkerItems()) {
-            workerItems.put(workerItem.getLevel(), workerItem);
-        }
+        loadWorkerItems();
         executorService = Executors.newFixedThreadPool(worker.getThreads());
     }
 
@@ -46,7 +44,16 @@ public class WorkerContext implements Serializable {
     }
     
     public WorkerItemData getRootWorkerItem() {
+        if(workerItems.isEmpty()) {
+            loadWorkerItems();
+        }
         return workerItems.get(Level.Level0);
+    }
+    
+    private void loadWorkerItems() {
+        for (WorkerItemData workerItem : worker.getWorkerItems()) {
+            workerItems.put(workerItem.getLevel(), workerItem);
+        }
     }
 
     public WorkerItemData nextWorkerItem(WorkerItemData workerItemData) {
