@@ -67,10 +67,14 @@ public abstract class AbstractCrawler implements CrawlerService {
         CrawlHistoryData crawlHistory = crawlHistoryService.getLatest(request.getWorkerId());
         if(crawlHistory == null) {
             crawlHistory = new CrawlHistoryData();
+            crawlHistory.setWorkerId(worker.getId());
+            crawlHistory.setStatus(CrawlStatus.CRAWLING);
+            crawlHistoryService.save(crawlHistory);
+        } else {
+            crawlHistory.setWorkerId(worker.getId());
+            crawlHistory.setStatus(CrawlStatus.CRAWLING);
+            crawlHistoryService.update(crawlHistory);
         }
-        crawlHistory.setWorkerId(worker.getId());
-        crawlHistory.setStatus(CrawlStatus.CRAWLING);
-        crawlHistoryService.save(crawlHistory);
 
         long starttime = Calendar.getInstance().getTimeInMillis();
         try {
