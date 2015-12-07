@@ -6,19 +6,13 @@ package com.myprj.crawler.domain;
 
 public class RequestCrawl {
     
+    private String workerKey;
+    
     private long workerId;
     
     private String type;
     
     private String requestId;
-
-    public long getWorkerId() {
-        return workerId;
-    }
-
-    public void setWorkerId(long workerId) {
-        this.workerId = workerId;
-    }
 
     public String getType() {
         return type;
@@ -34,5 +28,21 @@ public class RequestCrawl {
 
     public void setRequestId(String requestId) {
         this.requestId = requestId;
+    }
+
+    public String getWorkerKey() {
+        return workerKey;
+    }
+
+    public void setWorkerKey(String workerKey) {
+        this.workerKey = workerKey;
+    }
+
+    public long getWorkerId() {
+        return workerId;
+    }
+
+    public void setWorkerId(long workerId) {
+        this.workerId = workerId;
     }
 }

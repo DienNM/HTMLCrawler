@@ -62,6 +62,19 @@ public class WorkerServiceImpl implements WorkerService {
 
         return workerData;
     }
+    
+    @Override
+    public WorkerData getByKey(String key) {
+        WorkerModel workerModel = workerRepository.findByKey(key);
+        if (workerModel == null) {
+            logger.warn("Cannot find worker: {}", key);
+            return null;
+        }
+        WorkerData workerData = new WorkerData();
+        WorkerData.toData(workerModel, workerData);
+
+        return workerData;
+    }
 
     @Override
     public List<WorkerData> getAll() {

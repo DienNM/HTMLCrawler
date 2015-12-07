@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.myprj.crawler.domain.RequestCrawl;
+import com.myprj.crawler.domain.crawl.WorkerData;
+import com.myprj.crawler.service.WorkerService;
 import com.myprj.crawler.service.crawl.CrawlerHandler;
 import com.myprj.crawler.service.crawl.CrawlerService;
 import com.myprj.crawler.web.dto.JsonResponse;
@@ -26,15 +28,27 @@ public class CrawlerController extends AbstractController {
 
     @Autowired
     private CrawlerHandler crawlerHandler;
+    
+    @Autowired
+    private WorkerService workerService;
 
-    @RequestMapping(value = "/{workerId}")
+    @RequestMapping(value = "/{workerKey}")
     @ResponseBody
-    public JsonResponse crawl(@PathVariable(value = "workerId") long workerId,
+    public JsonResponse crawl(@PathVariable(value = "workerKey") String workerKey,
             @RequestParam(value = "type", defaultValue = "none") String type) {
 
         try {
+            
+            WorkerData workerData = workerService.getByKey(workerKey);
+            if(workerData == null){
+                JsonResponse response = new JsonResponse(true);
+                response.putMessage("Worker key " + workerKey + " not found");
+                return response;
+            }
+            
             RequestCrawl requestCrawl = new RequestCrawl();
-            requestCrawl.setWorkerId(workerId);
+            requestCrawl.setWorkerKey(workerKey);
+            requestCrawl.setWorkerId(workerData.getId());
             requestCrawl.getType();
             
             String requestId = crawlerHandler.handle(type, requestCrawl);

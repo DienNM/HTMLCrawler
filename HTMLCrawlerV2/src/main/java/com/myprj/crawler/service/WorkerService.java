@@ -16,6 +16,8 @@ public interface WorkerService {
     
     WorkerData get(long id);
     
+    WorkerData getByKey(String key);
+    
     List<WorkerData> getAll();
     
     PageResult<WorkerData> getAllWithPaging(Pageable pageable);
