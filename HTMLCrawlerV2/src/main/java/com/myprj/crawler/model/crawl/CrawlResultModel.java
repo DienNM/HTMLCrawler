@@ -33,15 +33,15 @@ public class CrawlResultModel implements Serializable {
     @Column(name = "request_id", length = 30)
     private String requestId;
 
-    @Column(name = "item_id")
-    private long itemId;
+    @Column(name = "item_key")
+    private String itemKey;
 
-    @Column(name = "category_id")
-    private long categoryId;
+    @Column(name = "category_key")
+    private String categoryKey;
 
-    @Column(name = "category_worker")
-    private String categoryWorker;
-    
+    @Column(name = "site")
+    private String site;
+
     @Column(name = "detail")
     @Lob
     private String detail;
@@ -70,22 +70,6 @@ public class CrawlResultModel implements Serializable {
 
     public void setId(long id) {
         this.id = id;
-    }
-
-    public long getCategoryId() {
-        return categoryId;
-    }
-
-    public void setCategoryId(long categoryId) {
-        this.categoryId = categoryId;
-    }
-
-    public long getItemId() {
-        return itemId;
-    }
-
-    public void setItemId(long itemId) {
-        this.itemId = itemId;
     }
 
     public String getDetail() {
@@ -128,12 +112,28 @@ public class CrawlResultModel implements Serializable {
         this.requestId = requestId;
     }
 
-    public String getCategoryWorker() {
-        return categoryWorker;
+    public String getItemKey() {
+        return itemKey;
     }
 
-    public void setCategoryWorker(String categoryWorker) {
-        this.categoryWorker = categoryWorker;
+    public void setItemKey(String itemKey) {
+        this.itemKey = itemKey;
+    }
+
+    public String getCategoryKey() {
+        return categoryKey;
+    }
+
+    public void setCategoryKey(String categoryKey) {
+        this.categoryKey = categoryKey;
+    }
+
+    public String getSite() {
+        return site;
+    }
+
+    public void setSite(String site) {
+        this.site = site;
     }
 
 }

@@ -20,17 +20,17 @@ public class CrawlResultDTO implements Serializable {
     @DataTransfer("id")
     private long id;
 
-    @DataTransfer("itemId")
-    private long itemId;
+    @DataTransfer("itemKey")
+    private String itemKey;
 
-    @DataTransfer("categoryWorker")
-    private String categoryWorker;
+    @DataTransfer("categoryKey")
+    private String categoryKey;
+
+    @DataTransfer("site")
+    private String site;
 
     @DataTransfer("requestId")
     private String requestId;
-
-    @DataTransfer("categoryId")
-    private long categoryId;
 
     @DataTransfer("url")
     private String url;
@@ -55,36 +55,12 @@ public class CrawlResultDTO implements Serializable {
         this.id = id;
     }
 
-    public long getItemId() {
-        return itemId;
-    }
-
-    public void setItemId(long itemId) {
-        this.itemId = itemId;
-    }
-
-    public String getCategoryWorker() {
-        return categoryWorker;
-    }
-
-    public void setCategoryWorker(String categoryWorker) {
-        this.categoryWorker = categoryWorker;
-    }
-
     public String getRequestId() {
         return requestId;
     }
 
     public void setRequestId(String requestId) {
         this.requestId = requestId;
-    }
-
-    public long getCategoryId() {
-        return categoryId;
-    }
-
-    public void setCategoryId(long categoryId) {
-        this.categoryId = categoryId;
     }
 
     public String getUrl() {
@@ -117,6 +93,30 @@ public class CrawlResultDTO implements Serializable {
 
     public void setCreatedAt(long createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public String getItemKey() {
+        return itemKey;
+    }
+
+    public void setItemKey(String itemKey) {
+        this.itemKey = itemKey;
+    }
+
+    public String getCategoryKey() {
+        return categoryKey;
+    }
+
+    public void setCategoryKey(String categoryKey) {
+        this.categoryKey = categoryKey;
+    }
+
+    public String getSite() {
+        return site;
+    }
+
+    public void setSite(String site) {
+        this.site = site;
     }
     
     

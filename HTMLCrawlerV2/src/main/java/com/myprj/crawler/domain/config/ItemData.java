@@ -45,6 +45,8 @@ public class ItemData extends AuditData {
     @EntityTransfer("is_built")
     private boolean built;
     
+    private CategoryData categoryData;
+    
     private ItemContent sampleContent;
 
     private List<AttributeData> attributes = new ArrayList<AttributeData>();
@@ -148,5 +150,13 @@ public class ItemData extends AuditData {
 
     public void setKey(String key) {
         this.key = key;
+    }
+
+    public CategoryData getCategoryData() {
+        return categoryData;
+    }
+
+    public void setCategoryData(CategoryData categoryData) {
+        this.categoryData = categoryData;
     }
 }

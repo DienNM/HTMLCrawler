@@ -180,8 +180,8 @@ public class DefaultWorker implements Worker {
 
         CrawlResultData result = new CrawlResultData();
         result.setUrl(url);
-        result.setItemId(item.getId());
-        result.setCategoryId(item.getCategoryId());
+        result.setItemKey(item.getKey());
+        result.setCategoryKey(item.getCategoryData().getKey());
         result.setRequestId(workerItem.getRequestId());
         result.getDetail().putAll(item.getSampleContent().getContent());
 

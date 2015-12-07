@@ -28,21 +28,21 @@ public class CrawlResultData implements Serializable {
     @EntityTransfer("id")
     private long id;
 
-    @DataTransfer("itemId")
-    @EntityTransfer("item_id")
-    private long itemId;
-
-    @DataTransfer("categoryWorker")
-    @EntityTransfer("category_worker")
-    private String categoryWorker;
+    @DataTransfer("itemKey")
+    @EntityTransfer("item_key")
+    private String itemKey;
+    
+    @DataTransfer("categoryKey")
+    @EntityTransfer("category_key")
+    private String categoryKey;
+    
+    @DataTransfer("site")
+    @EntityTransfer("site")
+    private String site;
 
     @DataTransfer("requestId")
     @EntityTransfer("request_id")
     private String requestId;
-
-    @DataTransfer("categoryId")
-    @EntityTransfer("category_id")
-    private long categoryId;
 
     @DataTransfer("url")
     @EntityTransfer("url")
@@ -105,22 +105,6 @@ public class CrawlResultData implements Serializable {
         this.id = id;
     }
 
-    public long getCategoryId() {
-        return categoryId;
-    }
-
-    public void setCategoryId(long categoryId) {
-        this.categoryId = categoryId;
-    }
-
-    public long getItemId() {
-        return itemId;
-    }
-
-    public void setItemId(long itemId) {
-        this.itemId = itemId;
-    }
-
     public Map<String, Object> getDetail() {
         return detail;
     }
@@ -161,12 +145,28 @@ public class CrawlResultData implements Serializable {
         this.requestId = requestId;
     }
 
-    public String getCategoryWorker() {
-        return categoryWorker;
+    public String getItemKey() {
+        return itemKey;
     }
 
-    public void setCategoryWorker(String categoryWorker) {
-        this.categoryWorker = categoryWorker;
+    public void setItemKey(String itemKey) {
+        this.itemKey = itemKey;
+    }
+
+    public String getCategoryKey() {
+        return categoryKey;
+    }
+
+    public void setCategoryKey(String categoryKey) {
+        this.categoryKey = categoryKey;
+    }
+
+    public String getSite() {
+        return site;
+    }
+
+    public void setSite(String site) {
+        this.site = site;
     }
 
 }

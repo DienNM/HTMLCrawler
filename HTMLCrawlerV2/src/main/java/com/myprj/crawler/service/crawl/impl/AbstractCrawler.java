@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.myprj.crawler.domain.RequestCrawl;
+import com.myprj.crawler.domain.config.CategoryData;
 import com.myprj.crawler.domain.config.ItemAttributeData;
 import com.myprj.crawler.domain.config.ItemData;
 import com.myprj.crawler.domain.crawl.CrawlHistoryData;
@@ -21,6 +22,7 @@ import com.myprj.crawler.domain.crawl.WorkerItemData;
 import com.myprj.crawler.enumeration.CrawlStatus;
 import com.myprj.crawler.enumeration.WorkerStatus;
 import com.myprj.crawler.exception.CrawlerException;
+import com.myprj.crawler.service.CategoryService;
 import com.myprj.crawler.service.CrawlHistoryService;
 import com.myprj.crawler.service.ItemAttributeService;
 import com.myprj.crawler.service.ItemService;
@@ -47,6 +49,9 @@ public abstract class AbstractCrawler implements CrawlerService {
 
     @Autowired
     private ItemService itemService;
+    
+    @Autowired
+    private CategoryService categoryService;
     
     @Autowired
     private WorkerService workerService;
@@ -80,6 +85,9 @@ public abstract class AbstractCrawler implements CrawlerService {
                     workerItem.setRootItemAttribute(root);
                     
                     ItemData itemData = itemService.getByKey(workerItem.getItemKey());
+                    CategoryData categoryData = categoryService.getById(itemData.getCategoryId());
+                    itemData.setCategoryData(categoryData);
+                    
                     workerItem.setItem(itemData);
                 }
                 WorkerItemValidator.validateCrawlPhase(workerItem);

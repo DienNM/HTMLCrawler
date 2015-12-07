@@ -38,7 +38,7 @@ public class CrawlDetailCompletedEventListener implements CrawlEventListener<Cra
             CrawlDetailCompletedEvent crawlDetailCompletedEvent = (CrawlDetailCompletedEvent) event;
             CrawlResultData crawlResult = crawlDetailCompletedEvent.getCrawlResult();
             if (crawlResult.getDetail().isEmpty()) {
-                logger.warn("Cannot crawl any information of " + crawlResult.getItemId());
+                logger.warn("Cannot crawl any information of " + crawlResult.getItemKey());
                 return;
             }
             crawlResultService.save(crawlResult);
