@@ -97,18 +97,21 @@ public class WorkerFacadeImpl implements WorkerFacade {
         workerItem.setItemKey(elements[0]);
         workerItem.setLevel(Level.valueOf(elements[1]));
         workerItem.setCrawlType(CrawlType.valueOf(elements[2]));
+        
+        if(workerItem.getCrawlType().equals(CrawlType.LIST)) {
+            PagingConfig pagingConfig = new PagingConfig();
+            pagingConfig.setStart(elements[3]);
+            pagingConfig.setEnd(elements[4]);
+            workerItem.setPagingConfig(pagingConfig);
+            
+            if (!StringUtils.isEmpty(elements[5])) {
+                AttributeSelector selector = new AttributeSelector(elements[5]);
+                workerItem.setLevel0Selector(selector);
+            }
 
-        PagingConfig pagingConfig = new PagingConfig();
-        pagingConfig.setStart(elements[3]);
-        pagingConfig.setEnd(elements[4]);
-        workerItem.setPagingConfig(pagingConfig);
-
-        if (!StringUtils.isEmpty(elements[5])) {
-            AttributeSelector selector = new AttributeSelector(elements[5]);
-            workerItem.setLevel0Selector(selector);
+            workerItem.setUrl(elements[6]);
         }
-
-        workerItem.setUrl(elements[6]);
+        
         return workerItem;
     }
 
