@@ -22,6 +22,9 @@ public class WorkerDTO extends AuditTDO {
     @DataTransfer("id")
     private long id;
 
+    @DataTransfer("key")
+    private String key;
+
     @DataTransfer("name")
     private String name;
 
@@ -140,5 +143,13 @@ public class WorkerDTO extends AuditTDO {
 
     public void setWorkerItems(List<WorkerItemDTO> workerItems) {
         this.workerItems = workerItems;
+    }
+
+    public String getKey() {
+        return key;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
     }
 }

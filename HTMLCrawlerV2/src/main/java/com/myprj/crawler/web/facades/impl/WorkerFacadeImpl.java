@@ -45,7 +45,7 @@ public class WorkerFacadeImpl implements WorkerFacade {
                 String lineOfWorker = lines.get(0);
                 try {
                     WorkerData workerData = parseWorker(lineOfWorker);
-                    workerData = workerService.save(workerData);
+                    workerData = workerService.saveOrUpdate(workerData);
                     List<WorkerItemData> workerItems = new ArrayList<WorkerItemData>();
                     for (int i = 1; i < lines.size(); i++) {
                         WorkerItemData workerItem = parseWorkerItem(lines.get(i));
@@ -82,12 +82,15 @@ public class WorkerFacadeImpl implements WorkerFacade {
     private WorkerData parseWorker(String line) {
         String[] elements = line.split(Pattern.quote("|"));
         WorkerData workerData = new WorkerData();
-        workerData.setSite(elements[0]);
-        workerData.setThreads(Integer.valueOf(elements[1]));
-        workerData.setAttemptTimes(Integer.valueOf(elements[2]));
-        workerData.setDelayTime(Integer.valueOf(elements[3]));
-        workerData.setName(elements[4]);
-        workerData.setDescription(elements[5]);
+        workerData.setKey(elements[0]);
+        workerData.setSite(elements[1]);
+        workerData.setThreads(Integer.valueOf(elements[2]));
+        workerData.setAttemptTimes(Integer.valueOf(elements[3]));
+        workerData.setDelayTime(Integer.valueOf(elements[4]));
+        workerData.setName(elements[5]);
+        if(elements.length > 6) {
+            workerData.setDescription(elements[6]);
+        }
         return workerData;
     }
 

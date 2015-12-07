@@ -23,6 +23,11 @@ public class WorkerData extends AuditData {
     @DataTransfer(value = "id")
     @EntityTransfer("id")
     private long id;
+    
+
+    @DataTransfer(value = "key")
+    @EntityTransfer("worker_key")
+    private String key;
 
     @DataTransfer(value = "name")
     @EntityTransfer("name")
@@ -185,6 +190,14 @@ public class WorkerData extends AuditData {
 
     public void setBuilt(boolean built) {
         this.built = built;
+    }
+
+    public String getKey() {
+        return key;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
     }
 
 }

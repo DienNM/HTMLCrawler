@@ -32,6 +32,9 @@ public class WorkerModel extends AuditModel {
     @Column(name = "id")
     private long id;
     
+    @Column(name = "worker_key", length = 50, nullable=false, unique = true)
+    private String key;
+    
     @Column(name = "name", length = 50)
     private String name;
     
@@ -138,5 +141,13 @@ public class WorkerModel extends AuditModel {
 
     public void setBuilt(boolean built) {
         this.built = built;
+    }
+
+    public String getKey() {
+        return key;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
     }
 }

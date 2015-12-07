@@ -24,6 +24,8 @@ public interface WorkerService {
     
     WorkerData save(WorkerData worker);
     
+    WorkerData saveOrUpdate(WorkerData worker);
+    
     WorkerData update(WorkerData worker);
     
     List<WorkerItemData> buildWorkerItems(WorkerData worker, List<WorkerItemData> workerItems);

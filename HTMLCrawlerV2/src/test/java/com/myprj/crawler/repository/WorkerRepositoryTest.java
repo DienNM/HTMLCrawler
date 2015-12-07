@@ -28,10 +28,12 @@ public class WorkerRepositoryTest extends AbstractTest {
     public void testFindByStatus() {
         WorkerModel worker1 = new WorkerModel();
         worker1.setName("Worker 1");
+        worker1.setKey("key 1");
         worker1.setStatus(WorkerStatus.Completed);
 
         WorkerModel worker2 = new WorkerModel();
         worker2.setName("Worker 2");
+        worker2.setKey("key 2");
         worker2.setStatus(WorkerStatus.Completed);
         
         workerRepository.save(worker1);

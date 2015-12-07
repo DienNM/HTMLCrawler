@@ -47,7 +47,7 @@
         <property name="targetClassName" value="com.myprj.crawler.web.dto.WorkerDTO" />
         <property name="targetMappings">
             <map>
-                <entry key="SIMPLE" value="id,name,site" />
+                <entry key="SIMPLE" value="id,key,name,site" />
                 <entry key="DEFAULT" value="SIMPLE,description,threads,attemptTimes,delayTime,status,createdAt,createdBy" />
                 <entry key="FULL" value="DEFAULT,updatedAt,updatedBy,LIST;workerItems(DEFAULT)" />
             </map>

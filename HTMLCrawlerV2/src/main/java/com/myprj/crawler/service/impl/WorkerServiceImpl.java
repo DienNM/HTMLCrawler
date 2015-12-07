@@ -103,6 +103,30 @@ public class WorkerServiceImpl implements WorkerService {
         WorkerData.toData(workerModel, workerData);
         return workerData;
     }
+    
+    @Override
+    @Transactional
+    public WorkerData saveOrUpdate(WorkerData worker) {
+        WorkerModel workerModel = workerRepository.findByKey(worker.getKey());
+        if (workerModel == null) {
+            workerModel = new WorkerModel();
+            WorkerData.toModel(worker, workerModel);
+            workerRepository.save(workerModel);
+        } else {
+            workerModel.setName(worker.getName());
+            workerModel.setAttemptTimes(worker.getAttemptTimes());
+            workerModel.setDelayTime(worker.getDelayTime());
+            workerModel.setDescription(worker.getDescription());
+            workerModel.setRequestId(worker.getRequestId());
+            workerModel.setStatus(worker.getStatus());
+            workerModel.setThreads(worker.getThreads());
+            workerRepository.update(workerModel);
+        }
+        WorkerData persisted = new WorkerData();
+        WorkerData.toData(workerModel, persisted);
+        
+        return persisted;
+    }
 
     @Override
     @Transactional
