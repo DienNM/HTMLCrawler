@@ -1,10 +1,10 @@
 #key|name|active|category_key|description
 
 #mobiles
-prod-mobile|Moblile Product|mobiles|Information of Mobile
-prod-tablet|Tablet Product|tablets|Information of Tablet
-prod-laptop|Laptop Product|laptops|Information of Laptop
-prod-desktop|Desktop Product|desktops|Information of Desktop
+prod-mobile|Moblile Product|true|mobiles|Information of Mobile
+prod-tablet|Tablet Product|true|tablets|Information of Tablet
+prod-laptop|Laptop Product|true|laptops|Information of Laptop
+prod-desktop|Desktop Product|true|desktops|Information of Desktop
 
 <<START>>
 { 

@@ -36,7 +36,7 @@ public class ItemDTO extends AuditTDO {
 
     @DataTransfer("built")
     private boolean built;
-    
+
     @DataTransfer("attributes")
     private List<AttributeDTO> attributes = new ArrayList<AttributeDTO>();
 

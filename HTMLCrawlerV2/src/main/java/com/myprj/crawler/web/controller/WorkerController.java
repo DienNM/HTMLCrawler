@@ -1,7 +1,6 @@
 package com.myprj.crawler.web.controller;
 
 import static com.myprj.crawler.enumeration.CrawlType.DETAIL;
-import static com.myprj.crawler.web.enumeration.DTOLevel.SIMPLE;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -34,8 +33,8 @@ import com.myprj.crawler.service.ItemService;
 import com.myprj.crawler.service.WorkerService;
 import com.myprj.crawler.web.dto.JsonResponse;
 import com.myprj.crawler.web.dto.WorkerDTO;
-import com.myprj.crawler.web.dto.WorkerItemDTO;
 import com.myprj.crawler.web.enumeration.DTOLevel;
+import com.myprj.crawler.web.facades.WorkerFacade;
 
 /**
  * @author DienNM (DEE)
@@ -47,6 +46,9 @@ public class WorkerController extends AbstractController {
     
     private Logger logger = LoggerFactory.getLogger(WorkerController.class);
 
+    @Autowired
+    private WorkerFacade workerFacade;
+    
     @Autowired
     private WorkerService workerService;
     
@@ -61,16 +63,6 @@ public class WorkerController extends AbstractController {
         default:
             break;
         }
-    }
-
-    @RequestMapping(value = "/all", method = RequestMethod.GET)
-    @ResponseBody
-    public JsonResponse getAll() {
-        List<WorkerData> workerDatas = workerService.getAll();
-
-        List<Map<String, Object>> results = getListMapResult(workerDatas, WorkerDTO.class, SIMPLE);
-        JsonResponse response = new JsonResponse(results, !results.isEmpty());
-        return response;
     }
 
     @RequestMapping(method = RequestMethod.GET)
@@ -121,15 +113,13 @@ public class WorkerController extends AbstractController {
             response.putMessage("File are missing");
             return response;
         }
-        
-        List<WorkerData> workerDatas = loadWorkers(file);
-        if (workerDatas.isEmpty()) {
-            JsonResponse response = new JsonResponse(false);
-            response.putMessage("No Worker ared loaded");
-            return response;
-        }
-        
         try {
+            List<WorkerData> workerDatas = workerFacade.loadWorkersFromSource(file.getInputStream());
+            if (workerDatas.isEmpty()) {
+                JsonResponse response = new JsonResponse(false);
+                response.putMessage("No Workers are loaded");
+                return response;
+            }
             for(WorkerData workerData : workerDatas) {
                 List<WorkerItemData> workerItems = workerData.getWorkerItems();
                 WorkerData worker = workerService.save(workerData);
@@ -197,67 +187,7 @@ public class WorkerController extends AbstractController {
         return response;
     }
     
-    protected List<WorkerData>  loadWorkers(MultipartFile file) {
-        List<WorkerData> workers = new ArrayList<WorkerData>();
-        BufferedReader br = null;
-        try {
-            br = new BufferedReader(new InputStreamReader(file.getInputStream()));
-            String line = null;
-            
-            List<String> lines = new ArrayList<String>();
-            boolean loadingWorkerItem = false;
-            
-            while ((line = br.readLine()) != null) {
-                if(line == null || line.trim().isEmpty()) {
-                    continue;
-                }
-                if(line.startsWith("#")) {
-                    continue;
-                }
-                if(line.startsWith(">") || line.startsWith("<END")) {
-                    if(!lines.isEmpty()) {
-                        WorkerData workerData = workers.get(workers.size() - 1);
-                        List<WorkerItemDTO> workerItemDTOs = convertStrings2Objects(lines, WorkerItemDTO.class);
-                        List<WorkerItemData> workerItems = new ArrayList<WorkerItemData>();
-                        WorkerItemDTO.toDatas(workerItemDTOs, workerItems);
-                        workerData.setWorkerItems(workerItems);
-                        
-                        loadingWorkerItem = false;
-                    }
-                }
-                
-                if(loadingWorkerItem) {
-                    lines.add(line);
-                }
-                
-                if(line.startsWith(">")) {
-                    line = line.substring(1);
-                    WorkerData workerData = parseWorker(line);
-                    workers.add(workerData); 
-                    loadingWorkerItem = true;
-                    lines = new ArrayList<String>();
-                }
-            }
-        } catch (Exception ex) {
-            return new ArrayList<WorkerData>();
-        } finally {
-            IOUtils.closeQuietly(br);
-        }
-        return workers;
-    }
     
-    private WorkerData parseWorker(String line) {
-        String[] elements = line.split(Pattern.quote("|"));
-        WorkerData workerData = new WorkerData();
-        workerData.setSite(elements[1]);
-        workerData.setThreads(Integer.valueOf(elements[2]));
-        workerData.setAttemptTimes(Integer.valueOf(elements[3]));
-        workerData.setDelayTime(Integer.valueOf(elements[4]));
-        workerData.setName(elements[5]);
-        workerData.setCategory(elements[6]);
-        workerData.setDescription(elements[7]);
-        return workerData;
-    }
     
     protected List<Map<String, String>>  loadItemAttributes(MultipartFile file) {
         List<Map<String, String>> itemAttributes = new ArrayList<Map<String, String>>();

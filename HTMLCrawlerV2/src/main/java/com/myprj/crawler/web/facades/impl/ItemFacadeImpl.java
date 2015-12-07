@@ -1,5 +1,7 @@
 package com.myprj.crawler.web.facades.impl;
 
+import static org.apache.commons.lang3.StringUtils.join;
+
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -38,31 +40,57 @@ public class ItemFacadeImpl implements ItemFacade {
     private ItemService itemService;
 
     @Override
-    public List<ItemData> loadItemsFromSource(InputStream inputStream) {
-        List<ItemData> items = new ArrayList<ItemData>();
+    public List<String> loadItemsFromSource(InputStream inputStream, boolean forceBuild) {
+        List<String> errorStructures = new ArrayList<String>();
         BufferedReader br = null;
         try {
             br = new BufferedReader(new InputStreamReader(inputStream));
             String line = null;
             Map<String, CategoryData> categoryRepo = categoryService.getAllMap();
+            
+            List<String> lineOfItems = new ArrayList<String>();
+            List<String> lineOfStructures = new ArrayList<String>();
+            
+            boolean flagItem = true;
+            boolean flagStructure = false;
+            
             while ((line = br.readLine()) != null) {
                 if (line == null || line.trim().isEmpty() || line.startsWith("#")) {
                     continue;
                 }
-                ItemData item = parseItem(line, categoryRepo);
-                if (item == null) {
-                    return new ArrayList<ItemData>();
+                if (line.startsWith("<<START>>")) {
+                    flagStructure = true;
+                    flagItem = false;
+                    continue;
+                } 
+                if (line.startsWith("<<END>>")) {
+                    flagStructure = false;
+                    flagItem = true;
+                    
+                    List<ItemData> itemDatas = saveItems(lineOfItems, categoryRepo);
+                    if(itemDatas.isEmpty()) {
+                        errorStructures.add("Cannot import Items: " + join(line, ", "));
+                        break;
+                    }
+                    List<String> errors = buildItemStructures(itemDatas, join(lineOfStructures, " "), forceBuild);
+                    errorStructures.addAll(errors);
+                    continue;
                 }
-                items.add(item);
+                if(flagStructure) {
+                    lineOfStructures.add(line);
+                }
+                if(flagItem) {
+                    lineOfItems.add(line);
+                }
             }
         } catch (Exception ex) {
             logger.error("Error loading Item. Error: {}", ex);
-            return new ArrayList<ItemData>();
+            errorStructures.add(ex.getMessage());
         } finally {
             IOUtils.closeQuietly(br);
             IOUtils.closeQuietly(inputStream);
         }
-        return items;
+        return errorStructures;
     }
 
     @Override
@@ -131,6 +159,34 @@ public class ItemFacadeImpl implements ItemFacade {
             IOUtils.closeQuietly(br);
         }
         return itemStructures;
+    }
+    
+
+    private List<ItemData> saveItems(List<String> itemLines, Map<String, CategoryData> categoryRepo) {
+        List<ItemData> items = new ArrayList<ItemData>();
+        for(String line : itemLines) {
+            ItemData item = parseItem(line, categoryRepo);
+            if (item != null) {
+                items.add(item);
+            }
+        }
+        if(!items.isEmpty()) {
+            itemService.saveOrUpdate(items);
+        }
+        return items;
+    }
+    
+    private List<String> buildItemStructures(List<ItemData> items, String json, boolean forceBuild) {
+        List<String> itemErrors = new ArrayList<String>();
+        for(ItemData item : items) {
+            try {
+                itemService.buildItem(item.getKey(), json, forceBuild);
+            } catch (Exception e) {
+                itemErrors.add(item.getKey() + " - Error: " + e.getMessage());
+                logger.error("Cannot build Item Struture of: " + item.getKey() + " - Error: " + e.getMessage());
+            }
+        }
+        return itemErrors;
     }
     
     private ItemData parseItem(String line, Map<String, CategoryData> categoryRepo) {

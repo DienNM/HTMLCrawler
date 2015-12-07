@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -96,6 +95,28 @@ public class ItemController extends AbstractController {
         return response;
     }
 
+    @RequestMapping(value = "/by-key/{key}", method = RequestMethod.GET)
+    @ResponseBody
+    public JsonResponse getItemByKey(@PathVariable(value = "key") String key,
+            @RequestParam(value = "level", defaultValue = "SIMPLE") DTOLevel level) {
+        ItemData itemData = itemService.getByKey(key);
+        if (itemData == null) {
+            JsonResponse response = new JsonResponse(false);
+            response.putMessage("Item Key " + key + " not found");
+            return response;
+        }
+        populateObjectByLevel(itemData, level);
+
+        ItemDTO itemDTO = new ItemDTO();
+        ItemDTO.toItemDTO(itemData, itemDTO);
+
+        Map<String, Object> datas = getMapResult(itemDTO, level);
+        JsonResponse response = new JsonResponse(!datas.isEmpty());
+        response.putData(datas);
+
+        return response;
+    }
+
     @RequestMapping(value = "/{ids}/delete", method = RequestMethod.POST)
     @ResponseBody
     public JsonResponse deleteItems(@PathVariable(value = "ids") List<Long> ids) {
@@ -143,84 +164,25 @@ public class ItemController extends AbstractController {
         return new JsonResponse(item != null);
     }
 
-    @RequestMapping(value = "/{ids}/delete", method = RequestMethod.POST)
-    @ResponseBody
-    public JsonResponse delete(@PathVariable(value = "ids") List<Long> ids) {
-        try {
-            itemService.delete(ids);
-            return new JsonResponse(true);
-        } catch (Exception e) {
-            JsonResponse response = new JsonResponse(false);
-            response.putMessage(e.getMessage());
-            return response;
-        }
-    }
-
     @RequestMapping(value = "/import", method = RequestMethod.POST)
     @ResponseBody
-    public JsonResponse importFromFile(@RequestParam(value = "file") MultipartFile file) {
-
+    public JsonResponse importFromFile(@RequestParam(value = "file") MultipartFile file,
+            @RequestParam(value = "forceBuild", defaultValue = "false") boolean forceBuild) {
         if (file == null) {
             JsonResponse response = new JsonResponse(false);
             response.putMessage("File are missing");
             return response;
         }
 
-        List<ItemData> itemDatas = new ArrayList<ItemData>();
-        ;
+        List<String> errors = new ArrayList<String>();
         try {
-            itemDatas = itemFacade.loadItemsFromSource(file.getInputStream());
-            if (itemDatas.isEmpty()) {
-                JsonResponse response = new JsonResponse(false);
-                response.putMessage("No Items are loaded");
-                return response;
-            }
-            itemDatas = itemService.saveOrUpdate(itemDatas);
+            errors = itemFacade.loadItemsFromSource(file.getInputStream(), forceBuild);
         } catch (Exception e) {
-            JsonResponse response = new JsonResponse(false);
-            response.putMessage(e.getMessage());
-            return response;
+            errors.add(e.getMessage());
         }
-
-        JsonResponse response = new JsonResponse(true);
-        response.putMessage("Loaded " + itemDatas.size() + " items");
+        JsonResponse response = new JsonResponse(errors.isEmpty());
+        response.put("error", errors);
         return response;
-    }
-
-    @RequestMapping(value = "/strutures/build/{key}", method = RequestMethod.POST)
-    @ResponseBody
-    public JsonResponse buildItemAttributes(@RequestParam(value = "file", required = true) MultipartFile file,
-            @PathVariable(value = "key") String key,
-            @RequestParam(value = "forceBuild", defaultValue = "false") boolean forceBuild) {
-
-        if (file == null) {
-            JsonResponse response = new JsonResponse(false);
-            response.putMessage("Attributes are missing");
-            return response;
-        }
-
-        String json = readLinesFile2String(file);
-        if (StringUtils.isEmpty(json)) {
-            JsonResponse response = new JsonResponse(false);
-            response.putMessage("Attribute File is empty");
-            return response;
-        }
-        try {
-
-            ItemData itemData = itemService.buildItem(key, json, forceBuild);
-            ItemDTO itemDTO = new ItemDTO();
-            ItemDTO.toItemDTO(itemData, itemDTO);
-
-            Map<String, Object> datas = getMapResult(itemDTO, DTOLevel.FULL);
-
-            JsonResponse response = new JsonResponse(true);
-            response.putData(datas);
-            return response;
-        } catch (Exception e) {
-            JsonResponse response = new JsonResponse(false);
-            response.putMessage(e.getMessage());
-            return response;
-        }
     }
 
     @RequestMapping(value = "/structures/build/multi", method = RequestMethod.POST)

@@ -3,9 +3,6 @@ package com.myprj.crawler.util;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jackson.map.type.TypeFactory;
-
 import com.google.gson.Gson;
 
 /**
@@ -22,13 +19,15 @@ public class Serialization {
         return new Gson().fromJson(json, klass);
     }
 
-    public static <T> List<T> desetialize2List(String json, Class<T> clazz) {
-        ObjectMapper mapper = new ObjectMapper();
+    public static <T> List<T> deserialize(List<String> jsons, Class<T> clazz) {
+        List<T> targets = new ArrayList<T>();
         try {
-            return mapper.readValue(json, TypeFactory.defaultInstance().constructCollectionType(List.class, clazz));
+            for (String json : jsons) {
+                targets.add(Serialization.deserialize(json, clazz));
+            }
+            return targets;
         } catch (Exception e) {
             return new ArrayList<T>();
         }
     }
-
 }

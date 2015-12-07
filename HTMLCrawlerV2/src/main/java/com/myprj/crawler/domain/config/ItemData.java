@@ -44,7 +44,7 @@ public class ItemData extends AuditData {
     @DataTransfer("built")
     @EntityTransfer("is_built")
     private boolean built;
-
+    
     private ItemContent sampleContent;
 
     private List<AttributeData> attributes = new ArrayList<AttributeData>();

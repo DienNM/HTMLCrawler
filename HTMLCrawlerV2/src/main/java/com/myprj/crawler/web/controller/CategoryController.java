@@ -85,6 +85,25 @@ public class CategoryController extends AbstractController {
 
         return response;
     }
+    
+    @RequestMapping(value = "/by-key/{categoryKey}", method = RequestMethod.GET)
+    @ResponseBody
+    public JsonResponse getByKey(@PathVariable(value = "categoryKey") String categoryKey,
+            @RequestParam(value = "level", defaultValue = "DEFAULT") DTOLevel target) {
+
+        CategoryData category = categoryService.getByKey(categoryKey);
+        if (category == null) {
+            JsonResponse jsonResponse = new JsonResponse(false);
+            jsonResponse.putMessage("Category Key " + categoryKey + " not found");
+            return jsonResponse;
+        }
+
+        Map<String, Object> datas = getMapResult(category, CategoryDTO.class, target);
+        JsonResponse response = new JsonResponse(!datas.isEmpty());
+        response.putData(datas);
+
+        return response;
+    }
 
     @RequestMapping(value = "/import", method = RequestMethod.POST)
     @ResponseBody

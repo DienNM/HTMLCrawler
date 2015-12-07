@@ -1,0 +1,37 @@
+#category,itemId
+
+>1,2,3|1
+{
+    "name" : "I@div.item-box h1.item-name",
+    "price" : "I@span#span-price",
+    "pastPrice": "I@#p-listpirce > span:nth-child(2)",
+    "descriptionDetails" : [{
+        "key": "I@td:nth-child(1)",
+        "value": "I@td.last"
+    },"I@#chi-tiet > tbody > tr"]
+}
+
+
+>prod-mobile|prod-tablet|prod-laptop|prod-desktop
+{ 
+    "name":"TEXT",
+    "brand": "TEXT",
+    "price":"TEXT",
+    "pastPrice":"TEXT",
+    "vatInfo" : "TEXT",
+    "discount": "TEXT",
+    "promotions" : [TEXT],
+    "description": "HTML",
+    "attributes":[{ 
+        "key" : "TEXT",
+        "value" : "TEXT"
+    }],
+    "comments": [{
+	"title": "TEXT",
+   	"content": "TEXT",
+	"user": "TEXT"
+    }]
+}
+
+
+<END
