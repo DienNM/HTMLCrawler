@@ -120,12 +120,18 @@ public class CategoryController extends AbstractController {
     @RequestMapping(method = RequestMethod.POST)
     @ResponseBody
     public JsonResponse addCategory(@RequestParam(value = "name") String name,
+            @RequestParam(value = "key") String key,
             @RequestParam(value = "description", required = false) String description,
             @RequestParam(value = "parentKey", defaultValue = "") String parentKey) {
 
         List<RequestError> errors = new ArrayList<RequestError>();
         if (StringUtils.isEmpty(name)) {
             errors.add(new RequestError("name", "Category Name is required"));
+        }
+        
+        CategoryData categoryData = categoryService.getByKey(key);
+        if (categoryData != null) {
+            errors.add(new RequestError("key", "Key " + parentKey + " already exists"));
         }
 
         if (!StringUtils.isEmpty(parentKey)) {
@@ -141,7 +147,7 @@ public class CategoryController extends AbstractController {
             return jsonResponse;
         }
 
-        CategoryData categoryData = new CategoryData();
+        categoryData = new CategoryData();
         categoryData.setName(name);
         categoryData.setDescription(description);
         categoryData.setParentKey(parentKey);

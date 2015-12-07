@@ -96,11 +96,11 @@ public class ItemController extends AbstractController {
         return response;
     }
 
-    @RequestMapping(value = "/delete/{id}", method = RequestMethod.POST)
+    @RequestMapping(value = "/{ids}/delete", method = RequestMethod.POST)
     @ResponseBody
-    public JsonResponse deleteItem(@PathVariable(value = "id") long id) {
+    public JsonResponse deleteItems(@PathVariable(value = "ids") List<Long> ids) {
         try {
-            itemService.delete(id);
+            itemService.delete(ids);
             return new JsonResponse(true);
         } catch (Exception e) {
             JsonResponse response = new JsonResponse(false);
@@ -112,13 +112,17 @@ public class ItemController extends AbstractController {
     @RequestMapping(method = RequestMethod.POST)
     @ResponseBody
     public JsonResponse addItem(@RequestParam(value = "name", required = true) String name,
+            @RequestParam(value = "key", required = true) String key,
             @RequestParam(value = "categoryId", required = true) long categoryId,
             @RequestParam(value = "description", required = false) String description) {
 
         List<RequestError> errors = new ArrayList<RequestError>();
-        if (StringUtils.isEmpty(name)) {
-            errors.add(new RequestError("name", "Item Name is required"));
+
+        ItemData item = itemService.getByKey(key);
+        if (item != null) {
+            errors.add(new RequestError("key", "Key " + categoryId + " already exists"));
         }
+
         CategoryData categoryData = categoryService.getById(categoryId);
         if (categoryData == null) {
             errors.add(new RequestError("categoryId", "Category Id " + categoryId + " not found"));
@@ -130,15 +134,14 @@ public class ItemController extends AbstractController {
             return response;
         }
 
-        ItemData item = new ItemData();
+        item = new ItemData();
         item.setName(name);
         item.setCategoryId(categoryId);
         item.setDescription(description);
 
-        ItemData itemData = itemService.save(item);
-        return new JsonResponse(itemData != null);
+        item = itemService.save(item);
+        return new JsonResponse(item != null);
     }
-    
 
     @RequestMapping(value = "/{ids}/delete", method = RequestMethod.POST)
     @ResponseBody
@@ -183,8 +186,8 @@ public class ItemController extends AbstractController {
         response.putMessage("Loaded " + itemDatas.size() + " items");
         return response;
     }
-    
-    @RequestMapping(value = "/strutures/{key}/build", method = RequestMethod.POST)
+
+    @RequestMapping(value = "/strutures/build/{key}", method = RequestMethod.POST)
     @ResponseBody
     public JsonResponse buildItemAttributes(@RequestParam(value = "file", required = true) MultipartFile file,
             @PathVariable(value = "key") String key,
