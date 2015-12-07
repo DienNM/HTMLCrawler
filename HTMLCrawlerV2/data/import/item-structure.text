@@ -1,0 +1,24 @@
+#
+
+>prod-mobile|prod-tablet|prod-laptop|prod-desktop
+{ 
+    "name":"TEXT",
+    "brand": "TEXT",
+    "price":"TEXT",
+    "pastPrice":"TEXT",
+    "vatInfo" : "TEXT",
+    "discount": "TEXT",
+    "promotions" : [TEXT],
+    "description": "HTML",
+    "attributes":[{ 
+        "key" : "TEXT",
+        "value" : "TEXT"
+    }],
+    "comments": [{
+	"title": "TEXT",
+   	"content": "TEXT",
+	"user": "TEXT"
+    }]
+}
+
+<END

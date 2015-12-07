@@ -1,0 +1,1 @@
+mvn install:install-file -DgroupId=com.myprj -DartifactId=htmlcrawler -Dversion=1.0 -Dpackaging=jar -Dfile=htmlcrawler.jar -DgeneratePom=true

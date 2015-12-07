@@ -6,7 +6,10 @@ mvn jetty:run
 Test:
 
 - Categories:
-    /categories/all
-    /categories?currentPage=0&pageSize=10&level=DEFAULT
-    /categories/12?level=FULL
-    /categories?name=Category1&description=parentCategoryId
+    [GET]	/categories/all
+    [GET] 	/categories?currentPage=0&pageSize=10&level=DEFAULT
+    [GET] 	/categories/12?level=FULL
+    [POST] 	/categories?name=Category1&description=parentCategoryId
+    [POST] 	/categories/import (@file)
+			
+		
