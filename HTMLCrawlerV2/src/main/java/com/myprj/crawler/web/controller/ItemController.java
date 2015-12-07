@@ -138,42 +138,7 @@ public class ItemController extends AbstractController {
         ItemData itemData = itemService.save(item);
         return new JsonResponse(itemData != null);
     }
-
-    @RequestMapping(value = "/{key}/build", method = RequestMethod.POST)
-    @ResponseBody
-    public JsonResponse buildItemAttributes(@RequestParam(value = "file", required = true) MultipartFile file,
-            @PathVariable(value = "key") String key,
-            @RequestParam(value = "forceBuild", defaultValue = "false") boolean forceBuild) {
-
-        if (file == null) {
-            JsonResponse response = new JsonResponse(false);
-            response.putMessage("Attributes are missing");
-            return response;
-        }
-
-        String json = readLinesFile2String(file);
-        if (StringUtils.isEmpty(json)) {
-            JsonResponse response = new JsonResponse(false);
-            response.putMessage("Attribute File is empty");
-            return response;
-        }
-        try {
-
-            ItemData itemData = itemService.buildItem(key, json, forceBuild);
-            ItemDTO itemDTO = new ItemDTO();
-            ItemDTO.toItemDTO(itemData, itemDTO);
-
-            Map<String, Object> datas = getMapResult(itemDTO, DTOLevel.FULL);
-
-            JsonResponse response = new JsonResponse(true);
-            response.putData(datas);
-            return response;
-        } catch (Exception e) {
-            JsonResponse response = new JsonResponse(false);
-            response.putMessage(e.getMessage());
-            return response;
-        }
-    }
+    
 
     @RequestMapping(value = "/{ids}/delete", method = RequestMethod.POST)
     @ResponseBody
@@ -218,8 +183,44 @@ public class ItemController extends AbstractController {
         response.putMessage("Loaded " + itemDatas.size() + " items");
         return response;
     }
+    
+    @RequestMapping(value = "/{key}/struture/build", method = RequestMethod.POST)
+    @ResponseBody
+    public JsonResponse buildItemAttributes(@RequestParam(value = "file", required = true) MultipartFile file,
+            @PathVariable(value = "key") String key,
+            @RequestParam(value = "forceBuild", defaultValue = "false") boolean forceBuild) {
 
-    @RequestMapping(value = "/build", method = RequestMethod.POST)
+        if (file == null) {
+            JsonResponse response = new JsonResponse(false);
+            response.putMessage("Attributes are missing");
+            return response;
+        }
+
+        String json = readLinesFile2String(file);
+        if (StringUtils.isEmpty(json)) {
+            JsonResponse response = new JsonResponse(false);
+            response.putMessage("Attribute File is empty");
+            return response;
+        }
+        try {
+
+            ItemData itemData = itemService.buildItem(key, json, forceBuild);
+            ItemDTO itemDTO = new ItemDTO();
+            ItemDTO.toItemDTO(itemData, itemDTO);
+
+            Map<String, Object> datas = getMapResult(itemDTO, DTOLevel.FULL);
+
+            JsonResponse response = new JsonResponse(true);
+            response.putData(datas);
+            return response;
+        } catch (Exception e) {
+            JsonResponse response = new JsonResponse(false);
+            response.putMessage(e.getMessage());
+            return response;
+        }
+    }
+
+    @RequestMapping(value = "/structure/build", method = RequestMethod.POST)
     @ResponseBody
     public JsonResponse buildItemStructute(@RequestParam(value = "file") MultipartFile file,
             @RequestParam(value = "forceBuild", defaultValue = "false") boolean forceBuild) {
