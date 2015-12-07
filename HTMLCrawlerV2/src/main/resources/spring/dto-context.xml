@@ -80,8 +80,8 @@
         <property name="targetClassName" value="com.myprj.crawler.web.dto.CrawlResultDTO" />
         <property name="targetMappings">
             <map>
-                <entry key="SIMPLE" value="id,itemId,categoryWorker,url,detail" />
-                <entry key="DEFAULT" value="SIMPLE,categoryId,,requestId,status,createdAt" />
+                <entry key="SIMPLE" value="id,itemKey,categoryKey,url,detail" />
+                <entry key="DEFAULT" value="SIMPLE,requestId,status,createdAt" />
                 <entry key="FULL" value="DEFAULT" />
             </map>
         </property>
