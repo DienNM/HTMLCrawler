@@ -62,11 +62,15 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public List<ItemData> getAll() {
-        List<ItemModel> itemModels = itemRepository.findAll();
-        List<ItemData> itemDatas = new ArrayList<ItemData>();
-        ItemData.toDatas(itemModels, itemDatas);
-        return itemDatas;
+    public ItemData getByKey(String key) {
+        ItemModel itemModel = itemRepository.findByKey(key);
+        if (itemModel == null) {
+            logger.warn("Cannot find Item: {}", key);
+            return null;
+        }
+        ItemData itemData = new ItemData();
+        ItemData.toData(itemModel, itemData);
+        return itemData;
     }
 
     @Override
@@ -153,13 +157,11 @@ public class ItemServiceImpl implements ItemService {
         itemAttributeRepository.deleteByItemId(itemId);
         itemRepository.deleteById(itemId);
     }
-    
-
 
     @Override
     @Transactional
     public void delete(List<Long> ids) {
-        for(Long id : ids) {
+        for (Long id : ids) {
             ItemModel itemModel = itemRepository.find(id);
             if (itemModel != null) {
                 attributeRepository.deleteByItemId(id);
@@ -171,32 +173,30 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     @Transactional
-    public ItemData buildItem(long itemId, String jsonAttributes) {
-        return buildItem(itemId, jsonAttributes, false);
+    public ItemData buildItem(String itemKey, String jsonAttributes, boolean forceBuild) {
+        ItemData itemData = getByKey(itemKey);
+        if (itemData == null) {
+            throw new InvalidParameterException("Cannot find Item: " + itemKey);
+        }
+        return buildItem(itemData, jsonAttributes, forceBuild);
     }
 
-    @Override
-    @Transactional
-    public ItemData buildItem(long itemId, String jsonAttributes, boolean forceBuilt) {
-        ItemData itemData = get(itemId);
-        if (itemData == null) {
-            throw new InvalidParameterException("Cannot find Item: " + itemId);
-        }
+    private ItemData buildItem(ItemData itemData, String jsonAttributes, boolean forceBuild) {
 
-        if (itemData.isBuilt() && !forceBuilt) {
-            throw new InvalidParameterException(String.format("Item %s is already built", itemId));
+        if (itemData.isBuilt() && !forceBuild) {
+            throw new InvalidParameterException(String.format("Item %s is already built", itemData.getKey()));
         }
 
         AttributeData root = attributeStructureService.build(itemData, jsonAttributes);
         List<AttributeData> attributeDatas = ItemStructureUtil.navigateAttribtesFromRoot(root);
 
         if (attributeDatas.isEmpty()) {
-            throw new InvalidParameterException("No Attributes are built for Item: " + itemId);
+            throw new InvalidParameterException("No Attributes are built for Item: " + itemData.getKey());
         }
 
         // Delete existing attributes
-        attributeRepository.deleteByItemId(itemId);
-        itemAttributeRepository.deleteByItemId(itemId);
+        attributeRepository.deleteByItemId(itemData.getId());
+        itemAttributeRepository.deleteByItemId(itemData.getId());
 
         // Save new Attributes
         attributeDatas = attributeService.save(attributeDatas);

@@ -4,11 +4,14 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.regex.Pattern;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +20,7 @@ import org.springframework.stereotype.Service;
 import com.myprj.crawler.domain.config.CategoryData;
 import com.myprj.crawler.domain.config.ItemData;
 import com.myprj.crawler.service.CategoryService;
+import com.myprj.crawler.service.ItemService;
 import com.myprj.crawler.web.facades.ItemFacade;
 
 /**
@@ -29,6 +33,9 @@ public class ItemFacadeImpl implements ItemFacade {
 
     @Autowired
     private CategoryService categoryService;
+    
+    @Autowired
+    private ItemService itemService;
 
     @Override
     public List<ItemData> loadItemsFromSource(InputStream inputStream) {
@@ -58,6 +65,74 @@ public class ItemFacadeImpl implements ItemFacade {
         return items;
     }
 
+    @Override
+    public List<String> buildItemStructure(InputStream inputStream, boolean forceBuild) {
+        List<Map<String, String>> itemStrutures = loadItemStructures(inputStream);
+        List<String> itemErrors = new ArrayList<String>();
+        for(Map<String, String> itemStructure : itemStrutures) {
+            Entry<String, String> entry = itemStructure.entrySet().iterator().next();
+            String[] itemKeys = entry.getKey().split(Pattern.quote("|"));
+            String json = entry.getValue();
+            for(String itemKey : itemKeys) {
+                try {
+                    itemService.buildItem(itemKey, json, forceBuild);
+                } catch (Exception e) {
+                    itemErrors.add(itemKey);
+                    logger.error("Cannot build Item Struture of: " + itemKey + " - JSON = " + json);
+                }
+            }
+        }
+        return itemErrors;
+    }
+    
+    protected List<Map<String, String>>  loadItemStructures(InputStream inputStream) {
+        List<Map<String, String>> itemStructures = new ArrayList<Map<String, String>>();
+        BufferedReader br = null;
+        try {
+            br = new BufferedReader(new InputStreamReader(inputStream));
+            String line = null;
+            
+            List<String> lines = new ArrayList<String>();
+            boolean loadingItemStructure = false;
+            
+            String currentKey = null;
+            
+            while ((line = br.readLine()) != null) {
+                if(line == null || line.trim().isEmpty() || line.startsWith("#")) {
+                    continue;
+                }
+                if(line.startsWith(">") || line.startsWith("<END")) {
+                    if(!lines.isEmpty()) {
+                        Map<String, String> map = itemStructures.get(itemStructures.size() - 1);
+                        map.put(currentKey, StringUtils.join(lines, " "));
+                        loadingItemStructure = false;
+                        currentKey = null;
+                    }
+                }
+                
+                if(loadingItemStructure) {
+                    lines.add(line);
+                }
+                
+                if(line.startsWith(">")) {
+                    line = line.substring(1);
+                    currentKey = line;
+                    Map<String, String> itemStructureMap = new HashMap<String, String>();
+                    itemStructureMap.put(line, null);
+                    itemStructures.add(itemStructureMap);
+
+                    loadingItemStructure = true;
+                }
+            }
+            
+        } catch (Exception ex) {
+            return new ArrayList<Map<String, String>>();
+        } finally {
+            IOUtils.closeQuietly(br);
+        }
+        return itemStructures;
+    }
+    
     private ItemData parseItem(String line, Map<String, CategoryData> categoryRepo) {
         try {
             String[] elements = line.split(Pattern.quote("|"));

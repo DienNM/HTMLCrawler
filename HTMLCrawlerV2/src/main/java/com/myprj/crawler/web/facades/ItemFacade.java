@@ -13,4 +13,6 @@ public interface ItemFacade {
     
     List<ItemData> loadItemsFromSource(InputStream inputStream);
     
+    List<String> buildItemStructure(InputStream inputStream, boolean forceBuild);
+    
 }

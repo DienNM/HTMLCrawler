@@ -13,25 +13,23 @@ import com.myprj.crawler.domain.config.ItemData;
 public interface ItemService {
 
     ItemData get(long id);
-    
-    List<ItemData> getAll();
-    
+
+    ItemData getByKey(String key);
+
     PageResult<ItemData> getAllWithPaging(Pageable pageable);
-    
+
     void populateAttributes(ItemData item);
-    
+
     ItemData save(ItemData item);
-    
+
     List<ItemData> saveOrUpdate(List<ItemData> items);
-    
+
     ItemData update(ItemData item);
-    
-    ItemData buildItem(long itemId, String jsonAttributes);
-    
-    ItemData buildItem(long itemId, String jsonAttributes, boolean forceBuilt);
-    
+
+    ItemData buildItem(String itemKey, String jsonAttributes, boolean forceBuild);
+
     void delete(long id);
-    
+
     void delete(List<Long> ids);
-    
+
 }

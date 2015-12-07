@@ -110,12 +110,14 @@ public class AttributeStructureServiceImpl implements AttributeStructureService 
         AttributeData current = createAttribute(parent, LIST_OBJECT, item, key);
         Map<String, Object> elementList = new HashMap<String, Object>();
         listValue.add(elementList);
+        
         AttributeData attribute = createAttribute(current, OBJECT, item, key);
         AttributeData child = build(item, attribute, (Map<String, Object>) value.get(0));
         addChild(current, child);
         return current;
     }
-
+    
+    
     private AttributeData buildString(ItemData item, AttributeData parent, String key, String value) {
         AttributeData current = null;
         

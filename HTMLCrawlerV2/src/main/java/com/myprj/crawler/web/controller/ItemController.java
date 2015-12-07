@@ -1,7 +1,5 @@
 package com.myprj.crawler.web.controller;
 
-import static com.myprj.crawler.web.enumeration.DTOLevel.SIMPLE;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -35,8 +33,6 @@ import com.myprj.crawler.web.facades.ItemFacade;
 @RequestMapping(value = "/items", produces = "application/json")
 public class ItemController extends AbstractController {
 
-    private static final long DEFAULT_CTG_ID = -1000;
-
     @Autowired
     private ItemFacade itemFacade;
 
@@ -54,17 +50,6 @@ public class ItemController extends AbstractController {
         default:
             break;
         }
-    }
-
-    @RequestMapping(value = "/all", method = RequestMethod.GET)
-    @ResponseBody
-    public JsonResponse getAll() {
-        List<ItemData> itemDatas = itemService.getAll();
-
-        List<Map<String, Object>> results = getListMapResult(itemDatas, ItemDTO.class, SIMPLE);
-        JsonResponse response = new JsonResponse(results, !results.isEmpty());
-
-        return response;
     }
 
     @RequestMapping(method = RequestMethod.GET)
@@ -154,53 +139,10 @@ public class ItemController extends AbstractController {
         return new JsonResponse(itemData != null);
     }
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.POST)
-    @ResponseBody
-    public JsonResponse updateItem(@PathVariable(value = "id") long id,
-            @RequestParam(value = "name", required = false) String name,
-            @RequestParam(value = "categoryId", required = false, defaultValue = "-1000") long categoryId,
-            @RequestParam(value = "description", required = false) String description) {
-
-        ItemData itemData = itemService.get(id);
-        if (itemData == null) {
-            JsonResponse response = new JsonResponse(false);
-            response.putMessage("Item Id " + id + " not found");
-            return response;
-        }
-
-        List<RequestError> errors = new ArrayList<RequestError>();
-
-        if (itemData.getCategoryId() != categoryId && categoryId != -1 && categoryId != DEFAULT_CTG_ID) {
-            CategoryData parentCtg = categoryService.getById(categoryId);
-            if (parentCtg == null) {
-                errors.add(new RequestError("categoryId", "Category " + categoryId + " not found"));
-            }
-        }
-
-        if (!StringUtils.isEmpty(name)) {
-            itemData.setName(name);
-        }
-        if (categoryId != DEFAULT_CTG_ID) {
-            itemData.setCategoryId(categoryId);
-        }
-        if (!StringUtils.isEmpty(description)) {
-            itemData.setDescription(description);
-        }
-
-        if (!errors.isEmpty()) {
-            JsonResponse response = new JsonResponse(false);
-            response.putErrors(errors);
-            return response;
-        }
-
-        itemData = itemService.update(itemData);
-        return new JsonResponse(itemData != null);
-    }
-
-    @RequestMapping(value = "/{id}/build", method = RequestMethod.POST)
+    @RequestMapping(value = "/{key}/build", method = RequestMethod.POST)
     @ResponseBody
     public JsonResponse buildItemAttributes(@RequestParam(value = "file", required = true) MultipartFile file,
-            @PathVariable(value = "id") long id,
+            @PathVariable(value = "key") String key,
             @RequestParam(value = "forceBuild", defaultValue = "false") boolean forceBuild) {
 
         if (file == null) {
@@ -217,7 +159,7 @@ public class ItemController extends AbstractController {
         }
         try {
 
-            ItemData itemData = itemService.buildItem(id, json, forceBuild);
+            ItemData itemData = itemService.buildItem(key, json, forceBuild);
             ItemDTO itemDTO = new ItemDTO();
             ItemDTO.toItemDTO(itemData, itemDTO);
 
@@ -226,6 +168,19 @@ public class ItemController extends AbstractController {
             JsonResponse response = new JsonResponse(true);
             response.putData(datas);
             return response;
+        } catch (Exception e) {
+            JsonResponse response = new JsonResponse(false);
+            response.putMessage(e.getMessage());
+            return response;
+        }
+    }
+
+    @RequestMapping(value = "/{ids}/delete", method = RequestMethod.POST)
+    @ResponseBody
+    public JsonResponse delete(@PathVariable(value = "ids") List<Long> ids) {
+        try {
+            itemService.delete(ids);
+            return new JsonResponse(true);
         } catch (Exception e) {
             JsonResponse response = new JsonResponse(false);
             response.putMessage(e.getMessage());
@@ -264,12 +219,22 @@ public class ItemController extends AbstractController {
         return response;
     }
 
-    @RequestMapping(value = "/{ids}/delete", method = RequestMethod.POST)
+    @RequestMapping(value = "/build", method = RequestMethod.POST)
     @ResponseBody
-    public JsonResponse delete(@PathVariable(value = "ids") List<Long> ids) {
+    public JsonResponse buildItemStructute(@RequestParam(value = "file") MultipartFile file,
+            @RequestParam(value = "forceBuild", defaultValue = "false") boolean forceBuild) {
+
+        if (file == null) {
+            JsonResponse response = new JsonResponse(false);
+            response.putMessage("File are missing");
+            return response;
+        }
+
         try {
-            itemService.delete(ids);
-            return new JsonResponse(true);
+            List<String> errorItems = itemFacade.buildItemStructure(file.getInputStream(), forceBuild);
+            JsonResponse response = new JsonResponse(true);
+            response.put("errorItems", errorItems);
+            return response;
         } catch (Exception e) {
             JsonResponse response = new JsonResponse(false);
             response.putMessage(e.getMessage());
