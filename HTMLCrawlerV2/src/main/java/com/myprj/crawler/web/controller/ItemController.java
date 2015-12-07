@@ -184,7 +184,7 @@ public class ItemController extends AbstractController {
         return response;
     }
     
-    @RequestMapping(value = "/{key}/struture/build", method = RequestMethod.POST)
+    @RequestMapping(value = "/strutures/{key}/build", method = RequestMethod.POST)
     @ResponseBody
     public JsonResponse buildItemAttributes(@RequestParam(value = "file", required = true) MultipartFile file,
             @PathVariable(value = "key") String key,
@@ -220,7 +220,7 @@ public class ItemController extends AbstractController {
         }
     }
 
-    @RequestMapping(value = "/structure/build", method = RequestMethod.POST)
+    @RequestMapping(value = "/structures/build/multi", method = RequestMethod.POST)
     @ResponseBody
     public JsonResponse buildItemStructute(@RequestParam(value = "file") MultipartFile file,
             @RequestParam(value = "forceBuild", defaultValue = "false") boolean forceBuild) {
