@@ -77,8 +77,8 @@ public class ItemFacadeImpl implements ItemFacade {
                 try {
                     itemService.buildItem(itemKey, json, forceBuild);
                 } catch (Exception e) {
-                    itemErrors.add(itemKey);
-                    logger.error("Cannot build Item Struture of: " + itemKey + " - JSON = " + json);
+                    itemErrors.add(itemKey + " - Error: " + e.getMessage());
+                    logger.error("Cannot build Item Struture of: " + itemKey + " - Error: " + e.getMessage());
                 }
             }
         }
