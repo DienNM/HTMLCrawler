@@ -16,7 +16,7 @@ public class ItemAttributeDataTest extends AbstractDomain {
     public void testConvertDomain2Entity() {
         ItemAttributeData source = new ItemAttributeData();
         source.setId("1");
-        source.setItemId(1);
+        source.setItemKey("key1");
         source.setName("Att1");
         source.setParentId("2");
         source.setRoot(true);
@@ -28,7 +28,7 @@ public class ItemAttributeDataTest extends AbstractDomain {
         ItemAttributeData.toModel(source, dest);
 
         Assert.assertEquals(source.getId(), dest.getId());
-        Assert.assertEquals(source.getItemId(), dest.getItemId());
+        Assert.assertEquals(source.getItemKey(), dest.getItemKey());
         Assert.assertEquals(source.getName(), dest.getName());
         Assert.assertEquals(source.getParentId(), dest.getParentId());
         Assert.assertEquals(source.isRoot(), dest.isRoot());
@@ -42,7 +42,7 @@ public class ItemAttributeDataTest extends AbstractDomain {
     public void testConvertEntity2Domain() {
         ItemAttributeModel source = new ItemAttributeModel();
         source.setId("1");
-        source.setItemId(1);
+        source.setItemKey("key1");
         source.setName("Att1");
         source.setParentId("2");
         source.setRoot(true);
@@ -54,7 +54,7 @@ public class ItemAttributeDataTest extends AbstractDomain {
         ItemAttributeData.toData(source, dest);
 
         Assert.assertEquals(source.getId(), dest.getId());
-        Assert.assertEquals(source.getItemId(), dest.getItemId());
+        Assert.assertEquals(source.getItemKey(), dest.getItemKey());
         Assert.assertEquals(source.getName(), dest.getName());
         Assert.assertEquals(source.getParentId(), dest.getParentId());
         Assert.assertEquals(source.isRoot(), dest.isRoot());

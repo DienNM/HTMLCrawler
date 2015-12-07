@@ -19,8 +19,8 @@ public class ItemAttributeDTO extends AuditTDO {
     @DataTransfer("id")
     private String id;
 
-    @DataTransfer("itemId")
-    private long itemId;
+    @DataTransfer("itemKey")
+    private String itemKey;
 
     @DataTransfer("workerItemId")
     private long workerItemId;
@@ -68,14 +68,6 @@ public class ItemAttributeDTO extends AuditTDO {
 
     public void setId(String id) {
         this.id = id;
-    }
-
-    public long getItemId() {
-        return itemId;
-    }
-
-    public void setItemId(long itemId) {
-        this.itemId = itemId;
     }
 
     public String getParentId() {
@@ -132,5 +124,13 @@ public class ItemAttributeDTO extends AuditTDO {
 
     public void setWorkerItemId(long workerItemId) {
         this.workerItemId = workerItemId;
+    }
+
+    public String getItemKey() {
+        return itemKey;
+    }
+
+    public void setItemKey(String itemKey) {
+        this.itemKey = itemKey;
     }
 }

@@ -20,11 +20,13 @@ import com.myprj.crawler.domain.config.AttributeData;
 import com.myprj.crawler.domain.config.AttributeSelector;
 import com.myprj.crawler.domain.config.ItemAttributeData;
 import com.myprj.crawler.domain.config.ItemContent;
+import com.myprj.crawler.domain.config.ItemData;
 import com.myprj.crawler.domain.crawl.WorkerItemData;
 import com.myprj.crawler.enumeration.AttributeType;
 import com.myprj.crawler.enumeration.SelectorSource;
 import com.myprj.crawler.service.AttributeService;
 import com.myprj.crawler.service.ItemAttributeStructureService;
+import com.myprj.crawler.service.ItemService;
 import com.myprj.crawler.util.AttributeUtil;
 import com.myprj.crawler.util.Serialization;
 
@@ -36,6 +38,9 @@ public class ItemAttributeStructureServiceImpl implements ItemAttributeStructure
 
     @Autowired
     private AttributeService attributeService;
+    
+    @Autowired
+    private ItemService itemService;
 
     public void setAttributeService(AttributeService attributeService) {
         this.attributeService = attributeService;
@@ -45,8 +50,9 @@ public class ItemAttributeStructureServiceImpl implements ItemAttributeStructure
     @Override
     public ItemAttributeData build(WorkerItemData workerItem, String jsonText) {
         Map<String, Object> inputObject = Serialization.deserialize(jsonText, Map.class);
-
-        long itemId = workerItem.getItemId();
+        
+        ItemData itemData = itemService.getByKey(workerItem.getItemKey());
+        long itemId = itemData.getId();
         String attributeId = String.valueOf(itemId) + "|" + ItemContent.ROOT;
 
         ItemAttributeData root = new ItemAttributeData();
@@ -58,7 +64,7 @@ public class ItemAttributeStructureServiceImpl implements ItemAttributeStructure
         root.setParent(null);
         root.setParentId(null);
         root.setAttributeId(attributeId);
-        root.setItemId(itemId);
+        root.setItemKey(workerItem.getItemKey());
 
         return build(workerItem, root, inputObject);
     }
@@ -96,7 +102,7 @@ public class ItemAttributeStructureServiceImpl implements ItemAttributeStructure
         attribute.setAttributeId(attributeId);
         attribute.setParent(parent);
         attribute.setParentId(parent.getId());
-        attribute.setItemId(workerItem.getItemId());
+        attribute.setItemKey(workerItem.getItemKey());
         attribute.setType(type);
         return attribute;
     }

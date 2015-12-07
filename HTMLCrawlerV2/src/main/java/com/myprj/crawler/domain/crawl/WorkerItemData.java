@@ -37,11 +37,10 @@ public class WorkerItemData extends AuditData {
     @EntityTransfer("worker_id")
     @DataCopy("workerId")
     private long workerId;
-
-    @DataTransfer("itemId")
-    @EntityTransfer("item_id")
-    @DataCopy("itemId")
-    private long itemId = -1;
+    
+    @DataTransfer("itemKey")
+    @EntityTransfer("item_key")
+    private String itemKey;
 
     @DataTransfer("url")
     @EntityTransfer("url")
@@ -189,14 +188,6 @@ public class WorkerItemData extends AuditData {
         this.level0Selector = level0Selector;
     }
 
-    public long getItemId() {
-        return itemId;
-    }
-
-    public void setItemId(long itemId) {
-        this.itemId = itemId;
-    }
-
     public ItemAttributeData getRootItemAttribute() {
         return rootItemAttribute;
     }
@@ -211,6 +202,14 @@ public class WorkerItemData extends AuditData {
 
     public void setRequestId(String requestId) {
         this.requestId = requestId;
+    }
+
+    public String getItemKey() {
+        return itemKey;
+    }
+
+    public void setItemKey(String itemKey) {
+        this.itemKey = itemKey;
     }
 
 }

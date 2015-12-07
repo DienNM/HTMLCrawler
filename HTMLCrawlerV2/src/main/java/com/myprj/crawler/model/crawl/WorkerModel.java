@@ -41,9 +41,6 @@ public class WorkerModel extends AuditModel {
     @Column(name = "site", length = 100)
     private String site;
     
-    @Column(name = "category", length = 50)
-    private String category;
-    
     @Column(name = "threads")
     private int threads = 1;
 
@@ -141,13 +138,5 @@ public class WorkerModel extends AuditModel {
 
     public void setBuilt(boolean built) {
         this.built = built;
-    }
-
-    public String getCategory() {
-        return category;
-    }
-
-    public void setCategory(String category) {
-        this.category = category;
     }
 }

@@ -69,7 +69,7 @@
         <property name="targetClassName" value="com.myprj.crawler.web.dto.ItemAttributeDTO" />
         <property name="targetMappings">
             <map>
-                <entry key="SIMPLE" value="id,itemId,name,parentId,attributeId,type,root,workerItemId" />
+                <entry key="SIMPLE" value="id,itemKey,name,parentId,attributeId,type,root,workerItemId" />
                 <entry key="DEFAULT" value="SIMPLE,,selector,createdAt,createdBy" />
                 <entry key="FULL" value="DEFAULT,updatedAt,updatedBy" />
             </map>

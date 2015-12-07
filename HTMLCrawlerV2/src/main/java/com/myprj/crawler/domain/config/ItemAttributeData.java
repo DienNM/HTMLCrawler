@@ -26,9 +26,9 @@ public class ItemAttributeData extends AuditData {
     @EntityTransfer("id")
     private String id;
 
-    @DataTransfer("itemId")
-    @EntityTransfer("item_id")
-    private long itemId;
+    @DataTransfer("itemKey")
+    @EntityTransfer("item_key")
+    private String itemKey;
     
 
     @DataTransfer("workerItemId")
@@ -114,14 +114,6 @@ public class ItemAttributeData extends AuditData {
         this.id = id;
     }
 
-    public long getItemId() {
-        return itemId;
-    }
-
-    public void setItemId(long itemId) {
-        this.itemId = itemId;
-    }
-
     public String getName() {
         return name;
     }
@@ -192,5 +184,13 @@ public class ItemAttributeData extends AuditData {
 
     public void setWorkerItemId(long workerItemId) {
         this.workerItemId = workerItemId;
+    }
+
+    public String getItemKey() {
+        return itemKey;
+    }
+
+    public void setItemKey(String itemKey) {
+        this.itemKey = itemKey;
     }
 }

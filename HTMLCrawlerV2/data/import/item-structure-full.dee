@@ -1,10 +1,10 @@
 #key|name|active|category_key|description
 
 #mobiles
-prod-mobile|Moblile Product|mobiles|Information of Mobile
-prod-tablet|Tablet Product|tablets|Information of Tablet
-prod-laptop|Laptop Product|laptops|Information of Laptop
-prod-desktop|Desktop Product|desktops|Information of Desktop
+>prod-mobile|Moblile Product|mobiles|Information of Mobile
+>prod-tablet|Tablet Product|tablets|Information of Tablet
+>prod-laptop|Laptop Product|laptops|Information of Laptop
+>prod-desktop|Desktop Product|desktops|Information of Desktop
 
 <<START>>
 { 
@@ -14,7 +14,7 @@ prod-desktop|Desktop Product|desktops|Information of Desktop
     "pastPrice":"TEXT",
     "vatInfo" : "TEXT",
     "discount": "TEXT",
-    "promotions" : [TEXT],
+    "promotions" : ["TEXT"],
     "description": "HTML",
     "attributes":[{ 
         "key" : "TEXT",

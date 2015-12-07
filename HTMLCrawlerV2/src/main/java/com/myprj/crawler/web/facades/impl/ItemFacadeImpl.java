@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.regex.Pattern;
 
 import org.apache.commons.io.IOUtils;
@@ -24,6 +23,8 @@ import com.myprj.crawler.domain.config.ItemData;
 import com.myprj.crawler.service.CategoryService;
 import com.myprj.crawler.service.ItemService;
 import com.myprj.crawler.web.facades.ItemFacade;
+import com.myprj.crawler.web.util.ImportFileParser;
+import com.myprj.crawler.web.util.ImportFileStruture;
 
 /**
  * @author DienNM (DEE)
@@ -35,114 +36,83 @@ public class ItemFacadeImpl implements ItemFacade {
 
     @Autowired
     private CategoryService categoryService;
-    
+
     @Autowired
     private ItemService itemService;
 
     @Override
     public List<String> loadItemsFromSource(InputStream inputStream, boolean forceBuild) {
         List<String> errorStructures = new ArrayList<String>();
-        BufferedReader br = null;
-        try {
-            br = new BufferedReader(new InputStreamReader(inputStream));
-            String line = null;
-            Map<String, CategoryData> categoryRepo = categoryService.getAllMap();
-            
-            List<String> lineOfItems = new ArrayList<String>();
-            List<String> lineOfStructures = new ArrayList<String>();
-            
-            boolean flagItem = true;
-            boolean flagStructure = false;
-            
-            while ((line = br.readLine()) != null) {
-                if (line == null || line.trim().isEmpty() || line.startsWith("#")) {
-                    continue;
-                }
-                if (line.startsWith("<<START>>")) {
-                    flagStructure = true;
-                    flagItem = false;
-                    continue;
-                } 
-                if (line.startsWith("<<END>>")) {
-                    flagStructure = false;
-                    flagItem = true;
-                    
-                    List<ItemData> itemDatas = saveItems(lineOfItems, categoryRepo);
-                    if(itemDatas.isEmpty()) {
-                        errorStructures.add("Cannot import Items: " + join(line, ", "));
-                        break;
-                    }
-                    List<String> errors = buildItemStructures(itemDatas, join(lineOfStructures, " "), forceBuild);
-                    errorStructures.addAll(errors);
-                    continue;
-                }
-                if(flagStructure) {
-                    lineOfStructures.add(line);
-                }
-                if(flagItem) {
-                    lineOfItems.add(line);
-                }
+        List<ImportFileStruture> importFileStrutures = ImportFileParser.loadItemFromSource(inputStream);
+        if (importFileStrutures.isEmpty()) {
+            errorStructures.add("No Item loaded");
+            return errorStructures;
+        }
+        Map<String, CategoryData> categoryRepo = categoryService.getAllMap();
+        for (ImportFileStruture item : importFileStrutures) {
+            List<ItemData> itemDatas = saveItems(item.getMainLines().get(0), categoryRepo);
+            if (itemDatas.isEmpty()) {
+                errorStructures.add("Cannot import Items: " + join(item.getMainLines(), ", "));
+                break;
             }
-        } catch (Exception ex) {
-            logger.error("Error loading Item. Error: {}", ex);
-            errorStructures.add(ex.getMessage());
-        } finally {
-            IOUtils.closeQuietly(br);
-            IOUtils.closeQuietly(inputStream);
+            List<String> errors = buildItemStructures(itemDatas, item.getJson(), forceBuild);
+            errorStructures.addAll(errors);
         }
         return errorStructures;
     }
 
     @Override
     public List<String> buildItemStructure(InputStream inputStream, boolean forceBuild) {
-        List<Map<String, String>> itemStrutures = loadItemStructures(inputStream);
-        List<String> itemErrors = new ArrayList<String>();
-        for(Map<String, String> itemStructure : itemStrutures) {
-            Entry<String, String> entry = itemStructure.entrySet().iterator().next();
-            String[] itemKeys = entry.getKey().split(Pattern.quote("|"));
-            String json = entry.getValue();
-            for(String itemKey : itemKeys) {
+        List<String> errorStructures = new ArrayList<String>();
+        List<ImportFileStruture> importFileStrutures = ImportFileParser.loadItemFromSource(inputStream);
+        if (importFileStrutures.isEmpty()) {
+            errorStructures.add("No Item loaded");
+            return errorStructures;
+        }
+        for (ImportFileStruture item : importFileStrutures) {
+            for (List<String> itemKeys : item.getMainLines()) {
+                String itemKey = itemKeys.get(0);
                 try {
-                    itemService.buildItem(itemKey, json, forceBuild);
+                    itemService.buildItem(itemKey, item.getJson(), forceBuild);
                 } catch (Exception e) {
-                    itemErrors.add(itemKey + " - Error: " + e.getMessage());
+                    errorStructures.add(itemKey + " - Error: " + e.getMessage());
                     logger.error("Cannot build Item Struture of: " + itemKey + " - Error: " + e.getMessage());
                 }
             }
         }
-        return itemErrors;
+        return errorStructures;
     }
-    
-    protected List<Map<String, String>>  loadItemStructures(InputStream inputStream) {
+
+    protected List<Map<String, String>> loadItemStructures(InputStream inputStream) {
         List<Map<String, String>> itemStructures = new ArrayList<Map<String, String>>();
         BufferedReader br = null;
         try {
             br = new BufferedReader(new InputStreamReader(inputStream));
             String line = null;
-            
+
             List<String> lines = new ArrayList<String>();
             boolean loadingItemStructure = false;
-            
+
             String currentKey = null;
-            
+
             while ((line = br.readLine()) != null) {
-                if(line == null || line.trim().isEmpty() || line.startsWith("#")) {
+                if (line == null || line.trim().isEmpty() || line.startsWith("#")) {
                     continue;
                 }
-                if(line.startsWith(">") || line.startsWith("<END")) {
-                    if(!lines.isEmpty()) {
+                if (line.startsWith(">") || line.startsWith("<END")) {
+                    if (!lines.isEmpty()) {
                         Map<String, String> map = itemStructures.get(itemStructures.size() - 1);
                         map.put(currentKey, StringUtils.join(lines, " "));
                         loadingItemStructure = false;
                         currentKey = null;
                     }
                 }
-                
-                if(loadingItemStructure) {
+
+                if (loadingItemStructure) {
                     lines.add(line);
                 }
-                
-                if(line.startsWith(">")) {
+
+                if (line.startsWith(">")) {
                     line = line.substring(1);
                     currentKey = line;
                     Map<String, String> itemStructureMap = new HashMap<String, String>();
@@ -152,7 +122,7 @@ public class ItemFacadeImpl implements ItemFacade {
                     loadingItemStructure = true;
                 }
             }
-            
+
         } catch (Exception ex) {
             return new ArrayList<Map<String, String>>();
         } finally {
@@ -160,25 +130,24 @@ public class ItemFacadeImpl implements ItemFacade {
         }
         return itemStructures;
     }
-    
 
     private List<ItemData> saveItems(List<String> itemLines, Map<String, CategoryData> categoryRepo) {
         List<ItemData> items = new ArrayList<ItemData>();
-        for(String line : itemLines) {
+        for (String line : itemLines) {
             ItemData item = parseItem(line, categoryRepo);
             if (item != null) {
                 items.add(item);
             }
         }
-        if(!items.isEmpty()) {
+        if (!items.isEmpty()) {
             itemService.saveOrUpdate(items);
         }
         return items;
     }
-    
+
     private List<String> buildItemStructures(List<ItemData> items, String json, boolean forceBuild) {
         List<String> itemErrors = new ArrayList<String>();
-        for(ItemData item : items) {
+        for (ItemData item : items) {
             try {
                 itemService.buildItem(item.getKey(), json, forceBuild);
             } catch (Exception e) {
@@ -188,7 +157,7 @@ public class ItemFacadeImpl implements ItemFacade {
         }
         return itemErrors;
     }
-    
+
     private ItemData parseItem(String line, Map<String, CategoryData> categoryRepo) {
         try {
             String[] elements = line.split(Pattern.quote("|"));

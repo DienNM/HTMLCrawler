@@ -22,7 +22,7 @@ public class WorkerItemDataTest extends AbstractDomain {
         WorkerItemData source = new WorkerItemData();
         source.setId(1);
         source.setCrawlType(CrawlType.DETAIL);
-        source.setItemId(10);
+        source.setItemKey("key1");
         source.setLevel(Level.Level2);
         AttributeSelector attributeSelector = new AttributeSelector("div.select{{href}}");
         source.setLevel0Selector(attributeSelector);
@@ -41,7 +41,7 @@ public class WorkerItemDataTest extends AbstractDomain {
         WorkerItemData.toModel(source, dest);
 
         Assert.assertEquals(source.getId(), dest.getId());
-        Assert.assertEquals(source.getItemId(), dest.getItemId());
+        Assert.assertEquals(source.getItemKey(), dest.getItemKey());
         Assert.assertEquals(source.getWorkerId(), dest.getWorkerId());
         Assert.assertEquals(source.getCrawlType(), dest.getCrawlType());
         Assert.assertEquals(source.getLevel(), dest.getLevel());
@@ -57,7 +57,7 @@ public class WorkerItemDataTest extends AbstractDomain {
         WorkerItemModel source = new WorkerItemModel();
         source.setId(1);
         source.setCrawlType(CrawlType.DETAIL);
-        source.setItemId(10);
+        source.setItemKey("key1");
         source.setLevel(Level.Level2);
         AttributeSelector attributeSelector = new AttributeSelector("div.select{{href}}");
         
@@ -77,7 +77,7 @@ public class WorkerItemDataTest extends AbstractDomain {
         WorkerItemData.toData(source, dest);
 
         Assert.assertEquals(source.getId(), dest.getId());
-        Assert.assertEquals(source.getItemId(), dest.getItemId());
+        Assert.assertEquals(source.getItemKey(), dest.getItemKey());
         Assert.assertEquals(source.getWorkerId(), dest.getWorkerId());
         Assert.assertEquals(source.getCrawlType(), dest.getCrawlType());
         Assert.assertEquals(source.getLevel(), dest.getLevel());

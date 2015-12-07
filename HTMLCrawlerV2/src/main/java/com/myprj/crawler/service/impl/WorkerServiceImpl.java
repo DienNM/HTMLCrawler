@@ -121,7 +121,7 @@ public class WorkerServiceImpl implements WorkerService {
 
     @Override
     @Transactional
-    public void buildWorkerItems(WorkerData worker, List<WorkerItemData> workerItems) {
+    public List<WorkerItemData> buildWorkerItems(WorkerData worker, List<WorkerItemData> workerItems) {
         Map<Level, WorkerItemData> workerItemMap = new HashMap<Level, WorkerItemData>();
 
         for (WorkerItemData workerItem : workerItems) {
@@ -155,6 +155,8 @@ public class WorkerServiceImpl implements WorkerService {
         worker.setWorkerItems(workerItemDatas);
 
         update(worker);
+        
+        return workerItemDatas;
     }
 
     @Override

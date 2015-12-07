@@ -43,15 +43,15 @@ import com.myprj.crawler.web.facades.WorkerFacade;
 @Controller
 @RequestMapping(value = "/workers", produces = "application/json")
 public class WorkerController extends AbstractController {
-    
+
     private Logger logger = LoggerFactory.getLogger(WorkerController.class);
 
     @Autowired
     private WorkerFacade workerFacade;
-    
+
     @Autowired
     private WorkerService workerService;
-    
+
     @Autowired
     private ItemService itemService;
 
@@ -94,87 +94,74 @@ public class WorkerController extends AbstractController {
         }
 
         populateWorkerByLevel(workerData, level);
-        
+
         Map<String, Object> datas = getMapResult(workerData, WorkerDTO.class, level);
         JsonResponse response = new JsonResponse(!datas.isEmpty());
         response.putData(datas);
 
         return response;
     }
-    
+
     @RequestMapping(value = "/import", method = RequestMethod.POST)
     @ResponseBody
-    public JsonResponse importWorkersAndItems(
-            @RequestParam(value = "file") MultipartFile file,
+    public JsonResponse importWorkersAndItems(@RequestParam(value = "file") MultipartFile file,
             @RequestParam(value = "forceBuild", defaultValue = "false") boolean forceBuild) {
-        
+
         if (file == null) {
             JsonResponse response = new JsonResponse(false);
             response.putMessage("File are missing");
             return response;
         }
+        List<String> errors = new ArrayList<String>();
         try {
-            List<WorkerData> workerDatas = workerFacade.loadWorkersFromSource(file.getInputStream());
-            if (workerDatas.isEmpty()) {
-                JsonResponse response = new JsonResponse(false);
-                response.putMessage("No Workers are loaded");
-                return response;
-            }
-            for(WorkerData workerData : workerDatas) {
-                List<WorkerItemData> workerItems = workerData.getWorkerItems();
-                WorkerData worker = workerService.save(workerData);
-                
-                workerService.buildWorkerItems(worker, workerItems);
-                WorkerDTO workerDTO = new WorkerDTO();
-                WorkerDTO.toDTO(worker, workerDTO);
-            }
-            return new JsonResponse(true);
+            errors = workerFacade.loadImportWorkersFromSource(file.getInputStream(), forceBuild);
         } catch (Exception e) {
             logger.error("{}", e);
-            JsonResponse response = new JsonResponse(false);
-            response.putMessage(e.getMessage());
-            return response;
+            errors.add(e.getMessage());
         }
+
+        JsonResponse response = new JsonResponse(errors.isEmpty());
+        response.put("errors", errors);
+        return response;
     }
-    
+
     @RequestMapping(value = "/items/{level}", method = RequestMethod.POST)
     @ResponseBody
-    public JsonResponse buildSelectors4WorkerItems(
-            @PathVariable(value = "level") Level level, 
+    public JsonResponse buildSelectors4WorkerItems(@PathVariable(value = "level") Level level,
             @RequestParam(value = "file") MultipartFile file) {
-        
+
         List<Map<String, String>> listItemLines = loadItemAttributes(file);
-        for(Map<String, String> itemLineMap : listItemLines) {
-            for(String key : itemLineMap.keySet()) {
+        for (Map<String, String> itemLineMap : listItemLines) {
+            for (String key : itemLineMap.keySet()) {
                 String json = itemLineMap.get(key);
                 String[] arrays = key.split(Pattern.quote("|"));
                 String[] workerIds = arrays[0].split(",");
-                long itemId = Long.valueOf(arrays[1]);
-                ItemData itemData = itemService.get(itemId);
+                String itemKey = arrays[1];
+                ItemData itemData = itemService.getByKey(itemKey);
                 if (itemData == null) {
-                    logger.warn("Item Id " + itemId + " not found");
+                    logger.warn("Item Id " + itemKey + " not found");
                     continue;
                 }
-                for(String workerId : workerIds) {
+                for (String workerId : workerIds) {
                     WorkerData workerData = workerService.get(Long.valueOf(workerId));
                     if (workerData == null) {
                         logger.warn("Worker Id " + workerId + " not found");
                         continue;
                     }
-                    
+
                     WorkerItemData workerItemData = workerService.getWorkerItem(workerData, level);
-                    if(workerItemData == null) {
+                    if (workerItemData == null) {
                         JsonResponse response = new JsonResponse(false);
                         response.putMessage("Cannot find worker item for: WorkerId=" + workerId + " and Level=" + level);
                         return response;
                     }
-                    
-                    if(!DETAIL.equals(workerItemData.getCrawlType())) {
+
+                    if (!DETAIL.equals(workerItemData.getCrawlType())) {
                         JsonResponse response = new JsonResponse(false);
                         response.putMessage("Only be able to build selectors for DETAIL type");
                         return response;
                     }
-                    workerItemData.setItemId(itemId);
+                    workerItemData.setItemKey(itemKey);
                     try {
                         workerItemData = workerService.buildSelector4Item(workerItemData, json);
                     } catch (Exception e) {
@@ -186,39 +173,37 @@ public class WorkerController extends AbstractController {
         JsonResponse response = new JsonResponse(true);
         return response;
     }
-    
-    
-    
-    protected List<Map<String, String>>  loadItemAttributes(MultipartFile file) {
+
+    protected List<Map<String, String>> loadItemAttributes(MultipartFile file) {
         List<Map<String, String>> itemAttributes = new ArrayList<Map<String, String>>();
         BufferedReader br = null;
         try {
             br = new BufferedReader(new InputStreamReader(file.getInputStream()));
             String line = null;
-            
+
             List<String> lines = new ArrayList<String>();
             boolean loadingItemAttributeLines = false;
-            
+
             String currentKey = null;
-            
+
             while ((line = br.readLine()) != null) {
-                if(line == null || line.trim().isEmpty() || line.startsWith("#")) {
+                if (line == null || line.trim().isEmpty() || line.startsWith("#")) {
                     continue;
                 }
-                if(line.startsWith(">") || line.startsWith("<END")) {
-                    if(!lines.isEmpty()) {
+                if (line.startsWith(">") || line.startsWith("<END")) {
+                    if (!lines.isEmpty()) {
                         Map<String, String> map = itemAttributes.get(itemAttributes.size() - 1);
                         map.put(currentKey, StringUtils.join(lines, " "));
                         loadingItemAttributeLines = false;
                         currentKey = null;
                     }
                 }
-                
-                if(loadingItemAttributeLines) {
+
+                if (loadingItemAttributeLines) {
                     lines.add(line);
                 }
-                
-                if(line.startsWith(">")) {
+
+                if (line.startsWith(">")) {
                     line = line.substring(1);
                     currentKey = line;
                     Map<String, String> map = new HashMap<String, String>();

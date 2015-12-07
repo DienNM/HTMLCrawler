@@ -1,6 +1,11 @@
-#
+#each line a Item Key
 
->prod-mobile|prod-tablet|prod-laptop|prod-desktop
+>prod-mobile
+>prod-tablet
+>prod-laptop
+>prod-desktop
+
+<<START>>
 { 
     "name":"TEXT",
     "brand": "TEXT",
@@ -8,7 +13,7 @@
     "pastPrice":"TEXT",
     "vatInfo" : "TEXT",
     "discount": "TEXT",
-    "promotions" : [TEXT],
+    "promotions" : ["TEXT"],
     "description": "HTML",
     "attributes":[{ 
         "key" : "TEXT",
@@ -20,5 +25,4 @@
 	"user": "TEXT"
     }]
 }
-
-<END
+<<END>>

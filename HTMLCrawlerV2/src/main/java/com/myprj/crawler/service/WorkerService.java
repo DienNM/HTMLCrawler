@@ -26,7 +26,7 @@ public interface WorkerService {
     
     WorkerData update(WorkerData worker);
     
-    void buildWorkerItems(WorkerData worker, List<WorkerItemData> workerItems);
+    List<WorkerItemData> buildWorkerItems(WorkerData worker, List<WorkerItemData> workerItems);
     
     WorkerItemData getWorkerItem(WorkerData worker, Level level);
     

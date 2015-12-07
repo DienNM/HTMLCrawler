@@ -26,8 +26,8 @@ public class ItemAttributeModel extends AuditModel {
     @Column(name = "name", length = 20)
     private String name;
     
-    @Column(name = "item_id")
-    private long itemId;
+    @Column(name = "item_key")
+    private String itemKey;
 
     @Column(name = "worker_item_id")
     private long workerItemId;
@@ -55,17 +55,6 @@ public class ItemAttributeModel extends AuditModel {
     public void setId(String id) {
         this.id = id;
     }
-
-
-    public long getItemId() {
-        return itemId;
-    }
-
-
-    public void setItemId(long itemId) {
-        this.itemId = itemId;
-    }
-
 
     public String getAttributeId() {
         return attributeId;
@@ -126,5 +115,13 @@ public class ItemAttributeModel extends AuditModel {
 
     public void setWorkerItemId(long workerItemId) {
         this.workerItemId = workerItemId;
+    }
+
+    public String getItemKey() {
+        return itemKey;
+    }
+
+    public void setItemKey(String itemKey) {
+        this.itemKey = itemKey;
     }
 }
