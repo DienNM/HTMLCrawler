@@ -16,11 +16,11 @@ prod-laptop|Level1|DETAIL|0|0||
 <<START>>
 { 
     "name" : "I@div.item-box h1.item-name",
-    "brand" : "I@div.item-box > div.item-price div.item-brand > p > a",
+    "brand" : "I@div.item-price > div.item-brand > p > a",
     "price" : "I@span#span-price",
     "pastPrice" : "I@#p-listpirce > span:nth-child(2)",
-    "vatInfo" : "I@#p-listpirce > span:nth-child(3)",
-    "discount" : "I@div.item-box > div.item-price p.saleoff-price-item > span:nth-child(2)",
+    "vatInfo" : "I@#p-specialprice > span:nth-child(3)",
+    "discount" : "I@#p-listpirce > span:nth-child(2)",
     "promotions" : ["!@div.item-promotion div.item-promotion-content ul li"],
     "description" : "I@div.product-content-box div.product-content-detail",
     "attributes" : [{ 
@@ -31,6 +31,6 @@ prod-laptop|Level1|DETAIL|0|0||
 	"title" : "I@div.product-col-2 > div > p.review > a",
    	"content" : "I@div.product-col-2 > div > div.description.js-description",
 	"user" : "I@div.product-col-1 > p.name"
-    }, "I@I@#review-favorite > div:nth-child(1)"]
+    }, "I@#review-favorite > div:nth-child(1)"]
 }
 <<END>>

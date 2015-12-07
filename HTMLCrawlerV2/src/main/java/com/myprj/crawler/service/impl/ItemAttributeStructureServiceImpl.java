@@ -103,7 +103,11 @@ public class ItemAttributeStructureServiceImpl implements ItemAttributeStructure
         attribute.setParent(parent);
         attribute.setParentId(parent.getId());
         attribute.setItemKey(workerItem.getItemKey());
-        attribute.setType(type);
+        if(type == null) {
+            attribute.setType(attributeData.getType());
+        } else {
+            attribute.setType(type);
+        }
         return attribute;
     }
 
@@ -151,7 +155,7 @@ public class ItemAttributeStructureServiceImpl implements ItemAttributeStructure
     }
 
     private ItemAttributeData buildString(WorkerItemData workerItem, ItemAttributeData parent, String key, String value) {
-        ItemAttributeData current = createAttribute(parent, TEXT, workerItem, key);
+        ItemAttributeData current = createAttribute(parent, null, workerItem, key);
         AttributeSelector attributeSelector = parseAttritbuteSelectors(value);
         current.setSelector(attributeSelector);
         return current;

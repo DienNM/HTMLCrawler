@@ -39,11 +39,16 @@ public class TextAttributeHandler extends AttributeHandlerSupport {
         if (elements == null || elements.isEmpty()) {
             return null;
         }
+        String text = null;
         if (StringUtils.isEmpty(cssSelector.getTargetAttribute())) {
-            return elements.first().text();
+            text = elements.first().text();
         }
-        return elements.first().attr(cssSelector.getTargetAttribute());
-
+        text = elements.first().attr(cssSelector.getTargetAttribute());
+        
+        if(StringUtils.isEmpty(text)) {
+            return "";
+        }
+        return text.trim();
     }
 
 }
