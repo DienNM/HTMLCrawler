@@ -19,13 +19,25 @@ public class DefaultItemRepository extends DefaultGenericDao<ItemModel, Long> im
     protected Class<ItemModel> getTargetClass() {
         return ItemModel.class;
     }
-    
+
     @SuppressWarnings("unchecked")
     @Override
     public List<ItemModel> findByCategory(long category) {
         Query query = entityManager.createQuery("FROM " + getClassName() + " WHERE categoryId = :categoryId");
         query.setParameter("categoryId", category);
         return query.getResultList();
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public ItemModel findByKey(String key) {
+        Query query = entityManager.createQuery("FROM " + getClassName() + " WHERE key = :key");
+        query.setParameter("key", key);
+        List<ItemModel> itemModels = query.getResultList();
+        if (itemModels.isEmpty()) {
+            return null;
+        }
+        return itemModels.get(0);
     }
 
 }

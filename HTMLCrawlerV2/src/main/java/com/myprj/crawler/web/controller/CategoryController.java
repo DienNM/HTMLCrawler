@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.myprj.crawler.domain.PageResult;
 import com.myprj.crawler.domain.Pageable;
@@ -23,6 +24,7 @@ import com.myprj.crawler.web.dto.CategoryDTO;
 import com.myprj.crawler.web.dto.JsonResponse;
 import com.myprj.crawler.web.dto.RequestError;
 import com.myprj.crawler.web.enumeration.DTOLevel;
+import com.myprj.crawler.web.facades.CategoryFacade;
 
 /**
  * @author DienNM (DEE)
@@ -30,20 +32,21 @@ import com.myprj.crawler.web.enumeration.DTOLevel;
 @Controller
 @RequestMapping(value = "/categories", produces = "application/json")
 public class CategoryController extends AbstractController {
-    
-    private static final long DEFAULT_CTG_ID = -1000;
 
     @Autowired
     private CategoryService categoryService;
+
+    @Autowired
+    private CategoryFacade categoryFacade;
 
     @RequestMapping(value = "/all", method = RequestMethod.GET)
     @ResponseBody
     public JsonResponse getAll() {
         List<CategoryData> categories = categoryService.getAll();
-        
+
         List<Map<String, Object>> results = getListMapResult(categories, CategoryDTO.class, SIMPLE);
         JsonResponse response = new JsonResponse(results, !results.isEmpty());
-        
+
         return response;
     }
 
@@ -52,7 +55,7 @@ public class CategoryController extends AbstractController {
     public JsonResponse getPaging(@RequestParam(value = "currentPage", defaultValue = "0") int currentPage,
             @RequestParam(value = "pageSize", defaultValue = "10") int pageSize,
             @RequestParam(value = "level", defaultValue = "SIMPLE") DTOLevel level) {
-        
+
         Pageable pageable = new Pageable(pageSize, currentPage);
         PageResult<CategoryData> pageResult = categoryService.getAllWithPaging(pageable);
 
@@ -83,24 +86,55 @@ public class CategoryController extends AbstractController {
         return response;
     }
 
+    @RequestMapping(value = "/import", method = RequestMethod.POST)
+    @ResponseBody
+    public JsonResponse importFromFile(@RequestParam(value = "file") MultipartFile file) {
+
+        if (file == null) {
+            JsonResponse response = new JsonResponse(false);
+            response.putMessage("File are missing");
+            return response;
+        }
+
+        List<CategoryData> categoryDatas = new ArrayList<CategoryData>();
+        ;
+        try {
+            categoryDatas = categoryFacade.loadCategoriesFromSource(file.getInputStream());
+            if (categoryDatas.isEmpty()) {
+                JsonResponse response = new JsonResponse(false);
+                response.putMessage("No Categories are loaded");
+                return response;
+            }
+            categoryDatas = categoryService.saveOrUpdate(categoryDatas);
+        } catch (Exception e) {
+            JsonResponse response = new JsonResponse(false);
+            response.putMessage(e.getMessage());
+            return response;
+        }
+
+        JsonResponse response = new JsonResponse(true);
+        response.putMessage("Loaded " + categoryDatas.size() + " categories");
+        return response;
+    }
+
     @RequestMapping(method = RequestMethod.POST)
     @ResponseBody
     public JsonResponse addCategory(@RequestParam(value = "name") String name,
             @RequestParam(value = "description", required = false) String description,
-            @RequestParam(value = "parentCategoryId", defaultValue = "-1") long parentId) {
+            @RequestParam(value = "parentKey", defaultValue = "") String parentKey) {
 
         List<RequestError> errors = new ArrayList<RequestError>();
         if (StringUtils.isEmpty(name)) {
             errors.add(new RequestError("name", "Category Name is required"));
         }
-        
-        if(parentId != -1) {
-            CategoryData parentCtg = categoryService.getById(parentId);
-            if(parentCtg == null) {
-                errors.add(new RequestError("parentCategoryId", "Category Parent " + parentId + " not found"));
+
+        if (!StringUtils.isEmpty(parentKey)) {
+            CategoryData parentCtg = categoryService.getByKey(parentKey);
+            if (parentCtg == null) {
+                errors.add(new RequestError("parentKey", "Category Parent " + parentKey + " not found"));
             }
         }
-        
+
         if (!errors.isEmpty()) {
             JsonResponse jsonResponse = new JsonResponse(false);
             jsonResponse.putErrors(errors);
@@ -110,51 +144,63 @@ public class CategoryController extends AbstractController {
         CategoryData categoryData = new CategoryData();
         categoryData.setName(name);
         categoryData.setDescription(description);
-        categoryData.setParentCategoryId(parentId);
+        categoryData.setParentKey(parentKey);
         CategoryData category = categoryService.save(categoryData);
 
         return new JsonResponse(category != null);
     }
-    
+
     @RequestMapping(value = "/{id}", method = RequestMethod.POST)
     @ResponseBody
-    public JsonResponse updateParentCategory(
-            @PathVariable(value = "id") long id,
-            @RequestParam(value = "parentCategoryId", defaultValue = "-1000", required = false) long parentId,
+    public JsonResponse updateCategory(@PathVariable(value = "id") long id,
+            @RequestParam(value = "parentKey", defaultValue = "", required = false) String parentKey,
             @RequestParam(value = "name", required = false) String name,
             @RequestParam(value = "description", required = false) String description) {
 
         List<RequestError> errors = new ArrayList<RequestError>();
-        
+
         CategoryData categoryData = categoryService.getById(id);
-        if(categoryData == null) {
+        if (categoryData == null) {
             errors.add(new RequestError("id", "Category " + id + " not found"));
         }
-        
-        if(categoryData.getParentCategoryId() != parentId && parentId != -1 && parentId != DEFAULT_CTG_ID) {
-            CategoryData parentCtg = categoryService.getById(parentId);
-            if(parentCtg == null) {
-                errors.add(new RequestError("parentCategoryId", "Category Parent " + parentId + " not found"));
+
+        if (!StringUtils.isEmpty(parentKey)) {
+            CategoryData parentCtg = categoryService.getByKey(parentKey);
+            if (parentCtg == null) {
+                errors.add(new RequestError("parentKey", "Category Parent " + parentKey + " not found"));
             }
         }
-        
+
         if (!errors.isEmpty()) {
             JsonResponse jsonResponse = new JsonResponse(false);
             jsonResponse.putErrors(errors);
             return jsonResponse;
         }
-        
-        if(!StringUtils.isEmpty(name)) {
+
+        if (!StringUtils.isEmpty(name)) {
             categoryData.setName(name);
         }
-        if(!StringUtils.isEmpty(description)) {
+        if (!StringUtils.isEmpty(description)) {
             categoryData.setDescription(description);
         }
-        if(parentId != DEFAULT_CTG_ID) {
-            categoryData.setParentCategoryId(parentId);
+        if (!StringUtils.isEmpty(parentKey)) {
+            categoryData.setParentKey(parentKey);
         }
         CategoryData category = categoryService.update(categoryData);
 
         return new JsonResponse(category != null);
+    }
+
+    @RequestMapping(value = "/{ids}/delete", method = RequestMethod.POST)
+    @ResponseBody
+    public JsonResponse delete(@PathVariable(value = "ids") List<Long> ids) {
+        try {
+            categoryService.delete(ids);
+            return new JsonResponse(true);
+        } catch (Exception e) {
+            JsonResponse response = new JsonResponse(false);
+            response.putMessage(e.getMessage());
+            return response;
+        }
     }
 }

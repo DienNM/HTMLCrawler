@@ -35,10 +35,10 @@ public class ItemServiceImpl implements ItemService {
 
     @Autowired
     private ItemRepository itemRepository;
-    
+
     @Autowired
     private AttributeRepository attributeRepository;
-    
+
     @Autowired
     private ItemAttributeRepository itemAttributeRepository;
 
@@ -77,10 +77,10 @@ public class ItemServiceImpl implements ItemService {
         List<ItemData> itemDatas = new ArrayList<ItemData>();
         ItemData.toDatas(pageResult.getContent(), itemDatas);
         results.setContent(itemDatas);
-        
+
         return results;
     }
-    
+
     @Override
     public void populateAttributes(ItemData item) {
         List<AttributeData> attributeDatas = attributeService.getByItemId(item.getId());
@@ -96,11 +96,34 @@ public class ItemServiceImpl implements ItemService {
         itemRepository.save(itemModel);
         ItemData persisted = new ItemData();
         ItemData.toData(itemModel, persisted);
-        
+
         persisted.setAttributes(item.getAttributes());
         persisted.setSampleContent(item.getSampleContent());
 
         return persisted;
+    }
+
+    @Override
+    @Transactional
+    public List<ItemData> saveOrUpdate(List<ItemData> items) {
+        List<ItemData> persistedItems = new ArrayList<ItemData>();
+        for (ItemData item : items) {
+            ItemModel itemModel = itemRepository.findByKey(item.getKey());
+            if (itemModel == null) {
+                itemModel = new ItemModel();
+                ItemData.toModel(item, itemModel);
+                itemRepository.save(itemModel);
+            } else {
+                itemModel.setName(item.getName());
+                itemModel.setDescription(item.getDescription());
+                itemModel.setCategoryId(item.getCategoryId());
+                itemRepository.update(itemModel);
+            }
+            ItemData persisted = new ItemData();
+            ItemData.toData(itemModel, persisted);
+            persistedItems.add(persisted);
+        }
+        return persistedItems;
     }
 
     @Override
@@ -112,23 +135,38 @@ public class ItemServiceImpl implements ItemService {
         itemRepository.update(itemModel);
         ItemData persisted = new ItemData();
         ItemData.toData(itemModel, persisted);
-        
+
         persisted.setAttributes(item.getAttributes());
         persisted.setSampleContent(item.getSampleContent());
 
         return persisted;
     }
-    
+
     @Override
     @Transactional
     public void delete(long itemId) {
         ItemModel itemModel = itemRepository.find(itemId);
-        if(itemModel == null) {
+        if (itemModel == null) {
             throw new InvalidParameterException(String.format("Item %s not found. Cannot delete", itemId));
         }
         attributeRepository.deleteByItemId(itemId);
         itemAttributeRepository.deleteByItemId(itemId);
         itemRepository.deleteById(itemId);
+    }
+    
+
+
+    @Override
+    @Transactional
+    public void delete(List<Long> ids) {
+        for(Long id : ids) {
+            ItemModel itemModel = itemRepository.find(id);
+            if (itemModel != null) {
+                attributeRepository.deleteByItemId(id);
+                itemAttributeRepository.deleteByItemId(id);
+                itemRepository.deleteById(id);
+            }
+        }
     }
 
     @Override
@@ -141,30 +179,30 @@ public class ItemServiceImpl implements ItemService {
     @Transactional
     public ItemData buildItem(long itemId, String jsonAttributes, boolean forceBuilt) {
         ItemData itemData = get(itemId);
-        if(itemData == null) {
+        if (itemData == null) {
             throw new InvalidParameterException("Cannot find Item: " + itemId);
         }
-        
-        if(itemData.isBuilt() && !forceBuilt) {
+
+        if (itemData.isBuilt() && !forceBuilt) {
             throw new InvalidParameterException(String.format("Item %s is already built", itemId));
         }
 
         AttributeData root = attributeStructureService.build(itemData, jsonAttributes);
         List<AttributeData> attributeDatas = ItemStructureUtil.navigateAttribtesFromRoot(root);
-        
-        if(attributeDatas.isEmpty()) {
-            throw new InvalidParameterException("No Attributes are built for Item: " + itemId); 
+
+        if (attributeDatas.isEmpty()) {
+            throw new InvalidParameterException("No Attributes are built for Item: " + itemId);
         }
 
         // Delete existing attributes
         attributeRepository.deleteByItemId(itemId);
         itemAttributeRepository.deleteByItemId(itemId);
-        
+
         // Save new Attributes
         attributeDatas = attributeService.save(attributeDatas);
         itemData.setAttributes(attributeDatas);
         itemData.setBuilt(true);
-        
+
         return update(itemData);
     }
 }

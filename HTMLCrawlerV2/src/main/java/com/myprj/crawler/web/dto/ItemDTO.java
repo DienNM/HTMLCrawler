@@ -25,6 +25,9 @@ public class ItemDTO extends AuditTDO {
     @DataTransfer("name")
     private String name;
 
+    @DataTransfer("key")
+    private String key;
+
     @DataTransfer("categoryId")
     private long categoryId;
 
@@ -119,5 +122,13 @@ public class ItemDTO extends AuditTDO {
     
     public void setSampleContent(Map<String, Object> sampleContent) {
         this.sampleContent = sampleContent;
+    }
+
+    public String getKey() {
+        return key;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
     }
 }

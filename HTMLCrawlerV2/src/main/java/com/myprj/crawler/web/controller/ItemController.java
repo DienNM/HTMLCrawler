@@ -26,6 +26,7 @@ import com.myprj.crawler.web.dto.ItemDTO;
 import com.myprj.crawler.web.dto.JsonResponse;
 import com.myprj.crawler.web.dto.RequestError;
 import com.myprj.crawler.web.enumeration.DTOLevel;
+import com.myprj.crawler.web.facades.ItemFacade;
 
 /**
  * @author DienNM (DEE)
@@ -35,6 +36,9 @@ import com.myprj.crawler.web.enumeration.DTOLevel;
 public class ItemController extends AbstractController {
 
     private static final long DEFAULT_CTG_ID = -1000;
+
+    @Autowired
+    private ItemFacade itemFacade;
 
     @Autowired
     private ItemService itemService;
@@ -222,6 +226,50 @@ public class ItemController extends AbstractController {
             JsonResponse response = new JsonResponse(true);
             response.putData(datas);
             return response;
+        } catch (Exception e) {
+            JsonResponse response = new JsonResponse(false);
+            response.putMessage(e.getMessage());
+            return response;
+        }
+    }
+
+    @RequestMapping(value = "/import", method = RequestMethod.POST)
+    @ResponseBody
+    public JsonResponse importFromFile(@RequestParam(value = "file") MultipartFile file) {
+
+        if (file == null) {
+            JsonResponse response = new JsonResponse(false);
+            response.putMessage("File are missing");
+            return response;
+        }
+
+        List<ItemData> itemDatas = new ArrayList<ItemData>();
+        ;
+        try {
+            itemDatas = itemFacade.loadItemsFromSource(file.getInputStream());
+            if (itemDatas.isEmpty()) {
+                JsonResponse response = new JsonResponse(false);
+                response.putMessage("No Items are loaded");
+                return response;
+            }
+            itemDatas = itemService.saveOrUpdate(itemDatas);
+        } catch (Exception e) {
+            JsonResponse response = new JsonResponse(false);
+            response.putMessage(e.getMessage());
+            return response;
+        }
+
+        JsonResponse response = new JsonResponse(true);
+        response.putMessage("Loaded " + itemDatas.size() + " items");
+        return response;
+    }
+
+    @RequestMapping(value = "/{ids}/delete", method = RequestMethod.POST)
+    @ResponseBody
+    public JsonResponse delete(@PathVariable(value = "ids") List<Long> ids) {
+        try {
+            itemService.delete(ids);
+            return new JsonResponse(true);
         } catch (Exception e) {
             JsonResponse response = new JsonResponse(false);
             response.putMessage(e.getMessage());

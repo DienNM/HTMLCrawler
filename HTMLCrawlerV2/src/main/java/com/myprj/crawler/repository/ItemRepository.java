@@ -11,5 +11,6 @@ import com.myprj.crawler.model.config.ItemModel;
 public interface ItemRepository extends GenericDao<ItemModel, Long> {
     
     List<ItemModel> findByCategory(long category);
-    
+
+    ItemModel findByKey(String key);
 }

@@ -29,6 +29,10 @@ public class ItemData extends AuditData {
     @EntityTransfer("name")
     private String name;
 
+    @DataTransfer("key")
+    @EntityTransfer("item_key")
+    private String key;
+
     @DataTransfer("categoryId")
     @EntityTransfer("category_id")
     private long categoryId;
@@ -136,5 +140,13 @@ public class ItemData extends AuditData {
 
     public void setBuilt(boolean built) {
         this.built = built;
+    }
+
+    public String getKey() {
+        return key;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
     }
 }

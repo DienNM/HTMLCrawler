@@ -17,8 +17,9 @@ public class CategoryDataTest extends AbstractDomain {
         CategoryData source = new CategoryData();
         source.setDescription("Category Description");
         source.setId(1);
+        source.setKey("1");
         source.setName("Name 1");
-        source.setParentCategoryId(2);
+        source.setParentKey("category-key");
         setAudit(source);
 
         CategoryModel dest = new CategoryModel();
@@ -27,7 +28,8 @@ public class CategoryDataTest extends AbstractDomain {
         Assert.assertEquals(source.getName(), dest.getName());
         Assert.assertEquals(source.getId(), dest.getId());
         Assert.assertEquals(source.getDescription(), dest.getDescription());
-        Assert.assertEquals(source.getParentCategoryId(), dest.getParentCategoryId());
+        Assert.assertEquals(source.getParentKey(), dest.getParentKey());
+        Assert.assertEquals(source.getKey(), dest.getKey());
 
         assertAudilt(source, dest);
     }
@@ -37,8 +39,9 @@ public class CategoryDataTest extends AbstractDomain {
         CategoryModel source = new CategoryModel();
         source.setDescription("Category Description");
         source.setId(1);
+        source.setKey("1");
         source.setName("Name 1");
-        source.setParentCategoryId(2);
+        source.setParentKey("category-key");
         setAudit(source);
 
         CategoryData dest = new CategoryData();
@@ -47,7 +50,8 @@ public class CategoryDataTest extends AbstractDomain {
         Assert.assertEquals(source.getName(), dest.getName());
         Assert.assertEquals(source.getId(), dest.getId());
         Assert.assertEquals(source.getDescription(), dest.getDescription());
-        Assert.assertEquals(source.getParentCategoryId(), dest.getParentCategoryId());
+        Assert.assertEquals(source.getParentKey(), dest.getParentKey());
+        Assert.assertEquals(source.getKey(), dest.getKey());
 
         assertAudilt(source, dest);
     }

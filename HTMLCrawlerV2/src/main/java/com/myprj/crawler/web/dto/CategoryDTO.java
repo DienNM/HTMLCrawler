@@ -13,15 +13,18 @@ public class CategoryDTO extends AuditTDO {
     @DataTransfer("id")
     private long id;
 
+    @DataTransfer("key")
+    private String key;
+
     @DataTransfer("name")
     private String name;
 
     @DataTransfer("description")
     private String description;
 
-    @DataTransfer("parentCategoryId")
-    private long parentCategoryId;
-    
+    @DataTransfer("parentKey")
+    private String parentKey;
+
     public CategoryDTO() {
     }
 
@@ -49,12 +52,20 @@ public class CategoryDTO extends AuditTDO {
         this.description = description;
     }
 
-    public long getParentCategoryId() {
-        return parentCategoryId;
+    public String getKey() {
+        return key;
     }
 
-    public void setParentCategoryId(long parentCategoryId) {
-        this.parentCategoryId = parentCategoryId;
+    public void setKey(String key) {
+        this.key = key;
+    }
+
+    public String getParentKey() {
+        return parentKey;
+    }
+
+    public void setParentKey(String parentKey) {
+        this.parentKey = parentKey;
     }
 
 }

@@ -1,7 +1,9 @@
 package com.myprj.crawler.service.impl;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,14 +41,14 @@ public class CategoryServiceImpl implements CategoryService {
 
         return persitedCategory;
     }
-    
+
     @Override
     @Transactional
     public CategoryData update(CategoryData category) {
         CategoryModel categoryModel = new CategoryModel();
         CategoryData.toModel(category, categoryModel);
         categoryRepository.update(categoryModel);
-        
+
         CategoryData persitedCategory = new CategoryData();
         CategoryData.toData(categoryModel, persitedCategory);
 
@@ -65,6 +67,19 @@ public class CategoryServiceImpl implements CategoryService {
 
         return categoryData;
     }
+    
+    @Override
+    public CategoryData getByKey(String key) {
+        CategoryModel categoryModel = categoryRepository.findByKey(key);
+        if (categoryModel == null) {
+            logger.warn("Cannot find category: {}", key);
+            return null;
+        }
+        CategoryData categoryData = new CategoryData();
+        CategoryData.toData(categoryModel, categoryData);
+
+        return categoryData;
+    }
 
     @Override
     public List<CategoryData> getAll() {
@@ -74,6 +89,16 @@ public class CategoryServiceImpl implements CategoryService {
         CategoryData.toDatas(categoryModels, categoryDatas);
 
         return categoryDatas;
+    }
+    
+    @Override
+    public Map<String, CategoryData> getAllMap() {
+        Map<String, CategoryData> map = new HashMap<String, CategoryData>();
+        List<CategoryData> categories = getAll();
+        for(CategoryData category : categories) {
+            map.put(category.getKey(), category);
+        }
+        return map;
     }
 
     @Override
@@ -91,6 +116,52 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public long count() {
         return categoryRepository.count();
+    }
+
+    @Override
+    @Transactional
+    public List<CategoryData> saveOrUpdate(List<CategoryData> categoryDatas) {
+
+        List<CategoryData> persistedCategories = new ArrayList<CategoryData>();
+        for (CategoryData category : categoryDatas) {
+            CategoryModel categoryModel = categoryRepository.findByKey(category.getKey());
+            if (categoryModel == null) {
+                categoryModel = new CategoryModel();
+                CategoryData.toModel(category, categoryModel);
+                categoryRepository.save(categoryModel);
+            } else {
+                categoryModel.setName(category.getName());
+                categoryModel.setDescription(category.getDescription());
+                categoryModel.setParentKey(category.getParentKey());
+                categoryRepository.update(categoryModel);
+            }
+            CategoryData persisted = new CategoryData();
+            CategoryData.toData(categoryModel, persisted);
+            persistedCategories.add(persisted);
+        }
+        return persistedCategories;
+    }
+
+    @Override
+    @Transactional
+    public void delete(long id) {
+        CategoryModel categoryModel = categoryRepository.find(id);
+        if(categoryModel != null) {
+            categoryRepository.updateParentKey(categoryModel.getKey(), categoryModel.getParentKey());
+            categoryRepository.deleteById(id);
+        }
+    }
+
+    @Override
+    @Transactional
+    public void delete(List<Long> ids) {
+        for(Long id : ids) {
+            CategoryModel categoryModel = categoryRepository.find(id);
+            if(categoryModel != null) {
+                categoryRepository.updateParentKey(categoryModel.getKey(), categoryModel.getParentKey());
+                categoryRepository.deleteById(id);
+            }
+        }
     }
 
 }

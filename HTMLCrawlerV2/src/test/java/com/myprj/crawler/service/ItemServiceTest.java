@@ -34,10 +34,12 @@ public class ItemServiceTest extends AbstractTest {
         item1 = new ItemData();
         item1.setName("Item 1");
         item1.setCategoryId(1);
+        item1.setKey("item-key-1");
         
         item2 = new ItemData();
         item2.setName("Item 2");
         item2.setCategoryId(1);
+        item2.setKey("item-key-2");
         
         itemService.save(item1);
         itemService.save(item2);

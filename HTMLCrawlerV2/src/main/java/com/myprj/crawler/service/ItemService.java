@@ -22,12 +22,16 @@ public interface ItemService {
     
     ItemData save(ItemData item);
     
-    ItemData update(ItemData item);
+    List<ItemData> saveOrUpdate(List<ItemData> items);
     
-    void delete(long id);
+    ItemData update(ItemData item);
     
     ItemData buildItem(long itemId, String jsonAttributes);
     
     ItemData buildItem(long itemId, String jsonAttributes, boolean forceBuilt);
+    
+    void delete(long id);
+    
+    void delete(List<Long> ids);
     
 }

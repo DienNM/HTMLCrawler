@@ -14,7 +14,7 @@
         <property name="targetClassName" value="com.myprj.crawler.web.dto.CategoryDTO" />
         <property name="targetMappings">
             <map>
-                <entry key="SIMPLE" value="id,name,parentCategoryId" />
+                <entry key="SIMPLE" value="id,name,parentKey" />
                 <entry key="DEFAULT" value="SIMPLE,description,createdAt" />
                 <entry key="FULL" value="DEFAULT,createdBy,updatedAt,updatedBy" />
             </map>
@@ -25,7 +25,7 @@
         <property name="targetClassName" value="com.myprj.crawler.web.dto.ItemDTO" />
         <property name="targetMappings">
             <map>
-                <entry key="SIMPLE" value="id,name,categoryId,built" />
+                <entry key="SIMPLE" value="id,key,name,categoryId,built" />
                 <entry key="DEFAULT" value="SIMPLE,description,createdAt,createdBy" />
                 <entry key="FULL" value="DEFAULT,sampleContent,LIST;attributes(DEFAULT),updatedAt,updatedBy" />
             </map>

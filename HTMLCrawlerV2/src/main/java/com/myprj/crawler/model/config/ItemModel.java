@@ -24,6 +24,9 @@ public class ItemModel extends AuditModel {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
     private long id;
+    
+    @Column(name = "item_key", length = 50, nullable = false, unique = true)
+    private String key;
 
     @Column(name = "name", length = 50, nullable = false)
     private String name;
@@ -89,5 +92,13 @@ public class ItemModel extends AuditModel {
 
     public void setBuilt(boolean built) {
         this.built = built;
+    }
+
+    public String getKey() {
+        return key;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
     }
 }

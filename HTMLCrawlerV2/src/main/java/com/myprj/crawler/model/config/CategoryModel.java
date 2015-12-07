@@ -25,15 +25,18 @@ public class CategoryModel extends AuditModel {
     @Column(name = "id")
     private long id;
 
+    @Column(name = "ctg_key", length = 50, nullable = false, unique = true)
+    private String key;
+
     @Column(name = "name", length = 50)
     private String name;
 
     @Column(name = "description", length = 150)
     private String description;
 
-    @Column(name = "parent_ctg_id")
-    private long parentCategoryId = -1;
-
+    @Column(name = "parent_key", length = 50)
+    private String parentKey;
+    
     public CategoryModel() {
     }
 
@@ -61,11 +64,19 @@ public class CategoryModel extends AuditModel {
         this.description = description;
     }
 
-    public long getParentCategoryId() {
-        return parentCategoryId;
+    public String getKey() {
+        return key;
     }
 
-    public void setParentCategoryId(long parentCategoryId) {
-        this.parentCategoryId = parentCategoryId;
+    public void setKey(String key) {
+        this.key = key;
+    }
+
+    public String getParentKey() {
+        return parentKey;
+    }
+
+    public void setParentKey(String parentKey) {
+        this.parentKey = parentKey;
     }
 }

@@ -2,6 +2,7 @@ package com.myprj.crawler.repository;
 
 import java.util.List;
 
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,18 +20,26 @@ public class CategoryRepositoryTest extends AbstractTest {
     @Autowired
     private CategoryRepository categoryRepository;
     
+    @After
+    @Transactional
+    public void tearDown() {
+        categoryRepository.deleteAll();
+    }
+    
     @Test
     @Transactional
     public void testCount() {
         CategoryModel category1 = new CategoryModel();
         category1.setName("Category 1");
         category1.setDescription("Category Description 1");
-        category1.setParentCategoryId(-1);
+        category1.setParentKey(null);
+        category1.setKey("category-1");
 
         CategoryModel category2 = new CategoryModel();
         category2.setName("Category 2");
         category2.setDescription("Category Description 2");
-        category2.setParentCategoryId(-1);
+        category2.setParentKey(null);
+        category2.setKey("category-2");
 
         categoryRepository.save(category1);
         categoryRepository.save(category2);
@@ -44,12 +53,14 @@ public class CategoryRepositoryTest extends AbstractTest {
         CategoryModel category1 = new CategoryModel();
         category1.setName("Category 1");
         category1.setDescription("Category Description 1");
-        category1.setParentCategoryId(-1);
+        category1.setParentKey(null);
+        category1.setKey("category-1");
 
         CategoryModel category2 = new CategoryModel();
         category2.setName("Category 2");
         category2.setDescription("Category Description 2");
-        category2.setParentCategoryId(-1);
+        category2.setParentKey(null);
+        category2.setKey("category-2");
 
         categoryRepository.save(category1);
         categoryRepository.save(category2);
@@ -67,7 +78,8 @@ public class CategoryRepositoryTest extends AbstractTest {
         CategoryModel category1 = new CategoryModel();
         category1.setName("Category 1");
         category1.setDescription("Category Description 1");
-        category1.setParentCategoryId(-1);
+        category1.setParentKey(null);
+        category1.setKey("category-1");
 
         categoryRepository.save(category1);
 
@@ -81,7 +93,8 @@ public class CategoryRepositoryTest extends AbstractTest {
         CategoryModel category1 = new CategoryModel();
         category1.setName("Category 1");
         category1.setDescription("Category Description 1");
-        category1.setParentCategoryId(-1);
+        category1.setParentKey(null);
+        category1.setKey("category-1");
 
         categoryRepository.save(category1);
 
@@ -95,7 +108,8 @@ public class CategoryRepositoryTest extends AbstractTest {
         CategoryModel category1 = new CategoryModel();
         category1.setName("Category 1");
         category1.setDescription("Category Description 1");
-        category1.setParentCategoryId(-1);
+        category1.setParentKey(null);
+        category1.setKey("category-1");
 
         categoryRepository.save(category1);
 
@@ -117,7 +131,8 @@ public class CategoryRepositoryTest extends AbstractTest {
         CategoryModel category1 = new CategoryModel();
         category1.setName("Category 1");
         category1.setDescription("Category Description 1");
-        category1.setParentCategoryId(-1);
+        category1.setParentKey(null);
+        category1.setKey("category-1");
 
         categoryRepository.save(category1);
 
