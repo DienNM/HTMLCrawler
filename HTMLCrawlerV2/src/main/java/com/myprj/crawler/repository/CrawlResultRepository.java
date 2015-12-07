@@ -10,6 +10,8 @@ import com.myprj.crawler.model.crawl.CrawlResultModel;
 
 public interface CrawlResultRepository extends GenericDao<CrawlResultModel, Long> {
     
-    List<CrawlResultModel> findByItemId(long itemId);
+    List<CrawlResultModel> findByItemKey(String itemKey);
+    
+    List<CrawlResultModel> findByCategoryKey(String categoryKey);
     
 }

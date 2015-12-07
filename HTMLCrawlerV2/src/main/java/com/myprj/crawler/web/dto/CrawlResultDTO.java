@@ -4,10 +4,14 @@ import static com.myprj.crawler.enumeration.ResultStatus.NEW;
 
 import java.io.Serializable;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.myprj.crawler.annotation.DataTransfer;
+import com.myprj.crawler.domain.crawl.CrawlResultData;
 import com.myprj.crawler.enumeration.ResultStatus;
+import com.myprj.crawler.util.converter.DomainConverter;
+import com.myprj.crawler.util.converter.ObjectConverter;
 
 /**
  * @author DienNM (DEE)
@@ -43,6 +47,22 @@ public class CrawlResultDTO implements Serializable {
 
     @DataTransfer("createdAt")
     private long createdAt;
+    
+    public static void toDTOs(List<CrawlResultData> sources, List<CrawlResultDTO> dests) {
+        for(CrawlResultData source : sources) {
+            CrawlResultDTO dest = new CrawlResultDTO();
+            toDTO(source, dest);
+            dests.add(dest);
+        }
+    }
+    
+    public static void toDTO(CrawlResultData source, CrawlResultDTO dest) {
+        DomainConverter.convert(source, dest, new ObjectConverter<CrawlResultData, CrawlResultDTO>() {
+            @Override
+            public void convert(CrawlResultData src, CrawlResultDTO dest) {
+            }
+        });
+    }
     
     public CrawlResultDTO() {
     }

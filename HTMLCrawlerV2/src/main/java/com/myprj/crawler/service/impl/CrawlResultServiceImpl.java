@@ -54,10 +54,17 @@ public class CrawlResultServiceImpl implements CrawlResultService {
     }
 
     @Override
-    @Transactional
-    public List<CrawlResultData> getByItemId(long itemId) {
+    public List<CrawlResultData> getByItemKey(String itemKey) {
+        List<CrawlResultModel> crawlResultModels = crawlResultRepository.findByItemKey(itemKey);
+        List<CrawlResultData> crawlResultDatas = new ArrayList<CrawlResultData>();
+        CrawlResultData.toDatas(crawlResultModels, crawlResultDatas);
         
-        List<CrawlResultModel> crawlResultModels = crawlResultRepository.findByItemId(itemId);
+        return crawlResultDatas;
+    }
+
+    @Override
+    public List<CrawlResultData> getByCategoryKey(String categoryKey) {
+        List<CrawlResultModel> crawlResultModels = crawlResultRepository.findByCategoryKey(categoryKey);
         List<CrawlResultData> crawlResultDatas = new ArrayList<CrawlResultData>();
         CrawlResultData.toDatas(crawlResultModels, crawlResultDatas);
         

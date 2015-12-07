@@ -19,9 +19,9 @@ import org.springframework.stereotype.Service;
 
 import com.myprj.crawler.domain.ErrorLink;
 import com.myprj.crawler.domain.HtmlDocument;
-import com.myprj.crawler.domain.TargetObject;
 import com.myprj.crawler.domain.config.AttributeSelector;
 import com.myprj.crawler.domain.config.ItemAttributeData;
+import com.myprj.crawler.domain.config.ItemContent;
 import com.myprj.crawler.domain.config.ItemData;
 import com.myprj.crawler.domain.crawl.CrawlResultData;
 import com.myprj.crawler.domain.crawl.PagingConfig;
@@ -82,7 +82,6 @@ public class DefaultWorker implements Worker {
 
     protected void invokeWorkerList(WorkerContext workerCtx, WorkerItemData workerItem) throws WorkerException {
         List<String> urls = getURLs(workerItem.getPagingConfig(), workerItem.getUrl());
-        int numberOfContinuousFailures = 0;
         for (String url : urls) {
             logger.info("Start crawling: {}", url);
             WorkerData worker = workerCtx.getWorker();
@@ -95,14 +94,8 @@ public class DefaultWorker implements Worker {
                 error.setCrawlType(workerItem.getCrawlType());
                 workerCtx.getErrorLinks().add(error);
                 logger.warn(errorMessage);
-                numberOfContinuousFailures++;
-                if (numberOfContinuousFailures > 2) {
-                    return;
-                }
                 continue;
             }
-            numberOfContinuousFailures = 0; // Reset
-
             AttributeSelector linkSelector = workerItem.getLevel0Selector();
             Elements elements = document.body().select(linkSelector.getSelector());
             if (elements == null) {
@@ -180,11 +173,12 @@ public class DefaultWorker implements Worker {
 
         CrawlResultData result = new CrawlResultData();
         result.setUrl(url);
+        result.setSite(worker.getSite());
         result.setItemKey(item.getKey());
         result.setCategoryKey(item.getCategoryData().getKey());
         result.setRequestId(workerItem.getRequestId());
-        result.getDetail().putAll(item.getSampleContent().getContent());
-
+        result.getDetail().putAll(ItemContent.clone(item.getSampleContent()));
+        
         collectResult4Attribute(htmlDocument, rootItemAttribute, result);
 
         if (result.getDetail().isEmpty()) {
@@ -200,9 +194,7 @@ public class DefaultWorker implements Worker {
         Object data = null;
         if(LIST_OBJECT.equals(current.getType())) {
             data = HandlerRegister.getHandler(current.getType()).handle(htmlDocument, current);
-            TargetObject targetObject = new TargetObject();
-            targetObject.setAttributeName(current.getName());
-            ItemStructureUtil.populateValue2Attribute(result.getDetail(), current.getAttributeId(), data, targetObject);
+            ItemStructureUtil.populateValue2Attribute(result.getDetail(), current.getAttributeId(), data);
             return;
         } else if(selector != null) {
             data = HandlerRegister.getHandler(current.getType()).handle(htmlDocument, current);
@@ -210,7 +202,7 @@ public class DefaultWorker implements Worker {
         
         if (data == null && selector != null) {
             logger.warn("No Data: Attribute={}, CSS-Selector={}, URL={}", current.getName(),
-                    selector.getText(), selector.getUrl());
+                    selector.getText(), htmlDocument.getDocument().baseUri());
         }
         ItemStructureUtil.populateValue2Attribute(result.getDetail(), current.getAttributeId(), data);
         List<ItemAttributeData> children = current.getChildren();

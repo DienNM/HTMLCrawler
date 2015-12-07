@@ -23,12 +23,24 @@ public class DefaultCrawlResultRepository extends DefaultGenericDao<CrawlResultM
 
     @SuppressWarnings("unchecked")
     @Override
-    public List<CrawlResultModel> findByItemId(long itemId) {
+    public List<CrawlResultModel> findByItemKey(String itemKey) {
         StringBuilder queryStr = new StringBuilder("FROM " + getClassName());
-        queryStr.append(" WHERE itemId = :itemId ");
+        queryStr.append(" WHERE itemKey = :itemKey ");
 
         Query query = entityManager.createQuery(queryStr.toString(), getClazz());
-        query.setParameter("itemId", itemId);
+        query.setParameter("itemKey", itemKey);
+
+        return query.getResultList();
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public List<CrawlResultModel> findByCategoryKey(String categoryKey) {
+        StringBuilder queryStr = new StringBuilder("FROM " + getClassName());
+        queryStr.append(" WHERE categoryKey = :categoryKey ");
+
+        Query query = entityManager.createQuery(queryStr.toString(), getClazz());
+        query.setParameter("categoryKey", categoryKey);
 
         return query.getResultList();
     }

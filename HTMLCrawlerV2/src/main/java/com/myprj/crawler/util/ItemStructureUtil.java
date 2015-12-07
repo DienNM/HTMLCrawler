@@ -1,7 +1,5 @@
 package com.myprj.crawler.util;
 
-import static com.myprj.crawler.domain.config.ItemContent.EMPTY_TEXT;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -9,7 +7,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import com.myprj.crawler.domain.TargetObject;
 import com.myprj.crawler.domain.config.AttributeData;
 import com.myprj.crawler.domain.config.ItemAttributeData;
 import com.myprj.crawler.domain.config.ItemData;
@@ -62,63 +59,32 @@ public final class ItemStructureUtil {
     }
     
     public static void populateValue2Attribute(Map<String, Object> detail, String attributeId, Object value) {
-        populateValue2Attribute(detail, attributeId, value, null);
-    }
-    
-    public static void populateValue2Attribute(Map<String, Object> detail, String attributeId, Object value, TargetObject targetObject) {
         Iterator<String> attNames = AttributeUtil.parseAttributeNames(attributeId);
         attNames.next();
         if(attNames.hasNext()) {
-            populate(detail, attNames, value, targetObject);
+            populate(detail, attNames, value);
         }
     }
     
     @SuppressWarnings("unchecked")
-    private static void populate(Map<String, Object> detail, Iterator<String> attNames, Object value, TargetObject targetObject) {
+    private static void populate(Map<String, Object> detail, Iterator<String> attNames, Object value) {
         String attName = attNames.next();
         Object object = detail.get(attName);
         if(object == null || value == null) {
-            return;
-        }
-        if(targetObject != null && attName.equals(targetObject.getAttributeName())) {
-            detail.put(attName, value);
             return;
         }
         if(object instanceof String) {
             detail.put(attName, value);
         }
         if(object instanceof List) {
-            List<Object> listObjects = (List<Object>) object;
-            if(!AttributeUtil.contentObject(listObjects)) {
-                if(listObjects.size() == 1 && listObjects.get(0).equals(EMPTY_TEXT)) {
-                    listObjects.remove(0);
-                }
-                if(value instanceof List) {
-                    listObjects.addAll((List<Object>)value);
-                } else {
-                    listObjects.add(value);
-                }
-                return;
-            }
-            int attIndex = Integer.valueOf(attNames.next());
-            if(attIndex >= listObjects.size()) {
-                Map<String, Object> newElement = new HashMap<String, Object>();
-                newElement.putAll((Map<String, Object>) listObjects.get(0));
-                listObjects.add(attIndex,newElement);
-            }
-            Map<String, Object> itemValue = (Map<String, Object>) listObjects.get(attIndex);
-
-            if(!attNames.hasNext()) {
-                itemValue.put(attName, value);
-            } else {
-                populate(itemValue, attNames, value, targetObject);
-            }
+            detail.put(attName, value);
+            return;
         } else if(object instanceof Map) {
             Map<String, Object> itemValue = (Map<String, Object>) object;
             if(!attNames.hasNext()) {
                 itemValue.put(attName, value);
             } else {
-                populate(itemValue, attNames, value, targetObject);
+                populate(itemValue, attNames, value);
             }
         }
     }

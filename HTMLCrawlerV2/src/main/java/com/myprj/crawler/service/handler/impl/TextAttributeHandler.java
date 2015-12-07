@@ -42,8 +42,9 @@ public class TextAttributeHandler extends AttributeHandlerSupport {
         String text = null;
         if (StringUtils.isEmpty(cssSelector.getTargetAttribute())) {
             text = elements.first().text();
+        } else {
+            text = elements.first().attr(cssSelector.getTargetAttribute());
         }
-        text = elements.first().attr(cssSelector.getTargetAttribute());
         
         if(StringUtils.isEmpty(text)) {
             return "";

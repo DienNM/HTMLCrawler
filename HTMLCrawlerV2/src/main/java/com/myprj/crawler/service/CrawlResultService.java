@@ -14,6 +14,8 @@ public interface CrawlResultService {
     
     CrawlResultData get(long id);
     
-    List<CrawlResultData> getByItemId(long itemId);
+    List<CrawlResultData> getByItemKey(String itemKey);
+    
+    List<CrawlResultData> getByCategoryKey(String categoryKey);
     
 }

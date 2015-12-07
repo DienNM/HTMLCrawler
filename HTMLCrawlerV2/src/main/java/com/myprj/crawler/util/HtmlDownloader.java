@@ -50,7 +50,7 @@ public class HtmlDownloader {
     }
     
     public static void main(String[] args) {
-        HtmlDownloader.downloadAndStore2File("http://www.lazada.vn/laptop-apple-macbook-air-mjve2-13inch-bac-1299964.html"
+        HtmlDownloader.downloadAndStore2File("http://tiki.vn/asus-zenpad-c-7-0-z170cg-ho-tro-thoai-p149801.html?ref=c1789.c1794.c4281.c4654.c2325.c4655.c3350.c4215."
                 + "", "/media/diennm/Working/abc.txt");
     }
     

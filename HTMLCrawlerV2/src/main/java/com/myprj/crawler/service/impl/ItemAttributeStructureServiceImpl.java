@@ -3,7 +3,6 @@ package com.myprj.crawler.service.impl;
 import static com.myprj.crawler.enumeration.AttributeType.LIST;
 import static com.myprj.crawler.enumeration.AttributeType.LIST_OBJECT;
 import static com.myprj.crawler.enumeration.AttributeType.OBJECT;
-import static com.myprj.crawler.enumeration.AttributeType.TEXT;
 
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
