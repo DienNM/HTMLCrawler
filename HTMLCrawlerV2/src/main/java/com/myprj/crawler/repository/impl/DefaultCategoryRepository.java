@@ -51,11 +51,11 @@ public class DefaultCategoryRepository extends DefaultGenericDao<CategoryModel, 
 
     @Override
     public void updateParentKey(String oldParentKey, String newParentKey) {
-        StringBuilder queryStr = new StringBuilder("UPDATE " + getClassName());
-        queryStr.append(" set parentKey = :newParentKey ");
-        queryStr.append(" WHERE parentKey = :oldParentKey ");
+        StringBuilder queryStr = new StringBuilder("UPDATE category ");
+        queryStr.append(" set parent_key = :newParentKey ");
+        queryStr.append(" WHERE parent_key = :oldParentKey ");
 
-        Query query = entityManager.createQuery(queryStr.toString(), getClazz());
+        Query query = entityManager.createNativeQuery(queryStr.toString(), getClazz());
         query.setParameter("newParentKey", newParentKey);
         query.setParameter("oldParentKey", oldParentKey);
 

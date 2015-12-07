@@ -42,7 +42,6 @@ public class ItemFacadeImpl implements ItemFacade {
                 if (line == null || line.trim().isEmpty() || line.startsWith("#")) {
                     continue;
                 }
-                line = line.substring(1);
                 ItemData item = parseItem(line, categoryRepo);
                 if (item == null) {
                     return new ArrayList<ItemData>();

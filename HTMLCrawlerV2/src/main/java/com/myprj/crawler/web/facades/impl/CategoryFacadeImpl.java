@@ -34,7 +34,6 @@ public class CategoryFacadeImpl implements CategoryFacade {
                 if (line == null || line.trim().isEmpty() || line.startsWith("#")) {
                     continue;
                 }
-                line = line.substring(1);
                 CategoryData category = parseCategory(line);
                 if (category == null) {
                     return new ArrayList<CategoryData>();
