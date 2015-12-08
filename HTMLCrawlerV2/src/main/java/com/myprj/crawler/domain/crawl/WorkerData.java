@@ -23,7 +23,6 @@ public class WorkerData extends AuditData {
     @DataTransfer(value = "id")
     @EntityTransfer("id")
     private long id;
-    
 
     @DataTransfer(value = "key")
     @EntityTransfer("worker_key")

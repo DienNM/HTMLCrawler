@@ -23,31 +23,25 @@ public class ItemAttributeModel extends AuditModel {
     @Column(name = "id", length = 100)
     private String id;
     
-    @Column(name = "name", length = 20)
+    @Column(name = "item_id", nullable = false)
+    private long itemId;
+    
+    @Column(name = "name", nullable = false, length = 50)
     private String name;
     
-    @Column(name = "item_key")
-    private String itemKey;
-
-    @Column(name = "worker_item_id")
-    private long workerItemId;
-
-    @Column(name = "is_root")
-    private boolean root = false;
-    
-    @Column(name = "attribute_id", length = 100)
-    private String attributeId;
-
-    @Column(name = "selector_json", length = 1000)
-    private String selectorJson;
-    
-    @Column(name = "parent_id")
+    @Column(name = "parent_id", length = 100)
     private String parentId;
     
-    @Column(name = "att_type")
+    @Column(name = "att_type", length = 15)
     @Enumerated(EnumType.STRING)
     private AttributeType type;
     
+    @Column(name = "is_root")
+    private boolean root;
+    
+    public ItemAttributeModel() {
+    }
+
     public String getId() {
         return id;
     }
@@ -56,49 +50,12 @@ public class ItemAttributeModel extends AuditModel {
         this.id = id;
     }
 
-    public String getAttributeId() {
-        return attributeId;
+    public long getItemId() {
+        return itemId;
     }
 
-
-    public void setAttributeId(String attributeId) {
-        this.attributeId = attributeId;
-    }
-
-
-    public String getSelectorJson() {
-        return selectorJson;
-    }
-
-
-    public void setSelectorJson(String selectorJson) {
-        this.selectorJson = selectorJson;
-    }
-
-
-    public String getParentId() {
-        return parentId;
-    }
-
-
-    public void setParentId(String parentId) {
-        this.parentId = parentId;
-    }
-
-    public AttributeType getType() {
-        return type;
-    }
-
-    public void setType(AttributeType type) {
-        this.type = type;
-    }
-
-    public boolean isRoot() {
-        return root;
-    }
-
-    public void setRoot(boolean root) {
-        this.root = root;
+    public void setItemId(long itemId) {
+        this.itemId = itemId;
     }
 
     public String getName() {
@@ -109,19 +66,27 @@ public class ItemAttributeModel extends AuditModel {
         this.name = name;
     }
 
-    public long getWorkerItemId() {
-        return workerItemId;
+    public AttributeType getType() {
+        return type;
     }
 
-    public void setWorkerItemId(long workerItemId) {
-        this.workerItemId = workerItemId;
+    public void setType(AttributeType type) {
+        this.type = type;
     }
 
-    public String getItemKey() {
-        return itemKey;
+    public String getParentId() {
+        return parentId;
     }
 
-    public void setItemKey(String itemKey) {
-        this.itemKey = itemKey;
+    public void setParentId(String parentId) {
+        this.parentId = parentId;
+    }
+
+    public boolean isRoot() {
+        return root;
+    }
+
+    public void setRoot(boolean root) {
+        this.root = root;
     }
 }

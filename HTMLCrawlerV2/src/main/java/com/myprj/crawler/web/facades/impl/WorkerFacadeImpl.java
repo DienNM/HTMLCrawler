@@ -54,7 +54,7 @@ public class WorkerFacadeImpl implements WorkerFacade {
                     }
                     if (!workerItems.isEmpty()) {
                         workerItems = workerService.buildWorkerItems(workerData, workerItems);
-                        buildSelector(workerItems, item.getJson(), forceBuild);
+                        buildWorkerItemSelectors(workerItems, item.getJson(), forceBuild);
                     }
                 } catch(Exception e) {
                     errorStructures.add("Error: " + e.getMessage());
@@ -64,7 +64,7 @@ public class WorkerFacadeImpl implements WorkerFacade {
         return errorStructures;
     }
 
-    private void buildSelector(List<WorkerItemData> workerItems, String json, boolean forceBuild) {
+    private void buildWorkerItemSelectors(List<WorkerItemData> workerItems, String json, boolean forceBuild) {
         WorkerItemData detailWorkerItem = null;
         for (WorkerItemData workerItem : workerItems) {
             if (workerItem.getCrawlType().equals(CrawlType.DETAIL)) {
@@ -75,7 +75,6 @@ public class WorkerFacadeImpl implements WorkerFacade {
         if (detailWorkerItem == null) {
             return;
         }
-
         workerService.buildSelector4Item(detailWorkerItem, json);
     }
 
@@ -111,8 +110,9 @@ public class WorkerFacadeImpl implements WorkerFacade {
                 AttributeSelector selector = new AttributeSelector(elements[5]);
                 workerItem.setLevel0Selector(selector);
             }
-
             workerItem.setUrl(elements[6]);
+        } else {
+            workerItem.setPagingConfig(null);
         }
         
         return workerItem;

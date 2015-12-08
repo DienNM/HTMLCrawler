@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 
 import com.myprj.crawler.domain.HtmlDocument;
 import com.myprj.crawler.domain.config.AttributeSelector;
-import com.myprj.crawler.domain.config.ItemAttributeData;
+import com.myprj.crawler.domain.config.WorkerItemAttributeData;
 import com.myprj.crawler.enumeration.AttributeType;
 import com.myprj.crawler.service.handler.AttributeHandlerSupport;
 import com.myprj.crawler.service.handler.HandlerRegister;
@@ -23,54 +23,54 @@ import com.myprj.crawler.service.handler.HandlerRegister;
  * @author DienNM (DEE)
  */
 @Service("listObjectAttributeHandler")
-public class ListObjectAttributeHandler extends AttributeHandlerSupport{
-    
+public class ListObjectAttributeHandler extends AttributeHandlerSupport {
+
     @Override
     public AttributeType getType() {
         return AttributeType.LIST_OBJECT;
     }
-    
+
     @Override
     @PostConstruct
     public void registerHandler() {
         HandlerRegister.register(getType(), this);
     }
 
-    
     // [{ key : "", value : ""}]
     @Override
-    public Object handle(HtmlDocument document, ItemAttributeData current) {
-        AttributeSelector cssSelector  = current.getSelector();
+    public Object handle(HtmlDocument document, WorkerItemAttributeData current) {
+        AttributeSelector cssSelector = current.getSelector();
 
         List<Map<String, Object>> results = new ArrayList<Map<String, Object>>();
         Elements elements = document.getDocument().select(cssSelector.getSelector());
-        if(elements == null || elements.isEmpty()) {
+        if (elements == null || elements.isEmpty()) {
             return results;
         }
-        ItemAttributeData elementObject =  current.getChildren().get(0);
-        List<ItemAttributeData> actualObjects = elementObject.getChildren();
-        for(Element element : elements) {
+        WorkerItemAttributeData elementObject = current.getChildren().get(0);
+        List<WorkerItemAttributeData> actualObjects = elementObject.getChildren();
+        for (Element element : elements) {
             Map<String, Object> map = new HashMap<String, Object>();
-            for(ItemAttributeData obj : actualObjects) {
+            for (WorkerItemAttributeData obj : actualObjects) {
                 AttributeSelector subSelector = obj.getSelector();
-                if(subSelector == null) {
+                if (subSelector == null) {
                     continue;
                 }
                 Object rs = null;
                 Elements elementChildren = element.select(subSelector.getSelector());
-                if(elementChildren == null || elementChildren.isEmpty()) {
+                if (elementChildren == null || elementChildren.isEmpty()) {
                     continue;
                 }
-                if(StringUtils.isEmpty(subSelector.getTargetAttribute())) {
+                if (StringUtils.isEmpty(subSelector.getTargetAttribute())) {
                     rs = elementChildren.text();
                 } else {
                     rs = elementChildren.attr(subSelector.getTargetAttribute());
                 }
-                if(rs != null) {
+                String text = returnNormalizeString(rs);
+                if (!StringUtils.isEmpty(text)) {
                     map.put(obj.getName(), rs);
                 }
             }
-            if(!map.isEmpty()) {
+            if (!map.isEmpty()) {
                 results.add(map);
             }
         }

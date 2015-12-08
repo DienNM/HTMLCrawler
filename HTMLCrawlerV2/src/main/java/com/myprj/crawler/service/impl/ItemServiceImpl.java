@@ -7,22 +7,21 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.myprj.crawler.domain.PageResult;
 import com.myprj.crawler.domain.Pageable;
-import com.myprj.crawler.domain.config.AttributeData;
+import com.myprj.crawler.domain.config.ItemAttributeData;
 import com.myprj.crawler.domain.config.ItemData;
 import com.myprj.crawler.model.config.ItemModel;
-import com.myprj.crawler.repository.AttributeRepository;
 import com.myprj.crawler.repository.ItemAttributeRepository;
 import com.myprj.crawler.repository.ItemRepository;
-import com.myprj.crawler.service.AttributeService;
-import com.myprj.crawler.service.AttributeStructureService;
+import com.myprj.crawler.repository.WorkerItemAttributeRepository;
+import com.myprj.crawler.service.ItemAttributeService;
+import com.myprj.crawler.service.ItemAttributeStructureService;
 import com.myprj.crawler.service.ItemService;
-import com.myprj.crawler.util.ItemStructureUtil;
+import com.myprj.crawler.util.AttributeStructureUtil;
 
 /**
  * @author DienNM (DEE)
@@ -37,17 +36,16 @@ public class ItemServiceImpl implements ItemService {
     private ItemRepository itemRepository;
 
     @Autowired
-    private AttributeRepository attributeRepository;
+    private ItemAttributeRepository attributeRepository;
 
     @Autowired
-    private ItemAttributeRepository itemAttributeRepository;
+    private ItemAttributeService itemAttributeService;
 
     @Autowired
-    @Qualifier("attributeService")
-    private AttributeService attributeService;
+    private WorkerItemAttributeRepository workerItemAttributeRepository;
 
     @Autowired
-    private AttributeStructureService attributeStructureService;
+    private ItemAttributeStructureService itemAttributeStructureService;
 
     @Override
     public ItemData get(long id) {
@@ -87,7 +85,7 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public void populateAttributes(ItemData item) {
-        List<AttributeData> attributeDatas = attributeService.getByItemId(item.getId());
+        List<ItemAttributeData> attributeDatas = itemAttributeService.getByItemId(item.getId());
         item.setAttributes(attributeDatas);
     }
 
@@ -154,7 +152,7 @@ public class ItemServiceImpl implements ItemService {
             throw new InvalidParameterException(String.format("Item %s not found. Cannot delete", itemId));
         }
         attributeRepository.deleteByItemId(itemId);
-        itemAttributeRepository.deleteByItemId(itemId);
+        workerItemAttributeRepository.deleteByItemKey(itemModel.getKey());
         itemRepository.deleteById(itemId);
     }
 
@@ -165,7 +163,7 @@ public class ItemServiceImpl implements ItemService {
             ItemModel itemModel = itemRepository.find(id);
             if (itemModel != null) {
                 attributeRepository.deleteByItemId(id);
-                itemAttributeRepository.deleteByItemId(id);
+                workerItemAttributeRepository.deleteByItemKey(itemModel.getKey());
                 itemRepository.deleteById(id);
             }
         }
@@ -187,8 +185,8 @@ public class ItemServiceImpl implements ItemService {
             throw new InvalidParameterException(String.format("Item %s is already built", itemData.getKey()));
         }
 
-        AttributeData root = attributeStructureService.build(itemData, jsonAttributes);
-        List<AttributeData> attributeDatas = ItemStructureUtil.navigateAttribtesFromRoot(root);
+        ItemAttributeData root = itemAttributeStructureService.build(itemData, jsonAttributes);
+        List<ItemAttributeData> attributeDatas = AttributeStructureUtil.navigateAttribtesFromRoot(root);
 
         if (attributeDatas.isEmpty()) {
             throw new InvalidParameterException("No Attributes are built for Item: " + itemData.getKey());
@@ -196,10 +194,10 @@ public class ItemServiceImpl implements ItemService {
 
         // Delete existing attributes
         attributeRepository.deleteByItemId(itemData.getId());
-        itemAttributeRepository.deleteByItemId(itemData.getId());
+        workerItemAttributeRepository.deleteByItemKey(itemData.getKey());
 
         // Save new Attributes
-        attributeDatas = attributeService.save(attributeDatas);
+        attributeDatas = itemAttributeService.save(attributeDatas);
         itemData.setAttributes(attributeDatas);
         itemData.setBuilt(true);
 

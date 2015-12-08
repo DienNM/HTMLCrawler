@@ -20,6 +20,10 @@ public final class ImportFileParser {
 
     private static Logger logger = LoggerFactory.getLogger(ImportFileParser.class);
 
+    private static final String START = "<<START>>";
+    
+    private static final String END = "<<END>>";
+
     public static List<ImportFileStruture> loadItemFromSource(InputStream inputStream) {
         List<ImportFileStruture> importFileStrutures = new ArrayList<ImportFileStruture>();
         BufferedReader br = null;
@@ -37,12 +41,12 @@ public final class ImportFileParser {
                 if (line == null || line.trim().isEmpty() || line.startsWith("#")) {
                     continue;
                 }
-                if (line.startsWith("<<START>>")) {
+                if (line.startsWith(START)) {
                     flagStructure = true;
                     flagItem = false;
                     continue;
                 }
-                if (line.startsWith("<<END>>")) {
+                if (line.startsWith(END)) {
                     flagStructure = false;
                     flagItem = true;
 
@@ -56,18 +60,18 @@ public final class ImportFileParser {
                     lineOfStructures = new ArrayList<String>();
                     continue;
                 }
-                
-                if(line.startsWith(">")) {
+
+                if (line.startsWith(">")) {
                     flagItem = true;
                     List<String> subLines = new ArrayList<String>();
                     lineOfItems.add(subLines);
                     line = line.substring(1);
                 }
-                
+
                 if (flagStructure) {
                     lineOfStructures.add(line);
                 }
-                
+
                 if (flagItem) {
                     List<String> subLines = lineOfItems.get(lineOfItems.size() - 1);
                     subLines.add(line);

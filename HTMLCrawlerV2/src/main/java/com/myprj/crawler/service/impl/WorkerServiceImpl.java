@@ -16,17 +16,17 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.myprj.crawler.domain.PageResult;
 import com.myprj.crawler.domain.Pageable;
-import com.myprj.crawler.domain.config.ItemAttributeData;
+import com.myprj.crawler.domain.config.WorkerItemAttributeData;
 import com.myprj.crawler.domain.crawl.WorkerData;
 import com.myprj.crawler.domain.crawl.WorkerItemData;
 import com.myprj.crawler.enumeration.Level;
-import com.myprj.crawler.model.config.ItemAttributeModel;
+import com.myprj.crawler.model.config.WorkerItemAttributeModel;
 import com.myprj.crawler.model.crawl.WorkerItemModel;
 import com.myprj.crawler.model.crawl.WorkerModel;
-import com.myprj.crawler.repository.ItemAttributeRepository;
+import com.myprj.crawler.repository.WorkerItemAttributeRepository;
 import com.myprj.crawler.repository.WorkerItemRepository;
 import com.myprj.crawler.repository.WorkerRepository;
-import com.myprj.crawler.service.ItemAttributeStructureService;
+import com.myprj.crawler.service.WorkerItemAttributeStructureService;
 import com.myprj.crawler.service.WorkerService;
 import com.myprj.crawler.util.WorkerItemValidator;
 
@@ -45,10 +45,10 @@ public class WorkerServiceImpl implements WorkerService {
     private WorkerItemRepository workerItemRepository;
 
     @Autowired
-    private ItemAttributeRepository itemAttributeRepository;
+    private WorkerItemAttributeRepository workerItemAttributeRepository;
 
     @Autowired
-    private ItemAttributeStructureService itemAttrItemStructureService;
+    private WorkerItemAttributeStructureService workerItemAttrItemStructureService;
 
     @Override
     public WorkerData get(long id) {
@@ -62,7 +62,7 @@ public class WorkerServiceImpl implements WorkerService {
 
         return workerData;
     }
-    
+
     @Override
     public WorkerData getByKey(String key) {
         WorkerModel workerModel = workerRepository.findByKey(key);
@@ -116,7 +116,7 @@ public class WorkerServiceImpl implements WorkerService {
         WorkerData.toData(workerModel, workerData);
         return workerData;
     }
-    
+
     @Override
     @Transactional
     public WorkerData saveOrUpdate(WorkerData worker) {
@@ -137,7 +137,7 @@ public class WorkerServiceImpl implements WorkerService {
         }
         WorkerData persisted = new WorkerData();
         WorkerData.toData(workerModel, persisted);
-        
+
         return persisted;
     }
 
@@ -177,12 +177,12 @@ public class WorkerServiceImpl implements WorkerService {
 
         List<WorkerItemModel> workerItemModels = new ArrayList<WorkerItemModel>();
         WorkerItemData.toModels(new ArrayList<WorkerItemData>(workerItemMap.values()), workerItemModels);
-        
+
         List<WorkerItemModel> workerItemModelOlds = workerItemRepository.findByWorkerId(worker.getId());
-        for(WorkerItemModel workerItemModelOld : workerItemModelOlds) {
-            itemAttributeRepository.deleteByWorkerItemId(workerItemModelOld.getId());
+        for (WorkerItemModel workerItemModelOld : workerItemModelOlds) {
+            workerItemAttributeRepository.deleteByWorkerItemId(workerItemModelOld.getId());
         }
-        
+
         workerItemRepository.deleteByWorkerId(worker.getId());
         workerItemRepository.save(workerItemModels);
         worker.setBuilt(true);
@@ -192,34 +192,34 @@ public class WorkerServiceImpl implements WorkerService {
         worker.setWorkerItems(workerItemDatas);
 
         update(worker);
-        
+
         return workerItemDatas;
     }
 
     @Override
     @Transactional
     public WorkerItemData buildSelector4Item(WorkerItemData workerItem, String jsonSelector) {
-        ItemAttributeData itemAttribute = itemAttrItemStructureService.build(workerItem, jsonSelector);
-       
-        if(itemAttribute == null) {
+        WorkerItemAttributeData attribute = workerItemAttrItemStructureService.build(workerItem, jsonSelector);
+
+        if (attribute == null) {
             return workerItem;
         }
-        
-        itemAttributeRepository.deleteByWorkerItemId(workerItem.getId());
-        
-        List<ItemAttributeData> itemAttributes = new ArrayList<ItemAttributeData>();
-        ItemAttributeData.collectionAllItemAttributes(itemAttribute, itemAttributes);
-        List<ItemAttributeModel> itemAttributeModels = new ArrayList<ItemAttributeModel>();
-        ItemAttributeData.toModels(itemAttributes, itemAttributeModels);
-        itemAttributeRepository.save(itemAttributeModels);
-        
-        workerItem.setRootItemAttribute(itemAttribute);
-        
+
+        workerItemAttributeRepository.deleteByWorkerItemId(workerItem.getId());
+
+        List<WorkerItemAttributeData> itemAttributes = new ArrayList<WorkerItemAttributeData>();
+        WorkerItemAttributeData.collectionAllItemAttributes(attribute, itemAttributes);
+        List<WorkerItemAttributeModel> itemAttributeModels = new ArrayList<WorkerItemAttributeModel>();
+        WorkerItemAttributeData.toModels(itemAttributes, itemAttributeModels);
+        workerItemAttributeRepository.save(itemAttributeModels);
+
+        workerItem.setRootWorkerItemAttribute(attribute);
+
         WorkerItemModel workerItemModel = new WorkerItemModel();
         WorkerItemData.toModel(workerItem, workerItemModel);
-        
+
         workerItemRepository.update(workerItemModel);
-        
+
         return workerItem;
     }
 

@@ -1,10 +1,7 @@
 package com.myprj.crawler.service.impl;
 
-import java.security.InvalidParameterException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,145 +19,113 @@ import com.myprj.crawler.service.ItemAttributeService;
  */
 @Service
 public class ItemAttributeServiceImpl implements ItemAttributeService {
-    
+
     private Logger logger = LoggerFactory.getLogger(ItemAttributeServiceImpl.class);
 
     @Autowired
     private ItemAttributeRepository itemAttributeRepository;
-    
+
     @Override
     public ItemAttributeData get(String id) {
-        ItemAttributeModel itemAttributeModel = itemAttributeRepository.find(id);
-        if(itemAttributeModel == null) {
-            logger.warn("Cannot find Item Attribute: {}", id);
+        ItemAttributeModel attributeModel = itemAttributeRepository.find(id);
+        if (attributeModel == null) {
+            logger.warn("Cannot find Attribute: {}", id);
             return null;
         }
-        ItemAttributeData itemAttributeData = new ItemAttributeData();
-        ItemAttributeData.toData(itemAttributeModel, itemAttributeData);
-        
-        return itemAttributeData;
+        ItemAttributeData attributeData = new ItemAttributeData();
+        ItemAttributeData.toData(attributeModel, attributeData);
+
+        return attributeData;
     }
-    
+
     @Override
     public ItemAttributeData getAndPopulate(String id) {
-        ItemAttributeData itemAttributeData = get(id);
-        if(itemAttributeData == null) {
+        ItemAttributeData attributeData = get(id);
+        if (attributeData == null) {
             return null;
         }
-        populate(itemAttributeData);
-        return itemAttributeData;
+        populate(attributeData);
+        return attributeData;
     }
 
     @Override
-    public void populate(ItemAttributeData itemAttribute) {
-        populateParent(itemAttribute);
-        populateChildren(itemAttribute);
-        populateAttribute(itemAttribute);
+    public ItemAttributeData getRoot(long itemId) {
+        ItemAttributeModel attributeModel =itemAttributeRepository.findRootByItemId(itemId);
+        if (attributeModel == null) {
+            logger.warn("Cannot find Root Attribute for Item: {}", itemId);
+            return null;
+        }
+        ItemAttributeData attributeData = new ItemAttributeData();
+        ItemAttributeData.toData(attributeModel, attributeData);
+
+        return attributeData;
     }
 
     @Override
-    public void populateChildren(ItemAttributeData itemAttribute) {
-        List<ItemAttributeModel> childrenModel = itemAttributeRepository.findChildren(itemAttribute.getId());
-        List<ItemAttributeData> childrenData = new ArrayList<ItemAttributeData>();
-        ItemAttributeData.toDatas(childrenModel, childrenData);
-        itemAttribute.setChildren(childrenData);
+    public void populate(ItemAttributeData attribute) {
+        populateChildren(attribute);
+        populateParent(attribute);
     }
 
     @Override
-    public void populateParent(ItemAttributeData itemAttribute) {
-        String parentId = itemAttribute.getParentId();
-        if(parentId == null) {
-            logger.warn("No Parent Item Attribute of {}. Cannot populate its parent", itemAttribute.getId());
+    public void populateChildren(ItemAttributeData attribute) {
+        List<ItemAttributeModel> childrenModels = itemAttributeRepository.findChildren(attribute.getId());
+        List<ItemAttributeData> childrenDatas = new ArrayList<ItemAttributeData>();
+
+        ItemAttributeData.toDatas(childrenModels, childrenDatas);
+        attribute.setChildren(childrenDatas);
+    }
+
+    @Override
+    public void populateParent(ItemAttributeData attribute) {
+        String parentId = attribute.getParentId();
+        if (parentId == null) {
+            logger.warn("No Parent Attribute of {}. Cannot populate its parent", attribute.getId());
             return;
         }
-        ItemAttributeData parentItemAttribute = get(itemAttribute.getParentId());
-        if(parentItemAttribute != null) {
-            itemAttribute.setParent(parentItemAttribute);
+        ItemAttributeData parent = get(parentId);
+        if (parent != null) {
+            attribute.setParent(parent);
         }
-    }
-    
-    @Override
-    public void populateAttribute(ItemAttributeData itemAttribute) {
-        // TODO
     }
 
     @Override
-    public List<ItemAttributeData> getByWorkerItemId(long workerItemId) {
-        
-        List<ItemAttributeModel> itemAttributeModels = itemAttributeRepository.findByWorkerItemId(workerItemId);
-        List<ItemAttributeData> itemAttributeDatas = new ArrayList<ItemAttributeData>();
-        ItemAttributeData.toDatas(itemAttributeModels, itemAttributeDatas);
-        
-        return itemAttributeDatas;
-    }
-    
-    @Override
-    public ItemAttributeData getRootWithPopulateTree(long workerItemId) {
-        
-        List<ItemAttributeData> itemAttributeDatas = getByWorkerItemId(workerItemId);
-        if(itemAttributeDatas.isEmpty()) {
-            throw new InvalidParameterException("Worker Item " + workerItemId + " has not been built Selectors yet.");
-        }
-        
-        Map<String, List<ItemAttributeData>> mapParents = new HashMap<String, List<ItemAttributeData>>();
-        for(ItemAttributeData itemAtt : itemAttributeDatas) {
-            String parentId = itemAtt.getParentId();
-            if(parentId == null) {
-                parentId = "-1";
-            }
-            List<ItemAttributeData> children = mapParents.get(parentId);
-            if(children == null) {
-                children = new ArrayList<ItemAttributeData>();
-                mapParents.put(parentId, children);
-            }
-            children.add(itemAtt);
-        }
-        
-        ItemAttributeData root = mapParents.get("-1").get(0);
-        populateTree(root, mapParents);
-        
-        return root;
-    }
-    
-    private void populateTree(ItemAttributeData current, Map<String, List<ItemAttributeData>> mapParents) {
-        List<ItemAttributeData> children = mapParents.get(current.getId());
-        if(children == null) {
-            return;
-        }
-        for(ItemAttributeData child : children) {
-            child.setParent(current);
-            populateTree(child, mapParents);
-            if(current.getChildren() == null) {
-                current.setChildren(new ArrayList<ItemAttributeData>());
-            }
-            current.getChildren().add(child);
-        }
+    public List<ItemAttributeData> getByItemId(long itemId) {
+        List<ItemAttributeModel> attributeModels = itemAttributeRepository.findByItemId(itemId);
+        List<ItemAttributeData> attributeDatas = new ArrayList<ItemAttributeData>();
+
+        ItemAttributeData.toDatas(attributeModels, attributeDatas);
+        return attributeDatas;
     }
 
     @Override
     @Transactional
-    public ItemAttributeData save(ItemAttributeData itemAttribute) {
-        ItemAttributeModel itemAttributeModel = new ItemAttributeModel();
-        ItemAttributeData.toModel(itemAttribute, itemAttributeModel);
-        
-        itemAttributeRepository.save(itemAttributeModel);
-        ItemAttributeData persisted = new ItemAttributeData();
-        ItemAttributeData.toData(itemAttributeModel, persisted);
-        
-        return persisted;
+    public ItemAttributeData save(ItemAttributeData attribute) {
+        ItemAttributeModel attributeModel = new ItemAttributeModel();
+        ItemAttributeData.toModel(attribute, attributeModel);
+
+        itemAttributeRepository.save(attributeModel);
+        ItemAttributeData attributeData = new ItemAttributeData();
+        ItemAttributeData.toData(attributeModel, attributeData);
+
+        return attributeData;
     }
 
     @Override
     @Transactional
-    public List<ItemAttributeData> save(List<ItemAttributeData> itemAttributes) {
-        List<ItemAttributeModel> itemAttributeModels = new ArrayList<ItemAttributeModel>();
-        ItemAttributeData.toModels(itemAttributes, itemAttributeModels);
-        
-        itemAttributeRepository.save(itemAttributeModels);
-        List<ItemAttributeData> persisteds = new ArrayList<ItemAttributeData>();
-        ItemAttributeData.toDatas(itemAttributeModels, persisteds);
-        
-        return persisteds;
+    public List<ItemAttributeData> save(List<ItemAttributeData> attributes) {
+        List<ItemAttributeData> attributeDatas = new ArrayList<ItemAttributeData>();
+
+        for (ItemAttributeData attributeData : attributes) {
+            ItemAttributeModel attributeModel = new ItemAttributeModel();
+            ItemAttributeData.toModel(attributeData, attributeModel);
+            itemAttributeRepository.save(attributeModel);
+
+            ItemAttributeData persisted = new ItemAttributeData();
+            ItemAttributeData.toData(attributeModel, persisted);
+            attributeDatas.add(persisted);
+        }
+        return attributeDatas;
     }
 
 }

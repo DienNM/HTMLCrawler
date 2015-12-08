@@ -6,7 +6,7 @@ import java.util.Map;
 
 import com.myprj.crawler.annotation.DataTransfer;
 import com.myprj.crawler.domain.config.AttributeSelector;
-import com.myprj.crawler.domain.config.ItemAttributeData;
+import com.myprj.crawler.domain.config.WorkerItemAttributeData;
 import com.myprj.crawler.domain.crawl.PagingConfig;
 import com.myprj.crawler.domain.crawl.WorkerItemData;
 import com.myprj.crawler.enumeration.CrawlType;
@@ -36,9 +36,9 @@ public class WorkerItemDTO extends AuditTDO {
 
     @DataTransfer("pagingConfig")
     private PagingConfig pagingConfig = new PagingConfig();
-    
-    @DataTransfer("itemAttributeDTOs")
-    private List<ItemAttributeDTO> itemAttributeDTOs = new ArrayList<ItemAttributeDTO>();
+
+    @DataTransfer("workerItemAttributeDTOs")
+    private List<WorkerItemAttributeDTO> workerItemAttributeDTOs = new ArrayList<WorkerItemAttributeDTO>();
     
     private Map<String, Object> detailSelectors;
     
@@ -80,12 +80,12 @@ public class WorkerItemDTO extends AuditTDO {
                 if(src.getLevel0Selector() != null) {
                     dest.setLevel0Selector(src.getLevel0Selector().getText());
                 }
-                if(src.getRootItemAttribute() != null) {
-                    List<ItemAttributeData> itemAttributes = new ArrayList<ItemAttributeData>();
-                    ItemAttributeData.collectionAllItemAttributes(src.getRootItemAttribute(), itemAttributes);
-                    List<ItemAttributeDTO> itemAttributeDTOs = new ArrayList<ItemAttributeDTO>();
-                    ItemAttributeDTO.toDTOs(itemAttributes, itemAttributeDTOs);
-                    dest.setItemAttributeDTOs(itemAttributeDTOs);
+                if(src.getRootWorkerItemAttribute() != null) {
+                    List<WorkerItemAttributeData> itemAttributes = new ArrayList<WorkerItemAttributeData>();
+                    WorkerItemAttributeData.collectionAllItemAttributes(src.getRootWorkerItemAttribute(), itemAttributes);
+                    List<WorkerItemAttributeDTO> itemAttributeDTOs = new ArrayList<WorkerItemAttributeDTO>();
+                    WorkerItemAttributeDTO.toDTOs(itemAttributes, itemAttributeDTOs);
+                    dest.setWorkerItemAttributeDTOs(itemAttributeDTOs);
                 }
             }
         });
@@ -139,11 +139,11 @@ public class WorkerItemDTO extends AuditTDO {
         this.url = url;
     }
 
-    public List<ItemAttributeDTO> getItemAttributeDTOs() {
-        return itemAttributeDTOs;
+    public List<WorkerItemAttributeDTO> getWorkerItemAttributeDTOs() {
+        return workerItemAttributeDTOs;
     }
 
-    public void setItemAttributeDTOs(List<ItemAttributeDTO> itemAttributeDTOs) {
-        this.itemAttributeDTOs = itemAttributeDTOs;
+    public void setWorkerItemAttributeDTOs(List<WorkerItemAttributeDTO> workerItemAttributeDTOs) {
+        this.workerItemAttributeDTOs = workerItemAttributeDTOs;
     }
 }

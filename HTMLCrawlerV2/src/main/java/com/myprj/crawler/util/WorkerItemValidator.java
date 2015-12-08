@@ -68,7 +68,7 @@ public final class WorkerItemValidator {
                     workerItem.getClass()));
         }
 
-        if (workerItem.getRootItemAttribute() == null) {
+        if (workerItem.getRootWorkerItemAttribute() == null) {
             errors.add(String.format("%s [CrawlType = %s] is missing Item Attributes", workerItem.getLevel(),
                     workerItem.getClass()));
         }

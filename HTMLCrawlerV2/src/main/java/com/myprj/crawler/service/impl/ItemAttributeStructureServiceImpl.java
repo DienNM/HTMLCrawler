@@ -1,31 +1,26 @@
 package com.myprj.crawler.service.impl;
 
+import static com.myprj.crawler.domain.config.ItemContent.EMPTY_TEXT;
+import static com.myprj.crawler.enumeration.AttributeType.HTML;
 import static com.myprj.crawler.enumeration.AttributeType.LIST;
 import static com.myprj.crawler.enumeration.AttributeType.LIST_OBJECT;
 import static com.myprj.crawler.enumeration.AttributeType.OBJECT;
+import static com.myprj.crawler.enumeration.AttributeType.TEXT;
 
-import java.security.InvalidParameterException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.regex.Pattern;
 
-import org.jsoup.helper.StringUtil;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
-import com.myprj.crawler.domain.config.AttributeData;
-import com.myprj.crawler.domain.config.AttributeSelector;
 import com.myprj.crawler.domain.config.ItemAttributeData;
 import com.myprj.crawler.domain.config.ItemContent;
 import com.myprj.crawler.domain.config.ItemData;
-import com.myprj.crawler.domain.crawl.WorkerItemData;
 import com.myprj.crawler.enumeration.AttributeType;
-import com.myprj.crawler.enumeration.SelectorSource;
-import com.myprj.crawler.service.AttributeService;
 import com.myprj.crawler.service.ItemAttributeStructureService;
-import com.myprj.crawler.service.ItemService;
 import com.myprj.crawler.util.AttributeUtil;
 import com.myprj.crawler.util.Serialization;
 
@@ -35,78 +30,51 @@ import com.myprj.crawler.util.Serialization;
 @Service
 public class ItemAttributeStructureServiceImpl implements ItemAttributeStructureService {
 
-    @Autowired
-    private AttributeService attributeService;
-    
-    @Autowired
-    private ItemService itemService;
-
-    public void setAttributeService(AttributeService attributeService) {
-        this.attributeService = attributeService;
-    }
-
     @SuppressWarnings("unchecked")
     @Override
-    public ItemAttributeData build(WorkerItemData workerItem, String jsonText) {
+    public ItemAttributeData build(ItemData item, String jsonText) {
         Map<String, Object> inputObject = Serialization.deserialize(jsonText, Map.class);
-        
-        ItemData itemData = itemService.getByKey(workerItem.getItemKey());
-        long itemId = itemData.getId();
-        String attributeId = String.valueOf(itemId) + "|" + ItemContent.ROOT;
 
         ItemAttributeData root = new ItemAttributeData();
-        root.setId(workerItem.getId() + "|" + attributeId);
-        root.setWorkerItemId(workerItem.getId());
-        root.setRoot(true);
-        root.setName(ItemContent.ROOT);
         root.setType(OBJECT);
+        root.setName(ItemContent.ROOT);
+        root.setId(String.valueOf(item.getId()) + "|" + ItemContent.ROOT);
+        root.setRoot(true);
         root.setParent(null);
-        root.setParentId(null);
-        root.setAttributeId(attributeId);
-        root.setItemKey(workerItem.getItemKey());
+        root.setItemId(item.getId());
 
-        return build(workerItem, root, inputObject);
+        // Initialize ItemContent
+        item.setSampleContent(new ItemContent());
+
+        return build(item, root, inputObject);
     }
 
     @SuppressWarnings("unchecked")
-    private ItemAttributeData build(WorkerItemData workerItem, ItemAttributeData current, Map<String, Object> obj) {
+    private ItemAttributeData build(ItemData item, ItemAttributeData current, Map<String, Object> obj) {
         for (Entry<String, Object> entry : obj.entrySet()) {
             String key = entry.getKey();
             Object value = entry.getValue();
             ItemAttributeData child = null;
             if (value instanceof Map) {
-                child = buildMap(workerItem, current, key, (Map<String, Object>) value);
+                child = buildMap(item, current, key, (Map<String, Object>) value);
             } else if (value instanceof List) {
-                child = buildList(workerItem, current, key, (List<Object>) value);
+                child = buildList(item, current, key, (List<Object>) value);
             } else if (value instanceof String) {
-                child = buildString(workerItem, current, key, (String) value);
+                child = buildString(item, current, key, (String) value);
             }
             addChild(current, child);
         }
         return current;
     }
 
-    protected ItemAttributeData createAttribute(ItemAttributeData parent, AttributeType type,
-            WorkerItemData workerItem, String key) {
-        String attributeId = parent.getAttributeId() + "|" + key;
-        AttributeData attributeData = attributeService.get(attributeId);
-        if (attributeData == null) {
-            throw new InvalidParameterException("Cannot build Item Attribute structue. Key: " + attributeId
-                    + " not found");
-        }
+    private ItemAttributeData createAttribute(ItemAttributeData parent, AttributeType type, ItemData item, String key) {
         ItemAttributeData attribute = new ItemAttributeData();
-        attribute.setWorkerItemId(workerItem.getId());
-        attribute.setId(workerItem.getId() + "|" + attributeId);
         attribute.setName(key);
-        attribute.setAttributeId(attributeId);
+        attribute.setId(parent.getId() + "|" + key);
         attribute.setParent(parent);
         attribute.setParentId(parent.getId());
-        attribute.setItemKey(workerItem.getItemKey());
-        if(type == null) {
-            attribute.setType(attributeData.getType());
-        } else {
-            attribute.setType(type);
-        }
+        attribute.setItemId(item.getId());
+        attribute.setType(type);
         return attribute;
     }
 
@@ -118,73 +86,50 @@ public class ItemAttributeStructureServiceImpl implements ItemAttributeStructure
         current.getChildren().add(child);
     }
 
-    private ItemAttributeData buildMap(WorkerItemData workerItem, ItemAttributeData parent, String key,
-            Map<String, Object> value) {
-        ItemAttributeData current = createAttribute(parent, OBJECT, workerItem, key);
-        return build(workerItem, current, value);
+    private ItemAttributeData buildMap(ItemData item, ItemAttributeData parent, String key, Map<String, Object> value) {
+        ItemAttributeData current = createAttribute(parent, OBJECT, item, key);
+        Map<String, Object> parentObject = AttributeUtil.getObject(item.getSampleContent(), parent.getId());
+        parentObject.put(key, new HashMap<String, Object>());
+
+        return build(item, current, value);
     }
 
     @SuppressWarnings("unchecked")
-    private ItemAttributeData buildList(WorkerItemData workerItem, ItemAttributeData parent, String key,
-            List<Object> value) {
+    private ItemAttributeData buildList(ItemData item, ItemAttributeData parent, String key, List<Object> value) {
+
+        Map<String, Object> parentObj = AttributeUtil.getObject(item.getSampleContent(), parent.getId());
+        List<Object> listValue = new ArrayList<Object>();
+        parentObj.put(key, listValue);
 
         if (!AttributeUtil.contentObject(value)) {
-         // [...]
-            ItemAttributeData current = createAttribute(parent, LIST, workerItem, key);
-            if (value != null && !value.isEmpty()) {
-                AttributeSelector attributeSelector = parseAttritbuteSelectors(value.get(0).toString());
-                current.setSelector(attributeSelector);
-            }
+            ItemAttributeData current = createAttribute(parent, LIST, item, key);
+            listValue.add(EMPTY_TEXT);
             return current;
         }
+
+        ItemAttributeData current = createAttribute(parent, LIST_OBJECT, item, key);
+        Map<String, Object> elementList = new HashMap<String, Object>();
+        listValue.add(elementList);
         
-        // [{key:value,...}]
-        if(value.size() != 2) {
-            throw new InvalidParameterException("Error build attribute: " + key + " - LIST_OBJECT needs 2 params");
-        }
-        ItemAttributeData current = createAttribute(parent, LIST_OBJECT, workerItem, key);
-        AttributeSelector attributeSelector = parseAttritbuteSelectors(value.get(1).toString());
-        current.setSelector(attributeSelector);
-        
-        ItemAttributeData attribute = createAttribute(current, OBJECT, workerItem, key);
-        
-        ItemAttributeData child = build(workerItem, attribute, (Map<String, Object>) value.get(0));
+        ItemAttributeData attribute = createAttribute(current, OBJECT, item, key);
+        ItemAttributeData child = build(item, attribute, (Map<String, Object>) value.get(0));
         addChild(current, child);
         return current;
     }
-
-    private ItemAttributeData buildString(WorkerItemData workerItem, ItemAttributeData parent, String key, String value) {
-        ItemAttributeData current = createAttribute(parent, null, workerItem, key);
-        AttributeSelector attributeSelector = parseAttritbuteSelectors(value);
-        current.setSelector(attributeSelector);
+    
+    
+    private ItemAttributeData buildString(ItemData item, ItemAttributeData parent, String key, String value) {
+        ItemAttributeData current = null;
+        
+        if(StringUtils.isEmpty(value) || AttributeType.TEXT.name().equalsIgnoreCase(value)) {
+            current = createAttribute(parent, TEXT, item, key);
+        } else {
+            current = createAttribute(parent, HTML, item, key);
+        }
+        Map<String, Object> parentObj = AttributeUtil.getObject(item.getSampleContent(), parent.getId());
+        
+        parentObj.put(key, EMPTY_TEXT);
         return current;
     }
 
-    // I@CSS||E@CSS||E@CSS
-    private AttributeSelector parseAttritbuteSelectors(String input) {
-        if (StringUtil.isBlank(input)) {
-            return null;
-        }
-        String[] texts = input.split(Pattern.quote("|") + Pattern.quote("|"));
-        if (texts.length == 0) {
-            throw new InvalidParameterException("Cannot parse CSS-Selector value: " + input);
-        }
-        String e0 = texts[0];
-        AttributeSelector targetSelector = parseAttritbuteSelector(e0);
-
-        for (int i = 1; i < texts.length; i++) {
-            String ex = texts[i];
-            AttributeSelector externalSelector = parseAttritbuteSelector(ex);
-            targetSelector.getExternalSelectors().add(externalSelector);
-        }
-
-        return targetSelector;
-    }
-
-    private AttributeSelector parseAttritbuteSelector(String input) {
-        int firstIndexOfAT = input.indexOf("@");
-        String source = input.substring(0, firstIndexOfAT);
-        String css = input.substring(firstIndexOfAT + 1);
-        return new AttributeSelector(css, SelectorSource.fromString(source));
-    }
 }

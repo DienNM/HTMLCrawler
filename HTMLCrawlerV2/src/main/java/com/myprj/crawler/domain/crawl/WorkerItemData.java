@@ -12,7 +12,7 @@ import com.myprj.crawler.annotation.DataTransfer;
 import com.myprj.crawler.annotation.EntityTransfer;
 import com.myprj.crawler.domain.AuditData;
 import com.myprj.crawler.domain.config.AttributeSelector;
-import com.myprj.crawler.domain.config.ItemAttributeData;
+import com.myprj.crawler.domain.config.WorkerItemAttributeData;
 import com.myprj.crawler.domain.config.ItemData;
 import com.myprj.crawler.enumeration.CrawlType;
 import com.myprj.crawler.enumeration.Level;
@@ -64,8 +64,8 @@ public class WorkerItemData extends AuditData {
     @DataCopy("item")
     private ItemData item;
 
-    @DataCopy("rootItemAttribute")
-    private ItemAttributeData rootItemAttribute;
+    @DataCopy("rootWorkerItemAttribute")
+    private WorkerItemAttributeData rootWorkerItemAttribute;
 
     // For List Crawler to get next link
     @DataCopy("level0Selector")
@@ -188,12 +188,12 @@ public class WorkerItemData extends AuditData {
         this.level0Selector = level0Selector;
     }
 
-    public ItemAttributeData getRootItemAttribute() {
-        return rootItemAttribute;
+    public WorkerItemAttributeData getRootWorkerItemAttribute() {
+        return rootWorkerItemAttribute;
     }
 
-    public void setRootItemAttribute(ItemAttributeData rootItemAttribute) {
-        this.rootItemAttribute = rootItemAttribute;
+    public void setRootWorkerItemAttribute(WorkerItemAttributeData rootWorkerItemAttribute) {
+        this.rootWorkerItemAttribute = rootWorkerItemAttribute;
     }
 
     public String getRequestId() {

@@ -13,7 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.myprj.crawler.domain.RequestCrawl;
 import com.myprj.crawler.domain.config.CategoryData;
-import com.myprj.crawler.domain.config.ItemAttributeData;
+import com.myprj.crawler.domain.config.WorkerItemAttributeData;
 import com.myprj.crawler.domain.config.ItemData;
 import com.myprj.crawler.domain.crawl.CrawlHistoryData;
 import com.myprj.crawler.domain.crawl.WorkerContext;
@@ -24,7 +24,7 @@ import com.myprj.crawler.enumeration.WorkerStatus;
 import com.myprj.crawler.exception.CrawlerException;
 import com.myprj.crawler.service.CategoryService;
 import com.myprj.crawler.service.CrawlHistoryService;
-import com.myprj.crawler.service.ItemAttributeService;
+import com.myprj.crawler.service.WorkerItemAttributeService;
 import com.myprj.crawler.service.ItemService;
 import com.myprj.crawler.service.WorkerService;
 import com.myprj.crawler.service.crawl.CrawlerHandler;
@@ -57,7 +57,7 @@ public abstract class AbstractCrawler implements CrawlerService {
     private WorkerService workerService;
     
     @Autowired
-    private ItemAttributeService itemAttributeService;
+    private WorkerItemAttributeService itemAttributeService;
 
     @Override
     public void crawl(RequestCrawl request)  throws CrawlerException{
@@ -81,8 +81,8 @@ public abstract class AbstractCrawler implements CrawlerService {
             for(WorkerItemData workerItem : worker.getWorkerItems()) {
                 workerItem.setRequestId(request.getRequestId());
                 if(DETAIL.equals(workerItem.getCrawlType())) {
-                    ItemAttributeData root = itemAttributeService.getRootWithPopulateTree(workerItem.getId());
-                    workerItem.setRootItemAttribute(root);
+                    WorkerItemAttributeData root = itemAttributeService.getRootWithPopulateTree(workerItem.getId());
+                    workerItem.setRootWorkerItemAttribute(root);
                     
                     ItemData itemData = itemService.getByKey(workerItem.getItemKey());
                     CategoryData categoryData = categoryService.getById(itemData.getCategoryId());

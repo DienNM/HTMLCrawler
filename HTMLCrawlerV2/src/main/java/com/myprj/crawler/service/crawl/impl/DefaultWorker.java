@@ -20,7 +20,7 @@ import org.springframework.stereotype.Service;
 import com.myprj.crawler.domain.ErrorLink;
 import com.myprj.crawler.domain.HtmlDocument;
 import com.myprj.crawler.domain.config.AttributeSelector;
-import com.myprj.crawler.domain.config.ItemAttributeData;
+import com.myprj.crawler.domain.config.WorkerItemAttributeData;
 import com.myprj.crawler.domain.config.ItemContent;
 import com.myprj.crawler.domain.config.ItemData;
 import com.myprj.crawler.domain.crawl.CrawlResultData;
@@ -35,7 +35,7 @@ import com.myprj.crawler.service.event.CrawlEventPublisher;
 import com.myprj.crawler.service.event.impl.CrawlDetailCompletedEvent;
 import com.myprj.crawler.service.handler.HandlerRegister;
 import com.myprj.crawler.util.HtmlDownloader;
-import com.myprj.crawler.util.ItemStructureUtil;
+import com.myprj.crawler.util.AttributeStructureUtil;
 import com.myprj.crawler.util.converter.DomainCopy;
 
 /**
@@ -169,7 +169,7 @@ public class DefaultWorker implements Worker {
 
     protected void processWorkerDetail(String url, HtmlDocument htmlDocument, WorkerItemData workerItem, WorkerData worker) {
         ItemData item = workerItem.getItem();
-        ItemAttributeData rootItemAttribute = workerItem.getRootItemAttribute();
+        WorkerItemAttributeData rootItemAttribute = workerItem.getRootWorkerItemAttribute();
 
         CrawlResultData result = new CrawlResultData();
         result.setUrl(url);
@@ -189,12 +189,12 @@ public class DefaultWorker implements Worker {
         crawlEventPublisher.publish(new CrawlDetailCompletedEvent(result));
     }
 
-    protected void collectResult4Attribute(HtmlDocument htmlDocument, ItemAttributeData current, CrawlResultData result) {
+    protected void collectResult4Attribute(HtmlDocument htmlDocument, WorkerItemAttributeData current, CrawlResultData result) {
         AttributeSelector selector = current.getSelector();
         Object data = null;
         if(LIST_OBJECT.equals(current.getType())) {
             data = HandlerRegister.getHandler(current.getType()).handle(htmlDocument, current);
-            ItemStructureUtil.populateValue2Attribute(result.getDetail(), current.getAttributeId(), data);
+            AttributeStructureUtil.populateValue2Attribute(result.getDetail(), current.getAttributeId(), data);
             return;
         } else if(selector != null) {
             data = HandlerRegister.getHandler(current.getType()).handle(htmlDocument, current);
@@ -204,10 +204,10 @@ public class DefaultWorker implements Worker {
             logger.warn("No Data: Attribute={}, CSS-Selector={}, URL={}", current.getName(),
                     selector.getText(), htmlDocument.getDocument().baseUri());
         }
-        ItemStructureUtil.populateValue2Attribute(result.getDetail(), current.getAttributeId(), data);
-        List<ItemAttributeData> children = current.getChildren();
+        AttributeStructureUtil.populateValue2Attribute(result.getDetail(), current.getAttributeId(), data);
+        List<WorkerItemAttributeData> children = current.getChildren();
         if (!children.isEmpty()) {
-            for (ItemAttributeData child : children) {
+            for (WorkerItemAttributeData child : children) {
                 collectResult4Attribute(htmlDocument, child, result);
             }
         }

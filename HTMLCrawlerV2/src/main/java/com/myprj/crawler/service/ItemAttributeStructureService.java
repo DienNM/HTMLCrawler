@@ -1,7 +1,7 @@
 package com.myprj.crawler.service;
 
 import com.myprj.crawler.domain.config.ItemAttributeData;
-import com.myprj.crawler.domain.crawl.WorkerItemData;
+import com.myprj.crawler.domain.config.ItemData;
 
 /**
  * @author DienNM (DEE)
@@ -9,6 +9,6 @@ import com.myprj.crawler.domain.crawl.WorkerItemData;
 
 public interface ItemAttributeStructureService {
     
-    ItemAttributeData build(WorkerItemData workerItem, String jsonText);
+    ItemAttributeData build(ItemData item, String jsonText);
     
 }

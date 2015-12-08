@@ -3,62 +3,64 @@ package com.myprj.crawler.domain;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.myprj.crawler.domain.config.AttributeData;
+import com.myprj.crawler.domain.config.WorkerItemAttributeData;
 import com.myprj.crawler.enumeration.AttributeType;
-import com.myprj.crawler.model.config.AttributeModel;
+import com.myprj.crawler.model.config.WorkerItemAttributeModel;
 
 /**
  * @author DienNM (DEE)
  */
 
-public class AttributeDataTest extends AbstractDomain {
-
+public class WorkerItemAttributeDataTest extends AbstractDomain {
     @Test
     public void testConvertDomain2Entity() {
-        AttributeData source = new AttributeData();
+        WorkerItemAttributeData source = new WorkerItemAttributeData();
         source.setId("1");
-        source.setItemId(1);
+        source.setItemKey("key1");
         source.setName("Att1");
         source.setParentId("2");
         source.setRoot(true);
         source.setType(AttributeType.OBJECT);
+        source.setAttributeId("a1");
         setAudit(source);
-        
-        AttributeModel dest = new AttributeModel();
-        AttributeData.toModel(source, dest);
-     
+
+        WorkerItemAttributeModel dest = new WorkerItemAttributeModel();
+        WorkerItemAttributeData.toModel(source, dest);
+
         Assert.assertEquals(source.getId(), dest.getId());
-        Assert.assertEquals(source.getItemId(), dest.getItemId());
+        Assert.assertEquals(source.getItemKey(), dest.getItemKey());
         Assert.assertEquals(source.getName(), dest.getName());
         Assert.assertEquals(source.getParentId(), dest.getParentId());
         Assert.assertEquals(source.isRoot(), dest.isRoot());
         Assert.assertEquals(source.getType(), dest.getType());
-        
+        Assert.assertEquals(source.getAttributeId(), dest.getAttributeId());
+
         assertAudilt(source, dest);
     }
-    
+
     @Test
     public void testConvertEntity2Domain() {
-        AttributeModel source = new AttributeModel();
+        WorkerItemAttributeModel source = new WorkerItemAttributeModel();
         source.setId("1");
-        source.setItemId(1);
+        source.setItemKey("key1");
         source.setName("Att1");
         source.setParentId("2");
         source.setRoot(true);
         source.setType(AttributeType.OBJECT);
+        source.setAttributeId("a1");
         setAudit(source);
-        
-        AttributeData dest = new AttributeData();
-        AttributeData.toData(source, dest);
-     
+
+        WorkerItemAttributeData dest = new WorkerItemAttributeData();
+        WorkerItemAttributeData.toData(source, dest);
+
         Assert.assertEquals(source.getId(), dest.getId());
-        Assert.assertEquals(source.getItemId(), dest.getItemId());
+        Assert.assertEquals(source.getItemKey(), dest.getItemKey());
         Assert.assertEquals(source.getName(), dest.getName());
         Assert.assertEquals(source.getParentId(), dest.getParentId());
         Assert.assertEquals(source.isRoot(), dest.isRoot());
         Assert.assertEquals(source.getType(), dest.getType());
-        
+        Assert.assertEquals(source.getAttributeId(), dest.getAttributeId());
+
         assertAudilt(source, dest);
     }
-    
 }

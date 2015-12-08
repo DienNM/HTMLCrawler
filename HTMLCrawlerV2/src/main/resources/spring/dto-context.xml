@@ -15,8 +15,8 @@
         <property name="targetMappings">
             <map>
                 <entry key="SIMPLE" value="id,key,name,parentKey" />
-                <entry key="DEFAULT" value="SIMPLE,description,createdAt" />
-                <entry key="FULL" value="DEFAULT,createdBy,updatedAt,updatedBy" />
+                <entry key="DEFAULT" value="SIMPLE,description,createdAt,createdBy" />
+                <entry key="FULL" value="DEFAULT,updatedAt,updatedBy" />
             </map>
         </property>
     </bean>
@@ -32,8 +32,8 @@
         </property>
     </bean>
     
-    <bean id="com.myprj.crawler.web.dto.AttributeDTO" class = "com.myprj.crawler.web.mapping.DTOMapping">
-        <property name="targetClassName" value="com.myprj.crawler.web.dto.AttributeDTO" />
+    <bean id="com.myprj.crawler.web.dto.ItemAttributeDTO" class = "com.myprj.crawler.web.mapping.DTOMapping">
+        <property name="targetClassName" value="com.myprj.crawler.web.dto.ItemAttributeDTO" />
         <property name="targetMappings">
             <map>
                 <entry key="SIMPLE" value="id,name,itemId,type,parentId,root" />
@@ -60,13 +60,13 @@
             <map>
                 <entry key="SIMPLE" value="level,crawlType" />
                 <entry key="DEFAULT" value="SIMPLE,level0Selector,pagingConfig,createdAt,createdBy" />
-                <entry key="FULL" value="DEFAULT,LIST;itemAttributeDTOs(FULL),updatedAt,updatedBy" />
+                <entry key="FULL" value="DEFAULT,LIST;workerItemAttributeDTOs(DEFAULT),updatedAt,updatedBy" />
             </map>
         </property>
     </bean>
     
-    <bean id="com.myprj.crawler.web.dto.ItemAttributeDTO" class = "com.myprj.crawler.web.mapping.DTOMapping">
-        <property name="targetClassName" value="com.myprj.crawler.web.dto.ItemAttributeDTO" />
+    <bean id="com.myprj.crawler.web.dto.WorkerItemAttributeDTO" class = "com.myprj.crawler.web.mapping.DTOMapping">
+        <property name="targetClassName" value="com.myprj.crawler.web.dto.WorkerItemAttributeDTO" />
         <property name="targetMappings">
             <map>
                 <entry key="SIMPLE" value="id,itemKey,name,parentId,attributeId,type,root,workerItemId" />

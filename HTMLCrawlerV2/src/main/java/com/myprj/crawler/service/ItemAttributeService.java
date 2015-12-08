@@ -13,20 +13,19 @@ public interface ItemAttributeService {
     ItemAttributeData get(String id);
     
     ItemAttributeData getAndPopulate(String id);
-
+    
+    ItemAttributeData getRoot(long itemId);
+    
     void populate(ItemAttributeData attribute);
-
-    void populateChildren(ItemAttributeData itemAttribute);
-
-    void populateParent(ItemAttributeData itemAttribute);
     
-    void populateAttribute(ItemAttributeData itemAttribute);
+    void populateChildren(ItemAttributeData attribute);
 
-    List<ItemAttributeData> getByWorkerItemId(long workerItemId);
+    void populateParent(ItemAttributeData attribute);
     
-    ItemAttributeData getRootWithPopulateTree(long workerItemId);
-
-    ItemAttributeData save(ItemAttributeData itemAttribute);
-
-    List<ItemAttributeData> save(List<ItemAttributeData> itemAttributes);
+    List<ItemAttributeData> getByItemId(long itemId);
+    
+    ItemAttributeData save(ItemAttributeData attribute);
+    
+    List<ItemAttributeData> save(List<ItemAttributeData> attributes); 
+    
 }

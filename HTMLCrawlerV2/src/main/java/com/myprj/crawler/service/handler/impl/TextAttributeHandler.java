@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.myprj.crawler.domain.HtmlDocument;
 import com.myprj.crawler.domain.config.AttributeSelector;
-import com.myprj.crawler.domain.config.ItemAttributeData;
+import com.myprj.crawler.domain.config.WorkerItemAttributeData;
 import com.myprj.crawler.enumeration.AttributeType;
 import com.myprj.crawler.service.handler.AttributeHandlerSupport;
 import com.myprj.crawler.service.handler.HandlerRegister;
@@ -31,7 +31,7 @@ public class TextAttributeHandler extends AttributeHandlerSupport {
     }
 
     @Override
-    public Object handle(HtmlDocument document, ItemAttributeData current) {
+    public Object handle(HtmlDocument document, WorkerItemAttributeData current) {
         
         AttributeSelector cssSelector  = current.getSelector();
         
@@ -45,11 +45,7 @@ public class TextAttributeHandler extends AttributeHandlerSupport {
         } else {
             text = elements.first().attr(cssSelector.getTargetAttribute());
         }
-        
-        if(StringUtils.isEmpty(text)) {
-            return "";
-        }
-        return text.trim();
+        return returnNormalizeString(text);
     }
 
 }

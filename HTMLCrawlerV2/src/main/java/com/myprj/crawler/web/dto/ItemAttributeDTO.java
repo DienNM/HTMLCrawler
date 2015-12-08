@@ -6,45 +6,35 @@ import com.myprj.crawler.annotation.DataTransfer;
 import com.myprj.crawler.domain.config.ItemAttributeData;
 import com.myprj.crawler.enumeration.AttributeType;
 import com.myprj.crawler.util.converter.DomainConverter;
-import com.myprj.crawler.util.converter.ObjectConverter;
 
 /**
  * @author DienNM (DEE)
  */
 
 public class ItemAttributeDTO extends AuditTDO {
-
+    
     private static final long serialVersionUID = 1L;
 
     @DataTransfer("id")
     private String id;
 
-    @DataTransfer("itemKey")
-    private String itemKey;
-
-    @DataTransfer("workerItemId")
-    private long workerItemId;
-
-    @DataTransfer("parentId")
-    private String parentId;
+    @DataTransfer("itemId")
+    private long itemId;
 
     @DataTransfer("name")
     private String name;
 
-    @DataTransfer("attributeId")
-    private String attributeId;
-
     @DataTransfer("type")
     private AttributeType type;
 
+    @DataTransfer("parentId")
+    private String parentId;
+
     @DataTransfer("root")
     private boolean root;
-
-    @DataTransfer("selector")
-    private String selector;
     
     public static void toDTOs(List<ItemAttributeData> sources, List<ItemAttributeDTO> dests) {
-        for(ItemAttributeData source : sources) {
+        for(ItemAttributeData source :  sources) {
             ItemAttributeDTO dest = new ItemAttributeDTO();
             toDTO(source, dest);
             dests.add(dest);
@@ -52,14 +42,7 @@ public class ItemAttributeDTO extends AuditTDO {
     }
     
     public static void toDTO(ItemAttributeData source, ItemAttributeDTO dest) {
-        DomainConverter.convert(source, dest, new ObjectConverter<ItemAttributeData, ItemAttributeDTO>() {
-            @Override
-            public void convert(ItemAttributeData src, ItemAttributeDTO dest) {
-                if(src.getSelector() != null) {
-                    dest.setSelector(src.getSelector().getText());
-                }
-            }
-        });
+        DomainConverter.convert(source, dest);
     }
 
     public String getId() {
@@ -70,12 +53,12 @@ public class ItemAttributeDTO extends AuditTDO {
         this.id = id;
     }
 
-    public String getParentId() {
-        return parentId;
+    public long getItemId() {
+        return itemId;
     }
 
-    public void setParentId(String parentId) {
-        this.parentId = parentId;
+    public void setItemId(long itemId) {
+        this.itemId = itemId;
     }
 
     public String getName() {
@@ -86,14 +69,6 @@ public class ItemAttributeDTO extends AuditTDO {
         this.name = name;
     }
 
-    public String getAttributeId() {
-        return attributeId;
-    }
-
-    public void setAttributeId(String attributeId) {
-        this.attributeId = attributeId;
-    }
-
     public AttributeType getType() {
         return type;
     }
@@ -102,35 +77,19 @@ public class ItemAttributeDTO extends AuditTDO {
         this.type = type;
     }
 
+    public String getParentId() {
+        return parentId;
+    }
+
+    public void setParentId(String parentId) {
+        this.parentId = parentId;
+    }
+
     public boolean isRoot() {
         return root;
     }
 
     public void setRoot(boolean root) {
         this.root = root;
-    }
-
-    public String getSelector() {
-        return selector;
-    }
-
-    public void setSelector(String selector) {
-        this.selector = selector;
-    }
-
-    public long getWorkerItemId() {
-        return workerItemId;
-    }
-
-    public void setWorkerItemId(long workerItemId) {
-        this.workerItemId = workerItemId;
-    }
-
-    public String getItemKey() {
-        return itemKey;
-    }
-
-    public void setItemKey(String itemKey) {
-        this.itemKey = itemKey;
     }
 }
