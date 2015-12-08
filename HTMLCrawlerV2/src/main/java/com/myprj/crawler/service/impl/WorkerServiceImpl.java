@@ -20,7 +20,7 @@ import com.myprj.crawler.domain.config.WorkerItemAttributeData;
 import com.myprj.crawler.domain.crawl.WorkerData;
 import com.myprj.crawler.domain.crawl.WorkerItemData;
 import com.myprj.crawler.enumeration.Level;
-import com.myprj.crawler.model.config.WorkerItemAttributeModel;
+import com.myprj.crawler.model.crawl.WorkerItemAttributeModel;
 import com.myprj.crawler.model.crawl.WorkerItemModel;
 import com.myprj.crawler.model.crawl.WorkerModel;
 import com.myprj.crawler.repository.WorkerItemAttributeRepository;

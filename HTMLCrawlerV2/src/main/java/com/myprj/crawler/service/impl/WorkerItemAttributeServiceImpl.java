@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.myprj.crawler.domain.config.WorkerItemAttributeData;
-import com.myprj.crawler.model.config.WorkerItemAttributeModel;
+import com.myprj.crawler.model.crawl.WorkerItemAttributeModel;
 import com.myprj.crawler.repository.WorkerItemAttributeRepository;
 import com.myprj.crawler.service.WorkerItemAttributeService;
 

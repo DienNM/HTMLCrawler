@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.myprj.crawler.AbstractTest;
-import com.myprj.crawler.model.config.WorkerItemAttributeModel;
+import com.myprj.crawler.model.crawl.WorkerItemAttributeModel;
 
 /**
  * @author DienNM (DEE)

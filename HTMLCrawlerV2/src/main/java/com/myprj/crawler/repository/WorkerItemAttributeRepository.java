@@ -2,7 +2,7 @@ package com.myprj.crawler.repository;
 
 import java.util.List;
 
-import com.myprj.crawler.model.config.WorkerItemAttributeModel;
+import com.myprj.crawler.model.crawl.WorkerItemAttributeModel;
 
 /**
  * @author DienNM (DEE)

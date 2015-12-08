@@ -1,4 +1,4 @@
-package com.myprj.crawler.model.config;
+package com.myprj.crawler.model.crawl;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

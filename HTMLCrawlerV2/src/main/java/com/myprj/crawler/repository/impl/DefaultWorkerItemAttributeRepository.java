@@ -6,7 +6,7 @@ import javax.persistence.Query;
 
 import org.springframework.stereotype.Repository;
 
-import com.myprj.crawler.model.config.WorkerItemAttributeModel;
+import com.myprj.crawler.model.crawl.WorkerItemAttributeModel;
 import com.myprj.crawler.repository.WorkerItemAttributeRepository;
 
 /**

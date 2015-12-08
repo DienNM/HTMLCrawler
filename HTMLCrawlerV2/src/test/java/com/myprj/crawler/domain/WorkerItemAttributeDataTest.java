@@ -5,7 +5,7 @@ import org.junit.Test;
 
 import com.myprj.crawler.domain.config.WorkerItemAttributeData;
 import com.myprj.crawler.enumeration.AttributeType;
-import com.myprj.crawler.model.config.WorkerItemAttributeModel;
+import com.myprj.crawler.model.crawl.WorkerItemAttributeModel;
 
 /**
  * @author DienNM (DEE)

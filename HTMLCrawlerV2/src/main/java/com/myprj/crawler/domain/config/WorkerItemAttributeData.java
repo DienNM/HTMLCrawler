@@ -9,7 +9,7 @@ import com.myprj.crawler.annotation.DataTransfer;
 import com.myprj.crawler.annotation.EntityTransfer;
 import com.myprj.crawler.domain.AuditData;
 import com.myprj.crawler.enumeration.AttributeType;
-import com.myprj.crawler.model.config.WorkerItemAttributeModel;
+import com.myprj.crawler.model.crawl.WorkerItemAttributeModel;
 import com.myprj.crawler.util.Serialization;
 import com.myprj.crawler.util.converter.EntityConverter;
 import com.myprj.crawler.util.converter.ObjectConverter;
