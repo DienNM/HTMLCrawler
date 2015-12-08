@@ -1,113 +1,126 @@
 package com.myprj.crawler.model.target;
 
-import java.io.Serializable;
-
 import javax.persistence.Column;
+import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.MappedSuperclass;
+import javax.persistence.Table;
+
+import com.myprj.crawler.model.AuditModel;
 
 /**
  * @author DienNM (DEE)
  */
-@MappedSuperclass
-public class ProductModel implements Serializable {
+
+@Entity
+@Table(name = "product")
+public class ProductModel extends AuditModel {
 
     private static final long serialVersionUID = 1L;
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
     private long id;
-    
-    @Column(name = "name")
+
+    @Column(name = "key_sku", length = 200)
+    private String key;
+
+    @Column(name = "name", length = 200)
     private String name;
 
-    @Column(name = "category_key")
+    @Column(name = "category_key", length = 50)
     private String categoryKey;
 
-    @Column(name = "item_key")
+    @Column(name = "item_key", length = 50)
     private String itemKey;
 
-    @Column(name = "site")
+    @Column(name = "site", length = 50)
     private String site;
 
-    @Column(name = "price")
+    @Column(name = "price", length = 50)
     private String price;
 
-    @Column(name = "price_vat")
-    private String priceVAT;
+    @Column(name = "included_vat")
+    private boolean includedVat;
 
-    @Column(name = "past_price")
+    @Column(name = "past_price", length = 50)
     private String pastPrice;
-
-    @Column(name = "past_price_vat")
-    private String pastPriceVAT;
-
-    @Column(name = "discount")
-    private String discount;
     
+    public ProductModel() {
+    }
+
     public long getId() {
         return id;
     }
+
     public void setId(long id) {
         this.id = id;
     }
+
     public String getName() {
         return name;
     }
+
     public void setName(String name) {
         this.name = name;
     }
+
     public String getCategoryKey() {
         return categoryKey;
     }
+
     public void setCategoryKey(String categoryKey) {
         this.categoryKey = categoryKey;
     }
+
     public String getItemKey() {
         return itemKey;
     }
+
     public void setItemKey(String itemKey) {
         this.itemKey = itemKey;
     }
+
     public String getSite() {
         return site;
     }
+
     public void setSite(String site) {
         this.site = site;
     }
+
     public String getPrice() {
         return price;
     }
+
     public void setPrice(String price) {
         this.price = price;
     }
-    public String getPriceVAT() {
-        return priceVAT;
-    }
-    public void setPriceVAT(String priceVAT) {
-        this.priceVAT = priceVAT;
-    }
+
     public String getPastPrice() {
         return pastPrice;
     }
+
     public void setPastPrice(String pastPrice) {
         this.pastPrice = pastPrice;
     }
-    public String getPastPriceVAT() {
-        return pastPriceVAT;
+
+    public String getKey() {
+        return key;
     }
-    public void setPastPriceVAT(String pastPriceVAT) {
-        this.pastPriceVAT = pastPriceVAT;
+
+    public void setKey(String key) {
+        this.key = key;
     }
-    public String getDiscount() {
-        return discount;
+
+    public boolean isIncludedVat() {
+        return includedVat;
     }
-    public void setDiscount(String discount) {
-        this.discount = discount;
+
+    public void setIncludedVat(boolean includedVat) {
+        this.includedVat = includedVat;
     }
-    
 
 }

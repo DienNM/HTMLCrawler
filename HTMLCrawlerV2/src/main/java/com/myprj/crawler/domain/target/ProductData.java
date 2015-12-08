@@ -1,48 +1,86 @@
 package com.myprj.crawler.domain.target;
 
-import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
-import com.myprj.crawler.annotation.DataTransfer;
+import javax.persistence.Column;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+
+import com.myprj.crawler.model.AuditModel;
+import com.myprj.crawler.model.target.ProductModel;
+import com.myprj.crawler.util.converter.EntityConverter;
 
 /**
  * @author DienNM (DEE)
  */
 
-public class ProductData implements Serializable {
+public class ProductData extends AuditModel {
 
     private static final long serialVersionUID = 1L;
 
-    @DataTransfer("id")
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id")
     private long id;
 
-    @DataTransfer("name")
+    @Column(name = "key_sku", length = 200)
+    private String key;
+
+    @Column(name = "name", length = 200)
     private String name;
 
-    @DataTransfer("category_key")
+    @Column(name = "category_key", length = 50)
     private String categoryKey;
 
-    @DataTransfer("item_key")
+    @Column(name = "item_key", length = 50)
     private String itemKey;
 
-    @DataTransfer("site")
+    @Column(name = "site", length = 50)
     private String site;
 
-    @DataTransfer("price")
+    @Column(name = "price", length = 50)
     private String price;
 
-    @DataTransfer("price_vat")
-    private String priceVAT;
+    @Column(name = "included_vat")
+    private boolean includedVat;
 
-    @DataTransfer("past_price")
+    @Column(name = "past_price", length = 50)
     private String pastPrice;
-
-    @DataTransfer("past_price_vat")
-    private String pastPriceVAT;
-
-    @DataTransfer("discount")
-    private String discount;
     
+    private ProductPriceData productPriceData;
+    
+    private List<ProductPriceData> productPrices;
+    
+    private List<ProductAttributeData> productAttributes = new ArrayList<ProductAttributeData>();
+
     public ProductData() {
+        
+    }
+
+    public static void toDatas(List<ProductModel> sources, List<ProductData> dests) {
+        for (ProductModel source : sources) {
+            ProductData dest = new ProductData();
+            toData(source, dest);
+            dests.add(dest);
+        }
+    }
+
+    public static void toModels(List<ProductData> sources, List<ProductModel> dests) {
+        for (ProductData source : sources) {
+            ProductModel dest = new ProductModel();
+            toModel(source, dest);
+            dests.add(dest);
+        }
+    }
+
+    public static void toData(ProductModel source, ProductData dest) {
+        EntityConverter.convert2Data(source, dest);
+    }
+
+    public static void toModel(ProductData source, ProductModel dest) {
+        EntityConverter.convert2Entity(source, dest);
     }
 
     public long getId() {
@@ -93,14 +131,6 @@ public class ProductData implements Serializable {
         this.price = price;
     }
 
-    public String getPriceVAT() {
-        return priceVAT;
-    }
-
-    public void setPriceVAT(String priceVAT) {
-        this.priceVAT = priceVAT;
-    }
-
     public String getPastPrice() {
         return pastPrice;
     }
@@ -109,20 +139,43 @@ public class ProductData implements Serializable {
         this.pastPrice = pastPrice;
     }
 
-    public String getPastPriceVAT() {
-        return pastPriceVAT;
+    public String getKey() {
+        return key;
     }
 
-    public void setPastPriceVAT(String pastPriceVAT) {
-        this.pastPriceVAT = pastPriceVAT;
+    public void setKey(String key) {
+        this.key = key;
     }
 
-    public String getDiscount() {
-        return discount;
+    public boolean isIncludedVat() {
+        return includedVat;
     }
 
-    public void setDiscount(String discount) {
-        this.discount = discount;
+    public void setIncludedVat(boolean includedVat) {
+        this.includedVat = includedVat;
     }
 
+    public List<ProductPriceData> getProductPrices() {
+        return productPrices;
+    }
+
+    public void setProductPrices(List<ProductPriceData> productPrices) {
+        this.productPrices = productPrices;
+    }
+
+    public List<ProductAttributeData> getProductAttributes() {
+        return productAttributes;
+    }
+
+    public void setProductAttributes(List<ProductAttributeData> productAttributes) {
+        this.productAttributes = productAttributes;
+    }
+
+    public ProductPriceData getProductPriceData() {
+        return productPriceData;
+    }
+
+    public void setProductPriceData(ProductPriceData productPriceData) {
+        this.productPriceData = productPriceData;
+    }
 }

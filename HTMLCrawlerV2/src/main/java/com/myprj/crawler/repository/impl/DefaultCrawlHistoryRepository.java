@@ -38,7 +38,7 @@ public class DefaultCrawlHistoryRepository extends DefaultGenericDao<CrawlHistor
     @Override
     public CrawlHistoryModel findLatest(long workerId) {
         StringBuilder queryStr = new StringBuilder("FROM  " + getClassName());
-        queryStr.append(" WHERE workerId = :workerId AND eolDate = 0");
+        queryStr.append(" WHERE workerId = :workerId AND eolDate = 0 ");
 
         Query query = entityManager.createQuery(queryStr.toString(), getClazz());
         query.setParameter("workerId", workerId);
