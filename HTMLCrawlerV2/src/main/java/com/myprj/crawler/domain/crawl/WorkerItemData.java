@@ -74,7 +74,7 @@ public class WorkerItemData extends AuditData {
     // For List Crawler
     @DataTransfer("pagingConfig")
     @DataCopy("pagingConfig")
-    private PagingConfig pagingConfig = new PagingConfig();
+    private PagingConfig pagingConfig;
 
     public WorkerItemData() {
     }
