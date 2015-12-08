@@ -50,7 +50,7 @@ public class ItemFacadeImpl implements ItemFacade {
         }
         Map<String, CategoryData> categoryRepo = categoryService.getAllMap();
         for (ImportFileStruture item : importFileStrutures) {
-            List<ItemData> itemDatas = saveItems(item.getMainLines().get(0), categoryRepo);
+            List<ItemData> itemDatas = saveItems(item.getMainLines(), categoryRepo);
             if (itemDatas.isEmpty()) {
                 errorStructures.add("Cannot import Items: " + join(item.getMainLines(), ", "));
                 break;
@@ -131,12 +131,14 @@ public class ItemFacadeImpl implements ItemFacade {
         return itemStructures;
     }
 
-    private List<ItemData> saveItems(List<String> itemLines, Map<String, CategoryData> categoryRepo) {
+    private List<ItemData> saveItems(List<List<String>> itemLines, Map<String, CategoryData> categoryRepo) {
         List<ItemData> items = new ArrayList<ItemData>();
-        for (String line : itemLines) {
-            ItemData item = parseItem(line, categoryRepo);
-            if (item != null) {
-                items.add(item);
+        for (List<String> lines : itemLines) {
+            for (String line : lines) {
+                ItemData item = parseItem(line, categoryRepo);
+                if (item != null) {
+                    items.add(item);
+                }
             }
         }
         if (!items.isEmpty()) {
