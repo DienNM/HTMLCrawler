@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,6 +30,8 @@ import com.myprj.crawler.web.util.ImportFileStruture;
  */
 @Service
 public class WorkerFacadeImpl implements WorkerFacade {
+    
+    private Logger logger = LoggerFactory.getLogger(WorkerFacadeImpl.class);
 
     @Autowired
     private WorkerService workerService;
@@ -60,6 +64,7 @@ public class WorkerFacadeImpl implements WorkerFacade {
                         buildWorkerItemSelectors(workerItems, item.getJson());
                     }
                 } catch(Exception e) {
+                    logger.error("Error: {}", e);
                     errorStructures.add("Error: " + e.getMessage());
                 }
             }

@@ -192,7 +192,7 @@ public class DefaultWorker implements Worker {
     protected void collectResult4Attribute(HtmlDocument htmlDocument, WorkerItemAttributeData current, CrawlResultData result) {
         AttributeSelector selector = current.getSelector();
         Object data = null;
-        if(LIST_OBJECT.equals(current.getType())) {
+        if(LIST_OBJECT.equals(current.getType()) && selector != null) {
             data = HandlerRegister.getHandler(current.getType()).handle(htmlDocument, current);
             AttributeStructureUtil.populateValue2Attribute(result.getDetail(), current.getAttributeId(), data);
             return;
@@ -201,7 +201,7 @@ public class DefaultWorker implements Worker {
         }
         
         if (data == null && selector != null) {
-            logger.warn("No Data: Attribute={}, CSS-Selector={}, URL={}", current.getName(),
+            logger.warn("No Data: Attribute={}, CSS-Selector={}, URL={}", current.getAttributeId(),
                     selector.getText(), htmlDocument.getDocument().baseUri());
         }
         AttributeStructureUtil.populateValue2Attribute(result.getDetail(), current.getAttributeId(), data);
@@ -254,7 +254,7 @@ public class DefaultWorker implements Worker {
                 errorLink.setLevel(workerItem.getLevel());
                 errorLink.setCrawlType(workerItem.getCrawlType());
                 workerCtx.getErrorLinks().add(errorLink);
-                logger.warn(errorMessage);
+                logger.warn("{}", e);
             }
             return null;
         }

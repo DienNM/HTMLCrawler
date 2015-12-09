@@ -47,7 +47,7 @@ public class WorkerItemModel extends AuditModel implements Comparable<WorkerItem
     private CrawlType crawlType;
 
     // JSON {"attribute1_id" : "@..."}
-    @Column(name = "level0_selector", length = 400)
+    @Column(name = "level0_selector", length = 1000)
     private String level0Selector;
 
     // JSON {"toPage" : "1"}
