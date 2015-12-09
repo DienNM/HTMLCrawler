@@ -6,7 +6,7 @@ import com.myprj.crawler.annotation.DataTransfer;
  * @author DienNM (DEE)
  */
 
-public class CategoryDTO extends AuditTDO {
+public class CategoryDTO extends AuditDTO {
 
     private static final long serialVersionUID = 1L;
 

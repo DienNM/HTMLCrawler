@@ -1,6 +1,7 @@
 package com.myprj.crawler.service;
 
 import java.util.List;
+import java.util.Set;
 
 import com.myprj.crawler.domain.SiteData;
 
@@ -13,6 +14,8 @@ public interface SiteService {
     SiteData get(String id);
     
     List<SiteData> getAll();
+    
+    Set<String> getAllIds();
     
     SiteData save(SiteData site);
 

@@ -1,5 +1,9 @@
 package com.myprj.crawler.repository.target.impl;
 
+import java.util.List;
+
+import javax.persistence.Query;
+
 import org.springframework.stereotype.Repository;
 
 import com.myprj.crawler.model.target.AttributeMappingId;
@@ -17,6 +21,17 @@ public class DefaultAttributeMappingRepository extends DefaultGenericDao<Attribu
     @Override
     protected Class<AttributeMappingModel> getTargetClass() {
         return AttributeMappingModel.class;
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public List<AttributeMappingModel> findByGroup(String siteKey, String categoryKey, String itemKey) {
+        Query query = entityManager.createQuery("FROM " + getClassName()
+                + " WHERE siteKey = :siteKey AND categoryKey = :categoryKey AND itemKey = :itemKey ");
+        query.setParameter("siteKey", siteKey);
+        query.setParameter("categoryKey", categoryKey);
+        query.setParameter("itemKey", itemKey);
+        return query.getResultList();
     }
 
 }

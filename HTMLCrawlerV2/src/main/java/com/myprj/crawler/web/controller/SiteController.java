@@ -17,7 +17,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.myprj.crawler.domain.SiteData;
 import com.myprj.crawler.service.SiteService;
-import com.myprj.crawler.web.dto.CategoryDTO;
 import com.myprj.crawler.web.dto.JsonResponse;
 import com.myprj.crawler.web.dto.SiteDTO;
 import com.myprj.crawler.web.enumeration.DTOLevel;

@@ -11,7 +11,7 @@ import com.myprj.crawler.util.converter.DomainConverter;
  * @author DienNM (DEE)
  */
 
-public class ItemAttributeDTO extends AuditTDO {
+public class ItemAttributeDTO extends AuditDTO {
     
     private static final long serialVersionUID = 1L;
 

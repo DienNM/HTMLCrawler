@@ -8,7 +8,7 @@ import com.myprj.crawler.annotation.DataTransfer;
  * @author DienNM (DEE)
  */
 
-public abstract class AuditTDO implements Serializable{
+public abstract class AuditDTO implements Serializable{
     
     private static final long serialVersionUID = 1L;
 

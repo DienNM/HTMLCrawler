@@ -2,6 +2,7 @@ package com.myprj.crawler.service;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.myprj.crawler.domain.PageResult;
 import com.myprj.crawler.domain.Pageable;
@@ -20,6 +21,8 @@ public interface CategoryService {
     List<CategoryData> getByIds(List<String> ids);
     
     List<CategoryData> getAll();
+    
+    Set<String> getAllIds();
     
     Map<String, CategoryData> getAllMap();
     

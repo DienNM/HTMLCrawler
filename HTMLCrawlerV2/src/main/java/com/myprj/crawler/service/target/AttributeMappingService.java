@@ -12,6 +12,8 @@ public interface AttributeMappingService {
     
     AttributeMappingData save(AttributeMappingData attributeMappingData);
     
+    List<AttributeMappingData> saveOrUpdate(List<AttributeMappingData> attributeMappingDatas);
+    
     void update(AttributeMappingData attributeMappingData);
     
     AttributeMappingData get(String categoryKey, String itemKey, String siteKey, String name);

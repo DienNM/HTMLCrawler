@@ -1,12 +1,12 @@
-package com.myprj.crawler.domain.target;
+package com.myprj.crawler.web.dto;
 
 import java.util.List;
 
 import com.myprj.crawler.annotation.DataTransfer;
-import com.myprj.crawler.annotation.EntityTransfer;
-import com.myprj.crawler.domain.AuditData;
+import com.myprj.crawler.domain.target.AttributeMappingData;
 import com.myprj.crawler.model.target.AttributeMappingId;
 import com.myprj.crawler.model.target.AttributeMappingModel;
+import com.myprj.crawler.util.converter.DomainConverter;
 import com.myprj.crawler.util.converter.EntityConverter;
 import com.myprj.crawler.util.converter.ObjectConverter;
 
@@ -14,56 +14,41 @@ import com.myprj.crawler.util.converter.ObjectConverter;
  * @author DienNM (DEE)
  */
 
-public class AttributeMappingData extends AuditData {
+public class AttributeMappingDTO extends AuditDTO {
 
     private static final long serialVersionUID = 1L;
 
-    @EntityTransfer("category_key")
     @DataTransfer("categoryKey")
     private String categoryKey;
 
-    @EntityTransfer("item_key")
     @DataTransfer("itemKey")
     private String itemKey;
 
-    @EntityTransfer("site_key")
     @DataTransfer("siteKey")
     private String siteKey;
 
-    @EntityTransfer("site_name")
     @DataTransfer("attributeName")
     private String attributeName;
 
-    @EntityTransfer("value_mapping")
     @DataTransfer("valueMapping")
     private String valueMapping;
 
-    @EntityTransfer("mapping_strategy")
     @DataTransfer("mappingStrategy")
     private String mappingStrategy;
 
-    public AttributeMappingData() {
+    public AttributeMappingDTO() {
     }
 
-    public static void toDatas(List<AttributeMappingModel> sources, List<AttributeMappingData> dests) {
-        for (AttributeMappingModel source : sources) {
-            AttributeMappingData dest = new AttributeMappingData();
-            toData(source, dest);
+    public static void toDTOs(List<AttributeMappingData> sources, List<AttributeMappingDTO> dests) {
+        for (AttributeMappingData source : sources) {
+            AttributeMappingDTO dest = new AttributeMappingDTO();
+            toDTO(source, dest);
             dests.add(dest);
         }
     }
 
-    public static void toData(AttributeMappingModel source, AttributeMappingData dest) {
-        EntityConverter.convert2Data(source, dest, new ObjectConverter<AttributeMappingModel, AttributeMappingData>() {
-            @Override
-            public void convert(AttributeMappingModel src, AttributeMappingData dest) {
-                AttributeMappingId id = src.getId();
-                dest.setCategoryKey(id.getCategoryKey());
-                dest.setItemKey(id.getItemKey());
-                dest.setSiteKey(id.getSiteKey());
-                dest.setAttributeName(id.getAttributeName());
-            }
-        });
+    public static void toDTO(AttributeMappingData source, AttributeMappingDTO dest) {
+        DomainConverter.convert(source, dest);
     }
 
     public static void toModels(List<AttributeMappingData> sources, List<AttributeMappingModel> dests) {

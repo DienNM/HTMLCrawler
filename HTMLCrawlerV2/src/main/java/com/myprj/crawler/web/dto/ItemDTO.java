@@ -15,7 +15,7 @@ import com.myprj.crawler.util.converter.ObjectConverter;
  * @author DienNM (DEE)
  */
 
-public class ItemDTO extends AuditTDO {
+public class ItemDTO extends AuditDTO {
 
     private static final long serialVersionUID = 1L;
 

@@ -1,7 +1,9 @@
 package com.myprj.crawler.service.impl;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,6 +46,16 @@ public class SiteServiceImpl implements SiteService {
         List<SiteData> siteDatas = new ArrayList<SiteData>();
         SiteData.toDatas(siteModels, siteDatas);
         return siteDatas;
+    }
+    
+    @Override
+    public Set<String> getAllIds() {
+        List<SiteModel> siteModels = siteRepository.findAll();
+        Set<String> ids = new HashSet<String>();
+        for(SiteModel siteModel : siteModels) {
+            ids.add(siteModel.getKey());
+        }
+        return ids;
     }
 
     @Override

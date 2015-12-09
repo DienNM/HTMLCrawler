@@ -10,7 +10,7 @@ import com.myprj.crawler.util.converter.DomainConverter;
  * @author DienNM (DEE)
  */
 
-public class SiteDTO extends AuditTDO {
+public class SiteDTO extends AuditDTO {
 
     private static final long serialVersionUID = 1L;
     

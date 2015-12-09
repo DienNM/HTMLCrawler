@@ -2,8 +2,10 @@ package com.myprj.crawler.service.impl;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -86,6 +88,16 @@ public class CategoryServiceImpl implements CategoryService {
         CategoryData.toDatas(categoryModels, categoryDatas);
 
         return categoryDatas;
+    }
+    
+    @Override
+    public Set<String> getAllIds() {
+        List<CategoryModel> categoryModels = categoryRepository.findAll();
+        Set<String> ids = new HashSet<String>();
+        for(CategoryModel categoryModel : categoryModels) {
+            ids.add(categoryModel.getId());
+        }
+        return ids;
     }
     
     @Override
