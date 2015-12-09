@@ -29,7 +29,7 @@ public class ItemDTO extends AuditTDO {
     private String key;
 
     @DataTransfer("categoryId")
-    private long categoryId;
+    private String categoryId;
 
     @DataTransfer("description")
     private String description;
@@ -84,11 +84,11 @@ public class ItemDTO extends AuditTDO {
         this.name = name;
     }
 
-    public long getCategoryId() {
+    public String getCategoryId() {
         return categoryId;
     }
 
-    public void setCategoryId(long categoryId) {
+    public void setCategoryId(String categoryId) {
         this.categoryId = categoryId;
     }
 

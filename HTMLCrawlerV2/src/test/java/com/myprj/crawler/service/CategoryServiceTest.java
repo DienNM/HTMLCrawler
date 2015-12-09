@@ -35,14 +35,14 @@ public class CategoryServiceTest extends AbstractTest {
     public void startUp() {
         category1 = new CategoryData();
         category1.setName("Category 1");
-        category1.setKey("key-1");
+        category1.setId("key-1");
         category1.setDescription("Description 1");
         category1.setParentKey("10");
         category1 = categoryService.save(category1);
 
         category2 = new CategoryData();
         category2.setName("Category 2");
-        category2.setKey("key-2");
+        category2.setId("key-2");
         category2.setDescription("Description 2");
         category2.setParentKey("10");
         category2 = categoryService.save(category2);
@@ -61,7 +61,7 @@ public class CategoryServiceTest extends AbstractTest {
         category.setName("Category 1");
         category.setDescription("Description 1");
         category.setParentKey("10");
-        category.setKey("Category-1");
+        category.setId("Category-1");
         category = categoryService.save(category);
 
         CategoryData categoryData = categoryService.getById(category.getId());

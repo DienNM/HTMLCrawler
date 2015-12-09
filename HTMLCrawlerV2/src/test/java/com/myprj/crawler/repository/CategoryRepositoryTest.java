@@ -33,13 +33,13 @@ public class CategoryRepositoryTest extends AbstractTest {
         category1.setName("Category 1");
         category1.setDescription("Category Description 1");
         category1.setParentKey(null);
-        category1.setKey("category-1");
+        category1.setId("category-1");
 
         CategoryModel category2 = new CategoryModel();
         category2.setName("Category 2");
         category2.setDescription("Category Description 2");
         category2.setParentKey(null);
-        category2.setKey("category-2");
+        category2.setId("category-2");
 
         categoryRepository.save(category1);
         categoryRepository.save(category2);
@@ -54,13 +54,13 @@ public class CategoryRepositoryTest extends AbstractTest {
         category1.setName("Category 1");
         category1.setDescription("Category Description 1");
         category1.setParentKey(null);
-        category1.setKey("category-1");
+        category1.setId("category-1");
 
         CategoryModel category2 = new CategoryModel();
         category2.setName("Category 2");
         category2.setDescription("Category Description 2");
         category2.setParentKey(null);
-        category2.setKey("category-2");
+        category2.setId("category-2");
 
         categoryRepository.save(category1);
         categoryRepository.save(category2);
@@ -79,7 +79,7 @@ public class CategoryRepositoryTest extends AbstractTest {
         category1.setName("Category 1");
         category1.setDescription("Category Description 1");
         category1.setParentKey(null);
-        category1.setKey("category-1");
+        category1.setId("category-1");
 
         categoryRepository.save(category1);
 
@@ -94,7 +94,7 @@ public class CategoryRepositoryTest extends AbstractTest {
         category1.setName("Category 1");
         category1.setDescription("Category Description 1");
         category1.setParentKey(null);
-        category1.setKey("category-1");
+        category1.setId("category-1");
 
         categoryRepository.save(category1);
 
@@ -109,7 +109,7 @@ public class CategoryRepositoryTest extends AbstractTest {
         category1.setName("Category 1");
         category1.setDescription("Category Description 1");
         category1.setParentKey(null);
-        category1.setKey("category-1");
+        category1.setId("category-1");
 
         categoryRepository.save(category1);
 
@@ -132,7 +132,7 @@ public class CategoryRepositoryTest extends AbstractTest {
         category1.setName("Category 1");
         category1.setDescription("Category Description 1");
         category1.setParentKey(null);
-        category1.setKey("category-1");
+        category1.setId("category-1");
 
         categoryRepository.save(category1);
 

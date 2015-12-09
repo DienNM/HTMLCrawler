@@ -13,28 +13,11 @@ import com.myprj.crawler.repository.CategoryRepository;
  * @author DienNM (DEE)
  */
 @Repository
-public class DefaultCategoryRepository extends DefaultGenericDao<CategoryModel, Long> implements CategoryRepository {
+public class DefaultCategoryRepository extends DefaultGenericDao<CategoryModel, String> implements CategoryRepository {
 
     @Override
     protected Class<CategoryModel> getTargetClass() {
         return CategoryModel.class;
-    }
-
-    @SuppressWarnings("unchecked")
-    @Override
-    public CategoryModel findByKey(String key) {
-        StringBuilder queryStr = new StringBuilder("FROM " + getClassName());
-        queryStr.append(" WHERE key = :key ");
-
-        Query query = entityManager.createQuery(queryStr.toString(), getClazz());
-        query.setParameter("key", key);
-
-        List<CategoryModel> categoryModels = query.getResultList();
-        if (categoryModels.isEmpty()) {
-            return null;
-        }
-
-        return categoryModels.get(0);
     }
 
     @SuppressWarnings("unchecked")

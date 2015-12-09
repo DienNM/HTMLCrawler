@@ -15,9 +15,7 @@ public interface CategoryService {
     
     long count();
     
-    CategoryData getById(long id);
-    
-    CategoryData getByKey(String key);
+    CategoryData getById(String id);
     
     List<CategoryData> getAll();
     
@@ -31,8 +29,8 @@ public interface CategoryService {
     
     CategoryData update(CategoryData category);
     
-    void delete(long id);
+    void delete(String id);
     
-    void delete(List<Long> ids);
+    void delete(List<String> ids);
     
 }

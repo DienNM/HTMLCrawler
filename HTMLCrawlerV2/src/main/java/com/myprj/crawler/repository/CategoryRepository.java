@@ -7,9 +7,7 @@ import com.myprj.crawler.model.config.CategoryModel;
 /**
  * @author DienNM (DEE)
  */
-public interface CategoryRepository extends GenericDao<CategoryModel, Long> {
-    
-    CategoryModel findByKey(String key);
+public interface CategoryRepository extends GenericDao<CategoryModel, String> {
     
     List<CategoryModel> findByParentKey(String parentKey);
     

@@ -134,7 +134,7 @@ public class ItemController extends AbstractController {
     @ResponseBody
     public JsonResponse addItem(@RequestParam(value = "name", required = true) String name,
             @RequestParam(value = "key", required = true) String key,
-            @RequestParam(value = "categoryId", required = true) long categoryId,
+            @RequestParam(value = "categoryId", required = true) String categoryId,
             @RequestParam(value = "description", required = false) String description) {
 
         List<RequestError> errors = new ArrayList<RequestError>();

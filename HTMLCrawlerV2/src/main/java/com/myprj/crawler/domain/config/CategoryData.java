@@ -18,11 +18,7 @@ public class CategoryData extends AuditData {
 
     @DataTransfer("id")
     @EntityTransfer("id")
-    private long id;
-
-    @DataTransfer("key")
-    @EntityTransfer("ctg_key")
-    private String key;
+    private String id;
 
     @DataTransfer("name")
     @EntityTransfer("name")
@@ -65,11 +61,11 @@ public class CategoryData extends AuditData {
         EntityConverter.convert2Entity(source, dest);
     }
 
-    public long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -95,14 +91,6 @@ public class CategoryData extends AuditData {
 
     public void setParentCategory(CategoryData parentCategory) {
         this.parentCategory = parentCategory;
-    }
-
-    public String getKey() {
-        return key;
-    }
-
-    public void setKey(String key) {
-        this.key = key;
     }
 
     public String getParentKey() {

@@ -175,7 +175,7 @@ public class DefaultWorker implements Worker {
         result.setUrl(url);
         result.setSite(worker.getSite());
         result.setItemKey(item.getKey());
-        result.setCategoryKey(item.getCategoryData().getKey());
+        result.setCategoryKey(item.getCategoryData().getId());
         result.setRequestId(workerItem.getRequestId());
         result.getDetail().putAll(ItemContent.clone(item.getSampleContent()));
         

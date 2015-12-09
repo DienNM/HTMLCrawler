@@ -2,8 +2,6 @@ package com.myprj.crawler.model.config;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
@@ -21,12 +19,8 @@ public class CategoryModel extends AuditModel {
     public static final String TABLE_NAME = "category";
     
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id")
-    private long id;
-
-    @Column(name = "ctg_key", length = 50, nullable = false, unique = true)
-    private String key;
+    @Column(name = "id", length = 50)
+    private String id;
 
     @Column(name = "name", length = 50)
     private String name;
@@ -40,11 +34,11 @@ public class CategoryModel extends AuditModel {
     public CategoryModel() {
     }
 
-    public long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -62,14 +56,6 @@ public class CategoryModel extends AuditModel {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public String getKey() {
-        return key;
-    }
-
-    public void setKey(String key) {
-        this.key = key;
     }
 
     public String getParentKey() {

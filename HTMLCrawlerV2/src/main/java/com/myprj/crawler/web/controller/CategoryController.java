@@ -67,9 +67,9 @@ public class CategoryController extends AbstractController {
         return jsonResponse;
     }
 
-    @RequestMapping(value = "/{categoryId}", method = RequestMethod.GET)
+    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     @ResponseBody
-    public JsonResponse getById(@PathVariable(value = "categoryId") long id,
+    public JsonResponse getByKey(@PathVariable(value = "id") String id,
             @RequestParam(value = "level", defaultValue = "DEFAULT") DTOLevel target) {
 
         CategoryData category = categoryService.getById(id);
@@ -78,26 +78,6 @@ public class CategoryController extends AbstractController {
             jsonResponse.putMessage("Category Id " + id + " not found");
             return jsonResponse;
         }
-
-        Map<String, Object> datas = getMapResult(category, CategoryDTO.class, target);
-        JsonResponse response = new JsonResponse(!datas.isEmpty());
-        response.putData(datas);
-
-        return response;
-    }
-    
-    @RequestMapping(value = "/by-key/{categoryKey}", method = RequestMethod.GET)
-    @ResponseBody
-    public JsonResponse getByKey(@PathVariable(value = "categoryKey") String categoryKey,
-            @RequestParam(value = "level", defaultValue = "DEFAULT") DTOLevel target) {
-
-        CategoryData category = categoryService.getByKey(categoryKey);
-        if (category == null) {
-            JsonResponse jsonResponse = new JsonResponse(false);
-            jsonResponse.putMessage("Category Key " + categoryKey + " not found");
-            return jsonResponse;
-        }
-
         Map<String, Object> datas = getMapResult(category, CategoryDTO.class, target);
         JsonResponse response = new JsonResponse(!datas.isEmpty());
         response.putData(datas);
@@ -139,7 +119,7 @@ public class CategoryController extends AbstractController {
     @RequestMapping(method = RequestMethod.POST)
     @ResponseBody
     public JsonResponse addCategory(@RequestParam(value = "name") String name,
-            @RequestParam(value = "key") String key,
+            @RequestParam(value = "id", required = true) String id,
             @RequestParam(value = "description", required = false) String description,
             @RequestParam(value = "parentKey", defaultValue = "") String parentKey) {
 
@@ -148,13 +128,13 @@ public class CategoryController extends AbstractController {
             errors.add(new RequestError("name", "Category Name is required"));
         }
         
-        CategoryData categoryData = categoryService.getByKey(key);
+        CategoryData categoryData = categoryService.getById(id);
         if (categoryData != null) {
-            errors.add(new RequestError("key", "Key " + parentKey + " already exists"));
+            errors.add(new RequestError("id", "id " + parentKey + " already exists"));
         }
 
         if (!StringUtils.isEmpty(parentKey)) {
-            CategoryData parentCtg = categoryService.getByKey(parentKey);
+            CategoryData parentCtg = categoryService.getById(parentKey);
             if (parentCtg == null) {
                 errors.add(new RequestError("parentKey", "Category Parent " + parentKey + " not found"));
             }
@@ -177,7 +157,7 @@ public class CategoryController extends AbstractController {
 
     @RequestMapping(value = "/{id}", method = RequestMethod.POST)
     @ResponseBody
-    public JsonResponse updateCategory(@PathVariable(value = "id") long id,
+    public JsonResponse updateCategory(@PathVariable(value = "id") String id,
             @RequestParam(value = "parentKey", defaultValue = "", required = false) String parentKey,
             @RequestParam(value = "name", required = false) String name,
             @RequestParam(value = "description", required = false) String description) {
@@ -190,7 +170,7 @@ public class CategoryController extends AbstractController {
         }
 
         if (!StringUtils.isEmpty(parentKey)) {
-            CategoryData parentCtg = categoryService.getByKey(parentKey);
+            CategoryData parentCtg = categoryService.getById(parentKey);
             if (parentCtg == null) {
                 errors.add(new RequestError("parentKey", "Category Parent " + parentKey + " not found"));
             }
@@ -218,7 +198,7 @@ public class CategoryController extends AbstractController {
 
     @RequestMapping(value = "/{ids}/delete", method = RequestMethod.POST)
     @ResponseBody
-    public JsonResponse delete(@PathVariable(value = "ids") List<Long> ids) {
+    public JsonResponse delete(@PathVariable(value = "ids") List<String> ids) {
         try {
             categoryService.delete(ids);
             return new JsonResponse(true);

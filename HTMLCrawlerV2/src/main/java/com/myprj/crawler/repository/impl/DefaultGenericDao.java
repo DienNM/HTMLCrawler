@@ -105,6 +105,13 @@ public abstract class DefaultGenericDao<E, Id>  implements GenericDao<E, Id> {
     }
     
     @Override
+    public void deleteByIds(List<Id> ids) {
+        Query query = entityManager.createQuery("DELETE FROM " + getClassName() + " WHERE ids in (:ids)");
+        query.setParameter("ids", ids);
+        query.executeUpdate();
+    }
+    
+    @Override
     public void deleteAll() {
         Query query = entityManager.createQuery("DELETE FROM " + getClassName());
         query.executeUpdate();

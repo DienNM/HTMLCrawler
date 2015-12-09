@@ -56,7 +56,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public CategoryData getById(long id) {
+    public CategoryData getById(String id) {
         CategoryModel categoryModel = categoryRepository.find(id);
         if (categoryModel == null) {
             logger.warn("Cannot find category: {}", id);
@@ -68,19 +68,6 @@ public class CategoryServiceImpl implements CategoryService {
         return categoryData;
     }
     
-    @Override
-    public CategoryData getByKey(String key) {
-        CategoryModel categoryModel = categoryRepository.findByKey(key);
-        if (categoryModel == null) {
-            logger.warn("Cannot find category: {}", key);
-            return null;
-        }
-        CategoryData categoryData = new CategoryData();
-        CategoryData.toData(categoryModel, categoryData);
-
-        return categoryData;
-    }
-
     @Override
     public List<CategoryData> getAll() {
         List<CategoryModel> categoryModels = categoryRepository.findAll();
@@ -96,7 +83,7 @@ public class CategoryServiceImpl implements CategoryService {
         Map<String, CategoryData> map = new HashMap<String, CategoryData>();
         List<CategoryData> categories = getAll();
         for(CategoryData category : categories) {
-            map.put(category.getKey(), category);
+            map.put(category.getId(), category);
         }
         return map;
     }
@@ -124,7 +111,7 @@ public class CategoryServiceImpl implements CategoryService {
 
         List<CategoryData> persistedCategories = new ArrayList<CategoryData>();
         for (CategoryData category : categoryDatas) {
-            CategoryModel categoryModel = categoryRepository.findByKey(category.getKey());
+            CategoryModel categoryModel = categoryRepository.find(category.getId());
             if (categoryModel == null) {
                 categoryModel = new CategoryModel();
                 CategoryData.toModel(category, categoryModel);
@@ -144,23 +131,31 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     @Transactional
-    public void delete(long id) {
+    public void delete(String id) {
         CategoryModel categoryModel = categoryRepository.find(id);
         if(categoryModel != null) {
-            categoryRepository.updateParentKey(categoryModel.getKey(), categoryModel.getParentKey());
+            categoryRepository.updateParentKey(categoryModel.getId(), categoryModel.getParentKey());
             categoryRepository.deleteById(id);
         }
     }
 
     @Override
     @Transactional
-    public void delete(List<Long> ids) {
-        for(Long id : ids) {
+    public void delete(List<String> ids) {
+        List<CategoryModel> categoryModels = new ArrayList<CategoryModel>();
+        for(String id : ids) {
             CategoryModel categoryModel = categoryRepository.find(id);
-            if(categoryModel != null) {
-                categoryRepository.updateParentKey(categoryModel.getKey(), categoryModel.getParentKey());
-                categoryRepository.deleteById(id);
+            if(categoryModel == null) {
+                logger.error("Category Id " + id + " not found");
+                return;
             }
+            categoryModels.add(categoryModel);
+        }
+        
+        
+        for(CategoryModel categoryModel : categoryModels) {
+            categoryRepository.updateParentKey(categoryModel.getId(), categoryModel.getParentKey());
+            categoryRepository.deleteById(categoryModel.getId());
         }
     }
 

@@ -35,7 +35,7 @@ public class ItemData extends AuditData {
 
     @DataTransfer("categoryId")
     @EntityTransfer("category_id")
-    private long categoryId;
+    private String categoryId;
 
     @DataTransfer("description")
     @EntityTransfer("description")
@@ -96,11 +96,11 @@ public class ItemData extends AuditData {
         this.id = id;
     }
 
-    public long getCategoryId() {
+    public String getCategoryId() {
         return categoryId;
     }
 
-    public void setCategoryId(long categoryId) {
+    public void setCategoryId(String categoryId) {
         this.categoryId = categoryId;
     }
 

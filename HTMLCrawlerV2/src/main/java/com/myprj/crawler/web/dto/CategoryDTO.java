@@ -11,10 +11,7 @@ public class CategoryDTO extends AuditTDO {
     private static final long serialVersionUID = 1L;
 
     @DataTransfer("id")
-    private long id;
-
-    @DataTransfer("key")
-    private String key;
+    private String id;
 
     @DataTransfer("name")
     private String name;
@@ -28,11 +25,11 @@ public class CategoryDTO extends AuditTDO {
     public CategoryDTO() {
     }
 
-    public long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -50,14 +47,6 @@ public class CategoryDTO extends AuditTDO {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public String getKey() {
-        return key;
-    }
-
-    public void setKey(String key) {
-        this.key = key;
     }
 
     public String getParentKey() {

@@ -32,7 +32,7 @@ public class ItemModel extends AuditModel {
     private String name;
 
     @Column(name = "category_id", nullable = false)
-    private long categoryId;
+    private String categoryId;
 
     @Column(name = "description", length = 150)
     private String description;
@@ -54,11 +54,11 @@ public class ItemModel extends AuditModel {
         this.id = id;
     }
 
-    public long getCategoryId() {
+    public String getCategoryId() {
         return categoryId;
     }
 
-    public void setCategoryId(long categoryId) {
+    public void setCategoryId(String categoryId) {
         this.categoryId = categoryId;
     }
 

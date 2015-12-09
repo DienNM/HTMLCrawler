@@ -54,7 +54,7 @@ public class CategoryFacadeImpl implements CategoryFacade {
         try {
             String[] elements = line.split(Pattern.quote("|"));
             CategoryData category = new CategoryData();
-            category.setKey(elements[0]);
+            category.setId(elements[0]);
             category.setName(elements[1]);
             category.setParentKey(elements[2]);
             category.setDescription(elements[3]);

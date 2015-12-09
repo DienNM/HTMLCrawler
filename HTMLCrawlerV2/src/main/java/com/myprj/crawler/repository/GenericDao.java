@@ -29,6 +29,8 @@ public interface GenericDao<E, Id> {
     
     void deleteById(Id id);
     
+    void deleteByIds(List<Id> ids);
+    
     void deleteAll();
     
 }
