@@ -17,6 +17,8 @@ public interface CategoryService {
     
     CategoryData getById(String id);
     
+    List<CategoryData> getByIds(List<String> ids);
+    
     List<CategoryData> getAll();
     
     Map<String, CategoryData> getAllMap();

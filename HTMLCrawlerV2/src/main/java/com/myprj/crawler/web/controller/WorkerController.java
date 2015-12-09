@@ -104,8 +104,7 @@ public class WorkerController extends AbstractController {
 
     @RequestMapping(value = "/import", method = RequestMethod.POST)
     @ResponseBody
-    public JsonResponse importWorkersAndItems(@RequestParam(value = "file") MultipartFile file,
-            @RequestParam(value = "forceBuild", defaultValue = "false") boolean forceBuild) {
+    public JsonResponse importWorkersAndItems(@RequestParam(value = "file") MultipartFile file) {
 
         if (file == null) {
             JsonResponse response = new JsonResponse(false);
@@ -114,7 +113,7 @@ public class WorkerController extends AbstractController {
         }
         List<String> errors = new ArrayList<String>();
         try {
-            errors = workerFacade.loadImportWorkersFromSource(file.getInputStream(), forceBuild);
+            errors = workerFacade.loadImportWorkersFromSource(file.getInputStream());
         } catch (Exception e) {
             logger.error("{}", e);
             errors.add(e.getMessage());

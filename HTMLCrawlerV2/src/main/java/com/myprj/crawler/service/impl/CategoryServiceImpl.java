@@ -69,6 +69,16 @@ public class CategoryServiceImpl implements CategoryService {
     }
     
     @Override
+    public List<CategoryData> getByIds(List<String> ids) {
+        List<CategoryModel> categoryModels = categoryRepository.find(ids);
+        List<CategoryData> categoryDatas = new ArrayList<CategoryData>();
+
+        CategoryData.toDatas(categoryModels, categoryDatas);
+
+        return categoryDatas;
+    }
+    
+    @Override
     public List<CategoryData> getAll() {
         List<CategoryModel> categoryModels = categoryRepository.findAll();
         List<CategoryData> categoryDatas = new ArrayList<CategoryData>();

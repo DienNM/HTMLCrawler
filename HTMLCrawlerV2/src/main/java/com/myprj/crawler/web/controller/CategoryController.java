@@ -65,18 +65,13 @@ public class CategoryController extends AbstractController {
         return jsonResponse;
     }
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/{ids}", method = RequestMethod.GET)
     @ResponseBody
-    public JsonResponse getByKey(@PathVariable(value = "id") String id,
+    public JsonResponse getByKey(@PathVariable(value = "ids") List<String> ids,
             @RequestParam(value = "level", defaultValue = "DEFAULT") DTOLevel target) {
 
-        CategoryData category = categoryService.getById(id);
-        if (category == null) {
-            JsonResponse jsonResponse = new JsonResponse(false);
-            jsonResponse.putMessage("Category Id " + id + " not found");
-            return jsonResponse;
-        }
-        Map<String, Object> datas = getMapResult(category, CategoryDTO.class, target);
+        List<CategoryData> categories = categoryService.getByIds(ids);
+        List<Map<String, Object>> datas = getListMapResult(categories, CategoryDTO.class, target);
         JsonResponse response = new JsonResponse(!datas.isEmpty());
         response.putData(datas);
 

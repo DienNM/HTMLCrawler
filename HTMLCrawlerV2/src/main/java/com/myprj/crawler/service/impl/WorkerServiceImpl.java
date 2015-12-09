@@ -185,13 +185,10 @@ public class WorkerServiceImpl implements WorkerService {
 
         workerItemRepository.deleteByWorkerId(worker.getId());
         workerItemRepository.save(workerItemModels);
-        worker.setBuilt(true);
 
         List<WorkerItemData> workerItemDatas = new ArrayList<WorkerItemData>();
         WorkerItemData.toDatas(workerItemModels, workerItemDatas);
         worker.setWorkerItems(workerItemDatas);
-
-        update(worker);
 
         return workerItemDatas;
     }

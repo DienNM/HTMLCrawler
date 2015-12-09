@@ -9,6 +9,6 @@ import java.util.List;
 
 public interface WorkerFacade {
 
-    List<String> loadImportWorkersFromSource(InputStream inputStream, boolean forceBuild);
+    List<String> loadImportWorkersFromSource(InputStream inputStream);
 
 }

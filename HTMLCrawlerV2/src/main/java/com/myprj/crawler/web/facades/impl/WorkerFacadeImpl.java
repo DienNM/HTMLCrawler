@@ -33,7 +33,7 @@ public class WorkerFacadeImpl implements WorkerFacade {
     // Level0|LIST|1|1|div.product-col-2 div.infomation p.title a{{href}}|http://tiki.vn/dien-thoai-di-dong/c1793?mode=list&page=%s
     // Level1|DETAIL|0|0||
     @Override
-    public List<String> loadImportWorkersFromSource(InputStream inputStream, boolean forceBuild) {
+    public List<String> loadImportWorkersFromSource(InputStream inputStream) {
         List<String> errorStructures = new ArrayList<String>();
         List<ImportFileStruture> importFileStrutures = ImportFileParser.loadItemFromSource(inputStream);
         if (importFileStrutures.isEmpty()) {
@@ -54,7 +54,7 @@ public class WorkerFacadeImpl implements WorkerFacade {
                     }
                     if (!workerItems.isEmpty()) {
                         workerItems = workerService.buildWorkerItems(workerData, workerItems);
-                        buildWorkerItemSelectors(workerItems, item.getJson(), forceBuild);
+                        buildWorkerItemSelectors(workerItems, item.getJson());
                     }
                 } catch(Exception e) {
                     errorStructures.add("Error: " + e.getMessage());
@@ -64,7 +64,7 @@ public class WorkerFacadeImpl implements WorkerFacade {
         return errorStructures;
     }
 
-    private void buildWorkerItemSelectors(List<WorkerItemData> workerItems, String json, boolean forceBuild) {
+    private void buildWorkerItemSelectors(List<WorkerItemData> workerItems, String json) {
         WorkerItemData detailWorkerItem = null;
         for (WorkerItemData workerItem : workerItems) {
             if (workerItem.getCrawlType().equals(CrawlType.DETAIL)) {
