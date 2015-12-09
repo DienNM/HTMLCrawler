@@ -84,7 +84,7 @@ public abstract class AbstractCrawler implements CrawlerService {
                     WorkerItemAttributeData root = itemAttributeService.getRootWithPopulateTree(workerItem.getId());
                     workerItem.setRootWorkerItemAttribute(root);
                     
-                    ItemData itemData = itemService.getByKey(workerItem.getItemKey());
+                    ItemData itemData = itemService.get(workerItem.getItemKey());
                     CategoryData categoryData = categoryService.getById(itemData.getCategoryId());
                     itemData.setCategoryData(categoryData);
                     

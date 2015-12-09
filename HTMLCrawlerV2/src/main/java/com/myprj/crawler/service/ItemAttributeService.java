@@ -14,7 +14,7 @@ public interface ItemAttributeService {
     
     ItemAttributeData getAndPopulate(String id);
     
-    ItemAttributeData getRoot(long itemId);
+    ItemAttributeData getRoot(String itemId);
     
     void populate(ItemAttributeData attribute);
     
@@ -22,7 +22,7 @@ public interface ItemAttributeService {
 
     void populateParent(ItemAttributeData attribute);
     
-    List<ItemAttributeData> getByItemId(long itemId);
+    List<ItemAttributeData> getByItemId(String itemId);
     
     ItemAttributeData save(ItemAttributeData attribute);
     

@@ -151,10 +151,10 @@ public class ItemFacadeImpl implements ItemFacade {
         List<String> itemErrors = new ArrayList<String>();
         for (ItemData item : items) {
             try {
-                itemService.buildItem(item.getKey(), json, forceBuild);
+                itemService.buildItem(item.getId(), json, forceBuild);
             } catch (Exception e) {
-                itemErrors.add(item.getKey() + " - Error: " + e.getMessage());
-                logger.error("Cannot build Item Struture of: " + item.getKey() + " - Error: " + e.getMessage());
+                itemErrors.add(item.getId() + " - Error: " + e.getMessage());
+                logger.error("Cannot build Item Struture of: " + item.getId() + " - Error: " + e.getMessage());
             }
         }
         return itemErrors;
@@ -164,10 +164,14 @@ public class ItemFacadeImpl implements ItemFacade {
         try {
             String[] elements = line.split(Pattern.quote("|"));
             ItemData item = new ItemData();
-            item.setKey(elements[0]);
+            item.setId(elements[0]);
             item.setName(elements[1]);
 
             CategoryData category = categoryRepo.get(elements[2]);
+            if(category == null) {
+                logger.error("Cannot find category: " + elements[2]);
+                return null;
+            }
             item.setCategoryId(category.getId());
 
             item.setDescription(elements[3]);

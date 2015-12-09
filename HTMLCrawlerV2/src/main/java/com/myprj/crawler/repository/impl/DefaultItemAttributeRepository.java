@@ -30,14 +30,14 @@ public class DefaultItemAttributeRepository extends DefaultGenericDao<ItemAttrib
     }
 
     @Override
-    public List<ItemAttributeModel> findByItemId(long itemId) {
+    public List<ItemAttributeModel> findByItemId(String itemId) {
         Query query = entityManager.createQuery("FROM " + getClassName() + " WHERE itemId = :itemId");
         query.setParameter("itemId", itemId);
         return query.getResultList();
     }
 
     @Override
-    public ItemAttributeModel findRootByItemId(long itemId) {
+    public ItemAttributeModel findRootByItemId(String itemId) {
         Query query = entityManager.createQuery("FROM " + getClassName() + 
                 " WHERE itemId = :itemId AND root = :root ");
         query.setParameter("itemId", itemId);
@@ -50,7 +50,7 @@ public class DefaultItemAttributeRepository extends DefaultGenericDao<ItemAttrib
     }
 
     @Override
-    public void deleteByItemId(long itemId) {
+    public void deleteByItemId(String itemId) {
         Query query = entityManager.createQuery("DELETE FROM " + getClassName() + " WHERE itemId = :itemId");
         query.setParameter("itemId", itemId);
         query.executeUpdate();

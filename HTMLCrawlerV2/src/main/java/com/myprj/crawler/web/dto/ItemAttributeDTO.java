@@ -19,7 +19,7 @@ public class ItemAttributeDTO extends AuditTDO {
     private String id;
 
     @DataTransfer("itemId")
-    private long itemId;
+    private String itemId;
 
     @DataTransfer("name")
     private String name;
@@ -53,11 +53,11 @@ public class ItemAttributeDTO extends AuditTDO {
         this.id = id;
     }
 
-    public long getItemId() {
+    public String getItemId() {
         return itemId;
     }
 
-    public void setItemId(long itemId) {
+    public void setItemId(String itemId) {
         this.itemId = itemId;
     }
 

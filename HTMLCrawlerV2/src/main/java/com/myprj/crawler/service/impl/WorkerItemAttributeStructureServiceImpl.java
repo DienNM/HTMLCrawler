@@ -12,6 +12,8 @@ import java.util.Map.Entry;
 import java.util.regex.Pattern;
 
 import org.jsoup.helper.StringUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -34,7 +36,9 @@ import com.myprj.crawler.util.Serialization;
  */
 @Service
 public class WorkerItemAttributeStructureServiceImpl implements WorkerItemAttributeStructureService {
-
+    
+    private Logger logger = LoggerFactory.getLogger(WorkerItemAttributeStructureServiceImpl.class);
+    
     @Autowired
     private ItemAttributeService itemAttributeService;
     
@@ -50,9 +54,12 @@ public class WorkerItemAttributeStructureServiceImpl implements WorkerItemAttrib
     public WorkerItemAttributeData build(WorkerItemData workerItem, String jsonText) {
         Map<String, Object> inputObject = Serialization.deserialize(jsonText, Map.class);
         
-        ItemData itemData = itemService.getByKey(workerItem.getItemKey());
-        long itemId = itemData.getId();
-        String attributeId = String.valueOf(itemId) + "|" + ItemContent.ROOT;
+        ItemData itemData = itemService.get(workerItem.getItemKey());
+        if(itemData == null) {
+            logger.error("Item Key: " + workerItem.getItemKey() + " not found");
+            return null;
+        }
+        String attributeId = itemData.getId() + "|" + ItemContent.ROOT;
 
         WorkerItemAttributeData root = new WorkerItemAttributeData();
         root.setId(workerItem.getId() + "|" + attributeId);

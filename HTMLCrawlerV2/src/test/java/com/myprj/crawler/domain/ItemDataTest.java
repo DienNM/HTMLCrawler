@@ -19,7 +19,7 @@ public class ItemDataTest extends AbstractDomain {
     @Test
     public void testConvertDomain2Entity() {
         ItemData source = new ItemData();
-        source.setId(1);
+        source.setId("1");
         source.setCategoryId("1");
         source.setBuilt(true);
         source.setDescription("Description");
@@ -49,7 +49,7 @@ public class ItemDataTest extends AbstractDomain {
     @Test
     public void testConvertEntity2Domain() {
         ItemModel source = new ItemModel();
-        source.setId(1);
+        source.setId("1");
         source.setCategoryId("1");
         source.setBuilt(true);
         source.setDescription("Description");

@@ -14,7 +14,7 @@ public interface WorkerItemAttributeRepository extends GenericDao<WorkerItemAttr
     
     List<WorkerItemAttributeModel> findByWorkerItemId(long workerItemId);
     
-    void deleteByItemKey(String itemKey);
+    void deleteByItemId(String itemKey);
     
     void deleteByWorkerItemId(long workerItemId);
     

@@ -12,10 +12,10 @@ public interface ItemAttributeRepository extends GenericDao<ItemAttributeModel, 
     
     List<ItemAttributeModel> findChildren(String id);
     
-    List<ItemAttributeModel> findByItemId(long itemId);
+    List<ItemAttributeModel> findByItemId(String itemId);
     
-    ItemAttributeModel findRootByItemId(long itemId);
+    ItemAttributeModel findRootByItemId(String itemId);
     
-    void deleteByItemId(long itemId);
+    void deleteByItemId(String itemId);
     
 }

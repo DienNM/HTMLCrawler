@@ -49,7 +49,7 @@ public class ItemAttributeServiceImpl implements ItemAttributeService {
     }
 
     @Override
-    public ItemAttributeData getRoot(long itemId) {
+    public ItemAttributeData getRoot(String itemId) {
         ItemAttributeModel attributeModel =itemAttributeRepository.findRootByItemId(itemId);
         if (attributeModel == null) {
             logger.warn("Cannot find Root Attribute for Item: {}", itemId);
@@ -90,7 +90,7 @@ public class ItemAttributeServiceImpl implements ItemAttributeService {
     }
 
     @Override
-    public List<ItemAttributeData> getByItemId(long itemId) {
+    public List<ItemAttributeData> getByItemId(String itemId) {
         List<ItemAttributeModel> attributeModels = itemAttributeRepository.findByItemId(itemId);
         List<ItemAttributeData> attributeDatas = new ArrayList<ItemAttributeData>();
 

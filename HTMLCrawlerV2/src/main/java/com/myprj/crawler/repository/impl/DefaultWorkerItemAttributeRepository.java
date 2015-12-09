@@ -29,7 +29,7 @@ public class DefaultWorkerItemAttributeRepository extends DefaultGenericDao<Work
     }
 
     @Override
-    public void deleteByItemKey(String itemKey) {
+    public void deleteByItemId(String itemKey) {
         Query query = entityManager.createQuery("DELETE FROM " + getClassName() + " WHERE itemKey = :itemKey");
         query.setParameter("itemKey", itemKey);
         query.executeUpdate();

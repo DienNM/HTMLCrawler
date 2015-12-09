@@ -75,7 +75,7 @@ public class ItemController extends AbstractController {
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     @ResponseBody
-    public JsonResponse getItem(@PathVariable(value = "id") long id,
+    public JsonResponse getItem(@PathVariable(value = "id") String id,
             @RequestParam(value = "level", defaultValue = "SIMPLE") DTOLevel level) {
         ItemData itemData = itemService.get(id);
         if (itemData == null) {
@@ -95,31 +95,9 @@ public class ItemController extends AbstractController {
         return response;
     }
 
-    @RequestMapping(value = "/by-key/{key}", method = RequestMethod.GET)
-    @ResponseBody
-    public JsonResponse getItemByKey(@PathVariable(value = "key") String key,
-            @RequestParam(value = "level", defaultValue = "SIMPLE") DTOLevel level) {
-        ItemData itemData = itemService.getByKey(key);
-        if (itemData == null) {
-            JsonResponse response = new JsonResponse(false);
-            response.putMessage("Item Key " + key + " not found");
-            return response;
-        }
-        populateObjectByLevel(itemData, level);
-
-        ItemDTO itemDTO = new ItemDTO();
-        ItemDTO.toItemDTO(itemData, itemDTO);
-
-        Map<String, Object> datas = getMapResult(itemDTO, level);
-        JsonResponse response = new JsonResponse(!datas.isEmpty());
-        response.putData(datas);
-
-        return response;
-    }
-
     @RequestMapping(value = "/{ids}/delete", method = RequestMethod.POST)
     @ResponseBody
-    public JsonResponse deleteItems(@PathVariable(value = "ids") List<Long> ids) {
+    public JsonResponse deleteItems(@PathVariable(value = "ids") List<String> ids) {
         try {
             itemService.delete(ids);
             return new JsonResponse(true);
@@ -133,15 +111,15 @@ public class ItemController extends AbstractController {
     @RequestMapping(method = RequestMethod.POST)
     @ResponseBody
     public JsonResponse addItem(@RequestParam(value = "name", required = true) String name,
-            @RequestParam(value = "key", required = true) String key,
+            @RequestParam(value = "id", required = true) String id,
             @RequestParam(value = "categoryId", required = true) String categoryId,
             @RequestParam(value = "description", required = false) String description) {
 
         List<RequestError> errors = new ArrayList<RequestError>();
 
-        ItemData item = itemService.getByKey(key);
+        ItemData item = itemService.get(id);
         if (item != null) {
-            errors.add(new RequestError("key", "Key " + categoryId + " already exists"));
+            errors.add(new RequestError("id", "id" + categoryId + " already exists"));
         }
 
         CategoryData categoryData = categoryService.getById(categoryId);

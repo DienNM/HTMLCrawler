@@ -13,7 +13,7 @@ import com.myprj.crawler.repository.ItemRepository;
  * @author DienNM (DEE)
  */
 @Repository
-public class DefaultItemRepository extends DefaultGenericDao<ItemModel, Long> implements ItemRepository {
+public class DefaultItemRepository extends DefaultGenericDao<ItemModel, String> implements ItemRepository {
 
     @Override
     protected Class<ItemModel> getTargetClass() {
@@ -26,18 +26,6 @@ public class DefaultItemRepository extends DefaultGenericDao<ItemModel, Long> im
         Query query = entityManager.createQuery("FROM " + getClassName() + " WHERE categoryId = :categoryId");
         query.setParameter("categoryId", category);
         return query.getResultList();
-    }
-
-    @SuppressWarnings("unchecked")
-    @Override
-    public ItemModel findByKey(String key) {
-        Query query = entityManager.createQuery("FROM " + getClassName() + " WHERE key = :key");
-        query.setParameter("key", key);
-        List<ItemModel> itemModels = query.getResultList();
-        if (itemModels.isEmpty()) {
-            return null;
-        }
-        return itemModels.get(0);
     }
 
 }

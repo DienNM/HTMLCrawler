@@ -12,9 +12,7 @@ import com.myprj.crawler.domain.config.ItemData;
 
 public interface ItemService {
 
-    ItemData get(long id);
-
-    ItemData getByKey(String key);
+    ItemData get(String id);
 
     PageResult<ItemData> getAllWithPaging(Pageable pageable);
 
@@ -28,8 +26,8 @@ public interface ItemService {
 
     ItemData buildItem(String itemKey, String jsonAttributes, boolean forceBuild);
 
-    void delete(long id);
+    void delete(String id);
 
-    void delete(List<Long> ids);
+    void delete(List<String> ids);
 
 }

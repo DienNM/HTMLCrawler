@@ -48,22 +48,10 @@ public class ItemServiceImpl implements ItemService {
     private ItemAttributeStructureService itemAttributeStructureService;
 
     @Override
-    public ItemData get(long id) {
+    public ItemData get(String id) {
         ItemModel itemModel = itemRepository.find(id);
         if (itemModel == null) {
             logger.warn("Cannot find Item: {}", id);
-            return null;
-        }
-        ItemData itemData = new ItemData();
-        ItemData.toData(itemModel, itemData);
-        return itemData;
-    }
-
-    @Override
-    public ItemData getByKey(String key) {
-        ItemModel itemModel = itemRepository.findByKey(key);
-        if (itemModel == null) {
-            logger.warn("Cannot find Item: {}", key);
             return null;
         }
         ItemData itemData = new ItemData();
@@ -110,7 +98,7 @@ public class ItemServiceImpl implements ItemService {
     public List<ItemData> saveOrUpdate(List<ItemData> items) {
         List<ItemData> persistedItems = new ArrayList<ItemData>();
         for (ItemData item : items) {
-            ItemModel itemModel = itemRepository.findByKey(item.getKey());
+            ItemModel itemModel = itemRepository.find(item.getId());
             if (itemModel == null) {
                 itemModel = new ItemModel();
                 ItemData.toModel(item, itemModel);
@@ -146,24 +134,24 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     @Transactional
-    public void delete(long itemId) {
+    public void delete(String itemId) {
         ItemModel itemModel = itemRepository.find(itemId);
         if (itemModel == null) {
             throw new InvalidParameterException(String.format("Item %s not found. Cannot delete", itemId));
         }
         attributeRepository.deleteByItemId(itemId);
-        workerItemAttributeRepository.deleteByItemKey(itemModel.getKey());
+        workerItemAttributeRepository.deleteByItemId(itemModel.getId());
         itemRepository.deleteById(itemId);
     }
 
     @Override
     @Transactional
-    public void delete(List<Long> ids) {
-        for (Long id : ids) {
+    public void delete(List<String> ids) {
+        for (String id : ids) {
             ItemModel itemModel = itemRepository.find(id);
             if (itemModel != null) {
                 attributeRepository.deleteByItemId(id);
-                workerItemAttributeRepository.deleteByItemKey(itemModel.getKey());
+                workerItemAttributeRepository.deleteByItemId(itemModel.getId());
                 itemRepository.deleteById(id);
             }
         }
@@ -172,7 +160,7 @@ public class ItemServiceImpl implements ItemService {
     @Override
     @Transactional
     public ItemData buildItem(String itemKey, String jsonAttributes, boolean forceBuild) {
-        ItemData itemData = getByKey(itemKey);
+        ItemData itemData = get(itemKey);
         if (itemData == null) {
             throw new InvalidParameterException("Cannot find Item: " + itemKey);
         }
@@ -182,19 +170,19 @@ public class ItemServiceImpl implements ItemService {
     private ItemData buildItem(ItemData itemData, String jsonAttributes, boolean forceBuild) {
 
         if (itemData.isBuilt() && !forceBuild) {
-            throw new InvalidParameterException(String.format("Item %s is already built", itemData.getKey()));
+            throw new InvalidParameterException(String.format("Item %s is already built", itemData.getId()));
         }
 
         ItemAttributeData root = itemAttributeStructureService.build(itemData, jsonAttributes);
         List<ItemAttributeData> attributeDatas = AttributeStructureUtil.navigateAttribtesFromRoot(root);
 
         if (attributeDatas.isEmpty()) {
-            throw new InvalidParameterException("No Attributes are built for Item: " + itemData.getKey());
+            throw new InvalidParameterException("No Attributes are built for Item: " + itemData.getId());
         }
 
         // Delete existing attributes
         attributeRepository.deleteByItemId(itemData.getId());
-        workerItemAttributeRepository.deleteByItemKey(itemData.getKey());
+        workerItemAttributeRepository.deleteByItemId(itemData.getId());
 
         // Save new Attributes
         attributeDatas = itemAttributeService.save(attributeDatas);

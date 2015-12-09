@@ -20,13 +20,10 @@ public class ItemDTO extends AuditTDO {
     private static final long serialVersionUID = 1L;
 
     @DataTransfer("id")
-    private long id;
+    private String id;
 
     @DataTransfer("name")
     private String name;
-
-    @DataTransfer("key")
-    private String key;
 
     @DataTransfer("categoryId")
     private String categoryId;
@@ -68,11 +65,11 @@ public class ItemDTO extends AuditTDO {
         });
     }
 
-    public long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -122,13 +119,5 @@ public class ItemDTO extends AuditTDO {
     
     public void setSampleContent(Map<String, Object> sampleContent) {
         this.sampleContent = sampleContent;
-    }
-
-    public String getKey() {
-        return key;
-    }
-
-    public void setKey(String key) {
-        this.key = key;
     }
 }

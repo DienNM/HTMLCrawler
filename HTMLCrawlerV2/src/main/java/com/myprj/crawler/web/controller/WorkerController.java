@@ -137,7 +137,7 @@ public class WorkerController extends AbstractController {
                 String[] arrays = key.split(Pattern.quote("|"));
                 String[] workerIds = arrays[0].split(",");
                 String itemKey = arrays[1];
-                ItemData itemData = itemService.getByKey(itemKey);
+                ItemData itemData = itemService.get(itemKey);
                 if (itemData == null) {
                     logger.warn("Item Id " + itemKey + " not found");
                     continue;

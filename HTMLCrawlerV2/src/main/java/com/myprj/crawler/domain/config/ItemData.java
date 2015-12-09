@@ -23,15 +23,11 @@ public class ItemData extends AuditData {
 
     @DataTransfer("id")
     @EntityTransfer("id")
-    private long id;
+    private String id;
 
     @DataTransfer("name")
     @EntityTransfer("name")
     private String name;
-
-    @DataTransfer("key")
-    @EntityTransfer("item_key")
-    private String key;
 
     @DataTransfer("categoryId")
     @EntityTransfer("category_id")
@@ -88,11 +84,11 @@ public class ItemData extends AuditData {
         });
     }
 
-    public long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -142,14 +138,6 @@ public class ItemData extends AuditData {
 
     public void setBuilt(boolean built) {
         this.built = built;
-    }
-
-    public String getKey() {
-        return key;
-    }
-
-    public void setKey(String key) {
-        this.key = key;
     }
 
     public CategoryData getCategoryData() {
