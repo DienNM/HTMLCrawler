@@ -50,5 +50,4 @@ public class ItemRepositoryTest extends AbstractTest {
         itemModels = itemRepository.findByCategory("3");
         Assert.assertEquals(0, itemModels.size());
     }
-    
 }

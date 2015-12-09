@@ -75,6 +75,14 @@ public abstract class DefaultGenericDao<E, Id>  implements GenericDao<E, Id> {
         return entity;
     }
 
+    @SuppressWarnings("unchecked")
+    @Override
+    public List<E> find(List<Id> ids) {
+        Query query = entityManager.createQuery("FROM " + getClassName() + " WHERE id in (:ids)");
+        query.setParameter("ids", ids);
+        return query.getResultList();
+    }
+    
     @Override
     public void save(E entity) {
         entityManager.persist(entity);
@@ -106,7 +114,7 @@ public abstract class DefaultGenericDao<E, Id>  implements GenericDao<E, Id> {
     
     @Override
     public void deleteByIds(List<Id> ids) {
-        Query query = entityManager.createQuery("DELETE FROM " + getClassName() + " WHERE ids in (:ids)");
+        Query query = entityManager.createQuery("DELETE FROM " + getClassName() + " WHERE id in (:ids)");
         query.setParameter("ids", ids);
         query.executeUpdate();
     }

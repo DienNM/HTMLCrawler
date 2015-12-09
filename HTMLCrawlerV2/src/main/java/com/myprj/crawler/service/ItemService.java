@@ -13,6 +13,8 @@ import com.myprj.crawler.domain.config.ItemData;
 public interface ItemService {
 
     ItemData get(String id);
+    
+    List<ItemData> get(List<String> ids);
 
     PageResult<ItemData> getAllWithPaging(Pageable pageable);
 

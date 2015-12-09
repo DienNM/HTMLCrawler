@@ -15,13 +15,11 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.myprj.crawler.domain.PageResult;
 import com.myprj.crawler.domain.Pageable;
-import com.myprj.crawler.domain.config.CategoryData;
 import com.myprj.crawler.domain.config.ItemData;
 import com.myprj.crawler.service.CategoryService;
 import com.myprj.crawler.service.ItemService;
 import com.myprj.crawler.web.dto.ItemDTO;
 import com.myprj.crawler.web.dto.JsonResponse;
-import com.myprj.crawler.web.dto.RequestError;
 import com.myprj.crawler.web.enumeration.DTOLevel;
 import com.myprj.crawler.web.facades.ItemFacade;
 
@@ -73,22 +71,19 @@ public class ItemController extends AbstractController {
         return response;
     }
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/{ids}", method = RequestMethod.GET)
     @ResponseBody
-    public JsonResponse getItem(@PathVariable(value = "id") String id,
+    public JsonResponse getItem(@PathVariable(value = "ids") List<String> ids,
             @RequestParam(value = "level", defaultValue = "SIMPLE") DTOLevel level) {
-        ItemData itemData = itemService.get(id);
-        if (itemData == null) {
-            JsonResponse response = new JsonResponse(false);
-            response.putMessage("Item Id " + id + " not found");
-            return response;
+        List<ItemData> itemDatas = itemService.get(ids);
+        for(ItemData itemData : itemDatas) {
+            populateObjectByLevel(itemData, level);
         }
-        populateObjectByLevel(itemData, level);
 
-        ItemDTO itemDTO = new ItemDTO();
-        ItemDTO.toItemDTO(itemData, itemDTO);
+        List<ItemDTO> itemDTOs = new ArrayList<ItemDTO>();
+        ItemDTO.toItemDTOs(itemDatas, itemDTOs);
 
-        Map<String, Object> datas = getMapResult(itemDTO, level);
+        List<Map<String, Object>> datas = getListMapResult(itemDTOs, level);
         JsonResponse response = new JsonResponse(!datas.isEmpty());
         response.putData(datas);
 
@@ -106,40 +101,6 @@ public class ItemController extends AbstractController {
             response.putMessage(e.getMessage());
             return response;
         }
-    }
-
-    @RequestMapping(method = RequestMethod.POST)
-    @ResponseBody
-    public JsonResponse addItem(@RequestParam(value = "name", required = true) String name,
-            @RequestParam(value = "id", required = true) String id,
-            @RequestParam(value = "categoryId", required = true) String categoryId,
-            @RequestParam(value = "description", required = false) String description) {
-
-        List<RequestError> errors = new ArrayList<RequestError>();
-
-        ItemData item = itemService.get(id);
-        if (item != null) {
-            errors.add(new RequestError("id", "id" + categoryId + " already exists"));
-        }
-
-        CategoryData categoryData = categoryService.getById(categoryId);
-        if (categoryData == null) {
-            errors.add(new RequestError("categoryId", "Category Id " + categoryId + " not found"));
-        }
-
-        if (!errors.isEmpty()) {
-            JsonResponse response = new JsonResponse(false);
-            response.putErrors(errors);
-            return response;
-        }
-
-        item = new ItemData();
-        item.setName(name);
-        item.setCategoryId(categoryId);
-        item.setDescription(description);
-
-        item = itemService.save(item);
-        return new JsonResponse(item != null);
     }
 
     @RequestMapping(value = "/import", method = RequestMethod.POST)

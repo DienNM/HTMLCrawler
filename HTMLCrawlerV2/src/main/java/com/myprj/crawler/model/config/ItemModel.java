@@ -2,8 +2,6 @@ package com.myprj.crawler.model.config;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
@@ -17,14 +15,11 @@ import com.myprj.crawler.model.AuditModel;
 public class ItemModel extends AuditModel {
 
     private static final long serialVersionUID = 1L;
-    
-    public static final String TABLE_NAME = "item";
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id", length = 50)
     private String id;
-    
+
     @Column(name = "name", length = 50, nullable = false)
     private String name;
 
@@ -33,10 +28,10 @@ public class ItemModel extends AuditModel {
 
     @Column(name = "description", length = 150)
     private String description;
-    
+
     @Column(name = "is_built")
     private boolean built = false;
-    
+
     @Column(name = "sample_content_json", length = 1000)
     private String sampleContentJson;
 
@@ -74,11 +69,11 @@ public class ItemModel extends AuditModel {
     public void setDescription(String description) {
         this.description = description;
     }
-    
+
     public String getSampleContentJson() {
         return sampleContentJson;
     }
-    
+
     public void setSampleContentJson(String sampleContentJson) {
         this.sampleContentJson = sampleContentJson;
     }

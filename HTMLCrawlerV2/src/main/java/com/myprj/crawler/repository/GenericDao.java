@@ -19,6 +19,8 @@ public interface GenericDao<E, Id> {
     
     E find(Id id);
     
+    List<E> find(List<Id> ids);
+    
     void save(E entity);
     
     void save(List<E> entities);

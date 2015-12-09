@@ -58,6 +58,14 @@ public class ItemServiceImpl implements ItemService {
         ItemData.toData(itemModel, itemData);
         return itemData;
     }
+    
+    @Override
+    public List<ItemData> get(List<String> ids) {
+        List<ItemModel> itemModels = itemRepository.find(ids);
+        List<ItemData> itemDatas = new ArrayList<ItemData>();
+        ItemData.toDatas(itemModels, itemDatas);
+        return itemDatas;
+    }
 
     @Override
     public PageResult<ItemData> getAllWithPaging(Pageable pageable) {

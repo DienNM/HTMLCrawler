@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,7 +21,6 @@ import com.myprj.crawler.domain.config.CategoryData;
 import com.myprj.crawler.service.CategoryService;
 import com.myprj.crawler.web.dto.CategoryDTO;
 import com.myprj.crawler.web.dto.JsonResponse;
-import com.myprj.crawler.web.dto.RequestError;
 import com.myprj.crawler.web.enumeration.DTOLevel;
 import com.myprj.crawler.web.facades.CategoryFacade;
 
@@ -84,6 +82,19 @@ public class CategoryController extends AbstractController {
 
         return response;
     }
+    
+    @RequestMapping(value = "/{ids}/delete", method = RequestMethod.POST)
+    @ResponseBody
+    public JsonResponse delete(@PathVariable(value = "ids") List<String> ids) {
+        try {
+            categoryService.delete(ids);
+            return new JsonResponse(true);
+        } catch (Exception e) {
+            JsonResponse response = new JsonResponse(false);
+            response.putMessage(e.getMessage());
+            return response;
+        }
+    }
 
     @RequestMapping(value = "/import", method = RequestMethod.POST)
     @ResponseBody
@@ -114,98 +125,5 @@ public class CategoryController extends AbstractController {
         JsonResponse response = new JsonResponse(true);
         response.putMessage("Loaded " + categoryDatas.size() + " categories");
         return response;
-    }
-
-    @RequestMapping(method = RequestMethod.POST)
-    @ResponseBody
-    public JsonResponse addCategory(@RequestParam(value = "name") String name,
-            @RequestParam(value = "id", required = true) String id,
-            @RequestParam(value = "description", required = false) String description,
-            @RequestParam(value = "parentKey", defaultValue = "") String parentKey) {
-
-        List<RequestError> errors = new ArrayList<RequestError>();
-        if (StringUtils.isEmpty(name)) {
-            errors.add(new RequestError("name", "Category Name is required"));
-        }
-        
-        CategoryData categoryData = categoryService.getById(id);
-        if (categoryData != null) {
-            errors.add(new RequestError("id", "id " + parentKey + " already exists"));
-        }
-
-        if (!StringUtils.isEmpty(parentKey)) {
-            CategoryData parentCtg = categoryService.getById(parentKey);
-            if (parentCtg == null) {
-                errors.add(new RequestError("parentKey", "Category Parent " + parentKey + " not found"));
-            }
-        }
-
-        if (!errors.isEmpty()) {
-            JsonResponse jsonResponse = new JsonResponse(false);
-            jsonResponse.putErrors(errors);
-            return jsonResponse;
-        }
-
-        categoryData = new CategoryData();
-        categoryData.setName(name);
-        categoryData.setDescription(description);
-        categoryData.setParentKey(parentKey);
-        CategoryData category = categoryService.save(categoryData);
-
-        return new JsonResponse(category != null);
-    }
-
-    @RequestMapping(value = "/{id}", method = RequestMethod.POST)
-    @ResponseBody
-    public JsonResponse updateCategory(@PathVariable(value = "id") String id,
-            @RequestParam(value = "parentKey", defaultValue = "", required = false) String parentKey,
-            @RequestParam(value = "name", required = false) String name,
-            @RequestParam(value = "description", required = false) String description) {
-
-        List<RequestError> errors = new ArrayList<RequestError>();
-
-        CategoryData categoryData = categoryService.getById(id);
-        if (categoryData == null) {
-            errors.add(new RequestError("id", "Category " + id + " not found"));
-        }
-
-        if (!StringUtils.isEmpty(parentKey)) {
-            CategoryData parentCtg = categoryService.getById(parentKey);
-            if (parentCtg == null) {
-                errors.add(new RequestError("parentKey", "Category Parent " + parentKey + " not found"));
-            }
-        }
-
-        if (!errors.isEmpty()) {
-            JsonResponse jsonResponse = new JsonResponse(false);
-            jsonResponse.putErrors(errors);
-            return jsonResponse;
-        }
-
-        if (!StringUtils.isEmpty(name)) {
-            categoryData.setName(name);
-        }
-        if (!StringUtils.isEmpty(description)) {
-            categoryData.setDescription(description);
-        }
-        if (!StringUtils.isEmpty(parentKey)) {
-            categoryData.setParentKey(parentKey);
-        }
-        CategoryData category = categoryService.update(categoryData);
-
-        return new JsonResponse(category != null);
-    }
-
-    @RequestMapping(value = "/{ids}/delete", method = RequestMethod.POST)
-    @ResponseBody
-    public JsonResponse delete(@PathVariable(value = "ids") List<String> ids) {
-        try {
-            categoryService.delete(ids);
-            return new JsonResponse(true);
-        } catch (Exception e) {
-            JsonResponse response = new JsonResponse(false);
-            response.putMessage(e.getMessage());
-            return response;
-        }
     }
 }
