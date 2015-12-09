@@ -22,7 +22,7 @@ public class DefaultItemRepository extends DefaultGenericDao<ItemModel, Long> im
 
     @SuppressWarnings("unchecked")
     @Override
-    public List<ItemModel> findByCategory(long category) {
+    public List<ItemModel> findByCategory(String category) {
         Query query = entityManager.createQuery("FROM " + getClassName() + " WHERE categoryId = :categoryId");
         query.setParameter("categoryId", category);
         return query.getResultList();
