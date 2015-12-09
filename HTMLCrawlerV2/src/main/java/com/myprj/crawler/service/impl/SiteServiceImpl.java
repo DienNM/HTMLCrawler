@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,6 +22,7 @@ public class SiteServiceImpl implements SiteService {
     
     private Logger logger = LoggerFactory.getLogger(SiteServiceImpl.class);
     
+    @Autowired
     private SiteRepository siteRepository;
     
     @Override
@@ -35,7 +37,7 @@ public class SiteServiceImpl implements SiteService {
         
         return siteData;
     }
-
+    
     @Override
     public List<SiteData> getAll() {
         List<SiteModel> siteModels = siteRepository.findAll();
@@ -60,6 +62,29 @@ public class SiteServiceImpl implements SiteService {
         SiteData.toData(siteModel, siteData);
         
         return siteData;
+    }
+    
+    @Override
+    @Transactional
+    public List<SiteData> saveOrUpdate(List<SiteData> siteDatas) {
+        List<SiteData> persistedSites = new ArrayList<SiteData>();
+        for (SiteData site : siteDatas) {
+            SiteModel siteModel = siteRepository.find(site.getKey());
+            if (siteModel == null) {
+                siteModel = new SiteModel();
+                SiteData.toModel(site, siteModel);
+                siteRepository.save(siteModel);
+            } else {
+                siteModel.setName(site.getName());
+                siteModel.setDescription(site.getDescription());
+                siteModel.setUrl(site.getUrl());
+                siteRepository.update(siteModel);
+            }
+            SiteData persisted = new SiteData();
+            SiteData.toData(siteModel, persisted);
+            persistedSites.add(persisted);
+        }
+        return persistedSites;
     }
 
     @Override

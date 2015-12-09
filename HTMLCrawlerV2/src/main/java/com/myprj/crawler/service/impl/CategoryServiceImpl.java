@@ -118,7 +118,6 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     @Transactional
     public List<CategoryData> saveOrUpdate(List<CategoryData> categoryDatas) {
-
         List<CategoryData> persistedCategories = new ArrayList<CategoryData>();
         for (CategoryData category : categoryDatas) {
             CategoryModel categoryModel = categoryRepository.find(category.getId());

@@ -15,6 +15,8 @@ public interface SiteService {
     List<SiteData> getAll();
     
     SiteData save(SiteData site);
+
+    List<SiteData> saveOrUpdate(List<SiteData> siteDatas);
     
     void update(SiteData siteData);
     

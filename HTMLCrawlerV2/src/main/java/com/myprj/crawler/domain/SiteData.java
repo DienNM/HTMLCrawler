@@ -54,7 +54,7 @@ public class SiteData extends AuditData {
     }
 
     public static void toModel(SiteData source, SiteModel dest) {
-        EntityConverter.convert2Data(source, dest);
+        EntityConverter.convert2Entity(source, dest);
     }
 
     public String getKey() {

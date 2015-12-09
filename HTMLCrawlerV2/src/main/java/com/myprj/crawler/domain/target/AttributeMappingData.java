@@ -71,7 +71,7 @@ public class AttributeMappingData extends AuditData {
     }
 
     public static void toModel(AttributeMappingData source, AttributeMappingModel dest) {
-        EntityConverter.convert2Data(source, dest, new ObjectConverter<AttributeMappingData, AttributeMappingModel>() {
+        EntityConverter.convert2Entity(source, dest, new ObjectConverter<AttributeMappingData, AttributeMappingModel>() {
             @Override
             public void convert(AttributeMappingData src, AttributeMappingModel dest) {
                 AttributeMappingId id = new AttributeMappingId();

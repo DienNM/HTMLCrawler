@@ -1,6 +1,7 @@
 package com.myprj.crawler.web.facades.impl;
 
 import java.io.InputStream;
+import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -9,12 +10,14 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.myprj.crawler.domain.SiteData;
 import com.myprj.crawler.domain.config.AttributeSelector;
 import com.myprj.crawler.domain.crawl.PagingConfig;
 import com.myprj.crawler.domain.crawl.WorkerData;
 import com.myprj.crawler.domain.crawl.WorkerItemData;
 import com.myprj.crawler.enumeration.CrawlType;
 import com.myprj.crawler.enumeration.Level;
+import com.myprj.crawler.service.SiteService;
 import com.myprj.crawler.service.WorkerService;
 import com.myprj.crawler.web.facades.WorkerFacade;
 import com.myprj.crawler.web.util.ImportFileParser;
@@ -28,10 +31,10 @@ public class WorkerFacadeImpl implements WorkerFacade {
 
     @Autowired
     private WorkerService workerService;
+    
+    @Autowired
+    private SiteService siteService;
 
-    // prod-mobile|tiki|3|5|1000|Product Mobile Worker|Product Mobile Worker
-    // Level0|LIST|1|1|div.product-col-2 div.infomation p.title a{{href}}|http://tiki.vn/dien-thoai-di-dong/c1793?mode=list&page=%s
-    // Level1|DETAIL|0|0||
     @Override
     public List<String> loadImportWorkersFromSource(InputStream inputStream) {
         List<String> errorStructures = new ArrayList<String>();
@@ -80,6 +83,12 @@ public class WorkerFacadeImpl implements WorkerFacade {
 
     private WorkerData parseWorker(String line) {
         String[] elements = line.split(Pattern.quote("|"));
+        
+        SiteData siteData = siteService.get(elements[1]);
+        if(siteData == null) {
+            throw new InvalidParameterException("Site Key " + elements[1] + " not found");
+        }
+        
         WorkerData workerData = new WorkerData();
         workerData.setKey(elements[0]);
         workerData.setSite(elements[1]);
