@@ -15,4 +15,6 @@ public interface WorkerRepository extends GenericDao<WorkerModel, Long> {
     
     WorkerModel findByKey(String key);
     
+    List<WorkerModel> findByKeys(List<String> keys);
+    
 }

@@ -9,36 +9,27 @@ Test:
 
     [GET]	/categories/all
     [GET] 	/categories?currentPage=0&pageSize=10&level=DEFAULT
-    [GET] 	/categories/{id}?level=FULL
-    [GET] 	/categories/by-key/?level=FULL
-    [POST] 	/categories?name=Category1&description=parentCategoryId
-    [POST] 	/categories/12?key=&name=&description=&parentKey=
-    [POST] 	/categories/1,2,3/delete
+    [GET] 	/categories/{id2,id2}?level=FULL
+    [POST] 	/categories/{id1,id2}/delete
     [POST] 	/categories/import (@file)
 
 
 - Item:
 
     [GET] 	/items?currentPage=0&pageSize=10&level=DEFAULT
-    [GET] 	/items/12?level=FULL
-    [GET] 	/items/by-key/?level=FULL
-    [POST] 	/items/12?key=&name=&categoryId=&description=
-    [POST] 	/items/1,2,3/delete
-    [POST] 	/items/import (@file)
-    [POST] 	/items/import (@file)
+    [GET] 	/items/{id1,id2}?level=FULL
+    [POST] 	/items/{id1,id2}/delete
+    [POST] 	/items/import?forceBuild=false (@file)
     [POST] 	/items/strutures/multi/build/multi?forceBuild=true (@file)
-    [POST] 	/items/strutures/build/{key}?forceBuild=true (@file)
+
 
 - Worker:
 
     [GET] 	/workers?currentPage=0&pageSize=10&level=DEFAULT
-    [GET] 	/workers/12?level=FULL
-    [POST] 	/workers/12?key=&name=&categoryId=&description=
-    [POST] 	/workers/1,2,3/delete
+    [GET] 	/workers/{id1,id2}?level=FULL
+    [GET] 	/workers/{key1,key2}/by-keys
+    [POST] 	/workers/{key1,key2}/delete
     [POST] 	/workers/import (@file)
-    [POST] 	/workers/import (@file)
-    [POST] 	/workers/strutures/multi/build/multi?forceBuild=true (@file)
-    [POST] 	/workers/strutures/build/{key}?forceBuild=true (@file)
 
 
 			

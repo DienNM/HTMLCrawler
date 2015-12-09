@@ -62,6 +62,15 @@ public class WorkerServiceImpl implements WorkerService {
 
         return workerData;
     }
+    
+    @Override
+    public List<WorkerData> get(List<Long> ids) {
+        List<WorkerModel> workerModels = workerRepository.find(ids);
+        List<WorkerData> workerDatas = new ArrayList<WorkerData>();
+        WorkerData.toDatas(workerModels, workerDatas);
+
+        return workerDatas;
+    }
 
     @Override
     public WorkerData getByKey(String key) {
@@ -74,6 +83,15 @@ public class WorkerServiceImpl implements WorkerService {
         WorkerData.toData(workerModel, workerData);
 
         return workerData;
+    }
+    
+    @Override
+    public List<WorkerData> getByKeys(List<String> keys) {
+        List<WorkerModel> workerModels = workerRepository.findByKeys(keys);
+        List<WorkerData> workerDatas = new ArrayList<WorkerData>();
+        WorkerData.toDatas(workerModels, workerDatas);
+
+        return workerDatas;
     }
 
     @Override
@@ -230,6 +248,26 @@ public class WorkerServiceImpl implements WorkerService {
         WorkerItemData workerItemData = new WorkerItemData();
         WorkerItemData.toData(workerItemModel, workerItemData);
         return workerItemData;
+    }
+    
+    @Override
+    @Transactional
+    public void delete(List<Long> ids) {
+        for(Long id : ids) {
+            WorkerModel workerModel = workerRepository.find(id);
+            if(workerModel == null) {
+                throw new InvalidParameterException("Worker Id " + " not found");
+            }
+        }
+        
+        for(Long id : ids) {
+            workerRepository.deleteById(id);
+            List<WorkerItemModel> workerItemModels = workerItemRepository.findByWorkerId(id);
+            for(WorkerItemModel itemModel : workerItemModels) {
+                workerItemAttributeRepository.deleteByWorkerItemId(itemModel.getId());
+            }
+            workerItemRepository.deleteByWorkerId(id);
+        }
     }
 
 }

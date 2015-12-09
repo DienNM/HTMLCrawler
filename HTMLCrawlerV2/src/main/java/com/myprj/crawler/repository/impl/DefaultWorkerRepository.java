@@ -44,5 +44,17 @@ public class DefaultWorkerRepository extends DefaultGenericDao<WorkerModel, Long
         }
         return workerModels.get(0);
     }
+    
+    @SuppressWarnings("unchecked")
+    @Override
+    public List<WorkerModel> findByKeys(List<String> keys) {
+        StringBuilder queryStr = new StringBuilder("FROM " + getClassName());
+        queryStr.append(" WHERE key in (:key) ");
+
+        Query query = entityManager.createQuery(queryStr.toString(), getClazz());
+        query.setParameter("key", keys);
+
+        return query.getResultList();
+    }
 
 }

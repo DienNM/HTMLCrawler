@@ -16,7 +16,11 @@ public interface WorkerService {
     
     WorkerData get(long id);
     
+    List<WorkerData> get(List<Long> ids);
+    
     WorkerData getByKey(String key);
+    
+    List<WorkerData> getByKeys(List<String> keys);
     
     List<WorkerData> getAll();
     
@@ -35,5 +39,7 @@ public interface WorkerService {
     WorkerItemData getWorkerItem(WorkerData worker, Level level);
     
     WorkerItemData buildSelector4Item(WorkerItemData workerItem, String jsonSelector);
+    
+    void delete(List<Long> ids);
     
 }

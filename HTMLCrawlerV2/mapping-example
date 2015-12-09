@@ -1,29 +1,35 @@
 {
 	"price":"price",
 	"description":"description",
-	"name":"name",
+	"name":"ATTRIBUTE(name,NULL)|name",
 	"pastPrice":"pastPrice",
 	"promotions":["promotions"],
 	"brand":"brand",
-	"vatInfo":"priceVAT",,
-	"discount":"discount"
-	"attributes":[
-		{"key":"Có thuế, "map" : "priceVAT{value}"},
-		{"key":"Thương hiệu", "map" : "brand"},
-		{"key":"Nhà sản xuất", "map" : "manufacturer"},
-		{"key":"Trọng lượng vận chuyển (gram)", "map" : "weightDelivery"},
-		{"key":"Trọng lượng sản phẩm", "map" : "weight"},
-		{"key":"Màu", "map" : "color"},
-		{"key":"Độ phân giải màn hình", "map" : "resolution"},
-		{"key":"Loại màn hình (Công nghệ màn hình)", "map" : "screenType"},
-		{"key":"Loại lõi chip", "map" : "chipType"},
-		{"key":"Tên chip", "map" : "chipName"},
-		{"key":"Tốc độ chip (GHz)", "map" : "chipSpeed"},
-		{"key":"Hệ điều hành", "map" : "os"},
-		{"key":"Bộ Nhớ RAM", "map" : "ram"},
-		{"key":"Phụ kiện đi kèm", "map" : "included"},
-		{"key":"Thời hạn bảo hành", "map" : "warranty"},
-		{"key":"SKU", "map" : ""}
-		{"key":"Danh mục", "map" : "individualCtg"}	
+	"vatInfo":"priceVAT",
+	"discount":"discount",
+	"including" : "ATTRIBUTE("")",
+	"price": {
+		"price": "ATTRIBUTE(price,NULL)",
+		"pastPrice": "",
+		"vatInfo": ""
+	},
+	"attributes":[{"ATTRIBUTE()"}
+		{value = "yes", "key":"Có thuế, "map" : "ATTRIBUTE(priceVAT,value)"},  -> vat=yes;
+		{value = "NIKE", "key":"Thương hiệu", "map" : "brand"},		-> brand=NIKE
+		{value = "", "key":"Nhà sản xuất", "map" : "manufacturer"},	->...
+		{value = "", "key":"Trọng lượng vận chuyển (gram)", "map" : "weightDelivery"},
+		{value = "", "key":"Trọng lượng sản phẩm", "map" : "weight"},
+		{value = "", "key":"Màu", "map" : "color"},
+		{value = "", "key":"Độ phân giải màn hình", "map" : "resolution"},
+		{value = "", "key":"Loại màn hình (Công nghệ màn hình)", "map" : "screenType"},
+		{value = "", "key":"Loại lõi chip", "map" : "chipType"},
+		{value = "", "key":"Tên chip", "map" : "chipName"},
+		{value = "", "key":"Tốc độ chip (GHz)", "map" : "chipSpeed"},
+		{value = "", "key":"Hệ điều hành", "map" : "os"},
+		{value = "", "key":"Bộ Nhớ RAM", "map" : "ram"},
+		{value = "", value = "", "key":"Phụ kiện đi kèm", "map" : "included"},
+		{value = "", "key":"Thời hạn bảo hành", "map" : "warranty"},
+		{value = "", "key":"SKU", "map" : ""}
+		{value = "", "key":"Danh mục", "map" : "individualCtg"}	
 	]
 }
