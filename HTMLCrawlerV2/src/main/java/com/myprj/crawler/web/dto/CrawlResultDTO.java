@@ -47,9 +47,6 @@ public class CrawlResultDTO extends AuditDTO {
     @DataTransfer("detail")
     private Map<String, Object> detail = new HashMap<String, Object>();
 
-    @DataTransfer("createdAt")
-    private long createdAt;
-    
     public static void toDTOs(List<CrawlResultData> sources, List<CrawlResultDTO> dests) {
         for(CrawlResultData source : sources) {
             CrawlResultDTO dest = new CrawlResultDTO();
@@ -107,14 +104,6 @@ public class CrawlResultDTO extends AuditDTO {
 
     public void setDetail(Map<String, Object> detail) {
         this.detail = detail;
-    }
-
-    public long getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(long createdAt) {
-        this.createdAt = createdAt;
     }
 
     public String getItemKey() {
