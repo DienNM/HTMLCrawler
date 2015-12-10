@@ -35,7 +35,11 @@ public class LinkAttributeHandler extends AttributeHandlerSupport{
     public Object handle(HtmlDocument document, WorkerItemAttributeData current) {
         
         AttributeSelector cssSelector  = current.getSelector();
-        
+        return handle(document, cssSelector);
+    }
+
+    @Override
+    public Object handle(HtmlDocument document, AttributeSelector cssSelector) {
         Elements elements = document.getDocument().select(cssSelector.getSelector());
         if(elements == null || elements.isEmpty()) {
             return null;

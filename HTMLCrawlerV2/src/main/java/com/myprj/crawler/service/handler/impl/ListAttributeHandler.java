@@ -39,7 +39,11 @@ public class ListAttributeHandler extends AttributeHandlerSupport{
     public Object handle(HtmlDocument document, WorkerItemAttributeData current) {
         
         AttributeSelector cssSelector  = current.getSelector();
-        
+        return handle(document, cssSelector);
+    }
+
+    @Override
+    public Object handle(HtmlDocument document, AttributeSelector cssSelector) {
         List<String> values = new ArrayList<String>();
         Elements elements = document.getDocument().select(cssSelector.getSelector());
         if(elements == null || elements.isEmpty()) {

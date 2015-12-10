@@ -3,31 +3,29 @@ package com.myprj.crawler.service.impl;
 import static com.myprj.crawler.enumeration.AttributeType.LIST;
 import static com.myprj.crawler.enumeration.AttributeType.LIST_OBJECT;
 import static com.myprj.crawler.enumeration.AttributeType.OBJECT;
+import static com.myprj.crawler.util.AttributeSelectorUtil.parseAttritbuteSelectors;
 
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.regex.Pattern;
 
-import org.jsoup.helper.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.myprj.crawler.domain.config.ItemAttributeData;
 import com.myprj.crawler.domain.config.AttributeSelector;
-import com.myprj.crawler.domain.config.WorkerItemAttributeData;
+import com.myprj.crawler.domain.config.ItemAttributeData;
 import com.myprj.crawler.domain.config.ItemContent;
 import com.myprj.crawler.domain.config.ItemData;
+import com.myprj.crawler.domain.config.WorkerItemAttributeData;
 import com.myprj.crawler.domain.crawl.WorkerItemData;
 import com.myprj.crawler.enumeration.AttributeType;
-import com.myprj.crawler.enumeration.SelectorSource;
 import com.myprj.crawler.service.ItemAttributeService;
-import com.myprj.crawler.service.WorkerItemAttributeStructureService;
 import com.myprj.crawler.service.ItemService;
+import com.myprj.crawler.service.WorkerItemAttributeStructureService;
 import com.myprj.crawler.util.AttributeUtil;
 import com.myprj.crawler.util.Serialization;
 
@@ -168,31 +166,5 @@ public class WorkerItemAttributeStructureServiceImpl implements WorkerItemAttrib
         return current;
     }
 
-    // I@CSS||E@CSS||E@CSS
-    private AttributeSelector parseAttritbuteSelectors(String input) {
-        if (StringUtil.isBlank(input)) {
-            return null;
-        }
-        String[] texts = input.split(Pattern.quote("|") + Pattern.quote("|"));
-        if (texts.length == 0) {
-            throw new InvalidParameterException("Cannot parse CSS-Selector value: " + input);
-        }
-        String e0 = texts[0];
-        AttributeSelector targetSelector = parseAttritbuteSelector(e0);
-
-        for (int i = 1; i < texts.length; i++) {
-            String ex = texts[i];
-            AttributeSelector externalSelector = parseAttritbuteSelector(ex);
-            targetSelector.getExternalSelectors().add(externalSelector);
-        }
-
-        return targetSelector;
-    }
-
-    private AttributeSelector parseAttritbuteSelector(String input) {
-        int firstIndexOfAT = input.indexOf("@");
-        String source = input.substring(0, firstIndexOfAT);
-        String css = input.substring(firstIndexOfAT + 1);
-        return new AttributeSelector(css, SelectorSource.fromString(source));
-    }
+    
 }

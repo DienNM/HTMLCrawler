@@ -77,4 +77,9 @@ public class ListObjectAttributeHandler extends AttributeHandlerSupport {
         return results;
     }
 
+    @Override
+    public Object handle(HtmlDocument document, AttributeSelector attributeSelector) {
+        throw new UnsupportedOperationException("This opperation has not support yet");
+    }
+
 }

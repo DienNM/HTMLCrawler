@@ -1,18 +1,27 @@
 package com.myprj.crawler.web.controller;
 
+import org.jsoup.nodes.Document;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.myprj.crawler.domain.HtmlDocument;
 import com.myprj.crawler.domain.RequestCrawl;
+import com.myprj.crawler.domain.config.AttributeSelector;
 import com.myprj.crawler.domain.crawl.WorkerData;
+import com.myprj.crawler.enumeration.AttributeType;
 import com.myprj.crawler.service.WorkerService;
 import com.myprj.crawler.service.crawl.CrawlerHandler;
 import com.myprj.crawler.service.crawl.CrawlerService;
+import com.myprj.crawler.service.handler.AttributeHandler;
+import com.myprj.crawler.service.handler.HandlerRegister;
+import com.myprj.crawler.util.AttributeSelectorUtil;
+import com.myprj.crawler.util.HtmlDownloader;
 import com.myprj.crawler.web.dto.JsonResponse;
 
 /**
@@ -32,7 +41,7 @@ public class CrawlerController extends AbstractController {
     @Autowired
     private WorkerService workerService;
 
-    @RequestMapping(value = "/{workerKey}")
+    @RequestMapping(value = "/{workerKey}", method = RequestMethod.POST)
     @ResponseBody
     public JsonResponse crawl(@PathVariable(value = "workerKey") String workerKey,
             @RequestParam(value = "type", defaultValue = "none") String type) {
@@ -63,6 +72,31 @@ public class CrawlerController extends AbstractController {
             response.putMessage(e.getMessage());
             return response;
         }
+    }
+    
+    @RequestMapping(value = "/css-selector/check", method = RequestMethod.POST)
+    @ResponseBody
+    public JsonResponse checkCssSelector(
+            @RequestParam(value = "selector") String selector,
+            @RequestParam(value = "url") String url,
+            @RequestParam(value = "type", defaultValue = "TEXT") AttributeType type) {
+        
+        JsonResponse jsonResponse = new JsonResponse(true);
+        AttributeSelector attributeSelector = AttributeSelectorUtil.parseAttritbuteSelector(selector);
+        
+        AttributeHandler handler = HandlerRegister.getHandler(type);
+        if(handler == null) {
+            jsonResponse = new JsonResponse(false);
+            jsonResponse.putMessage("No handler for type: " + type);
+        }
+        
+        Document document = HtmlDownloader.download(url);
+        Object object = handler.handle(new HtmlDocument(document), attributeSelector);
+        
+        jsonResponse.put("CSS-Selector", attributeSelector);
+        jsonResponse.put("result", object);
+        
+        return jsonResponse;
     }
 
 }

@@ -32,9 +32,14 @@ public class TextAttributeHandler extends AttributeHandlerSupport {
 
     @Override
     public Object handle(HtmlDocument document, WorkerItemAttributeData current) {
-        
-        AttributeSelector cssSelector  = current.getSelector();
-        
+
+        AttributeSelector cssSelector = current.getSelector();
+        return handle(document, cssSelector);
+
+    }
+
+    @Override
+    public Object handle(HtmlDocument document, AttributeSelector cssSelector) {
         Elements elements = document.getDocument().select(cssSelector.getSelector());
         if (elements == null || elements.isEmpty()) {
             return null;
@@ -47,5 +52,5 @@ public class TextAttributeHandler extends AttributeHandlerSupport {
         }
         return returnText(text, cssSelector);
     }
-    
+
 }
