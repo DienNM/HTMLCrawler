@@ -16,19 +16,18 @@ import com.myprj.crawler.domain.config.WorkerItemAttributeData;
 import com.myprj.crawler.enumeration.AttributeType;
 import com.myprj.crawler.service.handler.AttributeHandlerSupport;
 import com.myprj.crawler.service.handler.HandlerRegister;
-import com.myprj.crawler.util.Serialization;
 
 /**
  * @author DienNM (DEE)
  */
 @Service("listAttributeHandler")
-public class ListAttributeHandler extends AttributeHandlerSupport{
-    
+public class ListAttributeHandler extends AttributeHandlerSupport {
+
     @Override
     public AttributeType getType() {
         return AttributeType.LIST;
     }
-    
+
     @Override
     @PostConstruct
     public void registerHandler() {
@@ -37,26 +36,66 @@ public class ListAttributeHandler extends AttributeHandlerSupport{
 
     @Override
     public Object handle(HtmlDocument document, WorkerItemAttributeData current) {
-        
-        AttributeSelector cssSelector  = current.getSelector();
-        return handle(document, cssSelector);
+        List<WorkerItemAttributeData> children = current.getChildren();
+        List<Object> values = new ArrayList<Object>();
+        if(children == null || children.isEmpty()) {
+            return values;
+        }
+        WorkerItemAttributeData child = children.get(0);
+        AttributeSelector cssSelector = child.getSelector();
+        if(isEmptySelector(cssSelector)) {
+            return values;
+        }
+        Elements elements = document.getDocument().select(cssSelector.getSelector());
+        if (elements == null || elements.isEmpty()) {
+            return values;
+        }
+        for (Element element : elements) {
+            Object object = HandlerRegister.getHandler(child.getType()).handle(element, child);
+            if(object != null) {
+                values.add(object);
+            }
+        }
+        return values;
+    }
+
+    @Override
+    public Object handle(Element element, WorkerItemAttributeData current) {
+        List<WorkerItemAttributeData> children = current.getChildren();
+        List<Object> values = new ArrayList<Object>();
+        if(children == null || children.isEmpty()) {
+            return values;
+        }
+        WorkerItemAttributeData child = children.get(0);
+        AttributeSelector cssSelector = child.getSelector();
+        if(isEmptySelector(cssSelector)) {
+            return values;
+        }
+        Elements elements = element.select(cssSelector.getSelector());
+        if (elements == null || elements.isEmpty()) {
+            return values;
+        }
+        for (Element elm : elements) {
+            Object object = HandlerRegister.getHandler(child.getType()).handle(elm, child);
+            if(object != null) {
+                values.add(object);
+            }
+        }
+        return values;
     }
 
     @Override
     public Object handle(HtmlDocument document, AttributeSelector cssSelector) {
-        List<String> values = new ArrayList<String>();
-        Elements elements = document.getDocument().select(cssSelector.getSelector());
-        if(elements == null || elements.isEmpty()) {
-            return Serialization.serialize(values);
+        List<Object> values = new ArrayList<Object>();
+        if(isEmptySelector(cssSelector)) {
+            return values;
         }
-        for(Element element : elements) {
-            String text = null;
-            if(StringUtils.isEmpty(cssSelector.getTargetAttribute())) {
-                text = element.text();
-            } else {
-                text = element.attr(cssSelector.getTargetAttribute());
-            }
-            text = returnText(text, cssSelector);
+        Elements elements = document.getDocument().select(cssSelector.getSelector());
+        if (elements == null || elements.isEmpty()) {
+            return values;
+        }
+        for (Element element : elements) {
+            String text = pickupString(element, cssSelector);
             if(!StringUtils.isEmpty(text)) {
                 values.add(text);
             }

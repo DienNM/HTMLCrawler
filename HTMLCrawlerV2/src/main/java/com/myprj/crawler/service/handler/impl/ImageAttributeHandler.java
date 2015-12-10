@@ -3,6 +3,7 @@ package com.myprj.crawler.service.handler.impl;
 import javax.annotation.PostConstruct;
 
 import org.apache.commons.lang3.StringUtils;
+import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.stereotype.Service;
 
@@ -34,23 +35,31 @@ public class ImageAttributeHandler extends AttributeHandlerSupport {
     @Override
     public Object handle(HtmlDocument document, WorkerItemAttributeData current) {
         AttributeSelector cssSelector = current.getSelector();
-        return handle(document, cssSelector);
-    }
-
-    @Override
-    public Object handle(HtmlDocument document, AttributeSelector cssSelector) {
+        if(isEmptySelector(cssSelector)) {
+            return null;
+        }
         Elements elements = document.getDocument().select(cssSelector.getSelector());
         if (elements == null || elements.isEmpty()) {
             return null;
         }
-        String link = null;
-        if (StringUtils.isEmpty(cssSelector.getTargetAttribute())) {
-            link = elements.first().text();
-        } else {
-            link = elements.first().attr(cssSelector.getTargetAttribute());
+        return getBytes(elements, cssSelector);
+    }
+
+    @Override
+    public Object handle(Element element, WorkerItemAttributeData current) {
+        AttributeSelector cssSelector = current.getSelector();
+        if(isEmptySelector(cssSelector)) {
+            return null;
         }
-        
-        link = returnText(link, cssSelector);
+        Elements elements = element.select(cssSelector.getSelector());
+        if (elements == null || elements.isEmpty()) {
+            return null;
+        }
+        return getBytes(elements, cssSelector);
+    }
+    
+    private Object getBytes(Elements elements, AttributeSelector cssSelector) {
+        String link = pickupString(elements, cssSelector);
         if(StringUtils.isEmpty(link)) {
             return null;
         }
@@ -60,7 +69,18 @@ public class ImageAttributeHandler extends AttributeHandlerSupport {
         } catch (Exception e) {
             return null;
         }
-        
+    }
+
+    @Override
+    public Object handle(HtmlDocument document, AttributeSelector cssSelector) {
+        if(isEmptySelector(cssSelector)) {
+            return null;
+        }
+        Elements elements = document.getDocument().select(cssSelector.getSelector());
+        if (elements == null || elements.isEmpty()) {
+            return null;
+        }
+        return getBytes(elements, cssSelector);
     }
 
 }

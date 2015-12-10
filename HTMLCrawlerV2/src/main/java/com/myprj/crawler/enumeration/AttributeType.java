@@ -7,12 +7,10 @@ package com.myprj.crawler.enumeration;
 public enum AttributeType {
 
     IMAGE,
-    LIST_IMAGE,
     TEXT,
     HTML,
     LIST,
     LINK,
-    OBJECT,
-    LIST_OBJECT
+    OBJECT
     
 }

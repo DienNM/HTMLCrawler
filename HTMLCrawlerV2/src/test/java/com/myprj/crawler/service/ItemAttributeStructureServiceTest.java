@@ -42,7 +42,7 @@ public class ItemAttributeStructureServiceTest extends AbstractTest {
 
         // Verify Content
         Map<String, Object> content = (Map<String, Object>) itemData.getSampleContent().getContent().get("content");
-
+        System.out.println(content);
         Assert.assertTrue(content.get("name") instanceof String);
         Assert.assertTrue(content.get("name").toString().equals("EMPTY"));
 

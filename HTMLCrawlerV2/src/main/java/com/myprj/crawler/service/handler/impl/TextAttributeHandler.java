@@ -2,7 +2,7 @@ package com.myprj.crawler.service.handler.impl;
 
 import javax.annotation.PostConstruct;
 
-import org.apache.commons.lang3.StringUtils;
+import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +19,8 @@ import com.myprj.crawler.service.handler.HandlerRegister;
 @Service("textAttributeHandler")
 public class TextAttributeHandler extends AttributeHandlerSupport {
 
+    private final static String EMPTY = "";
+
     @Override
     public AttributeType getType() {
         return AttributeType.TEXT;
@@ -32,25 +34,31 @@ public class TextAttributeHandler extends AttributeHandlerSupport {
 
     @Override
     public Object handle(HtmlDocument document, WorkerItemAttributeData current) {
-
         AttributeSelector cssSelector = current.getSelector();
-        return handle(document, cssSelector);
+        if (isEmptySelector(cssSelector)) {
+            return EMPTY;
+        }
+        Elements elements = document.getDocument().select(cssSelector.getSelector());
+        return pickupString(elements, cssSelector);
+    }
 
+    @Override
+    public Object handle(Element element, WorkerItemAttributeData current) {
+        AttributeSelector cssSelector = current.getSelector();
+        if (isEmptySelector(cssSelector)) {
+            return EMPTY;
+        }
+        Elements elements = element.select(cssSelector.getSelector());
+        return pickupString(elements, cssSelector);
     }
 
     @Override
     public Object handle(HtmlDocument document, AttributeSelector cssSelector) {
+        if (isEmptySelector(cssSelector)) {
+            return EMPTY;
+        }
         Elements elements = document.getDocument().select(cssSelector.getSelector());
-        if (elements == null || elements.isEmpty()) {
-            return null;
-        }
-        String text = null;
-        if (StringUtils.isEmpty(cssSelector.getTargetAttribute())) {
-            text = elements.first().text();
-        } else {
-            text = elements.first().attr(cssSelector.getTargetAttribute());
-        }
-        return returnText(text, cssSelector);
+        return pickupString(elements, cssSelector);
     }
 
 }

@@ -5,6 +5,7 @@ import static com.myprj.crawler.util.Serialization.serialize;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import com.myprj.crawler.annotation.DataTransfer;
 import com.myprj.crawler.annotation.EntityTransfer;
@@ -44,12 +45,20 @@ public class ItemData extends AuditData {
     private CategoryData categoryData;
     
     private ItemContent sampleContent;
+    
+    @EntityTransfer("sample_content_json")
+    private String sampleContentJson;;
 
     private List<ItemAttributeData> attributes = new ArrayList<ItemAttributeData>();
 
     public ItemData() {
     }
-
+    
+    public static Map<String, Object> createSampleContent(ItemData item) {
+        ItemContent sampleContent = deserialize(item.getSampleContentJson(), ItemContent.class);
+        return sampleContent.getContent();
+    }
+    
     public static void toDatas(List<ItemModel> sources, List<ItemData> dests) {
         for (ItemModel source : sources) {
             ItemData dest = new ItemData();
@@ -146,5 +155,13 @@ public class ItemData extends AuditData {
 
     public void setCategoryData(CategoryData categoryData) {
         this.categoryData = categoryData;
+    }
+
+    public String getSampleContentJson() {
+        return sampleContentJson;
+    }
+
+    public void setSampleContentJson(String sampleContentJson) {
+        this.sampleContentJson = sampleContentJson;
     }
 }
