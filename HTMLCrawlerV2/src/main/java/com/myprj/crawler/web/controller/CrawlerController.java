@@ -1,5 +1,10 @@
 package com.myprj.crawler.web.controller;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.jsoup.nodes.Document;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -78,24 +83,45 @@ public class CrawlerController extends AbstractController {
     @ResponseBody
     public JsonResponse checkCssSelector(
             @RequestParam(value = "selector") String selector,
+            @RequestParam(value = "selector1", required = false) String selector1,
+            @RequestParam(value = "selector2", required = false) String selector2,
+            @RequestParam(value = "selector3", required = false) String selector3,
+            @RequestParam(value = "selector4", required = false) String selector4,
+            @RequestParam(value = "selector5", required = false) String selector5,
             @RequestParam(value = "url") String url,
-            @RequestParam(value = "type", defaultValue = "TEXT") AttributeType type) {
+            @RequestParam(value = "type", defaultValue = "TEXT") String type) {
         
         JsonResponse jsonResponse = new JsonResponse(true);
-        AttributeSelector attributeSelector = AttributeSelectorUtil.parseAttritbuteSelector(selector);
-        
-        AttributeHandler handler = HandlerRegister.getHandler(type);
-        if(handler == null) {
-            jsonResponse = new JsonResponse(false);
-            jsonResponse.putMessage("No handler for type: " + type);
-        }
-        
         Document document = HtmlDownloader.download(url);
-        Object object = handler.handle(new HtmlDocument(document), attributeSelector);
         
-        jsonResponse.put("CSS-Selector", attributeSelector);
-        jsonResponse.put("result", object);
-        
+        List<String> selectors = new ArrayList<String>();
+        selectors.add(selector);
+        selectors.add(selector1);
+        selectors.add(selector2);
+        selectors.add(selector3);
+        selectors.add(selector4);
+        selectors.add(selector5);
+        String[] types = type.split(",");
+
+        List<Object> results = new ArrayList<Object>();
+        for(int i = 0; i < selectors.size(); i++) {
+            if(types.length > i) {
+                AttributeSelector attributeSelector = AttributeSelectorUtil.parseAttritbuteSelector(selectors.get(i));
+                AttributeHandler handler = HandlerRegister.getHandler(AttributeType.valueOf(types[i]));
+                if(handler == null) {
+                    jsonResponse = new JsonResponse(false);
+                    jsonResponse.putMessage("No handler for type: " + type);
+                }
+                Object object = handler.handle(new HtmlDocument(document), attributeSelector);
+                Map<String, Object> info = new HashMap<String, Object>();
+                
+                info.put("CSS-Selector", attributeSelector);
+                info.put("Type", types[i]);
+                info.put("Data", object);
+                results.add(info);
+            }
+        }
+        jsonResponse.put("result", results);
         return jsonResponse;
     }
 
