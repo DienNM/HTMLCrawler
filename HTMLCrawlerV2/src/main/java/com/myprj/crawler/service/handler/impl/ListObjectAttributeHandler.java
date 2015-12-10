@@ -65,7 +65,7 @@ public class ListObjectAttributeHandler extends AttributeHandlerSupport {
                 } else {
                     rs = elementChildren.attr(subSelector.getTargetAttribute());
                 }
-                String text = returnNormalizeString(rs);
+                String text = returnText(rs, cssSelector);
                 if (!StringUtils.isEmpty(text)) {
                     map.put(obj.getName(), rs);
                 }

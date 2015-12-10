@@ -45,7 +45,7 @@ public class HtmlAttributeHandler extends AttributeHandlerSupport {
         } else {
             text = elements.first().attr(cssSelector.getTargetAttribute());
         }
-        return returnNormalizeString(text);
+        return returnText(text, cssSelector);
     }
 
 }

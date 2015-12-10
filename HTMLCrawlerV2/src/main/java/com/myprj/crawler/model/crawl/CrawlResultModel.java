@@ -33,6 +33,9 @@ public class CrawlResultModel implements Serializable {
     @Column(name = "request_id", length = 30)
     private String requestId;
 
+    @Column(name = "result_key", length = 150)
+    private String resultKey;
+    
     @Column(name = "item_key")
     private String itemKey;
 
@@ -134,6 +137,14 @@ public class CrawlResultModel implements Serializable {
 
     public void setSiteKey(String site) {
         this.siteKey = site;
+    }
+
+    public String getResultKey() {
+        return resultKey;
+    }
+
+    public void setResultKey(String resultKey) {
+        this.resultKey = resultKey;
     }
 
 }

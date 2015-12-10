@@ -28,6 +28,10 @@ public class CrawlResultData implements Serializable {
     @EntityTransfer("id")
     private long id;
 
+    @DataTransfer("resultKey")
+    @EntityTransfer("result_key")
+    private String resultKey;
+
     @DataTransfer("itemKey")
     @EntityTransfer("item_key")
     private String itemKey;
@@ -167,6 +171,14 @@ public class CrawlResultData implements Serializable {
 
     public void setSiteKey(String site) {
         this.siteKey = site;
+    }
+
+    public String getResultKey() {
+        return resultKey;
+    }
+
+    public void setResultKey(String resultKey) {
+        this.resultKey = resultKey;
     }
 
 }

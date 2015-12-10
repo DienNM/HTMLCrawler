@@ -19,22 +19,38 @@ import com.myprj.crawler.service.CrawlResultService;
  */
 @Service
 public class CrawlResultServiceImpl implements CrawlResultService {
-    
+
     private Logger logger = LoggerFactory.getLogger(CrawlResultServiceImpl.class);
-    
+
     @Autowired
     private CrawlResultRepository crawlResultRepository;
-    
+
     @Override
     @Transactional
-    public CrawlResultData save(CrawlResultData crawlResult) {
-        CrawlResultModel crawlResultModel = new CrawlResultModel();
-        CrawlResultData.toModel(crawlResult, crawlResultModel);
-        crawlResultRepository.save(crawlResultModel);
-        
+    public CrawlResultData saveOrUpdate(CrawlResultData crawlResult) {
+        String resultKey = crawlResult.getResultKey();
+        String siteKey = crawlResult.getSiteKey();
+        String categoryKey = crawlResult.getCategoryKey();
+        String itemKey = crawlResult.getItemKey();
+
+        CrawlResultModel crawlResultModel = crawlResultRepository.findByResultKey(resultKey, siteKey, categoryKey, itemKey);
+        if (crawlResultModel == null) {
+            crawlResultModel = new CrawlResultModel();
+            CrawlResultData.toModel(crawlResult, crawlResultModel);
+            crawlResultRepository.save(crawlResultModel);
+        } else {
+            CrawlResultModel convertObj = new CrawlResultModel();
+            CrawlResultData.toModel(crawlResult, convertObj);
+            
+            crawlResultModel.setDetail(convertObj.getDetail());
+            crawlResultModel.setRequestId(convertObj.getRequestId());
+            crawlResultModel.setStatus(convertObj.getStatus());
+            crawlResultModel.setUrl(convertObj.getUrl());
+            crawlResultRepository.update(crawlResultModel);
+        }
         CrawlResultData persisted = new CrawlResultData();
         CrawlResultData.toData(crawlResultModel, persisted);
-        
+
         return persisted;
     }
 
@@ -42,14 +58,14 @@ public class CrawlResultServiceImpl implements CrawlResultService {
     @Transactional
     public CrawlResultData get(long id) {
         CrawlResultModel crawlResultModel = crawlResultRepository.find(id);
-        if(crawlResultModel == null) {
+        if (crawlResultModel == null) {
             logger.warn("Crawl Result " + id + " not found");
             return null;
         }
 
         CrawlResultData persisted = new CrawlResultData();
         CrawlResultData.toData(crawlResultModel, persisted);
-        
+
         return persisted;
     }
 
@@ -58,7 +74,7 @@ public class CrawlResultServiceImpl implements CrawlResultService {
         List<CrawlResultModel> crawlResultModels = crawlResultRepository.findByItemKey(itemKey);
         List<CrawlResultData> crawlResultDatas = new ArrayList<CrawlResultData>();
         CrawlResultData.toDatas(crawlResultModels, crawlResultDatas);
-        
+
         return crawlResultDatas;
     }
 
@@ -67,7 +83,16 @@ public class CrawlResultServiceImpl implements CrawlResultService {
         List<CrawlResultModel> crawlResultModels = crawlResultRepository.findByCategoryKey(categoryKey);
         List<CrawlResultData> crawlResultDatas = new ArrayList<CrawlResultData>();
         CrawlResultData.toDatas(crawlResultModels, crawlResultDatas);
-        
+
+        return crawlResultDatas;
+    }
+
+    @Override
+    public List<CrawlResultData> getByRequestId(String requestId) {
+        List<CrawlResultModel> crawlResultModels = crawlResultRepository.findByRequestId(requestId);
+        List<CrawlResultData> crawlResultDatas = new ArrayList<CrawlResultData>();
+        CrawlResultData.toDatas(crawlResultModels, crawlResultDatas);
+
         return crawlResultDatas;
     }
 

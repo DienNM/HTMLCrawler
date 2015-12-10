@@ -10,12 +10,14 @@ import com.myprj.crawler.domain.crawl.CrawlResultData;
 
 public interface CrawlResultService {
     
-    CrawlResultData save(CrawlResultData crawlResult);
+    CrawlResultData saveOrUpdate(CrawlResultData crawlResult);
     
     CrawlResultData get(long id);
     
     List<CrawlResultData> getByItemKey(String itemKey);
     
     List<CrawlResultData> getByCategoryKey(String categoryKey);
+    
+    List<CrawlResultData> getByRequestId(String requestId);
     
 }

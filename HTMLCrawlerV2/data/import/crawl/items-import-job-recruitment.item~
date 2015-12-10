@@ -5,12 +5,13 @@
 
 <<START>>
 { 
+    "key" : "TEXT",
     "jobName":"TEXT", 
+    "jobTitle":"TEXT", 
     "categories" : ["TEXT"],
     "posted": "TEXT",
     "jobExpired": "TEXT",
     "workplace" : ["TEXT"],
-    "contract" : "TEXT",
     "company" : {
 	"name" : "TEXT",
 	"phone" : "TEXT",
@@ -29,14 +30,15 @@
     },
     "education":"TEXT",
     "experience": "TEXT",
-    "jobLevel":"TEXT",
     "salaryRange" : "TEXT",
     "jobType": "TEXT",
     "gender" : "TEXT",
+    "age" : "TEXT",
     "numberOfRequires": "TEXT",
     "descriptions": ["TEXT"],
     "jobRequirements": ["TEXT"],
     "offers": ["TEXT"],
+    "resume": ["TEXT"],
     "attributes":[{ 
         "key" : "TEXT",
         "value" : "TEXT"

@@ -52,7 +52,7 @@ public class ListAttributeHandler extends AttributeHandlerSupport{
             } else {
                 text = element.attr(cssSelector.getTargetAttribute());
             }
-            text = returnNormalizeString(text);
+            text = returnText(text, cssSelector);
             if(!StringUtils.isEmpty(text)) {
                 values.add(text);
             }

@@ -14,4 +14,8 @@ public interface CrawlResultRepository extends GenericDao<CrawlResultModel, Long
     
     List<CrawlResultModel> findByCategoryKey(String categoryKey);
     
+    List<CrawlResultModel> findByRequestId(String requestId);
+    
+    CrawlResultModel findByResultKey(String resultKey, String siteKey, String categoryKey, String itemKey);
+    
 }

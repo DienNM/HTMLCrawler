@@ -24,6 +24,9 @@ public class CrawlResultDTO implements Serializable {
     @DataTransfer("id")
     private long id;
 
+    @DataTransfer("resultKey")
+    private String resultKey;
+
     @DataTransfer("itemKey")
     private String itemKey;
 
@@ -137,6 +140,14 @@ public class CrawlResultDTO implements Serializable {
 
     public void setSiteKey(String siteKey) {
         this.siteKey = siteKey;
+    }
+
+    public String getResultKey() {
+        return resultKey;
+    }
+
+    public void setResultKey(String resultKey) {
+        this.resultKey = resultKey;
     }
     
     

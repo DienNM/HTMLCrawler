@@ -42,6 +42,10 @@ job-recruitment|Level1|DETAIL|0|0||
     "resume": ["I@#ttd_detail > div:nth-child(1) > div.pl_24.pr_24 > div:nth-child(4) > p"],
     "descriptions": ["I@#ttd_detail > div:nth-child(1) > div.pl_24.pr_24 > div:nth-child(1) > p"],
     "jobRequirements": ["I@#ttd_detail > div:nth-child(1) > div.pl_24.pr_24 > div:nth-child(3) > p"],
-    "offers": ["I@#ttd_detail > div:nth-child(1) > div.pl_24.pr_24 > div:nth-child(2) > p"]
+    "offers": ["I@#ttd_detail > div:nth-child(1) > div.pl_24.pr_24 > div:nth-child(2) > p"],
+    "attributes":[{ 
+        "key" : "",
+        "value" : ""
+    }, ""]
 }
 <<END>>

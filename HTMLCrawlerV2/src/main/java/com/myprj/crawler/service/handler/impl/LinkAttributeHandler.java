@@ -46,7 +46,7 @@ public class LinkAttributeHandler extends AttributeHandlerSupport{
         } else {
             text = elements.first().attr(cssSelector.getTargetAttribute());
         }
-        return returnNormalizeString(text);
+        return returnText(text, cssSelector);
     }
 
 }

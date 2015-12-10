@@ -6,17 +6,12 @@ package com.myprj.crawler.enumeration;
 
 public enum AttributeType {
 
-    ID,
     IMG,
     TEXT,
     HTML,
     LIST,
     LINK,
     OBJECT,
-    LIST_OBJECT,
+    LIST_OBJECT
     
-    
-    ID_CHOTOT,
-    ID_VIECLAMNHANH,
-    ID_VIECLAM24H
 }

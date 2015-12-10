@@ -7,7 +7,7 @@ job-recruitment|Level1|DETAIL|0|0||
 
 <<START>>
 { 
-    "key" : "I@head > title/\\d{7}/",
+    "key" : "I@head > title/\d{7}/",
     "jobName":"I@body > section > div.container.detail-content > div > div.col-xs-8.inner-10.primary > div > header > h1 > span", 
     "jobTitle":"", 
     "categories" : ["I@body > section > div.container.detail-content > div > div.col-xs-8.inner-10.primary > div > article > div.row > div.col-xs-4.offset20.push-right-20 > ul > li:nth-child(4) > a"],

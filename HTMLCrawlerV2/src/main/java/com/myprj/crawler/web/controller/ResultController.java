@@ -70,5 +70,16 @@ public class ResultController extends AbstractController {
         List<Map<String, Object>> listDatas = getListMapResult(crawlResultDatas, CrawlResultDTO.class, level);
         
         return new JsonResponse(listDatas, !listDatas.isEmpty());
-    }    
+    }  
+    
+    @RequestMapping(value = "/by-request/{requestId}")
+    @ResponseBody
+    public JsonResponse getByRequestId(@PathVariable(value = "requestId") String requestId, 
+            @RequestParam(value = "level", defaultValue = "DEFAULT") DTOLevel level) {
+        
+        List<CrawlResultData> crawlResultDatas = crawlResultService.getByRequestId(requestId);
+        List<Map<String, Object>> listDatas = getListMapResult(crawlResultDatas, CrawlResultDTO.class, level);
+        
+        return new JsonResponse(listDatas, !listDatas.isEmpty());
+    }  
 }

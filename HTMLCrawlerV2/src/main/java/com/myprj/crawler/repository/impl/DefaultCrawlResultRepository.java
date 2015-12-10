@@ -45,4 +45,38 @@ public class DefaultCrawlResultRepository extends DefaultGenericDao<CrawlResultM
         return query.getResultList();
     }
 
+    @SuppressWarnings("unchecked")
+    @Override
+    public List<CrawlResultModel> findByRequestId(String requestId) {
+        StringBuilder queryStr = new StringBuilder("FROM " + getClassName());
+        queryStr.append(" WHERE requestId = :requestId ");
+
+        Query query = entityManager.createQuery(queryStr.toString(), getClazz());
+        query.setParameter("requestId", requestId);
+
+        return query.getResultList();
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public CrawlResultModel findByResultKey(String resultKey, String siteKey, String categoryKey, String itemKey) {
+        StringBuilder queryStr = new StringBuilder("FROM " + getClassName());
+        queryStr.append(" WHERE resultKey = :resultKey AND ");
+        queryStr.append(" siteKey = :siteKey AND ");
+        queryStr.append(" categoryKey = :categoryKey AND ");
+        queryStr.append(" itemKey = :itemKey ");
+
+        Query query = entityManager.createQuery(queryStr.toString(), getClazz());
+        query.setParameter("resultKey", resultKey);
+        query.setParameter("siteKey", siteKey);
+        query.setParameter("categoryKey", categoryKey);
+        query.setParameter("itemKey", itemKey);
+
+        List<CrawlResultModel> results = query.getResultList();
+        if(results.isEmpty()) {
+            return null;
+        }
+        return results.get(0);
+    }
+
 }
