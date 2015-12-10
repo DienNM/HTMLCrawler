@@ -2,7 +2,6 @@ package com.myprj.crawler.web.dto;
 
 import static com.myprj.crawler.enumeration.ResultStatus.NEW;
 
-import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,7 +16,7 @@ import com.myprj.crawler.util.converter.ObjectConverter;
  * @author DienNM (DEE)
  */
 
-public class CrawlResultDTO implements Serializable {
+public class CrawlResultDTO extends AuditDTO {
 
     private static final long serialVersionUID = 1L;
     

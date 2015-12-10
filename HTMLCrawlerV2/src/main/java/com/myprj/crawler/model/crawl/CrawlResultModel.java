@@ -1,8 +1,5 @@
 package com.myprj.crawler.model.crawl;
 
-import java.io.Serializable;
-import java.util.Calendar;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -11,17 +8,17 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Lob;
-import javax.persistence.PrePersist;
 import javax.persistence.Table;
 
 import com.myprj.crawler.enumeration.ResultStatus;
+import com.myprj.crawler.model.AuditModel;
 
 /**
  * @author DienNM (DEE)
  */
 @Entity
 @Table(name = "crawl_result")
-public class CrawlResultModel implements Serializable {
+public class CrawlResultModel extends AuditModel {
 
     private static final long serialVersionUID = 1L;
 
@@ -35,7 +32,7 @@ public class CrawlResultModel implements Serializable {
 
     @Column(name = "result_key", length = 150)
     private String resultKey;
-    
+
     @Column(name = "item_key")
     private String itemKey;
 
@@ -52,17 +49,9 @@ public class CrawlResultModel implements Serializable {
     @Column(name = "status")
     @Enumerated(EnumType.STRING)
     private ResultStatus status;
-    
+
     @Column(name = "url")
     private String url;
-    
-    @Column(name = "createdAt")
-    private long createdAt;
-    
-    @PrePersist
-    public void prePersistAudit() {
-        createdAt = Calendar.getInstance().getTimeInMillis();
-    }
 
     public CrawlResultModel() {
     }
@@ -97,14 +86,6 @@ public class CrawlResultModel implements Serializable {
 
     public void setUrl(String url) {
         this.url = url;
-    }
-    
-    public long getCreatedAt() {
-        return this.createdAt;
-    }
-    
-    public void setCreatedAt(long createdAt) {
-        this.createdAt = createdAt;
     }
 
     public String getRequestId() {
