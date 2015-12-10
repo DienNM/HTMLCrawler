@@ -53,7 +53,6 @@ public class WorkerItemAttributeServiceImpl implements WorkerItemAttributeServic
 
     @Override
     public void populate(WorkerItemAttributeData attribute) {
-        populateParent(attribute);
         populateChildren(attribute);
         populateAttribute(attribute);
     }
@@ -66,19 +65,6 @@ public class WorkerItemAttributeServiceImpl implements WorkerItemAttributeServic
         attribute.setChildren(childrenData);
     }
 
-    @Override
-    public void populateParent(WorkerItemAttributeData attribute) {
-        String parentId = attribute.getParentId();
-        if(parentId == null) {
-            logger.warn("No Parent Worker Item Attribute of {}. Cannot populate its parent", attribute.getId());
-            return;
-        }
-        WorkerItemAttributeData parentAttribute = get(attribute.getParentId());
-        if(parentAttribute != null) {
-            attribute.setParent(parentAttribute);
-        }
-    }
-    
     @Override
     public void populateAttribute(WorkerItemAttributeData attribute) {
         // TODO
@@ -128,7 +114,6 @@ public class WorkerItemAttributeServiceImpl implements WorkerItemAttributeServic
             return;
         }
         for(WorkerItemAttributeData child : children) {
-            child.setParent(current);
             populateTree(child, mapParents);
             if(current.getChildren() == null) {
                 current.setChildren(new ArrayList<WorkerItemAttributeData>());

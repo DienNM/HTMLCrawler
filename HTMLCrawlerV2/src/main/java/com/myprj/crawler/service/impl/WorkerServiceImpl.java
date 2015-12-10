@@ -28,6 +28,7 @@ import com.myprj.crawler.repository.WorkerItemRepository;
 import com.myprj.crawler.repository.WorkerRepository;
 import com.myprj.crawler.service.WorkerItemAttributeStructureService;
 import com.myprj.crawler.service.WorkerService;
+import com.myprj.crawler.util.AttributeStructureUtil;
 import com.myprj.crawler.util.WorkerItemValidator;
 
 /**
@@ -222,8 +223,7 @@ public class WorkerServiceImpl implements WorkerService {
 
         workerItemAttributeRepository.deleteByWorkerItemId(workerItem.getId());
 
-        List<WorkerItemAttributeData> itemAttributes = new ArrayList<WorkerItemAttributeData>();
-        WorkerItemAttributeData.collectionAllItemAttributes(attribute, itemAttributes);
+        List<WorkerItemAttributeData> itemAttributes = AttributeStructureUtil.navigateAttribtesFromRoot(attribute);
         List<WorkerItemAttributeModel> itemAttributeModels = new ArrayList<WorkerItemAttributeModel>();
         WorkerItemAttributeData.toModels(itemAttributes, itemAttributeModels);
         workerItemAttributeRepository.save(itemAttributeModels);

@@ -18,8 +18,6 @@ public interface WorkerItemAttributeService {
 
     void populateChildren(WorkerItemAttributeData attribute);
 
-    void populateParent(WorkerItemAttributeData attribute);
-    
     void populateAttribute(WorkerItemAttributeData attribute);
 
     List<WorkerItemAttributeData> getByWorkerItemId(long workerItemId);

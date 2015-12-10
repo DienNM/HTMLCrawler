@@ -1,0 +1,12 @@
+{ 
+    "name":"I@div.name",
+    "promotions" : ["I@div.promotions"],
+    "include": "I@div.include{{href}}",
+    "descriptions": ["I@div.descriptions"],
+    "image": "I@div.image",
+    "album": ["I@div.album"],
+    "attributes":[{ 
+        "key" : "I@div.attributes key",
+        "value" : "I@div.value key"
+    }, "I@dList"]
+}

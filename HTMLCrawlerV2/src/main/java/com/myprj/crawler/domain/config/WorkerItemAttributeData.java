@@ -60,19 +60,9 @@ public class WorkerItemAttributeData extends AuditData {
 
     private AttributeSelector selector;
 
-    private WorkerItemAttributeData parent;
-
     private List<WorkerItemAttributeData> children = new ArrayList<WorkerItemAttributeData>();
 
     public WorkerItemAttributeData() {
-    }
-
-    public static void collectionAllItemAttributes(WorkerItemAttributeData itemAttribute,
-            List<WorkerItemAttributeData> itemAttributes) {
-        itemAttributes.add(itemAttribute);
-        for (WorkerItemAttributeData itemAttributeData : itemAttribute.getChildren()) {
-            collectionAllItemAttributes(itemAttributeData, itemAttributes);
-        }
     }
 
     public static void toDatas(List<WorkerItemAttributeModel> sources, List<WorkerItemAttributeData> dests) {
@@ -123,14 +113,6 @@ public class WorkerItemAttributeData extends AuditData {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public WorkerItemAttributeData getParent() {
-        return parent;
-    }
-
-    public void setParent(WorkerItemAttributeData parent) {
-        this.parent = parent;
     }
 
     public List<WorkerItemAttributeData> getChildren() {

@@ -13,6 +13,19 @@ import com.myprj.crawler.enumeration.AttributeType;
  * @author DienNM (DEE)
  */
 public final class AttributeStructureUtil {
+    
+    public static List<WorkerItemAttributeData> navigateAttribtesFromRoot(WorkerItemAttributeData root) {
+        List<WorkerItemAttributeData> attributeDatas = new ArrayList<WorkerItemAttributeData>();
+        navigateAttribtesFromParent(root, attributeDatas);
+        return attributeDatas;
+    }
+
+    private static void navigateAttribtesFromParent(WorkerItemAttributeData parent, List<WorkerItemAttributeData> attributeDatas) {
+        attributeDatas.add(parent);
+        for (WorkerItemAttributeData child : parent.getChildren()) {
+            navigateAttribtesFromParent(child, attributeDatas);
+        }
+    }
 
     public static List<ItemAttributeData> navigateAttribtesFromRoot(ItemAttributeData root) {
         List<ItemAttributeData> attributeDatas = new ArrayList<ItemAttributeData>();

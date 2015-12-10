@@ -1,0 +1,12 @@
+{ 
+    "name":"TEXT",
+    "promotions" : ["TEXT"],
+    "include": "HTML",
+    "descriptions": ["HTML"],
+    "image": "IMAGE",
+    "album": ["IMAGE"],
+    "attributes":[{ 
+        "key" : "TEXT",
+        "value" : "HTML"
+    }]
+}

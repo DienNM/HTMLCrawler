@@ -1,6 +1,6 @@
 #ID|name|active|category_key|description
 
-#mobiles
+
 >prod-mobile|Moblile Product|mobiles|Information of Mobile
 >prod-tablet|Tablet Product|tablets|Information of Tablet
 >prod-laptop|Laptop Product|laptops|Information of Laptop
@@ -14,6 +14,8 @@
     "pastPrice":"TEXT",
     "vatInfo" : "TEXT",
     "discount": "TEXT",
+    "image": "IMAGE",
+    "album": ["IMAGE"]
     "promotions" : ["TEXT"],
     "description": "HTML",
     "attributes":[{ 
@@ -21,9 +23,9 @@
         "value" : "TEXT"
     }],
     "comments": [{
-	"title": "TEXT",
-   	"content": "TEXT",
-	"user": "TEXT"
+        "title": "TEXT",
+        "content": "TEXT",
+        "user": "TEXT"
     }]
 }
 <<END>>

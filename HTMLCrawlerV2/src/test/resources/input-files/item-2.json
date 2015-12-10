@@ -1,0 +1,17 @@
+{ 
+    "attributes":[{ 
+        "key" : "TEXT",
+        "value" : ["HTML"],
+        "detail" : {
+            "phone" : "TEXT",
+            "customer" : {
+                "name" : "TEXT",
+                "habits" : ["TEXT"]
+            },
+            "album" : [{
+                "image" : "IMAGE",
+                "title" : "TEXT"
+            }]
+        }
+    }]
+}

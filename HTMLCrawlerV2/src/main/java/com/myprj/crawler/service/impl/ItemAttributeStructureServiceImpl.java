@@ -1,11 +1,8 @@
 package com.myprj.crawler.service.impl;
 
 import static com.myprj.crawler.domain.config.ItemContent.EMPTY_TEXT;
-import static com.myprj.crawler.enumeration.AttributeType.HTML;
 import static com.myprj.crawler.enumeration.AttributeType.LIST;
-import static com.myprj.crawler.enumeration.AttributeType.LIST_OBJECT;
 import static com.myprj.crawler.enumeration.AttributeType.OBJECT;
-import static com.myprj.crawler.enumeration.AttributeType.TEXT;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -28,9 +25,9 @@ import com.myprj.crawler.util.Serialization;
  * @author DienNM (DEE)
  */
 @Service
+@SuppressWarnings("unchecked")
 public class ItemAttributeStructureServiceImpl implements ItemAttributeStructureService {
 
-    @SuppressWarnings("unchecked")
     @Override
     public ItemAttributeData build(ItemData item, String jsonText) {
         Map<String, Object> inputObject = Serialization.deserialize(jsonText, Map.class);
@@ -49,7 +46,6 @@ public class ItemAttributeStructureServiceImpl implements ItemAttributeStructure
         return build(item, root, inputObject);
     }
 
-    @SuppressWarnings("unchecked")
     private ItemAttributeData build(ItemData item, ItemAttributeData current, Map<String, Object> obj) {
         for (Entry<String, Object> entry : obj.entrySet()) {
             String key = entry.getKey();
@@ -94,41 +90,45 @@ public class ItemAttributeStructureServiceImpl implements ItemAttributeStructure
         return build(item, current, value);
     }
 
-    @SuppressWarnings("unchecked")
     private ItemAttributeData buildList(ItemData item, ItemAttributeData parent, String key, List<Object> value) {
-
         Map<String, Object> parentObj = AttributeUtil.getObject(item.getSampleContent(), parent.getId());
         List<Object> listValue = new ArrayList<Object>();
         parentObj.put(key, listValue);
-
-        if (!AttributeUtil.contentObject(value)) {
-            ItemAttributeData current = createAttribute(parent, LIST, item, key);
+        
+        ItemAttributeData current = createAttribute(parent, LIST, item, key);
+        
+        AttributeType elementType = AttributeUtil.getElementType(value);
+        if(AttributeType.OBJECT.equals(elementType)) {
+            Map<String, Object> elementList = new HashMap<String, Object>();
+            listValue.add(elementList);
+            
+            ItemAttributeData attribute = createAttribute(current, OBJECT, item, key);
+            ItemAttributeData child = build(item, attribute, (Map<String, Object>) value.get(0));
+            addChild(current, child);
+            
+            return current;
+        } else {
             listValue.add(EMPTY_TEXT);
+            ItemAttributeData child = createAttribute(current, elementType, item, key);
+            addChild(current, child);
             return current;
         }
-
-        ItemAttributeData current = createAttribute(parent, LIST_OBJECT, item, key);
-        Map<String, Object> elementList = new HashMap<String, Object>();
-        listValue.add(elementList);
-        
-        ItemAttributeData attribute = createAttribute(current, OBJECT, item, key);
-        ItemAttributeData child = build(item, attribute, (Map<String, Object>) value.get(0));
-        addChild(current, child);
-        return current;
     }
     
     
     private ItemAttributeData buildString(ItemData item, ItemAttributeData parent, String key, String value) {
         ItemAttributeData current = null;
+        AttributeType type = null;
         
-        if(StringUtils.isEmpty(value) || AttributeType.TEXT.name().equalsIgnoreCase(value)) {
-            current = createAttribute(parent, TEXT, item, key);
+        if(StringUtils.isEmpty(value)) {
+            type = AttributeType.TEXT;
         } else {
-            current = createAttribute(parent, HTML, item, key);
+            type = AttributeType.valueOf(value);
         }
+        current = createAttribute(parent, type, item, key);
         Map<String, Object> parentObj = AttributeUtil.getObject(item.getSampleContent(), parent.getId());
-        
         parentObj.put(key, EMPTY_TEXT);
+        
         return current;
     }
 

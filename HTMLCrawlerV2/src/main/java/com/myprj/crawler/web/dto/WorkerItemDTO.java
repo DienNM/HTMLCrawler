@@ -11,6 +11,7 @@ import com.myprj.crawler.domain.crawl.PagingConfig;
 import com.myprj.crawler.domain.crawl.WorkerItemData;
 import com.myprj.crawler.enumeration.CrawlType;
 import com.myprj.crawler.enumeration.Level;
+import com.myprj.crawler.util.AttributeStructureUtil;
 import com.myprj.crawler.util.converter.DomainConverter;
 import com.myprj.crawler.util.converter.ObjectConverter;
 
@@ -81,8 +82,8 @@ public class WorkerItemDTO extends AuditDTO {
                     dest.setLevel0Selector(src.getLevel0Selector().getText());
                 }
                 if(src.getRootWorkerItemAttribute() != null) {
-                    List<WorkerItemAttributeData> itemAttributes = new ArrayList<WorkerItemAttributeData>();
-                    WorkerItemAttributeData.collectionAllItemAttributes(src.getRootWorkerItemAttribute(), itemAttributes);
+                    List<WorkerItemAttributeData> itemAttributes = 
+                            AttributeStructureUtil.navigateAttribtesFromRoot(src.getRootWorkerItemAttribute());
                     List<WorkerItemAttributeDTO> itemAttributeDTOs = new ArrayList<WorkerItemAttributeDTO>();
                     WorkerItemAttributeDTO.toDTOs(itemAttributes, itemAttributeDTOs);
                     dest.setWorkerItemAttributeDTOs(itemAttributeDTOs);

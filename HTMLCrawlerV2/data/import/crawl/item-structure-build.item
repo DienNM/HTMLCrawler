@@ -13,6 +13,8 @@
     "pastPrice":"TEXT",
     "vatInfo" : "TEXT",
     "discount": "TEXT",
+    "image": "IMAGE",
+    "album": ["IMAGE"]
     "promotions" : ["TEXT"],
     "description": "HTML",
     "attributes":[{ 
@@ -20,9 +22,9 @@
         "value" : "TEXT"
     }],
     "comments": [{
-	"title": "TEXT",
-   	"content": "TEXT",
-	"user": "TEXT"
+        "title": "TEXT",
+        "content": "TEXT",
+        "user": "TEXT"
     }]
 }
 <<END>>
