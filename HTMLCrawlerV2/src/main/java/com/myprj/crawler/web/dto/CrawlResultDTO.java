@@ -30,8 +30,8 @@ public class CrawlResultDTO implements Serializable {
     @DataTransfer("categoryKey")
     private String categoryKey;
 
-    @DataTransfer("site")
-    private String site;
+    @DataTransfer("siteKey")
+    private String siteKey;
 
     @DataTransfer("requestId")
     private String requestId;
@@ -131,12 +131,12 @@ public class CrawlResultDTO implements Serializable {
         this.categoryKey = categoryKey;
     }
 
-    public String getSite() {
-        return site;
+    public String getSiteKey() {
+        return siteKey;
     }
 
-    public void setSite(String site) {
-        this.site = site;
+    public void setSiteKey(String siteKey) {
+        this.siteKey = siteKey;
     }
     
     

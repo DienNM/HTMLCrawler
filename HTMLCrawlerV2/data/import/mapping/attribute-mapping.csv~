@@ -22,7 +22,7 @@ tiki|mobiles|prod-mobile|individualCtg||NONE
 
 #tiki:mobiles:prod-mobile mapping
 # =================================================
-vieclamnhanh|mobiles|prod-mobile|brand||NONE
+tiki|mobiles|prod-mobile|brand||NONE
 tiki|mobiles|prod-mobile|vat||NONE
 tiki|mobiles|prod-mobile|manufacturer||NONE
 tiki|mobiles|prod-mobile|weightDelivery||NONE

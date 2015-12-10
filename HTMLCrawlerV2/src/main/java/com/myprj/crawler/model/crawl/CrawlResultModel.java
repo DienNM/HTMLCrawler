@@ -40,7 +40,7 @@ public class CrawlResultModel implements Serializable {
     private String categoryKey;
 
     @Column(name = "site")
-    private String site;
+    private String siteKey;
 
     @Column(name = "detail")
     @Lob
@@ -128,12 +128,12 @@ public class CrawlResultModel implements Serializable {
         this.categoryKey = categoryKey;
     }
 
-    public String getSite() {
-        return site;
+    public String getSiteKey() {
+        return siteKey;
     }
 
-    public void setSite(String site) {
-        this.site = site;
+    public void setSiteKey(String site) {
+        this.siteKey = site;
     }
 
 }

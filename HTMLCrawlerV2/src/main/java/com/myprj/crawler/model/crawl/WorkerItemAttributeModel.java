@@ -29,6 +29,9 @@ public class WorkerItemAttributeModel extends AuditModel {
     @Column(name = "item_key")
     private String itemKey;
 
+    @Column(name = "site_key")
+    private String siteKey;
+
     @Column(name = "worker_item_id")
     private long workerItemId;
 
@@ -123,5 +126,13 @@ public class WorkerItemAttributeModel extends AuditModel {
 
     public void setItemKey(String itemKey) {
         this.itemKey = itemKey;
+    }
+
+    public String getSiteKey() {
+        return siteKey;
+    }
+
+    public void setSiteKey(String siteKey) {
+        this.siteKey = siteKey;
     }
 }

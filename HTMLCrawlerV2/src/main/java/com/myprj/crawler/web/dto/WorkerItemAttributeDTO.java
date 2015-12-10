@@ -22,6 +22,9 @@ public class WorkerItemAttributeDTO extends AuditDTO {
     @DataTransfer("itemKey")
     private String itemKey;
 
+    @DataTransfer("siteKey")
+    private String siteKey;
+
     @DataTransfer("workerItemId")
     private long workerItemId;
 
@@ -132,5 +135,13 @@ public class WorkerItemAttributeDTO extends AuditDTO {
 
     public void setItemKey(String itemKey) {
         this.itemKey = itemKey;
+    }
+
+    public String getSiteKey() {
+        return siteKey;
+    }
+
+    public void setSiteKey(String siteKey) {
+        this.siteKey = siteKey;
     }
 }

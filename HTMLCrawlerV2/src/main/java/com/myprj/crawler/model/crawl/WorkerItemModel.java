@@ -32,8 +32,11 @@ public class WorkerItemModel extends AuditModel implements Comparable<WorkerItem
     @Column(name = "worker_id")
     private long workerId;
     
-    @Column(name = "item_key")
+    @Column(name = "item_key", length = 50)
     private String itemKey;
+    
+    @Column(name = "site_key", length = 50)
+    private String siteKey;
 
     @Column(name = "url", length = 150)
     private String url;
@@ -127,6 +130,14 @@ public class WorkerItemModel extends AuditModel implements Comparable<WorkerItem
 
     public void setItemKey(String itemKey) {
         this.itemKey = itemKey;
+    }
+
+    public String getSiteKey() {
+        return siteKey;
+    }
+
+    public void setSiteKey(String siteKey) {
+        this.siteKey = siteKey;
     }
 
 }

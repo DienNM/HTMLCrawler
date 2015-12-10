@@ -29,7 +29,10 @@ public class WorkerItemAttributeData extends AuditData {
     @DataTransfer("itemKey")
     @EntityTransfer("item_key")
     private String itemKey;
-    
+
+    @DataTransfer("siteKey")
+    @EntityTransfer("site_key")
+    private String siteKey;
 
     @DataTransfer("workerItemId")
     @EntityTransfer("worker_item_id")
@@ -192,5 +195,13 @@ public class WorkerItemAttributeData extends AuditData {
 
     public void setItemKey(String itemKey) {
         this.itemKey = itemKey;
+    }
+
+    public String getSiteKey() {
+        return siteKey;
+    }
+
+    public void setSiteKey(String siteKey) {
+        this.siteKey = siteKey;
     }
 }

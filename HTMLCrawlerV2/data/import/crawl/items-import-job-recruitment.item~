@@ -33,12 +33,10 @@
     "salaryRange" : "TEXT",
     "jobType": "TEXT",
     "gender" : "TEXT",
-    "age" : "TEXT",
     "numberOfRequires": "TEXT",
     "descriptions": ["TEXT"],
     "jobRequirements": ["TEXT"],
     "offers": ["TEXT"],
-    "resume": ["TEXT"],
     "attributes":[{ 
         "key" : "TEXT",
         "value" : "TEXT"

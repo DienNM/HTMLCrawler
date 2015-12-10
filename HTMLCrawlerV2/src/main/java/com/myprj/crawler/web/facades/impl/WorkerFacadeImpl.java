@@ -57,6 +57,7 @@ public class WorkerFacadeImpl implements WorkerFacade {
                     for (int i = 1; i < lines.size(); i++) {
                         WorkerItemData workerItem = parseWorkerItem(lines.get(i));
                         workerItem.setWorkerId(workerData.getId());
+                        workerItem.setSiteKey(workerData.getSite());
                         workerItems.add(workerItem);
                     }
                     if (!workerItems.isEmpty()) {
