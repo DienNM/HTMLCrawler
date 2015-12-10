@@ -226,7 +226,7 @@ public class DefaultWorker implements Worker {
     }
 
     protected boolean isValidLink(String url) {
-        return url != null && url.startsWith("http://");
+        return url != null && (url.startsWith("http://") || url.startsWith("https://"));
     }
 
     protected boolean isDownloadSuccess(Document document) {

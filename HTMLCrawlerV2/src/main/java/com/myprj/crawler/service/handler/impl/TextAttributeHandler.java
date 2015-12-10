@@ -47,5 +47,5 @@ public class TextAttributeHandler extends AttributeHandlerSupport {
         }
         return returnText(text, cssSelector);
     }
-
+    
 }

@@ -1,13 +1,17 @@
 #ID|name|active|category_key|description
 
 #job-recruitment
->job-recruitment|Job Recruitment|recruitment|Information Recruitment Jobs
+>job-recruitment-vieclam24h|Job Recruitment|recruitment|Information Recruitment Jobs
 
 <<START>>
 { 
     "key" : "TEXT",
     "jobName":"TEXT", 
     "jobTitle":"TEXT", 
+    "education":"TEXT",
+    "experience": "TEXT",
+    "salaryRange" : "TEXT",
+    "jobType": "TEXT",
     "categories" : ["TEXT"],
     "posted": "TEXT",
     "jobExpired": "TEXT",
@@ -28,10 +32,6 @@
 	"mobile" : "TEXT",
 	"require" : "TEXT"
     },
-    "education":"TEXT",
-    "experience": "TEXT",
-    "salaryRange" : "TEXT",
-    "jobType": "TEXT",
     "gender" : "TEXT",
     "age" : "TEXT",
     "numberOfRequires": "TEXT",
