@@ -2,7 +2,6 @@ package com.myprj.crawler.web.controller;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -28,9 +27,9 @@ public class ResultController extends AbstractController {
     @Autowired
     private CrawlResultService crawlResultService;
     
-    @RequestMapping(value = "/by-item/{itemKey}/normal")
+    @RequestMapping(value = "/by-item/{itemKey}")
     @ResponseBody
-    public JsonResponse getByItemKeyNormal(@PathVariable(value = "itemKey") String itemKey) {
+    public JsonResponse getByItemKey(@PathVariable(value = "itemKey") String itemKey) {
         
         List<CrawlResultData> crawlResultDatas = crawlResultService.getByItemKey(itemKey);
         List<CrawlResultDTO> crawlResultDTOs = new ArrayList<CrawlResultDTO>();
@@ -39,9 +38,9 @@ public class ResultController extends AbstractController {
         return new JsonResponse(crawlResultDTOs, !crawlResultDTOs.isEmpty());
     }
     
-    @RequestMapping(value = "/by-category/{itemId}/normal")
+    @RequestMapping(value = "/by-category/{itemId}")
     @ResponseBody
-    public JsonResponse getByCategoryKeyNormal(@PathVariable(value = "categoryKey") String categoryKey) {
+    public JsonResponse getByCategoryKey(@PathVariable(value = "categoryKey") String categoryKey) {
         
         List<CrawlResultData> crawlResultDatas = crawlResultService.getByCategoryKey(categoryKey);
 
@@ -50,36 +49,15 @@ public class ResultController extends AbstractController {
         return new JsonResponse(crawlResultDTOs, !crawlResultDTOs.isEmpty());
     }    
     
-    @RequestMapping(value = "/by-item/{itemKey}")
-    @ResponseBody
-    public JsonResponse getByItemKey(@PathVariable(value = "itemKey") String itemKey, 
-            @RequestParam(value = "level", defaultValue = "DEFAULT") DTOLevel level) {
-        
-        List<CrawlResultData> crawlResultDatas = crawlResultService.getByItemKey(itemKey);
-        List<Map<String, Object>> listDatas = getListMapResult(crawlResultDatas, CrawlResultDTO.class, level);
-        
-        return new JsonResponse(listDatas, !listDatas.isEmpty());
-    }
-    
-    @RequestMapping(value = "/by-category/{itemId}")
-    @ResponseBody
-    public JsonResponse getByCategoryKey(@PathVariable(value = "categoryKey") String categoryKey, 
-            @RequestParam(value = "level", defaultValue = "DEFAULT") DTOLevel level) {
-        
-        List<CrawlResultData> crawlResultDatas = crawlResultService.getByCategoryKey(categoryKey);
-        List<Map<String, Object>> listDatas = getListMapResult(crawlResultDatas, CrawlResultDTO.class, level);
-        
-        return new JsonResponse(listDatas, !listDatas.isEmpty());
-    }  
-    
     @RequestMapping(value = "/by-request/{requestId}")
     @ResponseBody
     public JsonResponse getByRequestId(@PathVariable(value = "requestId") String requestId, 
             @RequestParam(value = "level", defaultValue = "DEFAULT") DTOLevel level) {
         
         List<CrawlResultData> crawlResultDatas = crawlResultService.getByRequestId(requestId);
-        List<Map<String, Object>> listDatas = getListMapResult(crawlResultDatas, CrawlResultDTO.class, level);
         
-        return new JsonResponse(listDatas, !listDatas.isEmpty());
+        List<CrawlResultDTO> crawlResultDTOs = new ArrayList<CrawlResultDTO>(); 
+        CrawlResultDTO.toDTOs(crawlResultDatas, crawlResultDTOs);
+        return new JsonResponse(crawlResultDTOs, !crawlResultDTOs.isEmpty());
     }  
 }
