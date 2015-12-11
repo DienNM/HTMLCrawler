@@ -3,7 +3,9 @@ package com.myprj.crawler.service.crawl.impl;
 import static com.myprj.crawler.enumeration.Level.Level0;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 
@@ -32,7 +34,7 @@ import com.myprj.crawler.service.crawl.Worker;
 import com.myprj.crawler.service.event.CrawlEventPublisher;
 import com.myprj.crawler.service.event.impl.CrawlDetailCompletedEvent;
 import com.myprj.crawler.service.handler.HandlerRegister;
-import com.myprj.crawler.util.AttributeStructureUtil;
+import com.myprj.crawler.util.AttributeUtil;
 import com.myprj.crawler.util.HtmlDownloader;
 import com.myprj.crawler.util.converter.DomainCopy;
 
@@ -191,12 +193,23 @@ public class DefaultWorker implements Worker {
         AttributeSelector selector = current.getSelector();
         List<WorkerItemAttributeData> children = current.getChildren();
         for (WorkerItemAttributeData child : children) {
-            Object data = HandlerRegister.getHandler(child.getType()).handle(htmlDocument, current);
+            Object data = HandlerRegister.getHandler(child.getType()).handle(htmlDocument, child);
             if (data == null && selector != null) {
-                logger.warn("No Data: Attribute={}, CSS-Selector={}, URL={}", current.getAttributeId(),
+                logger.warn("No Data: Attribute={}, CSS-Selector={}, URL={}", child.getAttributeId(),
                         selector.getText(), htmlDocument.getDocument().baseUri());
             }
-            AttributeStructureUtil.populateValue2Attribute(result.getDetail(), current.getAttributeId(), data);
+            populateValue2Attribute(result.getDetail(), child.getAttributeId(), data);
+        }
+    }
+    
+    @SuppressWarnings("unchecked")
+    private void populateValue2Attribute(Map<String, Object> detail, String attributeId, Object value) {
+        Iterator<String> attNames = AttributeUtil.parseAttributeNames(attributeId);
+        attNames.next(); // Ignore Worker ID
+        String content = attNames.next();
+        Object objectContent = detail.get(content);
+        if (objectContent instanceof Map) {
+            ((Map<String, Object>) objectContent).put(attNames.next(), value);
         }
     }
 

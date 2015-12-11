@@ -9,6 +9,7 @@ public enum WorkerStatus {
     Created,
     Pending,
     Running,
+    Interrupted,
     Completed,
     Failed
 }

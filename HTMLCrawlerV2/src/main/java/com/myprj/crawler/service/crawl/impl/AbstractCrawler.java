@@ -7,6 +7,8 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.annotation.PreDestroy;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,27 +42,42 @@ public abstract class AbstractCrawler implements CrawlerService {
     private Logger logger = LoggerFactory.getLogger(AbstractCrawler.class);
 
     private static Map<Long, WorkerContext> workerContextCache = new HashMap<Long, WorkerContext>();
-    
+
     @Autowired
     protected CrawlerHandler crawlerHandler;
-    
+
     @Autowired
     private CrawlHistoryService crawlHistoryService;
 
     @Autowired
     private ItemService itemService;
-    
+
     @Autowired
     private CategoryService categoryService;
-    
+
     @Autowired
     private WorkerService workerService;
-    
+
     @Autowired
     private WorkerItemAttributeService itemAttributeService;
 
+    @PreDestroy
+    public void destroy() {
+        for (long workerId : workerContextCache.keySet()) {
+            WorkerContext workerContext = workerContextCache.get(workerId);
+            if (workerContext != null) {
+                WorkerData worker = workerContext.getWorker();
+                worker.setStatus(WorkerStatus.Interrupted);
+                CrawlHistoryData crawlHistory = crawlHistoryService.getLatest(worker.getId());
+                crawlHistory.setStatus(CrawlStatus.INTERRUPTED);
+                crawlHistoryService.update(crawlHistory);
+                workerService.update(worker);
+            }
+        }
+    }
+
     @Override
-    public void crawl(RequestCrawl request)  throws CrawlerException{
+    public void crawl(RequestCrawl request) throws CrawlerException {
         WorkerContext workerCtx = pickupWorkerContext(request.getWorkerId());
         WorkerData worker = workerCtx.getWorker();
         worker.setStatus(WorkerStatus.Running);
@@ -78,23 +95,23 @@ public abstract class AbstractCrawler implements CrawlerService {
         try {
             // Load Worker Items
             workerService.populateWorkerItems(worker);
-            for(WorkerItemData workerItem : worker.getWorkerItems()) {
+            for (WorkerItemData workerItem : worker.getWorkerItems()) {
                 workerItem.setRequestId(request.getRequestId());
-                if(DETAIL.equals(workerItem.getCrawlType())) {
+                if (DETAIL.equals(workerItem.getCrawlType())) {
                     WorkerItemAttributeData root = itemAttributeService.getRootWithPopulateTree(workerItem.getId());
                     workerItem.setRootWorkerItemAttribute(root);
-                    
+
                     ItemData itemData = itemService.get(workerItem.getItemKey());
                     CategoryData categoryData = categoryService.getById(itemData.getCategoryId());
                     itemData.setCategoryData(categoryData);
-                    
+
                     workerItem.setItem(itemData);
                 }
                 WorkerItemValidator.validateCrawlPhase(workerItem);
             }
-            
+
             getWorker().invoke(workerCtx, workerCtx.getRootWorkerItem());
-            
+
             crawlHistory = crawlHistoryService.getLatest(request.getWorkerId());
             crawlHistory.setStatus(CrawlStatus.CRAWLED);
             worker.setStatus(WorkerStatus.Completed);
@@ -102,20 +119,20 @@ public abstract class AbstractCrawler implements CrawlerService {
             logger.info("Worker {} [Id={}] got error during crawling...", worker.getName(), worker.getId());
             logger.info("{}", e);
             worker.setStatus(WorkerStatus.Failed);
-            
+
             crawlHistory = crawlHistoryService.getLatest(request.getWorkerId());
             crawlHistory.setStatus(CrawlStatus.ERROR);
             crawlHistory.setMessage(e.getMessage());
         } finally {
             long took = (Calendar.getInstance().getTimeInMillis() - starttime) / 1000;
-            
+
             crawlHistory.setTimeTaken(took);
             crawlHistory.setErrorLinks(serialize(workerCtx.getErrorLinks()));
             crawlHistoryService.update(crawlHistory);
 
             workerService.update(worker);
             destroy(worker);
-            
+
             logger.info("Worker {} [Id={}] stops crawling. Took: {} second(s)", worker.getName(), worker.getId(), took);
         }
     }
@@ -149,5 +166,5 @@ public abstract class AbstractCrawler implements CrawlerService {
     }
 
     protected abstract Worker getWorker();
-    
+
 }

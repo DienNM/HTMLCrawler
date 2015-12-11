@@ -49,7 +49,7 @@ public class ImageAttributeHandler extends AttributeHandlerSupport {
     public Object handle(Element element, WorkerItemAttributeData current) {
         AttributeSelector cssSelector = current.getSelector();
         if(isEmptySelector(cssSelector)) {
-            return null;
+            return returnNormalizeString(element.text());
         }
         Elements elements = element.select(cssSelector.getSelector());
         if (elements == null || elements.isEmpty()) {

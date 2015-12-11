@@ -51,7 +51,12 @@ public class ListAttributeHandler extends AttributeHandlerSupport {
             return values;
         }
         for (Element element : elements) {
-            Object object = HandlerRegister.getHandler(child.getType()).handle(element, child);
+            Object object = null;
+            if(AttributeType.OBJECT.equals(child.getType())) {
+                object = HandlerRegister.getHandler(child.getType()).handle(element, child);
+            } else {
+                object = pickupString(element, cssSelector);
+            }
             if(object != null) {
                 values.add(object);
             }

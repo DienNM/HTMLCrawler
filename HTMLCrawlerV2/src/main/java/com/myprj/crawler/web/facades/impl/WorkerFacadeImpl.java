@@ -119,7 +119,7 @@ public class WorkerFacadeImpl implements WorkerFacade {
         
         ItemData itemData = itemService.get(elements[0]);
         if(itemData == null) {
-            throw new InvalidParameterException("Item Key " + elements[1] + " not found");
+            throw new InvalidParameterException("Item Key " + elements[0] + " not found");
         }
         
         workerItem.setItemKey(elements[0]);

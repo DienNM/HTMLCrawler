@@ -1,9 +1,7 @@
 package com.myprj.crawler.util;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 import com.myprj.crawler.domain.config.ItemAttributeData;
 import com.myprj.crawler.domain.config.WorkerItemAttributeData;
@@ -13,14 +11,15 @@ import com.myprj.crawler.enumeration.AttributeType;
  * @author DienNM (DEE)
  */
 public final class AttributeStructureUtil {
-    
+
     public static List<WorkerItemAttributeData> navigateAttribtesFromRoot(WorkerItemAttributeData root) {
         List<WorkerItemAttributeData> attributeDatas = new ArrayList<WorkerItemAttributeData>();
         navigateAttribtesFromParent(root, attributeDatas);
         return attributeDatas;
     }
 
-    private static void navigateAttribtesFromParent(WorkerItemAttributeData parent, List<WorkerItemAttributeData> attributeDatas) {
+    private static void navigateAttribtesFromParent(WorkerItemAttributeData parent,
+            List<WorkerItemAttributeData> attributeDatas) {
         attributeDatas.add(parent);
         for (WorkerItemAttributeData child : parent.getChildren()) {
             navigateAttribtesFromParent(child, attributeDatas);
@@ -37,37 +36,6 @@ public final class AttributeStructureUtil {
         attributeDatas.add(parent);
         for (ItemAttributeData child : parent.getChildren()) {
             navigateAttribtesFromParent(child, attributeDatas);
-        }
-    }
-
-    public static void populateValue2Attribute(Map<String, Object> detail, String attributeId, Object value) {
-        Iterator<String> attNames = AttributeUtil.parseAttributeNames(attributeId);
-        attNames.next();
-        if (attNames.hasNext()) {
-            populate(detail, attNames, value);
-        }
-    }
-
-    @SuppressWarnings("unchecked")
-    private static void populate(Map<String, Object> detail, Iterator<String> attNames, Object value) {
-        String attName = attNames.next();
-        Object object = detail.get(attName);
-        if (object == null || value == null) {
-            return;
-        }
-        if (object instanceof String) {
-            detail.put(attName, value);
-        }
-        if (object instanceof List) {
-            detail.put(attName, value);
-            return;
-        } else if (object instanceof Map) {
-            Map<String, Object> itemValue = (Map<String, Object>) object;
-            if (!attNames.hasNext()) {
-                itemValue.put(attName, value);
-            } else {
-                populate(itemValue, attNames, value);
-            }
         }
     }
 

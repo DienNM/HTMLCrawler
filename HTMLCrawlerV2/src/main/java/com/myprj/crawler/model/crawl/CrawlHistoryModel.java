@@ -34,7 +34,7 @@ public class CrawlHistoryModel implements Serializable {
     @Column(name = "eol_date")
     private long eolDate = 0;
     
-    @Column(name = "status", length = 10)
+    @Column(name = "status", length = 20)
     @Enumerated(EnumType.STRING)
     private CrawlStatus status;
     

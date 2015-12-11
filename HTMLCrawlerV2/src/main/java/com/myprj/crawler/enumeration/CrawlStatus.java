@@ -8,6 +8,7 @@ public enum CrawlStatus {
     
     CRAWLING,
     CRAWLED,
+    INTERRUPTED,
     ERROR
     
 }

@@ -53,7 +53,7 @@ public class WorkerModel extends AuditModel {
     @Column(name = "delay_time")
     private int delayTime = 1000;
     
-    @Column(name = "status")
+    @Column(name = "status", length = 20)
     @Enumerated(EnumType.STRING)
     private WorkerStatus status = Created;
     

@@ -46,7 +46,7 @@ public class TextAttributeHandler extends AttributeHandlerSupport {
     public Object handle(Element element, WorkerItemAttributeData current) {
         AttributeSelector cssSelector = current.getSelector();
         if (isEmptySelector(cssSelector)) {
-            return EMPTY;
+            return returnNormalizeString(element.text());
         }
         Elements elements = element.select(cssSelector.getSelector());
         return pickupString(elements, cssSelector);
