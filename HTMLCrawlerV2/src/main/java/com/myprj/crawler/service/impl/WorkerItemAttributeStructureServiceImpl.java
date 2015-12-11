@@ -9,20 +9,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.myprj.crawler.domain.config.AttributeSelector;
 import com.myprj.crawler.domain.config.ItemAttributeData;
 import com.myprj.crawler.domain.config.ItemContent;
-import com.myprj.crawler.domain.config.ItemData;
 import com.myprj.crawler.domain.config.WorkerItemAttributeData;
 import com.myprj.crawler.domain.crawl.WorkerItemData;
 import com.myprj.crawler.enumeration.AttributeType;
 import com.myprj.crawler.service.ItemAttributeService;
-import com.myprj.crawler.service.ItemService;
 import com.myprj.crawler.service.WorkerItemAttributeStructureService;
 import com.myprj.crawler.util.Serialization;
 
@@ -33,13 +29,8 @@ import com.myprj.crawler.util.Serialization;
 @SuppressWarnings("unchecked")
 public class WorkerItemAttributeStructureServiceImpl implements WorkerItemAttributeStructureService {
 
-    private Logger logger = LoggerFactory.getLogger(WorkerItemAttributeStructureServiceImpl.class);
-
     @Autowired
     private ItemAttributeService itemAttributeService;
-
-    @Autowired
-    private ItemService itemService;
 
     public void setAttributeService(ItemAttributeService attributeService) {
         this.itemAttributeService = attributeService;
@@ -49,12 +40,8 @@ public class WorkerItemAttributeStructureServiceImpl implements WorkerItemAttrib
     public WorkerItemAttributeData build(WorkerItemData workerItem, String jsonText) {
         Map<String, Object> inputObject = Serialization.deserialize(jsonText, Map.class);
 
-        ItemData itemData = itemService.get(workerItem.getItemKey());
-        if (itemData == null) {
-            logger.error("Item Key: " + workerItem.getItemKey() + " not found");
-            return null;
-        }
-        String attributeId = itemData.getId() + "|" + ItemContent.ROOT;
+        String itemKey = workerItem.getItemKey();
+        String attributeId = itemKey + "|" + ItemContent.ROOT;
 
         WorkerItemAttributeData root = new WorkerItemAttributeData();
         root.setId(workerItem.getId() + "|" + attributeId);
@@ -80,14 +67,14 @@ public class WorkerItemAttributeStructureServiceImpl implements WorkerItemAttrib
         }
         return createAttribute(parent, workerItem, key, attributeData);
     }
-    
+
     private WorkerItemAttributeData createAttribute(WorkerItemAttributeData parent, WorkerItemData workerItem,
             String key, ItemAttributeData attributeData) {
         String attributeId = parent.getAttributeId() + "|" + key;
         WorkerItemAttributeData attribute = new WorkerItemAttributeData();
         attribute.setWorkerItemId(workerItem.getId());
         attribute.setId(workerItem.getId() + "|" + attributeId);
-        attribute.setName(key); 
+        attribute.setName(key);
         attribute.setAttributeId(attributeId);
         attribute.setParentId(parent.getId());
         attribute.setItemKey(workerItem.getItemKey());
@@ -139,7 +126,7 @@ public class WorkerItemAttributeStructureServiceImpl implements WorkerItemAttrib
 
         ItemAttributeData itemAttributeData = itemAttributeList.getChildren().get(0);
         AttributeType elementType = itemAttributeData.getType();
-        
+
         if (AttributeType.OBJECT.equals(elementType)) {
             if (value.size() != 2) {
                 throw new InvalidParameterException("Error build attribute: " + key + " - LIST_OBJECT needs 2 params");

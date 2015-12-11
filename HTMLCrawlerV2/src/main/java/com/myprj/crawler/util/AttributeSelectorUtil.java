@@ -3,6 +3,7 @@ package com.myprj.crawler.util;
 import java.security.InvalidParameterException;
 import java.util.regex.Pattern;
 
+import org.apache.commons.lang3.StringUtils;
 import org.jsoup.helper.StringUtil;
 
 import com.myprj.crawler.domain.config.AttributeSelector;
@@ -36,6 +37,12 @@ public class AttributeSelectorUtil {
     }
 
     public static AttributeSelector parseAttritbuteSelector(String input) {
+        if(StringUtils.isEmpty(input)) {
+            return null;
+        }
+        if(!input.startsWith("I@") && !input.startsWith("E@")) {
+            return new AttributeSelector(input, SelectorSource.I);
+        }
         int firstIndexOfAT = input.indexOf("@");
         String source = input.substring(0, firstIndexOfAT);
         String css = input.substring(firstIndexOfAT + 1);

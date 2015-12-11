@@ -14,11 +14,13 @@ import org.springframework.stereotype.Service;
 
 import com.myprj.crawler.domain.SiteData;
 import com.myprj.crawler.domain.config.AttributeSelector;
+import com.myprj.crawler.domain.config.ItemData;
 import com.myprj.crawler.domain.crawl.PagingConfig;
 import com.myprj.crawler.domain.crawl.WorkerData;
 import com.myprj.crawler.domain.crawl.WorkerItemData;
 import com.myprj.crawler.enumeration.CrawlType;
 import com.myprj.crawler.enumeration.Level;
+import com.myprj.crawler.service.ItemService;
 import com.myprj.crawler.service.SiteService;
 import com.myprj.crawler.service.WorkerService;
 import com.myprj.crawler.web.facades.WorkerFacade;
@@ -38,6 +40,9 @@ public class WorkerFacadeImpl implements WorkerFacade {
     
     @Autowired
     private SiteService siteService;
+    
+    @Autowired
+    private ItemService itemService;
 
     @Override
     public List<String> loadImportWorkersFromSource(InputStream inputStream) {
@@ -65,7 +70,7 @@ public class WorkerFacadeImpl implements WorkerFacade {
                         buildWorkerItemSelectors(workerItems, item.getJson());
                     }
                 } catch(Exception e) {
-                    logger.error("Error: {}", e);
+                    logger.error("Error: {}", e.getMessage());
                     errorStructures.add("Error: " + e.getMessage());
                 }
             }
@@ -111,6 +116,12 @@ public class WorkerFacadeImpl implements WorkerFacade {
     private WorkerItemData parseWorkerItem(String line) {
         String[] elements = line.split(Pattern.quote("|"));
         WorkerItemData workerItem = new WorkerItemData();
+        
+        ItemData itemData = itemService.get(elements[0]);
+        if(itemData == null) {
+            throw new InvalidParameterException("Item Key " + elements[1] + " not found");
+        }
+        
         workerItem.setItemKey(elements[0]);
         workerItem.setLevel(Level.valueOf(elements[1]));
         workerItem.setCrawlType(CrawlType.valueOf(elements[2]));

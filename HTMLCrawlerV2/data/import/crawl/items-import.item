@@ -8,6 +8,7 @@
 
 <<START>>
 { 
+    "key" : "TEXT",
     "name":"TEXT",
     "brand": "TEXT",
     "price":"TEXT",

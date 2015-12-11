@@ -10,37 +10,36 @@ job-recruitment-vieclamnhanh|Level1|DETAIL|0|0||
     "key" : "I@head > title/\\d{7}/",
     "jobName":"I@body > section > div.container.detail-content > div > div.col-xs-8.inner-10.primary > div > header > h1 > span", 
     "jobTitle":"", 
+    "jobType": "I@body > section > div.container.detail-content > div > div.col-xs-8.inner-10.primary > div > article > div.row > div:nth-child(2) > ul > li:nth-child(4)",
+    "salary" : "I@body > section > div.container.detail-content > div > div.col-xs-8.inner-10.primary > div > article > div.row > div:nth-child(2) > ul > li:nth-child(3)",
+    "education":"I@body > section > div.container.detail-content > div > div.col-xs-8.inner-10.primary > div > article > div.row > div:nth-child(2) > ul > li:nth-child(1)",
+    "experience": "I@body > section > div.container.detail-content > div > div.col-xs-8.inner-10.primary > div > article > div.row > div:nth-child(2) > ul > li:nth-child(2)",
     "categories" : ["I@body > section > div.container.detail-content > div > div.col-xs-8.inner-10.primary > div > article > div.row > div.col-xs-4.offset20.push-right-20 > ul > li:nth-child(4) > a"],
-    "posted": "",
     "jobExpired": "I@body > section > div.container.detail-content > div > div.col-xs-8.inner-10.primary > div > article > table > tbody > tr:nth-child(5) > td:nth-child(2) > b",
     "workplace" : ["I@body > section > div.container.detail-content > div > div.col-xs-8.inner-10.primary > div > article > div.row > div:nth-child(2) > ul > li:nth-child(5) > a"],
     "company" : {
-	"name" : "I@body > section > div.container.detail-content > div > div.col-xs-8.inner-10.primary > div > article > div:nth-child(12) > header > h3 > a",
-	"phone" : "I@body > section > div.container.detail-content > div > div.col-xs-8.inner-10.primary > div > article > div:nth-child(12) > div > table > tbody > tr:nth-child(1) > td > div.col-xs-4.offset20.summay-company > p:nth-child(2)",
-	"size" : "I@body > section > div.container.detail-content > div > div.col-xs-8.inner-10.primary > div > article > div:nth-child(12) > div > table > tbody > tr:nth-child(3) > td:nth-child(2) > p",
-	"introduction" : "I@body > section > div.container.detail-content > div > div.col-xs-8.inner-10.primary > div > article > div:nth-child(12) > div > table > tbody > tr:nth-child(2) > td:nth-child(2) > p",
-	"address" : "I@body > section > div.container.detail-content > div > div.col-xs-8.inner-10.primary > div > article > div:nth-child(12) > div > table > tbody > tr:nth-child(1) > td > div.col-xs-4.offset20.summay-company > p:nth-child(1)"
+        "name" : "I@body > section > div.container.detail-content > div > div.col-xs-8.inner-10.primary > div > article > div:nth-child(12) > header > h3 > a",
+        "phone" : "I@body > section > div.container.detail-content > div > div.col-xs-8.inner-10.primary > div > article > div:nth-child(12) > div > table > tbody > tr:nth-child(1) > td > div.col-xs-4.offset20.summay-company > p:nth-child(2)",
+        "contact" : "",
+        "size" : "I@body > section > div.container.detail-content > div > div.col-xs-8.inner-10.primary > div > article > div:nth-child(12) > div > table > tbody > tr:nth-child(3) > td:nth-child(2) > p",
+        "introduction" : "I@body > section > div.container.detail-content > div > div.col-xs-8.inner-10.primary > div > article > div:nth-child(12) > div > table > tbody > tr:nth-child(2) > td:nth-child(2) > p",
+        "address" : "I@body > section > div.container.detail-content > div > div.col-xs-8.inner-10.primary > div > article > div:nth-child(12) > div > table > tbody > tr:nth-child(1) > td > div.col-xs-4.offset20.summay-company > p:nth-child(1)",
+        "logo" : "body > section > div.container.detail-content > div > div.col-xs-8.inner-10.primary > div > article > div:nth-child(12) > div > table > tbody > tr:nth-child(1) > td > span > img{{src}}"
     },
-   "contact" : {
-	"name" : "I@body > section > div.container.detail-content > div > div.col-xs-8.inner-10.primary > div > article > div:nth-child(10) > div > table > tbody > tr:nth-child(1) > td:nth-child(2) > p",
-	"email" : "I@body > section > div.container.detail-content > div > div.col-xs-8.inner-10.primary > div > article > div:nth-child(10) > div > table > tbody > tr:nth-child(2) > td:nth-child(2) > p",
-	"address" : "I@body > section > div.container.detail-content > div > div.col-xs-8.inner-10.primary > div > article > div:nth-child(10) > div > table > tbody > tr:nth-child(3) > td:nth-child(2) > p",
-	"phone" : "I@body > section > div.container.detail-content > div > div.col-xs-8.inner-10.primary > div > article > div:nth-child(10) > div > table > tbody > tr:nth-child(4) > td:nth-child(2) > p",
-	"mobile" : "I@body > section > div.container.detail-content > div > div.col-xs-8.inner-10.primary > div > article > div:nth-child(10) > div > table > tbody > tr:nth-child(5) > td:nth-child(2) > p",
-	"require" : "I@body > section > div.container.detail-content > div > div.col-xs-8.inner-10.primary > div > article > div:nth-child(10) > div > table > tbody > tr:nth-child(6) > td:nth-child(2)"
+    "contact" : {
+        "name" : "I@body > section > div.container.detail-content > div > div.col-xs-8.inner-10.primary > div > article > div:nth-child(10) > div > table > tbody > tr:nth-child(1) > td:nth-child(2) > p",
+        "email" : "I@body > section > div.container.detail-content > div > div.col-xs-8.inner-10.primary > div > article > div:nth-child(10) > div > table > tbody > tr:nth-child(2) > td:nth-child(2) > p",
+        "address" : "I@body > section > div.container.detail-content > div > div.col-xs-8.inner-10.primary > div > article > div:nth-child(10) > div > table > tbody > tr:nth-child(3) > td:nth-child(2) > p",
+        "phone" : "I@body > section > div.container.detail-content > div > div.col-xs-8.inner-10.primary > div > article > div:nth-child(10) > div > table > tbody > tr:nth-child(4) > td:nth-child(2) > p",
+        "mobile" : "I@body > section > div.container.detail-content > div > div.col-xs-8.inner-10.primary > div > article > div:nth-child(10) > div > table > tbody > tr:nth-child(5) > td:nth-child(2) > p",
+        "resumeInfo" : "I@body > section > div.container.detail-content > div > div.col-xs-8.inner-10.primary > div > article > div:nth-child(10) > div > table > tbody > tr:nth-child(6) > td:nth-child(2)"
     },
-    "education":"I@body > section > div.container.detail-content > div > div.col-xs-8.inner-10.primary > div > article > div.row > div:nth-child(2) > ul > li:nth-child(1)",
-    "experience": "I@body > section > div.container.detail-content > div > div.col-xs-8.inner-10.primary > div > article > div.row > div:nth-child(2) > ul > li:nth-child(2)",
-    "salaryRange" : "I@body > section > div.container.detail-content > div > div.col-xs-8.inner-10.primary > div > article > div.row > div:nth-child(2) > ul > li:nth-child(3)",
-    "jobType": "I@body > section > div.container.detail-content > div > div.col-xs-8.inner-10.primary > div > article > div.row > div:nth-child(2) > ul > li:nth-child(4)",
-    "gender" : "I@body > section > div.container.detail-content > div > div.col-xs-8.inner-10.primary > div > article > div.row > div.col-xs-4.offset20.push-right-20 > ul > li:nth-child(2)",
-    "numberOfRequires": "I@body > section > div.container.detail-content > div > div.col-xs-8.inner-10.primary > div > article > div.row > div.col-xs-4.offset20.push-right-20 > ul > li:nth-child(1)/\\d+/",
-    "descriptions": ["I@body > section > div.container.detail-content > div > div.col-xs-8.inner-10.primary > div > article > table > tbody > tr:nth-child(1) > td:nth-child(2) > p"],
-    "jobRequirements": ["I@body > section > div.container.detail-content > div > div.col-xs-8.inner-10.primary > div > article > table > tbody > tr:nth-child(2) > td:nth-child(2) > p"],
-    "offers": ["I@body > section > div.container.detail-content > div > div.col-xs-8.inner-10.primary > div > article > table > tbody > tr:nth-child(3) > td:nth-child(2) > p"],
-    "attributes":[{ 
-        "key" : "",
-        "value" : ""
-    }, ""]
+    "quantity": "I@body > section > div.container.detail-content > div > div.col-xs-8.inner-10.primary > div > article > div.row > div.col-xs-4.offset20.push-right-20 > ul > li:nth-child(1)/\\d+/",
+    "ageRequired" : "TEXT",
+    "genderRequired" : "I@body > section > div.container.detail-content > div > div.col-xs-8.inner-10.primary > div > article > div.row > div.col-xs-4.offset20.push-right-20 > ul > li:nth-child(2)",
+    "resumeRequired": ["I@body > section > div.container.detail-content > div > div.col-xs-8.inner-10.primary > div > article > table > tbody > tr:nth-child(4) > td:nth-child(2) > p"],
+    "jobRequired": ["I@body > section > div.container.detail-content > div > div.col-xs-8.inner-10.primary > div > article > table > tbody > tr:nth-child(2) > td:nth-child(2) > p"],
+    "jobDescription": ["I@body > section > div.container.detail-content > div > div.col-xs-8.inner-10.primary > div > article > table > tbody > tr:nth-child(1) > td:nth-child(2) > p"],
+    "offers": ["I@body > section > div.container.detail-content > div > div.col-xs-8.inner-10.primary > div > article > table > tbody > tr:nth-child(3) > td:nth-child(2) > p"]
 }
 <<END>>

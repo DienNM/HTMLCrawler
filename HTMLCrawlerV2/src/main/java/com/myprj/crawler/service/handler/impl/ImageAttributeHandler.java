@@ -59,6 +59,9 @@ public class ImageAttributeHandler extends AttributeHandlerSupport {
     }
     
     private Object getBytes(Elements elements, AttributeSelector cssSelector) {
+        if(StringUtils.isEmpty(cssSelector.getTargetAttribute())) {
+            cssSelector.setTargetAttribute("src");
+        }
         String link = pickupString(elements, cssSelector);
         if(StringUtils.isEmpty(link)) {
             return null;
