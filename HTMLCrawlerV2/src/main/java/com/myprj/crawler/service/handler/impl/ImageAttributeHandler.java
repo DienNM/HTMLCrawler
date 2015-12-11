@@ -1,5 +1,7 @@
 package com.myprj.crawler.service.handler.impl;
 
+import java.util.HashMap;
+
 import javax.annotation.PostConstruct;
 
 import org.apache.commons.lang3.StringUtils;
@@ -10,6 +12,7 @@ import org.springframework.stereotype.Service;
 import com.myprj.crawler.domain.HtmlDocument;
 import com.myprj.crawler.domain.config.AttributeSelector;
 import com.myprj.crawler.domain.config.WorkerItemAttributeData;
+import com.myprj.crawler.domain.crawl.WorkerItemData;
 import com.myprj.crawler.enumeration.AttributeType;
 import com.myprj.crawler.service.handler.AttributeHandlerSupport;
 import com.myprj.crawler.service.handler.HandlerRegister;
@@ -33,12 +36,13 @@ public class ImageAttributeHandler extends AttributeHandlerSupport {
     }
 
     @Override
-    public Object handle(HtmlDocument document, WorkerItemAttributeData current) {
+    public Object handle(HtmlDocument document, WorkerItemData workerItem, WorkerItemAttributeData current) {
         AttributeSelector cssSelector = current.getSelector();
         if(isEmptySelector(cssSelector)) {
             return null;
         }
-        Elements elements = document.getDocument().select(cssSelector.getSelector());
+        HtmlDocument finalDocument = getFinalDocument(document, workerItem, current);
+        Elements elements = finalDocument.getDocument().select(cssSelector.getSelector());
         if (elements == null || elements.isEmpty()) {
             return null;
         }
@@ -46,7 +50,7 @@ public class ImageAttributeHandler extends AttributeHandlerSupport {
     }
 
     @Override
-    public Object handle(Element element, WorkerItemAttributeData current) {
+    public Object handle(Element element, WorkerItemData workerItem, WorkerItemAttributeData current) {
         AttributeSelector cssSelector = current.getSelector();
         if(isEmptySelector(cssSelector)) {
             return returnNormalizeString(element.text());
@@ -79,7 +83,8 @@ public class ImageAttributeHandler extends AttributeHandlerSupport {
         if(isEmptySelector(cssSelector)) {
             return null;
         }
-        Elements elements = document.getDocument().select(cssSelector.getSelector());
+        HtmlDocument finalDocument = getFinalDocument(cssSelector, document, new HashMap<String, HtmlDocument>());
+        Elements elements = finalDocument.getDocument().select(cssSelector.getSelector());
         if (elements == null || elements.isEmpty()) {
             return null;
         }

@@ -3,7 +3,9 @@ package com.myprj.crawler.domain.crawl;
 import static com.myprj.crawler.util.Serialization.deserialize;
 import static com.myprj.crawler.util.Serialization.serialize;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -11,6 +13,7 @@ import com.myprj.crawler.annotation.DataCopy;
 import com.myprj.crawler.annotation.DataTransfer;
 import com.myprj.crawler.annotation.EntityTransfer;
 import com.myprj.crawler.domain.AuditData;
+import com.myprj.crawler.domain.HtmlDocument;
 import com.myprj.crawler.domain.config.AttributeSelector;
 import com.myprj.crawler.domain.config.WorkerItemAttributeData;
 import com.myprj.crawler.domain.config.ItemData;
@@ -70,7 +73,7 @@ public class WorkerItemData extends AuditData {
 
     @DataCopy("rootWorkerItemAttribute")
     private WorkerItemAttributeData rootWorkerItemAttribute;
-
+    
     // For List Crawler to get next link
     @DataCopy("level0Selector")
     private AttributeSelector level0Selector;
@@ -79,6 +82,8 @@ public class WorkerItemData extends AuditData {
     @DataTransfer("pagingConfig")
     @DataCopy("pagingConfig")
     private PagingConfig pagingConfig;
+    
+    private Map<String, HtmlDocument> htmlCaches = new HashMap<String, HtmlDocument>();
 
     public WorkerItemData() {
     }
@@ -222,6 +227,14 @@ public class WorkerItemData extends AuditData {
 
     public void setSiteKey(String siteKey) {
         this.siteKey = siteKey;
+    }
+
+    public Map<String, HtmlDocument> getHtmlCaches() {
+        return htmlCaches;
+    }
+
+    public void setHtmlCaches(Map<String, HtmlDocument> htmlCaches) {
+        this.htmlCaches = htmlCaches;
     }
 
 }

@@ -36,7 +36,7 @@ public class AttributeSelectorUtil {
         return targetSelector;
     }
 
-    public static AttributeSelector parseAttritbuteSelector(String input) {
+    private static AttributeSelector parseAttritbuteSelector(String input) {
         if(StringUtils.isEmpty(input)) {
             return null;
         }

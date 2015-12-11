@@ -79,6 +79,7 @@ public class WorkerItemAttributeStructureServiceImpl implements WorkerItemAttrib
         attribute.setParentId(parent.getId());
         attribute.setItemKey(workerItem.getItemKey());
         attribute.setType(attributeData.getType());
+        attribute.setSiteKey(parent.getSiteKey());
 
         return attribute;
     }

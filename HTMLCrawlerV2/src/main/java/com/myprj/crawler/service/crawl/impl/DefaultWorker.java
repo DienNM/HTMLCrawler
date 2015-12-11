@@ -179,7 +179,7 @@ public class DefaultWorker implements Worker {
         result.setRequestId(workerItem.getRequestId());
         result.getDetail().putAll(ItemData.createSampleContent(item));
         
-        collectResult4Attribute(htmlDocument, rootItemAttribute, result);
+        collectResult4Attribute(htmlDocument, workerItem, rootItemAttribute, result);
 
         if (result.getDetail().isEmpty()) {
             result.setStatus(ResultStatus.MISSING);
@@ -189,14 +189,12 @@ public class DefaultWorker implements Worker {
         crawlEventPublisher.publish(new CrawlDetailCompletedEvent(result));
     }
 
-    protected void collectResult4Attribute(HtmlDocument htmlDocument, WorkerItemAttributeData current, CrawlResultData result) {
-        AttributeSelector selector = current.getSelector();
+    protected void collectResult4Attribute(HtmlDocument htmlDocument, WorkerItemData workerItem, WorkerItemAttributeData current, CrawlResultData result) {
         List<WorkerItemAttributeData> children = current.getChildren();
         for (WorkerItemAttributeData child : children) {
-            Object data = HandlerRegister.getHandler(child.getType()).handle(htmlDocument, child);
-            if (data == null && selector != null) {
-                logger.warn("No Data: Attribute={}, CSS-Selector={}, URL={}", child.getAttributeId(),
-                        selector.getText(), htmlDocument.getDocument().baseUri());
+            Object data = HandlerRegister.getHandler(child.getType()).handle(htmlDocument, workerItem, child);
+            if (data == null) {
+                logger.warn("No Data: Attribute={}, URL={}", child.getAttributeId(), htmlDocument.getDocument().baseUri());
             }
             populateValue2Attribute(result.getDetail(), child.getAttributeId(), data);
         }

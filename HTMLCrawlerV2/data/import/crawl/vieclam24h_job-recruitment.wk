@@ -1,7 +1,7 @@
 #key|site|threads|attemptTimes|delayTime|name|description
-#level|crawlType|start|end|level0Selector
+##site-key|level|crawlType|start|end|level0Selector
 
->job-recruitment-vieclam24h|vieclam24h|2|5|1000|Job Recruitment vieclam24h Worker|Job Recruitment  vieclam24h Worker
+>jr-vieclam24h|vieclam24h|2|5|1000|Job Recruitment vieclam24h Worker|Job Recruitment  vieclam24h Worker
 job-recruitment|Level0|LIST|1|1|div.list-items div.detail-link.pos_relative div.content_list_item_line.w_100 span.title-blockjob-main a{{href}}|https://vieclam24h.vn/tim-kiem-viec-lam-nhanh/?hdn_nganh_nghe_cap1=96&hdn_dia_diem=&hdn_tu_khoa=&hdn_hinh_thuc=&hdn_cap_bac=&page=%s
 job-recruitment|Level1|DETAIL|0|0||
 
@@ -10,36 +10,36 @@ job-recruitment|Level1|DETAIL|0|0||
     "key" : "I@head > title/NTD\\d{7}/",
     "jobName":"I@div.box_chi_tiet_cong_viec.bg_white.mt16.box_shadow > div:nth-child(1) > div > h1", 
     "jobTitle":"I@div.box_chi_tiet_cong_viec.bg_white.mt16.box_shadow > div.row.job_detail.text_grey2.fw500.mt_6.mb_4 > div:nth-child(2) > p:nth-child(2) > span > span", 
+    "jobType": "I@div.box_chi_tiet_cong_viec.bg_white.mt16.box_shadow > div.row.job_detail.text_grey2.fw500.mt_6.mb_4 > div:nth-child(2) > p:nth-child(3) > span > span",
+    "salary" : "I@div.box_chi_tiet_cong_viec.bg_white.mt16.box_shadow > div.row.job_detail.text_grey2.fw500.mt_6.mb_4 > div:nth-child(1) > p:nth-child(1) > span > span",
+    "education":"I@div.box_chi_tiet_cong_viec.bg_white.mt16.box_shadow > div.row.job_detail.text_grey2.fw500.mt_6.mb_4 > div:nth-child(1) > p:nth-child(3) > span > span",
+    "experience": "I@div.box_chi_tiet_cong_viec.bg_white.mt16.box_shadow > div.row.job_detail.text_grey2.fw500.mt_6.mb_4 > div:nth-child(1) > p:nth-child(2) > span > span",
     "categories" : ["I@div.box_chi_tiet_cong_viec.bg_white.mt16.box_shadow > div.row.job_detail.text_grey2.fw500.mt_6.mb_4 > div:nth-child(1) > div > h2 > a"],
-    "posted": "",
     "jobExpired": "I@div.box_chi_tiet_cong_viec.bg_white.mt16.box_shadow > div:nth-child(2) > div.pull-left.w480.ml_14.mt_6.mb_6 > span > span > span > span",
     "workplace" : ["I@div.box_chi_tiet_cong_viec.bg_white.mt16.box_shadow > div.row.job_detail.text_grey2.fw500.mt_6.mb_4 > div:nth-child(2) > p:nth-child(1) > span > a"],
     "company" : {
-	"name" : "",
-	"phone" : "",
-	"contact" : "",
-	"size" : "",
-	"introduction" : "",
-	"address" : ""
+        "name" : "I@#cols-right > div.content_cols-right.pt_16.pl_24.pb_24 > div.box_chi_tiet_nha_tuyen_dung.bg_white.mt16.box_shadow > div > div.col-xs-9 > h1||E@#cols-right > div.content_cols-right.pt_16.pl_24.pb_24 > div.box_chi_tiet_cong_viec.bg_white.mt16.box_shadow > div:nth-child(1) > div > p > a{{href}}",
+        "phone" : "I@#cols-right > div.content_cols-right.pt_16.pl_24.pb_24 > div.box_chi_tiet_nha_tuyen_dung.bg_white.mt16.box_shadow > div > div.col-xs-9 > div.mb_30.mt_10 > p:nth-child(3)||E@#cols-right > div.content_cols-right.pt_16.pl_24.pb_24 > div.box_chi_tiet_cong_viec.bg_white.mt16.box_shadow > div:nth-child(1) > div > p > a{{href}}",
+        "contact" : "",
+        "size" : "I@#cols-right > div.content_cols-right.pt_16.pl_24.pb_24 > div.box_chi_tiet_nha_tuyen_dung.bg_white.mt16.box_shadow > div > div.col-xs-9 > div.mb_30.mt_10 > p:nth-child(2)||E@#cols-right > div.content_cols-right.pt_16.pl_24.pb_24 > div.box_chi_tiet_cong_viec.bg_white.mt16.box_shadow > div:nth-child(1) > div > p > a{{href}}",
+        "introduction" : "I@#cols-right > div.content_cols-right.pt_16.pl_24.pb_24 > div.box_chi_tiet_nha_tuyen_dung.bg_white.mt16.box_shadow > div > div.col-xs-9 > div.company-description||E@#cols-right > div.content_cols-right.pt_16.pl_24.pb_24 > div.box_chi_tiet_cong_viec.bg_white.mt16.box_shadow > div:nth-child(1) > div > p > a{{href}}",
+        "address" : "I@#cols-right > div.content_cols-right.pt_16.pl_24.pb_24 > div.box_chi_tiet_nha_tuyen_dung.bg_white.mt16.box_shadow > div > div.col-xs-9 > div.mb_30.mt_10 > p:nth-child(1)||E@#cols-right > div.content_cols-right.pt_16.pl_24.pb_24 > div.box_chi_tiet_cong_viec.bg_white.mt16.box_shadow > div:nth-child(1) > div > p > a{{href}}",
+        "logo" : "I@#cols-right > div.content_cols-right.pt_16.pl_24.pb_24 > div.box_chi_tiet_nha_tuyen_dung.bg_white.mt16.box_shadow > div > div.col-xs-3 > div.logo-company > img{{src}}||E@#cols-right > div.content_cols-right.pt_16.pl_24.pb_24 > div.box_chi_tiet_cong_viec.bg_white.mt16.box_shadow > div:nth-child(1) > div > p > a{{href}}"
     },
     "contact" : {
-	"name" : "",
-	"email" : "",
-	"address" : "",
-	"phone" : "",
-	"mobile" : "",
-	"require" : ""
+        "name" : "TEXT",
+        "email" : "TEXT",
+        "address" : "TEXT",
+        "phone" : "TEXT",
+        "mobile" : "TEXT",
+        "resumeInfo" : "TEXT"
     },
-    "education":"I@div.box_chi_tiet_cong_viec.bg_white.mt16.box_shadow > div.row.job_detail.text_grey2.fw500.mt_6.mb_4 > div:nth-child(1) > p:nth-child(3) > span > span",
-    "experience": "I@div.box_chi_tiet_cong_viec.bg_white.mt16.box_shadow > div.row.job_detail.text_grey2.fw500.mt_6.mb_4 > div:nth-child(1) > p:nth-child(2) > span > span",
-    "salaryRange" : "I@div.box_chi_tiet_cong_viec.bg_white.mt16.box_shadow > div.row.job_detail.text_grey2.fw500.mt_6.mb_4 > div:nth-child(1) > p:nth-child(1) > span > span",
-    "jobType": "I@div.box_chi_tiet_cong_viec.bg_white.mt16.box_shadow > div.row.job_detail.text_grey2.fw500.mt_6.mb_4 > div:nth-child(2) > p:nth-child(3) > span > span",
-    "gender" : "I@div.box_chi_tiet_cong_viec.bg_white.mt16.box_shadow > div.row.job_detail.text_grey2.fw500.mt_6.mb_4 > div:nth-child(2) > p:nth-child(4) > span > span",
-    "age" : "I@div.box_chi_tiet_cong_viec.bg_white.mt16.box_shadow > div.row.job_detail.text_grey2.fw500.mt_6.mb_4 > div:nth-child(2) > p:nth-child(5) > span > span",
-    "numberOfRequires": "I@div.box_chi_tiet_cong_viec.bg_white.mt16.box_shadow > div.row.job_detail.text_grey2.fw500.mt_6.mb_4 > div:nth-child(1) > p:nth-child(4) > span > span",
-    "resume": ["I@#ttd_detail > div:nth-child(1) > div.pl_24.pr_24 > div:nth-child(4) > p"],
-    "descriptions": ["I@#ttd_detail > div:nth-child(1) > div.pl_24.pr_24 > div:nth-child(1) > p"],
-    "jobRequirements": ["I@#ttd_detail > div:nth-child(1) > div.pl_24.pr_24 > div:nth-child(3) > p"],
+    "quantity": "I@div.box_chi_tiet_cong_viec.bg_white.mt16.box_shadow > div.row.job_detail.text_grey2.fw500.mt_6.mb_4 > div:nth-child(1) > p:nth-child(4) > span > span",
+    "ageRequired" : "I@div.box_chi_tiet_cong_viec.bg_white.mt16.box_shadow > div.row.job_detail.text_grey2.fw500.mt_6.mb_4 > div:nth-child(2) > p:nth-child(5) > span > span",
+    "genderRequired" : "I@div.box_chi_tiet_cong_viec.bg_white.mt16.box_shadow > div.row.job_detail.text_grey2.fw500.mt_6.mb_4 > div:nth-child(2) > p:nth-child(4) > span > span",
+    "resumeRequired": ["I@#ttd_detail > div:nth-child(1) > div.pl_24.pr_24 > div:nth-child(4) > p"],
+    "jobRequired": ["I@#ttd_detail > div:nth-child(1) > div.pl_24.pr_24 > div:nth-child(3) > p"],
+    "jobDescription": ["I@#ttd_detail > div:nth-child(1) > div.pl_24.pr_24 > div:nth-child(1) > p"],
     "offers": ["I@#ttd_detail > div:nth-child(1) > div.pl_24.pr_24 > div:nth-child(2) > p"]
 }
 <<END>>

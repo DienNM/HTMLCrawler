@@ -5,6 +5,7 @@ import org.jsoup.nodes.Element;
 import com.myprj.crawler.domain.HtmlDocument;
 import com.myprj.crawler.domain.config.AttributeSelector;
 import com.myprj.crawler.domain.config.WorkerItemAttributeData;
+import com.myprj.crawler.domain.crawl.WorkerItemData;
 import com.myprj.crawler.enumeration.AttributeType;
 
 /**
@@ -17,10 +18,10 @@ public interface AttributeHandler {
 
     AttributeType getType();
 
-    Object handle(HtmlDocument document, WorkerItemAttributeData current);
+    Object handle(HtmlDocument document, WorkerItemData workerItem, WorkerItemAttributeData current);
+
+    Object handle(Element element, WorkerItemData workerItem, WorkerItemAttributeData current);
 
     Object handle(HtmlDocument document, AttributeSelector attributeSelector);
-
-    Object handle(Element element, WorkerItemAttributeData current);
 
 }

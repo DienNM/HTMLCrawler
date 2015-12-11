@@ -106,7 +106,7 @@ public class CrawlerController extends AbstractController {
         List<Object> results = new ArrayList<Object>();
         for(int i = 0; i < selectors.size(); i++) {
             if(types.length > i) {
-                AttributeSelector attributeSelector = AttributeSelectorUtil.parseAttritbuteSelector(selectors.get(i));
+                AttributeSelector attributeSelector = AttributeSelectorUtil.parseAttritbuteSelectors(selectors.get(i));
                 AttributeHandler handler = HandlerRegister.getHandler(AttributeType.valueOf(types[i]));
                 if(handler == null) {
                     jsonResponse = new JsonResponse(false);
