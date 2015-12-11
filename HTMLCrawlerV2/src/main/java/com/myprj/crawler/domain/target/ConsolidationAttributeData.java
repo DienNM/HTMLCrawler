@@ -4,14 +4,14 @@ import java.util.List;
 
 import com.myprj.crawler.annotation.EntityTransfer;
 import com.myprj.crawler.model.AuditModel;
-import com.myprj.crawler.model.target.ProductAttributeModel;
+import com.myprj.crawler.model.target.ConsolidationAttributeModel;
 import com.myprj.crawler.util.converter.EntityConverter;
 
 /**
  * @author DienNM (DEE)
  */
 
-public class ProductAttributeData extends AuditModel {
+public class ConsolidationAttributeData extends AuditModel {
 
     private static final long serialVersionUID = 1L;
 
@@ -24,33 +24,33 @@ public class ProductAttributeData extends AuditModel {
     @EntityTransfer("value")
     private String value;
 
-    @EntityTransfer("product_id")
-    private long productId;
+    @EntityTransfer("consolidation_id")
+    private long consolidationId;
 
-    public ProductAttributeData() {
+    public ConsolidationAttributeData() {
     }
 
-    public static void toDatas(List<ProductAttributeModel> sources, List<ProductAttributeData> dests) {
-        for (ProductAttributeModel source : sources) {
-            ProductAttributeData dest = new ProductAttributeData();
+    public static void toDatas(List<ConsolidationAttributeModel> sources, List<ConsolidationAttributeData> dests) {
+        for (ConsolidationAttributeModel source : sources) {
+            ConsolidationAttributeData dest = new ConsolidationAttributeData();
             toData(source, dest);
             dests.add(dest);
         }
     }
 
-    public static void toModels(List<ProductAttributeData> sources, List<ProductAttributeModel> dests) {
-        for (ProductAttributeData source : sources) {
-            ProductAttributeModel dest = new ProductAttributeModel();
+    public static void toModels(List<ConsolidationAttributeData> sources, List<ConsolidationAttributeModel> dests) {
+        for (ConsolidationAttributeData source : sources) {
+            ConsolidationAttributeModel dest = new ConsolidationAttributeModel();
             toModel(source, dest);
             dests.add(dest);
         }
     }
 
-    public static void toData(ProductAttributeModel source, ProductAttributeData dest) {
+    public static void toData(ConsolidationAttributeModel source, ConsolidationAttributeData dest) {
         EntityConverter.convert2Data(source, dest);
     }
 
-    public static void toModel(ProductAttributeData source, ProductAttributeModel dest) {
+    public static void toModel(ConsolidationAttributeData source, ConsolidationAttributeModel dest) {
         EntityConverter.convert2Entity(source, dest);
     }
 
@@ -62,12 +62,12 @@ public class ProductAttributeData extends AuditModel {
         this.id = id;
     }
 
-    public long getProductId() {
-        return productId;
+    public long getConsolidationId() {
+        return consolidationId;
     }
 
-    public void setProductId(long productId) {
-        this.productId = productId;
+    public void setConsolidationId(long consolidationId) {
+        this.consolidationId = consolidationId;
     }
 
     public String getName() {

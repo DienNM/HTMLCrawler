@@ -14,8 +14,8 @@ import com.myprj.crawler.model.AuditModel;
  */
 
 @Entity
-@Table(name = "product_attribute")
-public class ProductAttributeModel extends AuditModel {
+@Table(name = "consolidation_attribute")
+public class ConsolidationAttributeModel extends AuditModel {
 
     private static final long serialVersionUID = 1L;
 
@@ -30,10 +30,10 @@ public class ProductAttributeModel extends AuditModel {
     @Column(name = "value", length = 2000)
     private String value;
 
-    @Column(name = "product_id")
-    private long productId;
+    @Column(name = "consolidation_id")
+    private long consolidationId;
 
-    public ProductAttributeModel() {
+    public ConsolidationAttributeModel() {
     }
     
     public long getId() {
@@ -44,12 +44,12 @@ public class ProductAttributeModel extends AuditModel {
         this.id = id;
     }
 
-    public long getProductId() {
-        return productId;
+    public long getConsolidationId() {
+        return consolidationId;
     }
 
-    public void setProductId(long productId) {
-        this.productId = productId;
+    public void setConsolidationId(long consolidationId) {
+        this.consolidationId = consolidationId;
     }
 
     public String getName() {

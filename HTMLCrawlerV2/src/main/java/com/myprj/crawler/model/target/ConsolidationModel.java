@@ -14,8 +14,8 @@ import com.myprj.crawler.model.AuditModel;
  */
 
 @Entity
-@Table(name = "product")
-public class ProductModel extends AuditModel {
+@Table(name = "consolidation")
+public class ConsolidationModel extends AuditModel {
 
     private static final long serialVersionUID = 1L;
 
@@ -24,8 +24,8 @@ public class ProductModel extends AuditModel {
     @Column(name = "id")
     private long id;
 
-    @Column(name = "key_sku", length = 200)
-    private String key;
+    @Column(name = "result_key", length = 200)
+    private String resultKey;
 
     @Column(name = "name", length = 200)
     private String name;
@@ -39,16 +39,7 @@ public class ProductModel extends AuditModel {
     @Column(name = "site", length = 50)
     private String site;
 
-    @Column(name = "price", length = 50)
-    private String price;
-
-    @Column(name = "included_vat")
-    private boolean includedVat;
-
-    @Column(name = "past_price", length = 50)
-    private String pastPrice;
-    
-    public ProductModel() {
+    public ConsolidationModel() {
     }
 
     public long getId() {
@@ -91,36 +82,11 @@ public class ProductModel extends AuditModel {
         this.site = site;
     }
 
-    public String getPrice() {
-        return price;
+    public String getResultKey() {
+        return resultKey;
     }
 
-    public void setPrice(String price) {
-        this.price = price;
+    public void setResultKey(String key) {
+        this.resultKey = key;
     }
-
-    public String getPastPrice() {
-        return pastPrice;
-    }
-
-    public void setPastPrice(String pastPrice) {
-        this.pastPrice = pastPrice;
-    }
-
-    public String getKey() {
-        return key;
-    }
-
-    public void setKey(String key) {
-        this.key = key;
-    }
-
-    public boolean isIncludedVat() {
-        return includedVat;
-    }
-
-    public void setIncludedVat(boolean includedVat) {
-        this.includedVat = includedVat;
-    }
-
 }

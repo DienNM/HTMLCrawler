@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.myprj.crawler.domain.target.ProductData;
-import com.myprj.crawler.service.target.ProductService;
+import com.myprj.crawler.domain.target.ConsolidationData;
+import com.myprj.crawler.service.target.ConsolidationService;
 import com.myprj.crawler.web.controller.AbstractController;
 import com.myprj.crawler.web.dto.JsonResponse;
 import com.myprj.crawler.web.enumeration.DTOLevel;
@@ -23,14 +23,14 @@ import com.myprj.crawler.web.enumeration.DTOLevel;
 public class ProductController extends AbstractController {
 
     @Autowired
-    private ProductService productService;
+    private ConsolidationService productService;
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     @ResponseBody
     public JsonResponse getById(@PathVariable(value = "id") long id,
             @RequestParam(value = "level", defaultValue = "DEFAULT") DTOLevel target) {
 
-        ProductData product = productService.getById(id);
+        ConsolidationData product = productService.getById(id);
         if (product == null) {
             JsonResponse jsonResponse = new JsonResponse(false);
             jsonResponse.putMessage("Product ID " + id + " not found");
