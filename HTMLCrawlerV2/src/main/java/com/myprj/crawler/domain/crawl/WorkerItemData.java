@@ -45,10 +45,12 @@ public class WorkerItemData extends AuditData {
     
     @DataTransfer("itemKey")
     @EntityTransfer("item_key")
+    @DataCopy("itemKey")
     private String itemKey;
 
     @DataTransfer("siteKey")
     @EntityTransfer("site_key")
+    @DataCopy("siteKey")
     private String siteKey;
 
     @DataTransfer("url")
@@ -93,7 +95,8 @@ public class WorkerItemData extends AuditData {
     public static String getImagesDir(WorkerItemData workerItem) {
         return workerItem.getSiteKey() + File.separator + 
                 workerItem.getItemKey() + File.separator + 
-                IdGenerator.generateStringByDate() + File.separator;
+                IdGenerator.generateStringByDate() + File.separator +
+                workerItem.getRequestId() + File.separator;
     }
     
     public static void toDatas(List<WorkerItemModel> sources, List<WorkerItemData> dests) {

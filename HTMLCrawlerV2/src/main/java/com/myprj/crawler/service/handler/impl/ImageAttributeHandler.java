@@ -81,14 +81,14 @@ public class ImageAttributeHandler extends AttributeHandlerSupport {
         if (StringUtils.isEmpty(storedDir)) {
             return null;
         }
-
-        String localImageName = storedDir + IdGenerator.generateIdByTime();
+        String fileName = IdGenerator.generateIdByTime();
+        String localImageName = storedDir + fileName;
         try {
             StreamUtil.writeImage(link, localImageName);
         } catch (Exception e) {
             localImageName = null;
         }
-        return localImageName;
+        return FileUtil.getDirPath(subDir) + fileName;
     }
 
     @Override

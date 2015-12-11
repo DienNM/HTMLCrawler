@@ -91,7 +91,7 @@ public class CrawlerHandler {
             workerService.update(workerData);
             return requestId;
         } catch (CrawlerException e1) {
-            logger.error("{}", e1);
+            logger.error("Error: " + e1.getMessage());
             throw new InvalidParameterException(e1.getMessage());
         }
 
