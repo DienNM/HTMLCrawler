@@ -3,6 +3,7 @@ package com.myprj.crawler.domain.crawl;
 import static com.myprj.crawler.util.Serialization.deserialize;
 import static com.myprj.crawler.util.Serialization.serialize;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,6 +21,7 @@ import com.myprj.crawler.domain.config.ItemData;
 import com.myprj.crawler.enumeration.CrawlType;
 import com.myprj.crawler.enumeration.Level;
 import com.myprj.crawler.model.crawl.WorkerItemModel;
+import com.myprj.crawler.util.IdGenerator;
 import com.myprj.crawler.util.converter.EntityConverter;
 import com.myprj.crawler.util.converter.ObjectConverter;
 
@@ -86,6 +88,12 @@ public class WorkerItemData extends AuditData {
     private Map<String, HtmlDocument> htmlCaches = new HashMap<String, HtmlDocument>();
 
     public WorkerItemData() {
+    }
+    
+    public static String getImagesDir(WorkerItemData workerItem) {
+        return workerItem.getSiteKey() + File.separator + 
+                workerItem.getItemKey() + File.separator + 
+                IdGenerator.generateStringByDate() + File.separator;
     }
     
     public static void toDatas(List<WorkerItemModel> sources, List<WorkerItemData> dests) {

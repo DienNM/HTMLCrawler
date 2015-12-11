@@ -10,7 +10,18 @@
             http://www.springframework.org/schema/context/spring-context-4.1.xsd
             http://www.springframework.org/schema/tx 
             http://www.springframework.org/schema/tx/spring-tx-4.1.xsd">
-    
+            
+    <bean id="externalPropertiesClasspath" class="com.myprj.crawler.util.AppProperties">
+       <property name="systemPropertiesModeName" value="SYSTEM_PROPERTIES_MODE_OVERRIDE" />
+       <property name="locations">
+           <array>
+               <value>classpath:db.properties</value>
+               <value>classpath:config.properties</value>
+           </array>
+       </property>
+       <property name="ignoreUnresolvablePlaceholders" value="true" />
+       <property name="ignoreResourceNotFound" value="false" />
+    </bean>
     
     <context:component-scan base-package="com.myprj.crawler.repository" />
     <context:component-scan base-package="com.myprj.crawler.service" />

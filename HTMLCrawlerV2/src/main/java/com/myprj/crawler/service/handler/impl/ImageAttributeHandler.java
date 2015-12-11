@@ -16,6 +16,9 @@ import com.myprj.crawler.domain.crawl.WorkerItemData;
 import com.myprj.crawler.enumeration.AttributeType;
 import com.myprj.crawler.service.handler.AttributeHandlerSupport;
 import com.myprj.crawler.service.handler.HandlerRegister;
+import com.myprj.crawler.util.Config;
+import com.myprj.crawler.util.FileUtil;
+import com.myprj.crawler.util.IdGenerator;
 import com.myprj.crawler.util.StreamUtil;
 
 /**
@@ -38,7 +41,7 @@ public class ImageAttributeHandler extends AttributeHandlerSupport {
     @Override
     public Object handle(HtmlDocument document, WorkerItemData workerItem, WorkerItemAttributeData current) {
         AttributeSelector cssSelector = current.getSelector();
-        if(isEmptySelector(cssSelector)) {
+        if (isEmptySelector(cssSelector)) {
             return null;
         }
         HtmlDocument finalDocument = getFinalDocument(document, workerItem, current);
@@ -46,41 +49,51 @@ public class ImageAttributeHandler extends AttributeHandlerSupport {
         if (elements == null || elements.isEmpty()) {
             return null;
         }
-        return getBytes(elements, cssSelector);
+        return getImage(elements, workerItem, cssSelector);
     }
 
     @Override
     public Object handle(Element element, WorkerItemData workerItem, WorkerItemAttributeData current) {
         AttributeSelector cssSelector = current.getSelector();
-        if(isEmptySelector(cssSelector)) {
+        if (isEmptySelector(cssSelector)) {
             return returnNormalizeString(element.text());
         }
         Elements elements = element.select(cssSelector.getSelector());
         if (elements == null || elements.isEmpty()) {
             return null;
         }
-        return getBytes(elements, cssSelector);
+        return getImage(elements, workerItem, cssSelector);
     }
-    
-    private Object getBytes(Elements elements, AttributeSelector cssSelector) {
-        if(StringUtils.isEmpty(cssSelector.getTargetAttribute())) {
+
+    private Object getImage(Elements elements, WorkerItemData workerItem, AttributeSelector cssSelector) {
+        if (StringUtils.isEmpty(cssSelector.getTargetAttribute())) {
             cssSelector.setTargetAttribute("src");
         }
         String link = pickupString(elements, cssSelector);
-        if(StringUtils.isEmpty(link)) {
+        if (StringUtils.isEmpty(link)) {
             return null;
         }
+
+        String root = Config.get("crawler.images.dir");
+        String subDir = WorkerItemData.getImagesDir(workerItem);
+
+        String storedDir = FileUtil.makeDir(root, subDir);
+        if (StringUtils.isEmpty(storedDir)) {
+            return null;
+        }
+
+        String localImageName = storedDir + IdGenerator.generateIdByTime();
         try {
-            byte[] bytes = StreamUtil.readImage(link);
-            return StreamUtil.encodeImage(bytes);
+            StreamUtil.writeImage(link, localImageName);
         } catch (Exception e) {
-            return null;
+            localImageName = null;
         }
+        return localImageName;
     }
 
     @Override
     public Object handle(HtmlDocument document, AttributeSelector cssSelector) {
-        if(isEmptySelector(cssSelector)) {
+        if (isEmptySelector(cssSelector)) {
             return null;
         }
         HtmlDocument finalDocument = getFinalDocument(cssSelector, document, new HashMap<String, HtmlDocument>());
@@ -88,7 +101,20 @@ public class ImageAttributeHandler extends AttributeHandlerSupport {
         if (elements == null || elements.isEmpty()) {
             return null;
         }
-        return getBytes(elements, cssSelector);
+        if (StringUtils.isEmpty(cssSelector.getTargetAttribute())) {
+            cssSelector.setTargetAttribute("src");
+        }
+        String link = pickupString(elements, cssSelector);
+        if (StringUtils.isEmpty(link)) {
+            return null;
+        }
+
+        try {
+            byte[] bytes = StreamUtil.readImage(link);
+            return StreamUtil.encodeImage(bytes);
+        } catch (Exception e) {
+            return null;
+        }
     }
 
 }
