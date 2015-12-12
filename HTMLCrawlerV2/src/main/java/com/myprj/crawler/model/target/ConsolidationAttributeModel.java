@@ -3,6 +3,7 @@ package com.myprj.crawler.model.target;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.persistence.Table;
 
 import com.myprj.crawler.model.AuditModel;
@@ -21,7 +22,8 @@ public class ConsolidationAttributeModel extends AuditModel {
     @Column(name = "id")
     private ConsolidationAttributeId id;
 
-    @Column(name = "value", length = 2000)
+    @Column(name = "value")
+    @Lob
     private String value;
 
     public ConsolidationAttributeModel() {

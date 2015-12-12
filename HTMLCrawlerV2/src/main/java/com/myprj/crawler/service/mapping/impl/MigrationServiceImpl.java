@@ -76,7 +76,7 @@ public class MigrationServiceImpl implements MigrationService {
         consolidation.setCategoryKey(crawlResult.getCategoryKey());
         consolidation.setItemKey(crawlResult.getItemKey());
         consolidation.setSiteKey(crawlResult.getSiteKey());
-        consolidation.setResultKey(crawlResult.getRequestId());
+        consolidation.setResultKey(crawlResult.getResultKey());
         ConsolidationData.createMd5Key(consolidation);
         
         Map<String, Object> contentObject = (Map<String, Object>) crawlResult.getDetail().get("content");
