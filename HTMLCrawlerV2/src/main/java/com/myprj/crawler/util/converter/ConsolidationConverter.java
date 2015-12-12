@@ -21,7 +21,7 @@ public final class ConsolidationConverter {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ConsolidationConverter.class.getName());
 
-    public static <S, D> void convert(Map<String, Object> source, D dest) {
+    public static <S, D> void map(Map<String, Object> source, D dest) {
         if (source == null || dest == null) {
             return;
         }
@@ -38,6 +38,10 @@ public final class ConsolidationConverter {
         Map<Field, String> mappedFieldsValues = new HashMap<Field, String>();
         for (String key : source.keySet()) {
             Field destField = destFieldsMap.get(key);
+            if(destField == null) {
+                LOGGER.warn("Mapping Field: " + key + " not found");
+                continue;
+            }
             if (mappedFieldsValues.containsKey(destField)) {
                 LOGGER.error("Duplicated for mapping field: " + destField.getName());
                 return;

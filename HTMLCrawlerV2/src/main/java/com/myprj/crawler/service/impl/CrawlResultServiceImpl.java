@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.myprj.crawler.domain.PageResult;
+import com.myprj.crawler.domain.Pageable;
 import com.myprj.crawler.domain.crawl.CrawlResultData;
 import com.myprj.crawler.model.crawl.CrawlResultId;
 import com.myprj.crawler.model.crawl.CrawlResultModel;
@@ -31,7 +33,7 @@ public class CrawlResultServiceImpl implements CrawlResultService {
     public CrawlResultData saveOrUpdate(CrawlResultData crawlResult) {
         CrawlResultModel newObject = new CrawlResultModel();
         CrawlResultData.toModel(crawlResult, newObject);
-        
+
         CrawlResultModel crawlResultModel = crawlResultRepository.find(newObject.getId());
         if (crawlResultModel == null) {
             crawlResultRepository.save(newObject);
@@ -47,7 +49,7 @@ public class CrawlResultServiceImpl implements CrawlResultService {
 
         return persisted;
     }
-    
+
     @Override
     public CrawlResultData get(String siteKey, String categoryKey, String itemKey, String resultKey) {
         CrawlResultId id = new CrawlResultId();
@@ -55,7 +57,7 @@ public class CrawlResultServiceImpl implements CrawlResultService {
         id.setItemKey(itemKey);
         id.setSiteKey(siteKey);
         id.setResultKey(resultKey);
-        
+
         CrawlResultModel crawlResultModel = crawlResultRepository.find(id);
         if (crawlResultModel == null) {
             logger.warn("Crawl Result " + id + " not found");
@@ -69,21 +71,23 @@ public class CrawlResultServiceImpl implements CrawlResultService {
     }
 
     @Override
-    public List<CrawlResultData> getByItemKey(String itemKey) {
-        List<CrawlResultModel> crawlResultModels = crawlResultRepository.findByItemKey(itemKey);
+    public List<CrawlResultData> get(String siteKey, String categoryKey, String itemKey, Pageable pageable) {
+        List<CrawlResultModel> crawlResultModels = crawlResultRepository.find(siteKey, categoryKey, itemKey, pageable);
         List<CrawlResultData> crawlResultDatas = new ArrayList<CrawlResultData>();
         CrawlResultData.toDatas(crawlResultModels, crawlResultDatas);
-
         return crawlResultDatas;
     }
-
+    
     @Override
-    public List<CrawlResultData> getByCategoryKey(String categoryKey) {
-        List<CrawlResultModel> crawlResultModels = crawlResultRepository.findByCategoryKey(categoryKey);
-        List<CrawlResultData> crawlResultDatas = new ArrayList<CrawlResultData>();
-        CrawlResultData.toDatas(crawlResultModels, crawlResultDatas);
+    public PageResult<CrawlResultData> getPaging(String siteKey, String categoryKey, String itemKey, Pageable pageable) {
+        PageResult<CrawlResultModel> pageResult = crawlResultRepository.findPaging(siteKey, categoryKey, itemKey, pageable);
 
-        return crawlResultDatas;
+        PageResult<CrawlResultData> results = new PageResult<CrawlResultData>(pageResult.getPageable());
+        List<CrawlResultData> crawlResults = new ArrayList<CrawlResultData>();
+        CrawlResultData.toDatas(pageResult.getContent(), crawlResults);
+        results.setContent(crawlResults);
+
+        return results;
     }
 
     @Override

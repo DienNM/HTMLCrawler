@@ -3,10 +3,12 @@ package com.myprj.crawler.domain.target;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.myprj.crawler.annotation.Consolidation;
 import com.myprj.crawler.annotation.EntityTransfer;
 import com.myprj.crawler.model.AuditModel;
 import com.myprj.crawler.model.target.ConsolidationId;
 import com.myprj.crawler.model.target.ConsolidationModel;
+import com.myprj.crawler.util.Md5;
 import com.myprj.crawler.util.converter.EntityConverter;
 import com.myprj.crawler.util.converter.ObjectConverter;
 
@@ -26,22 +28,32 @@ public class ConsolidationData extends AuditModel {
 
     private String siteKey;
 
+    @EntityTransfer("name")
+    @Consolidation("name")
+    private String name;
+
+    @EntityTransfer("url")
+    private String url;
+
     @EntityTransfer("md5_key")
     private String md5Key;
 
     @EntityTransfer("md5_attributes")
     private String md5Attributes;
 
-    @EntityTransfer("name")
-    private String name;
-
-    @EntityTransfer("name")
-    private String url;
-
     private List<ConsolidationAttributeData> attributes = new ArrayList<ConsolidationAttributeData>();
 
     public ConsolidationData() {
-
+    }
+    
+    public static void createMd5Key(ConsolidationData consolidation) {
+        String key = consolidation.getSiteKey() + "-" + consolidation.getCategoryKey() + consolidation.getItemKey()
+                + consolidation.getResultKey();
+        consolidation.setMd5Key(Md5.hex(key));
+    }
+    
+    public static void createMd5Attribute(ConsolidationData consolidation, Object attributeObj) {
+        consolidation.setMd5Attributes(Md5.hex(attributeObj.toString()));
     }
 
     public static void toDatas(List<ConsolidationModel> sources, List<ConsolidationData> dests) {
@@ -87,6 +99,11 @@ public class ConsolidationData extends AuditModel {
                 dest.setId(id);
             }
         });
+    }
+
+    @Override
+    public String toString() {
+        return String.format("Site=%s, Category=%s, Item=%s, ResultKey=%s", siteKey, categoryKey, itemKey, resultKey);
     }
 
     public String getName() {

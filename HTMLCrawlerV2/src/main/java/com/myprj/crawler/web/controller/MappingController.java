@@ -47,5 +47,25 @@ public class MappingController {
             return response;
         }
     }
+    
+    @RequestMapping(value = "/import", method = RequestMethod.POST)
+    @ResponseBody
+    public JsonResponse doMapping(@RequestParam(value = "file") MultipartFile file) {
+        if (file == null) {
+            JsonResponse response = new JsonResponse(false);
+            response.putMessage("File are missing");
+            return response;
+        }
+        try {
+            List<AttributeMappingData> attributeDatas = attributeMappingFacade.importFromSource(file.getInputStream());
+            JsonResponse response = new JsonResponse(!attributeDatas.isEmpty());
+            response.putMessage("Loaded " + attributeDatas.size() + " attribute mappings");
+            return response;
+        } catch (Exception e) {
+            JsonResponse response = new JsonResponse(false);
+            response.putMessage(e.getMessage());
+            return response;
+        }
+    }
 
 }

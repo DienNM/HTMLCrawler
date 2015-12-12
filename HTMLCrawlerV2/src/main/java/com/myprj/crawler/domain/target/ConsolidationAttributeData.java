@@ -15,17 +15,14 @@ public class ConsolidationAttributeData extends AuditModel {
 
     private static final long serialVersionUID = 1L;
 
-    @EntityTransfer("id")
-    private long id;
-
     @EntityTransfer("name")
     private String name;
 
+    @EntityTransfer("consolidation_id")
+    private String consolidationId;
+
     @EntityTransfer("value")
     private String value;
-
-    @EntityTransfer("consolidation_id")
-    private long consolidationId;
 
     public ConsolidationAttributeData() {
     }
@@ -54,19 +51,11 @@ public class ConsolidationAttributeData extends AuditModel {
         EntityConverter.convert2Entity(source, dest);
     }
 
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public long getConsolidationId() {
+    public String getConsolidationId() {
         return consolidationId;
     }
 
-    public void setConsolidationId(long consolidationId) {
+    public void setConsolidationId(String consolidationId) {
         this.consolidationId = consolidationId;
     }
 

@@ -65,6 +65,40 @@ public final class StreamUtil {
             IOUtils.closeQuietly(is);
         }
     }
+    
+    public static List<String> readCSVFile(String fileName) {
+        InputStream is = null;
+        try {
+            is = new FileInputStream(fileName);
+            return readCSVFile(is);
+        } catch (Exception e) {
+            return  new ArrayList<String>();
+        } finally {
+            IOUtils.closeQuietly(is);
+        }
+    }
+    
+    public static List<String> readCSVFile(InputStream inputStream) {
+        List<String> lines = new ArrayList<String>();
+        BufferedReader br = null;
+        try {
+            br = new BufferedReader(new InputStreamReader(inputStream));
+            String line = null;
+            while ((line = br.readLine()) != null) {
+                if (line == null || line.trim().isEmpty()) {
+                    continue;
+                }
+                if(!line.startsWith("#")) {
+                    lines.add(line);
+                }
+            }
+        } catch (Exception ex) {
+            return new ArrayList<String>();
+        } finally {
+            IOUtils.closeQuietly(br);
+        }
+        return lines;
+    }
 
     public static String readFile2String(InputStream inputStream) {
         BufferedReader br = null;
