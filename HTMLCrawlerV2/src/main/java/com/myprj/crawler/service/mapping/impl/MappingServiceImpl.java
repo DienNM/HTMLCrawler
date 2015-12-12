@@ -48,11 +48,8 @@ public class MappingServiceImpl implements MappingService {
             Object indexValue = indexMapping.get(key);
             Object targetValue = values.get(key);
 
-            if (indexValue == null || targetValue == null) {
+            if (indexValue == null || targetValue == null || StringUtils.isEmpty(targetValue.toString())) {
                 continue;
-            }
-            if (!indexValue.getClass().getName().equals(targetValue.getClass().getName())) {
-                logger.warn("Key: " + key + " not in mapping value");
             }
             if (indexValue instanceof String) {
                 mapValue2Index(indexValue.toString(), targetValue, mapFields, mapAttributes);

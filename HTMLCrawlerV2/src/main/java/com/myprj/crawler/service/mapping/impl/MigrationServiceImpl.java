@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -77,6 +78,7 @@ public class MigrationServiceImpl implements MigrationService {
         consolidation.setItemKey(crawlResult.getItemKey());
         consolidation.setSiteKey(crawlResult.getSiteKey());
         consolidation.setResultKey(crawlResult.getResultKey());
+        consolidation.setUrl(crawlResult.getUrl());
         ConsolidationData.createMd5Key(consolidation);
         
         Map<String, Object> contentObject = (Map<String, Object>) crawlResult.getDetail().get("content");
@@ -98,7 +100,7 @@ public class MigrationServiceImpl implements MigrationService {
             attribute.setConsolidationId(consolidation.getMd5Key());
             attribute.setName(attributeName);
             Object value = mapAttributes.get(attributeName);
-            if (value == null) {
+            if (value == null || StringUtils.isEmpty(value.toString())) {
                 continue;
             }
             if (value instanceof String) {
