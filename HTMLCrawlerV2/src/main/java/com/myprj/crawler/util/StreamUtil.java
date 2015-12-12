@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -51,6 +52,18 @@ public final class StreamUtil {
 
     public static void write(File file, List<String> lines, boolean append) {
         write(file, StringUtils.join(lines, System.lineSeparator()), append);
+    }
+    
+    public static String readFile2String(String fileName) {
+        InputStream is = null;
+        try {
+            is = new FileInputStream(fileName);
+            return readFile2String(is);
+        } catch (Exception e) {
+            return null;
+        } finally {
+            IOUtils.closeQuietly(is);
+        }
     }
 
     public static String readFile2String(InputStream inputStream) {
