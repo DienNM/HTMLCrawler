@@ -1,6 +1,8 @@
 // Start Debug
 export MAVEN_OPTS="-Xdebug -Xnoagent -Djava.compiler=NONE -Xrunjdwp:transport=dt_socket,address=8002,server=y,suspend=n"
 
+mvn install:install-file -DgroupId=com.myprj -DartifactId=htmlcrawler -Dversion=1.0 -Dpackaging=jar -Dfile=htmlcrawler.jar -DgeneratePom=true
+
 mvn jetty:run
 
 Test:
