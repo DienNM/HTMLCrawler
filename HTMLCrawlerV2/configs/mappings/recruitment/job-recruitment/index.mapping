@@ -31,8 +31,8 @@
 
     "quantity": "A@quantity",
     "ageRequired" : "A@ageRequired",
-    "genderRequired" : "A@quantity",
-    "resumeRequired": ["A@genderRequired"],
+    "genderRequired" : "A@genderRequired",
+    "resumeRequired": ["A@resumeRequired"],
     "jobRequired": ["A@jobRequired"],
     "jobDescription": ["A@jobDescription"],
     "offers": ["A@offers"],
