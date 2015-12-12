@@ -1,5 +1,6 @@
 package com.myprj.crawler.web.facades.impl;
 
+import java.security.InvalidParameterException;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -49,8 +50,7 @@ public class MigrationFacadeImpl implements MigrationFacade {
         String mappingFullFileName = Config.get("mapping.full.file");
         List<String> csvLines = StreamUtil.readCSVFile(mappingFullFileName);
         if (csvLines.isEmpty()) {
-            logger.warn("Mapping file is empty");
-            return;
+            throw new InvalidParameterException("Mapping file is empty");
         }
         for (String line : csvLines) {
             String[] items = line.split(Pattern.quote("|"));

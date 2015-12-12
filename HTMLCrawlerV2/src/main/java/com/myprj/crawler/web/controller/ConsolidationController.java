@@ -1,4 +1,4 @@
-package com.myprj.crawler.web.controller.target;
+package com.myprj.crawler.web.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -10,9 +10,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.myprj.crawler.domain.target.ConsolidationData;
 import com.myprj.crawler.service.target.ConsolidationService;
-import com.myprj.crawler.web.controller.AbstractController;
 import com.myprj.crawler.web.dto.JsonResponse;
 import com.myprj.crawler.web.enumeration.DTOLevel;
+import com.myprj.crawler.web.facades.MigrationFacade;
 
 /**
  * @author DienNM (DEE)
@@ -24,6 +24,9 @@ public class ConsolidationController extends AbstractController {
 
     @Autowired
     private ConsolidationService consolidationService;
+
+    @Autowired
+    private MigrationFacade migrationFacade;
 
     @RequestMapping(value = "/{md5Key}", method = RequestMethod.GET)
     @ResponseBody
@@ -41,5 +44,19 @@ public class ConsolidationController extends AbstractController {
         response.putData(consolidation);
 
         return response;
+    }
+
+    @RequestMapping(value = "/migration/full", method = RequestMethod.POST)
+    @ResponseBody
+    public JsonResponse doMigration() {
+        try {
+            migrationFacade.doFullMapping();
+            JsonResponse jsonResponse = new JsonResponse(true);
+            return jsonResponse;
+        } catch (Exception e) {
+            JsonResponse jsonResponse = new JsonResponse(false);
+            jsonResponse.putMessage(e.getMessage());
+            return jsonResponse;
+        }
     }
 }
