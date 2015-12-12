@@ -12,6 +12,7 @@ import com.myprj.crawler.annotation.DataTransfer;
 import com.myprj.crawler.annotation.EntityTransfer;
 import com.myprj.crawler.domain.AuditData;
 import com.myprj.crawler.enumeration.ResultStatus;
+import com.myprj.crawler.model.crawl.CrawlResultId;
 import com.myprj.crawler.model.crawl.CrawlResultModel;
 import com.myprj.crawler.util.converter.EntityConverter;
 import com.myprj.crawler.util.converter.ObjectConverter;
@@ -41,7 +42,7 @@ public class CrawlResultData extends AuditData {
     private String categoryKey;
     
     @DataTransfer("siteKey")
-    @EntityTransfer("site")
+    @EntityTransfer("site_key")
     private String siteKey;
 
     @DataTransfer("requestId")
@@ -83,6 +84,12 @@ public class CrawlResultData extends AuditData {
         EntityConverter.convert2Data(source, dest, new ObjectConverter<CrawlResultModel, CrawlResultData>() {
             @Override
             public void convert(CrawlResultModel src, CrawlResultData dest) {
+                CrawlResultId id = src.getId();
+                dest.setCategoryKey(id.getCategoryKey());
+                dest.setItemKey(id.getItemKey());
+                dest.setSiteKey(id.getSiteKey());
+                dest.setResultKey(id.getResultKey());
+
                 dest.setDetail(deserialize(src.getDetail(), Map.class));
             }
         });
@@ -92,6 +99,12 @@ public class CrawlResultData extends AuditData {
         EntityConverter.convert2Entity(source, dest, new ObjectConverter<CrawlResultData, CrawlResultModel>() {
             @Override
             public void convert(CrawlResultData src, CrawlResultModel dest) {
+                CrawlResultId id = new CrawlResultId();
+                id.setCategoryKey(src.getCategoryKey());
+                id.setItemKey(src.getItemKey());
+                id.setSiteKey(src.getSiteKey());
+                id.setResultKey(src.getResultKey());
+                dest.setId(id);
                 dest.setDetail(serialize(src.getDetail()));
             }
         });

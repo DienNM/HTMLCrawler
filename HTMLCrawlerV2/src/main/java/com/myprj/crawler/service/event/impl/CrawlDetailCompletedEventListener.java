@@ -1,7 +1,5 @@
 package com.myprj.crawler.service.event.impl;
 
-import java.util.Map;
-
 import javax.annotation.PostConstruct;
 
 import org.apache.commons.lang3.StringUtils;
@@ -15,6 +13,7 @@ import com.myprj.crawler.repository.CrawlResultRepository;
 import com.myprj.crawler.service.CrawlResultService;
 import com.myprj.crawler.service.event.CrawlEventListener;
 import com.myprj.crawler.service.event.CrawlEventPublisher;
+import com.myprj.crawler.util.Md5;
 
 /**
  * @author DienNM (DEE)
@@ -48,7 +47,7 @@ public class CrawlDetailCompletedEventListener implements CrawlEventListener<Cra
                 logger.warn("Cannot crawl any information of " + crawlResult.getItemKey());
                 return;
             }
-            String resultKey = getResultKey(crawlResult);
+            String resultKey = Md5.hex(crawlResult.getUrl());
             if(StringUtils.isEmpty(resultKey)) {
                 logger.warn("Result does not have Result Id (key) ");
                 return;
@@ -58,19 +57,6 @@ public class CrawlDetailCompletedEventListener implements CrawlEventListener<Cra
         }
     }
     
-    @SuppressWarnings("unchecked")
-    private String getResultKey(CrawlResultData crawlResult) {
-        Map<String, Object> map =  (Map<String, Object>)crawlResult.getDetail().get("content");
-        if(map == null || map.isEmpty()) {
-            return null;
-        }
-        Object objKey = map.get("key");
-        if(objKey == null) {
-            return null;
-        }
-        return objKey.toString().trim();
-    }
-
     @Override
     public Class<CrawlDetailCompletedEvent> getEventType() {
         return CrawlDetailCompletedEvent.class;

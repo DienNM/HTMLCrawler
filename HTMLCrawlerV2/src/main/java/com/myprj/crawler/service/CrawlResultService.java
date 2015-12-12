@@ -12,7 +12,7 @@ public interface CrawlResultService {
     
     CrawlResultData saveOrUpdate(CrawlResultData crawlResult);
     
-    CrawlResultData get(long id);
+    CrawlResultData get(String siteKey, String categoryKey, String itemKey, String resultKey);
     
     List<CrawlResultData> getByItemKey(String itemKey);
     

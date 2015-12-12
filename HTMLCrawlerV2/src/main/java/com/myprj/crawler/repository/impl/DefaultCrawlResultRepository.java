@@ -6,6 +6,7 @@ import javax.persistence.Query;
 
 import org.springframework.stereotype.Repository;
 
+import com.myprj.crawler.model.crawl.CrawlResultId;
 import com.myprj.crawler.model.crawl.CrawlResultModel;
 import com.myprj.crawler.repository.CrawlResultRepository;
 
@@ -13,7 +14,7 @@ import com.myprj.crawler.repository.CrawlResultRepository;
  * @author DienNM (DEE)
  */
 @Repository
-public class DefaultCrawlResultRepository extends DefaultGenericDao<CrawlResultModel, Long> implements
+public class DefaultCrawlResultRepository extends DefaultGenericDao<CrawlResultModel, CrawlResultId> implements
         CrawlResultRepository {
 
     @Override
@@ -55,28 +56,6 @@ public class DefaultCrawlResultRepository extends DefaultGenericDao<CrawlResultM
         query.setParameter("requestId", requestId);
 
         return query.getResultList();
-    }
-
-    @SuppressWarnings("unchecked")
-    @Override
-    public CrawlResultModel findByResultKey(String resultKey, String siteKey, String categoryKey, String itemKey) {
-        StringBuilder queryStr = new StringBuilder("FROM " + getClassName());
-        queryStr.append(" WHERE resultKey = :resultKey AND ");
-        queryStr.append(" siteKey = :siteKey AND ");
-        queryStr.append(" categoryKey = :categoryKey AND ");
-        queryStr.append(" itemKey = :itemKey ");
-
-        Query query = entityManager.createQuery(queryStr.toString(), getClazz());
-        query.setParameter("resultKey", resultKey);
-        query.setParameter("siteKey", siteKey);
-        query.setParameter("categoryKey", categoryKey);
-        query.setParameter("itemKey", itemKey);
-
-        List<CrawlResultModel> results = query.getResultList();
-        if(results.isEmpty()) {
-            return null;
-        }
-        return results.get(0);
     }
 
 }

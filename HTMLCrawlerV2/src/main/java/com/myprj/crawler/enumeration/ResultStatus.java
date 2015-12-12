@@ -6,6 +6,7 @@ package com.myprj.crawler.enumeration;
 
 public enum ResultStatus {
     
+    MIGRATED,
     COMPLETED,
     MISSING,
     NEW

@@ -4,8 +4,6 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.Table;
@@ -23,24 +21,11 @@ public class CrawlResultModel extends AuditModel {
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
-    private long id;
+    private CrawlResultId id;
 
     @Column(name = "request_id", length = 30)
     private String requestId;
-
-    @Column(name = "result_key", length = 150)
-    private String resultKey;
-
-    @Column(name = "item_key")
-    private String itemKey;
-
-    @Column(name = "category_key")
-    private String categoryKey;
-
-    @Column(name = "site")
-    private String siteKey;
 
     @Column(name = "detail")
     @Lob
@@ -56,11 +41,11 @@ public class CrawlResultModel extends AuditModel {
     public CrawlResultModel() {
     }
 
-    public long getId() {
+    public CrawlResultId getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(CrawlResultId id) {
         this.id = id;
     }
 
@@ -94,38 +79,6 @@ public class CrawlResultModel extends AuditModel {
 
     public void setRequestId(String requestId) {
         this.requestId = requestId;
-    }
-
-    public String getItemKey() {
-        return itemKey;
-    }
-
-    public void setItemKey(String itemKey) {
-        this.itemKey = itemKey;
-    }
-
-    public String getCategoryKey() {
-        return categoryKey;
-    }
-
-    public void setCategoryKey(String categoryKey) {
-        this.categoryKey = categoryKey;
-    }
-
-    public String getSiteKey() {
-        return siteKey;
-    }
-
-    public void setSiteKey(String site) {
-        this.siteKey = site;
-    }
-
-    public String getResultKey() {
-        return resultKey;
-    }
-
-    public void setResultKey(String resultKey) {
-        this.resultKey = resultKey;
     }
 
 }
