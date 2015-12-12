@@ -22,7 +22,6 @@ public class CrawlResultDataTest extends AbstractDomain {
     @Test
     public void testConvertDomain2Entity() {
         CrawlResultData source = new CrawlResultData();
-        source.setId(1);
         source.setItemKey("item-key-1");
         source.setCategoryKey("cate-key 1");
 
