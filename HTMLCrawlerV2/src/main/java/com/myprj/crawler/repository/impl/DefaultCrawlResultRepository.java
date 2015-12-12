@@ -28,9 +28,9 @@ public class DefaultCrawlResultRepository extends DefaultGenericDao<CrawlResultM
     @Override
     public List<CrawlResultModel> find(String siteKey, String categoryKey, String itemKey, Pageable pageable) {
         StringBuilder queryStr = new StringBuilder("FROM " + getClassName());
-        queryStr.append(" WHERE siteKey = :siteKey AND "
-                + " categoryKey = :categoryKey AND "
-                + " itemKey = :itemKey ");
+        queryStr.append(" WHERE id.siteKey = :siteKey AND "
+                + " id.categoryKey = :categoryKey AND "
+                + " id.itemKey = :itemKey ");
 
         Query query = entityManager.createQuery(queryStr.toString(), getClazz());
         query.setParameter("siteKey", categoryKey);
@@ -48,9 +48,9 @@ public class DefaultCrawlResultRepository extends DefaultGenericDao<CrawlResultM
     public PageResult<CrawlResultModel> findPaging(String siteKey, String categoryKey, String itemKey, Pageable pageable) {
         StringBuilder selectQuery = new StringBuilder("FROM " + getClassName());
         StringBuilder countQuery = new StringBuilder("SELECT count(*) FROM " + getClassName());
-        String whereClause =  " WHERE siteKey = :siteKey AND "
-                + " categoryKey = :categoryKey AND "
-                + " itemKey = :itemKey ";
+        String whereClause =  " WHERE id.siteKey = :siteKey AND "
+                + " id.categoryKey = :categoryKey AND "
+                + " id.itemKey = :itemKey ";
         
         selectQuery.append(whereClause);
         countQuery.append(whereClause);

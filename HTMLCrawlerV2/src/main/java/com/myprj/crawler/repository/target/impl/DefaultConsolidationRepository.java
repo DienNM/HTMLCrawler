@@ -25,11 +25,11 @@ public class DefaultConsolidationRepository extends DefaultGenericDao<Consolidat
 
     @SuppressWarnings("unchecked")
     @Override
-    public List<ConsolidationModel> findByCategoryAndSite(String category, String site) {
+    public List<ConsolidationModel> findByCategoryAndSite(String category, String siteKey) {
         Query query = entityManager.createQuery("FROM " + getClassName()
-                + " WHERE categoryKey = :categoryKey AND site = :site ");
+                + " WHERE id.categoryKey = :categoryKey AND id.siteKey = :siteKey ");
         query.setParameter("categoryKey", category);
-        query.setParameter("site", site);
+        query.setParameter("siteKey", siteKey);
         return query.getResultList();
     }
 

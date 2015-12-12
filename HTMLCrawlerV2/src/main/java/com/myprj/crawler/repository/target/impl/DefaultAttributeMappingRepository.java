@@ -27,7 +27,7 @@ public class DefaultAttributeMappingRepository extends DefaultGenericDao<Attribu
     @Override
     public List<AttributeMappingModel> findByGroup(String siteKey, String categoryKey, String itemKey) {
         Query query = entityManager.createQuery("FROM " + getClassName()
-                + " WHERE siteKey = :siteKey AND categoryKey = :categoryKey AND itemKey = :itemKey ");
+                + " WHERE id.siteKey = :siteKey AND id.categoryKey = :categoryKey AND id.itemKey = :itemKey ");
         query.setParameter("siteKey", siteKey);
         query.setParameter("categoryKey", categoryKey);
         query.setParameter("itemKey", itemKey);

@@ -28,7 +28,7 @@ public class DefaultConsolidationAttributeRepository extends
     @Override
     public List<ConsolidationAttributeModel> findByConsolidationId(String consolidationId) {
         Query query = entityManager
-                .createQuery("FROM " + getClassName() + " WHERE consolidationId = :consolidationId ");
+                .createQuery("FROM " + getClassName() + " WHERE id.consolidationId = :consolidationId ");
         query.setParameter("consolidationId", consolidationId);
         return query.getResultList();
     }
@@ -36,7 +36,7 @@ public class DefaultConsolidationAttributeRepository extends
     @Override
     public void deleteByConsolidationId(String consolidationId) {
         Query query = entityManager.createQuery("DELETE FROM " + getClassName()
-                + " WHERE consolidationId = :consolidationId ");
+                + " WHERE id.consolidationId = :consolidationId ");
         query.setParameter("consolidationId", consolidationId);
         query.executeUpdate();
     }
