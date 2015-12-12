@@ -1,0 +1,44 @@
+{ 
+    "key" : "A@sku",   			
+    "jobName":"A@jobName|C@name", 
+    "jobTitle":"A@jobTitle", 
+    "jobType": "A@jobType",
+    "salary" : "A@salary",
+    "education":"A@education",
+    "experience": "A@experience",
+    "categories" : ["A@categories"],
+    "jobExpired": "A@jobExpired",
+    "workplace" : ["A@workplace"],
+
+    "company" : {
+        "name" : "A@companyName",
+        "phone" : "A@companyPhone",
+        "contact" : "A@companyContact",
+        "size" : "A@companySize",
+        "introduction" : "A@companyIntro",
+        "address" : "A@companyAddress",
+        "logo" : "A@companyLogo"
+    },
+
+    "contact" : {
+        "name" : "A@contactName",
+        "email" : "A@contactEmail",
+        "address" : "A@contactAddress",
+        "phone" : "A@contactPhone",
+        "mobile" : "A@contactMobile",
+        "resumeInfo" : "A@contactResumeInfo"
+    },
+
+    "quantity": "A@quantity",
+    "ageRequired" : "A@ageRequired",
+    "genderRequired" : "A@quantity",
+    "resumeRequired": ["A@genderRequired"],
+    "jobRequired": ["A@jobRequired"],
+    "jobDescription": ["A@jobDescription"],
+    "offers": ["A@offers"],
+
+    "attributes":[{ 
+        "key" : "TEXT",
+        "value" : "TEXT"
+    }]
+}

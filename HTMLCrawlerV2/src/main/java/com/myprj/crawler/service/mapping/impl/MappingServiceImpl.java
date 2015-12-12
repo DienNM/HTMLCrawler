@@ -8,10 +8,12 @@ import java.util.regex.Pattern;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.myprj.crawler.service.mapping.MappingService;
 import com.myprj.crawler.service.mapping.Pair;
+import com.myprj.crawler.service.rule.RuleEngine;
 
 /**
  * @author DienNM (DEE)
@@ -26,6 +28,8 @@ public class MappingServiceImpl implements MappingService {
     private final static String C_AT = "C@".intern();
     private final static String PILE = Pattern.quote("|").intern();
     
+    @Autowired
+    private RuleEngine ruleEngine;
 
     @Override
     public Pair<Map<String, Object>, Map<String, Object>> doMappingIndex(Map<String, Object> indexMappings,
@@ -36,6 +40,12 @@ public class MappingServiceImpl implements MappingService {
         Pair<Map<String, Object>, Map<String, Object>> result = new Pair<Map<String, Object>, Map<String, Object>>(
                 mapFields, mapAttributes);
         return result;
+    }
+    
+    @Override
+    public Map<String, Object> applyRuleMapping(Map<String, Object> originalObject) {
+        
+        return null;
     }
 
     @SuppressWarnings("unchecked")

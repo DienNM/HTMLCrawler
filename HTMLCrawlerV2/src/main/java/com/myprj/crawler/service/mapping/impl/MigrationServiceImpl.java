@@ -82,6 +82,7 @@ public class MigrationServiceImpl implements MigrationService {
         ConsolidationData.createMd5Key(consolidation);
         
         Map<String, Object> contentObject = (Map<String, Object>) crawlResult.getDetail().get("content");
+        
         Pair<Map<String, Object>, Map<String, Object>> resultPair = mappingService.doMappingIndex(indexMapping,
                 contentObject);
 

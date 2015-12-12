@@ -10,5 +10,7 @@ public interface MappingService {
 
     Pair<Map<String, Object>, Map<String, Object>> doMappingIndex(Map<String, Object> indexMappings,
             Map<String, Object> targetValues);
+    
+    Map<String, Object> applyRuleMapping(Map<String, Object> originalObject);
 
 }

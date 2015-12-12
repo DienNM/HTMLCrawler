@@ -1,0 +1,43 @@
+
+# For Consolidation, add prefix with C@
+C@name=
+
+# Attributes
+# attribute_name|rule_code
+
+sku=
+jobName=R0001-Prefix
+jobTitle=
+jobType=
+salary=
+jobTitle=
+jobType=
+salary=
+education=
+experience=
+categories=
+jobExpired=
+workplace=
+
+companyName=
+companyPhone=
+companyContact=
+companySize=
+companyIntro=
+companyAddress=
+companyLogo=
+
+contactName=
+contactEmail=
+contactAddress=
+contactPhone=
+contactMobile=
+contactResumeInfo=
+
+quantity=
+ageRequired=
+quantity=
+genderRequired=
+jobRequired=
+jobDescription=
+offers=
