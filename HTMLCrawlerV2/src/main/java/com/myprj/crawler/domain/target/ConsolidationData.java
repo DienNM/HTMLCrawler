@@ -3,15 +3,12 @@ package com.myprj.crawler.domain.target;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-
-import com.myprj.crawler.annotation.Consolidation;
 import com.myprj.crawler.annotation.EntityTransfer;
 import com.myprj.crawler.model.AuditModel;
+import com.myprj.crawler.model.target.ConsolidationId;
 import com.myprj.crawler.model.target.ConsolidationModel;
 import com.myprj.crawler.util.converter.EntityConverter;
+import com.myprj.crawler.util.converter.ObjectConverter;
 
 /**
  * @author DienNM (DEE)
@@ -21,32 +18,30 @@ public class ConsolidationData extends AuditModel {
 
     private static final long serialVersionUID = 1L;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @EntityTransfer("id")
-    private long id;
-
-    @EntityTransfer("result_key")
-    @Consolidation("resultKey")
     private String resultKey;
 
-    @EntityTransfer("name")
-    @Consolidation("name")
-    private String name;
-
-    @EntityTransfer("category_key")
     private String categoryKey;
 
-    @EntityTransfer("item_key")
     private String itemKey;
 
-    @EntityTransfer("site")
-    private String site;
+    private String siteKey;
+
+    @EntityTransfer("md5_key")
+    private String md5Key;
+
+    @EntityTransfer("md5_attributes")
+    private String md5Attributes;
+
+    @EntityTransfer("name")
+    private String name;
+
+    @EntityTransfer("name")
+    private String url;
 
     private List<ConsolidationAttributeData> attributes = new ArrayList<ConsolidationAttributeData>();
 
     public ConsolidationData() {
-        
+
     }
 
     public static void toDatas(List<ConsolidationModel> sources, List<ConsolidationData> dests) {
@@ -66,19 +61,32 @@ public class ConsolidationData extends AuditModel {
     }
 
     public static void toData(ConsolidationModel source, ConsolidationData dest) {
-        EntityConverter.convert2Data(source, dest);
+        EntityConverter.convert2Data(source, dest, new ObjectConverter<ConsolidationModel, ConsolidationData>() {
+
+            @Override
+            public void convert(ConsolidationModel src, ConsolidationData dest) {
+                ConsolidationId id = src.getId();
+                dest.setCategoryKey(id.getCategoryKey());
+                dest.setItemKey(id.getItemKey());
+                dest.setSiteKey(id.getSiteKey());
+                dest.setResultKey(id.getResultKey());
+            }
+        });
     }
 
     public static void toModel(ConsolidationData source, ConsolidationModel dest) {
-        EntityConverter.convert2Entity(source, dest);
-    }
+        EntityConverter.convert2Entity(source, dest, new ObjectConverter<ConsolidationData, ConsolidationModel>() {
 
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
+            @Override
+            public void convert(ConsolidationData src, ConsolidationModel dest) {
+                ConsolidationId id = new ConsolidationId();
+                id.setCategoryKey(src.getCategoryKey());
+                id.setItemKey(src.getItemKey());
+                id.setSiteKey(src.getSiteKey());
+                id.setResultKey(src.getResultKey());
+                dest.setId(id);
+            }
+        });
     }
 
     public String getName() {
@@ -105,12 +113,12 @@ public class ConsolidationData extends AuditModel {
         this.itemKey = itemKey;
     }
 
-    public String getSite() {
-        return site;
+    public String getSiteKey() {
+        return siteKey;
     }
 
-    public void setSite(String site) {
-        this.site = site;
+    public void setSiteKey(String siteKey) {
+        this.siteKey = siteKey;
     }
 
     public String getResultKey() {
@@ -127,5 +135,29 @@ public class ConsolidationData extends AuditModel {
 
     public void setAttributes(List<ConsolidationAttributeData> attributes) {
         this.attributes = attributes;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    public String getMd5Key() {
+        return md5Key;
+    }
+
+    public void setMd5Key(String md5Key) {
+        this.md5Key = md5Key;
+    }
+
+    public String getMd5Attributes() {
+        return md5Attributes;
+    }
+
+    public void setMd5Attributes(String md5Attributes) {
+        this.md5Attributes = md5Attributes;
     }
 }

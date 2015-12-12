@@ -19,26 +19,26 @@ import com.myprj.crawler.web.enumeration.DTOLevel;
  */
 
 @Controller
-@RequestMapping(value = "/targets/products", produces = "application/json")
-public class ProductController extends AbstractController {
+@RequestMapping(value = "/consolidations", produces = "application/json")
+public class ConsolidationController extends AbstractController {
 
     @Autowired
-    private ConsolidationService productService;
+    private ConsolidationService consolidationService;
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/{md5Key}", method = RequestMethod.GET)
     @ResponseBody
-    public JsonResponse getById(@PathVariable(value = "id") long id,
+    public JsonResponse getConsolidationByMd5Key(@PathVariable(value = "md5Key") String md5Key,
             @RequestParam(value = "level", defaultValue = "DEFAULT") DTOLevel target) {
 
-        ConsolidationData product = productService.getById(id);
-        if (product == null) {
+        ConsolidationData consolidation = consolidationService.getByMd5Key(md5Key);
+        if (consolidation == null) {
             JsonResponse jsonResponse = new JsonResponse(false);
-            jsonResponse.putMessage("Product ID " + id + " not found");
+            jsonResponse.putMessage("Consolidation key " + md5Key + " not found");
             return jsonResponse;
         }
 
         JsonResponse response = new JsonResponse(true);
-        response.putData(product);
+        response.putData(consolidation);
 
         return response;
     }

@@ -6,6 +6,7 @@ import javax.persistence.Query;
 
 import org.springframework.stereotype.Repository;
 
+import com.myprj.crawler.model.target.ConsolidationId;
 import com.myprj.crawler.model.target.ConsolidationModel;
 import com.myprj.crawler.repository.impl.DefaultGenericDao;
 import com.myprj.crawler.repository.target.ConsolidationRepository;
@@ -14,19 +15,12 @@ import com.myprj.crawler.repository.target.ConsolidationRepository;
  * @author DienNM (DEE)
  */
 @Repository
-public class DefaultConsolidationRepository extends DefaultGenericDao<ConsolidationModel, Long> implements ConsolidationRepository {
+public class DefaultConsolidationRepository extends DefaultGenericDao<ConsolidationModel, ConsolidationId> implements
+        ConsolidationRepository {
 
-    @SuppressWarnings("unchecked")
     @Override
-    public ConsolidationModel findByKeyAndSite(String key, String site) {
-        Query query = entityManager.createQuery("FROM " + getClassName() + " WHERE key = :key AND site = :site ");
-        query.setParameter("key", key);
-        query.setParameter("site", site);
-        List<ConsolidationModel> consolidationModels = query.getResultList();
-        if (consolidationModels.isEmpty()) {
-            return null;
-        }
-        return consolidationModels.get(0);
+    protected Class<ConsolidationModel> getTargetClass() {
+        return ConsolidationModel.class;
     }
 
     @SuppressWarnings("unchecked")
@@ -41,15 +35,14 @@ public class DefaultConsolidationRepository extends DefaultGenericDao<Consolidat
 
     @SuppressWarnings("unchecked")
     @Override
-    public List<ConsolidationModel> findByName(String name) {
-        Query query = entityManager.createQuery("FROM " + getClassName() + " WHERE name LIKE :name ");
-        query.setParameter("name", "%" + name + "%");
-        return query.getResultList();
-    }
-
-    @Override
-    protected Class<ConsolidationModel> getTargetClass() {
-        return ConsolidationModel.class;
+    public ConsolidationModel findByMd5Key(String md5Key) {
+        Query query = entityManager.createQuery("FROM " + getClassName() + " WHERE md5Key = :md5Key ");
+        query.setParameter("md5Key", md5Key);
+        List<ConsolidationModel> consolidationModels = query.getResultList();
+        if (consolidationModels.isEmpty()) {
+            return null;
+        }
+        return consolidationModels.get(0);
     }
 
 }

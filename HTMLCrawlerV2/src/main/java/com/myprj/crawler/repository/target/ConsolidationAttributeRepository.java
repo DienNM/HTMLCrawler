@@ -2,6 +2,7 @@ package com.myprj.crawler.repository.target;
 
 import java.util.List;
 
+import com.myprj.crawler.model.target.ConsolidationAttributeId;
 import com.myprj.crawler.model.target.ConsolidationAttributeModel;
 import com.myprj.crawler.repository.GenericDao;
 
@@ -9,11 +10,9 @@ import com.myprj.crawler.repository.GenericDao;
  * @author DienNM (DEE)
  */
 
-public interface ConsolidationAttributeRepository extends GenericDao<ConsolidationAttributeModel, Long> {
+public interface ConsolidationAttributeRepository extends GenericDao<ConsolidationAttributeModel, ConsolidationAttributeId> {
     
-    List<ConsolidationAttributeModel> findByConsolidationId(long consolidationId);
+    List<ConsolidationAttributeModel> findByConsolidationId(String consolidationId);
 
-    ConsolidationAttributeModel findByNameAndConsolidationId(String name, long consolidationId);
-    
-    void deleteByConsolidationId(long consolidationId);
+    void deleteByConsolidationId(String consolidationId);
 }

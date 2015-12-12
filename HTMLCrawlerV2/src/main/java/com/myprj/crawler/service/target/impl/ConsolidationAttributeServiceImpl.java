@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.myprj.crawler.domain.target.ConsolidationAttributeData;
+import com.myprj.crawler.model.target.ConsolidationAttributeId;
 import com.myprj.crawler.model.target.ConsolidationAttributeModel;
 import com.myprj.crawler.repository.target.ConsolidationAttributeRepository;
 import com.myprj.crawler.service.target.ConsolidationAttributeService;
@@ -19,37 +20,25 @@ public class ConsolidationAttributeServiceImpl implements ConsolidationAttribute
 
     @Autowired
     private ConsolidationAttributeRepository consolidationAttributeRepository;
-    
+
     @Override
-    public List<ConsolidationAttributeData> getByConsolidationId(long consolidationId) {
-        List<ConsolidationAttributeModel> consolidationAttributeModels = consolidationAttributeRepository.findByConsolidationId(consolidationId);
+    public List<ConsolidationAttributeData> getByConsolidationId(String consolidationId) {
+        List<ConsolidationAttributeModel> consolidationAttributeModels = consolidationAttributeRepository
+                .findByConsolidationId(consolidationId);
         List<ConsolidationAttributeData> consolidationAttributeDatas = new ArrayList<ConsolidationAttributeData>();
         ConsolidationAttributeData.toDatas(consolidationAttributeModels, consolidationAttributeDatas);
         return consolidationAttributeDatas;
     }
 
     @Override
-    public ConsolidationAttributeData getById(long id) {
+    public ConsolidationAttributeData getById(ConsolidationAttributeId id) {
         ConsolidationAttributeModel consolidationAttributeModel = consolidationAttributeRepository.find(id);
-        if(consolidationAttributeModel == null) {
+        if (consolidationAttributeModel == null) {
             return null;
         }
         ConsolidationAttributeData consolidationAttributeData = new ConsolidationAttributeData();
         ConsolidationAttributeData.toData(consolidationAttributeModel, consolidationAttributeData);
-        
+
         return consolidationAttributeData;
     }
-
-    @Override
-    public ConsolidationAttributeData get(String name, long consolidationId) {
-        ConsolidationAttributeModel consolidationAttributeModel = consolidationAttributeRepository.findByNameAndConsolidationId(name, consolidationId);
-        if(consolidationAttributeModel == null) {
-            return null;
-        }
-        ConsolidationAttributeData consolidationAttributeData = new ConsolidationAttributeData();
-        ConsolidationAttributeData.toData(consolidationAttributeModel, consolidationAttributeData);
-        
-        return consolidationAttributeData;
-    }
-
 }

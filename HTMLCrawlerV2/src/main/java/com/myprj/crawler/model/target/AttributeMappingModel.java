@@ -17,6 +17,7 @@ public class AttributeMappingModel extends AuditModel {
     private static final long serialVersionUID = 1L;
 
     @Id
+    @Column(name = "id")
     private AttributeMappingId id;
     
     @Column(name = "value_mapping")

@@ -25,10 +25,6 @@ public class CrawlResultData extends AuditData {
 
     private static final long serialVersionUID = 1L;
 
-    @DataTransfer("id")
-    @EntityTransfer("id")
-    private long id;
-
     @DataTransfer("resultKey")
     @EntityTransfer("result_key")
     private String resultKey;
@@ -36,11 +32,11 @@ public class CrawlResultData extends AuditData {
     @DataTransfer("itemKey")
     @EntityTransfer("item_key")
     private String itemKey;
-    
+
     @DataTransfer("categoryKey")
     @EntityTransfer("category_key")
     private String categoryKey;
-    
+
     @DataTransfer("siteKey")
     @EntityTransfer("site_key")
     private String siteKey;
@@ -110,14 +106,6 @@ public class CrawlResultData extends AuditData {
         });
     }
 
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
     public Map<String, Object> getDetail() {
         return detail;
     }
@@ -145,7 +133,7 @@ public class CrawlResultData extends AuditData {
     public String getRequestId() {
         return requestId;
     }
-    
+
     public void setRequestId(String requestId) {
         this.requestId = requestId;
     }

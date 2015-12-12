@@ -2,8 +2,6 @@ package com.myprj.crawler.model.target;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
@@ -20,33 +18,30 @@ public class ConsolidationModel extends AuditModel {
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
-    private long id;
+    private ConsolidationId id;
 
-    @Column(name = "result_key", length = 200)
-    private String resultKey;
+    @Column(name = "md5_key")
+    private String md5Key;
+
+    @Column(name = "md5_attributes")
+    private String md5Attributes;
 
     @Column(name = "name", length = 200)
     private String name;
 
-    @Column(name = "category_key", length = 50)
-    private String categoryKey;
-
-    @Column(name = "item_key", length = 50)
-    private String itemKey;
-
-    @Column(name = "site", length = 50)
-    private String site;
+    @Column(name = "url", length = 1000)
+    private String url;
+    
 
     public ConsolidationModel() {
     }
-
-    public long getId() {
+    
+    public ConsolidationId getId() {
         return id;
     }
-
-    public void setId(long id) {
+    
+    public void setId(ConsolidationId id) {
         this.id = id;
     }
 
@@ -58,35 +53,28 @@ public class ConsolidationModel extends AuditModel {
         this.name = name;
     }
 
-    public String getCategoryKey() {
-        return categoryKey;
+    public String getUrl() {
+        return url;
     }
 
-    public void setCategoryKey(String categoryKey) {
-        this.categoryKey = categoryKey;
+    public void setUrl(String url) {
+        this.url = url;
     }
 
-    public String getItemKey() {
-        return itemKey;
+    public String getMd5Key() {
+        return md5Key;
     }
 
-    public void setItemKey(String itemKey) {
-        this.itemKey = itemKey;
+    public void setMd5Key(String md5Key) {
+        this.md5Key = md5Key;
     }
 
-    public String getSite() {
-        return site;
+    public String getMd5Attributes() {
+        return md5Attributes;
     }
 
-    public void setSite(String site) {
-        this.site = site;
+    public void setMd5Attributes(String md5Attributes) {
+        this.md5Attributes = md5Attributes;
     }
-
-    public String getResultKey() {
-        return resultKey;
-    }
-
-    public void setResultKey(String key) {
-        this.resultKey = key;
-    }
+    
 }

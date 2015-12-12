@@ -1,10 +1,8 @@
 package com.myprj.crawler.service.target.impl;
 
-import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.myprj.crawler.domain.target.ConsolidationAttributeData;
 import com.myprj.crawler.domain.target.ConsolidationData;
 import com.myprj.crawler.model.target.ConsolidationAttributeModel;
+import com.myprj.crawler.model.target.ConsolidationId;
 import com.myprj.crawler.model.target.ConsolidationModel;
 import com.myprj.crawler.repository.target.ConsolidationAttributeRepository;
 import com.myprj.crawler.repository.target.ConsolidationRepository;
@@ -38,7 +37,7 @@ public class ConsolidationServiceImpl implements ConsolidationService {
     private ConsolidationAttributeService consolidationAttributeService;
 
     @Override
-    public ConsolidationData getById(long id) {
+    public ConsolidationData getById(ConsolidationId id) {
         ConsolidationModel productModel = consolidationRepository.find(id);
         if (productModel == null) {
             return null;
@@ -52,8 +51,8 @@ public class ConsolidationServiceImpl implements ConsolidationService {
     }
 
     @Override
-    public ConsolidationData getByKey(String key, String site) {
-        ConsolidationModel productModel = consolidationRepository.findByKeyAndSite(key, site);
+    public ConsolidationData getByMd5Key(String md5Key) {
+        ConsolidationModel productModel = consolidationRepository.findByMd5Key(md5Key);
         if (productModel == null) {
             return null;
         }
@@ -74,90 +73,37 @@ public class ConsolidationServiceImpl implements ConsolidationService {
     }
 
     @Override
-    public List<ConsolidationData> getByName(String name) {
-        List<ConsolidationModel> productModels = consolidationRepository.findByName(name);
-        List<ConsolidationData> productDatas = new ArrayList<ConsolidationData>();
-        ConsolidationData.toDatas(productModels, productDatas);
-        return productDatas;
-    }
-
-    private List<String> validateAndNormalizeProduct(ConsolidationData product) {
-        List<String> errors = new ArrayList<String>();
-
-        if (StringUtils.isEmpty(product.getResultKey())) {
-            errors.add("Product Key is required");
-        } else {
-            product.setResultKey(product.getResultKey().trim());
-        }
-
-        if (StringUtils.isEmpty(product.getCategoryKey())) {
-            errors.add("Product Category is required");
-        } else {
-            product.setCategoryKey(product.getCategoryKey().trim());
-        }
-
-        if (StringUtils.isEmpty(product.getSite())) {
-            errors.add("Product Site is required");
-        } else {
-            product.setSite(product.getSite().trim());
-        }
-        return errors;
-    }
-
-    @Override
     @Transactional
-    public ConsolidationData save(ConsolidationData product) {
-        List<String> errors = validateAndNormalizeProduct(product);
-        if (!errors.isEmpty()) {
-            logger.error("Product cannot be saved. Errors: {}", errors);
-            return null;
+    public void saveOrUpdate(ConsolidationData consolidation) {
+        ConsolidationModel newObject = new ConsolidationModel();
+        ConsolidationData.toModel(consolidation, newObject);
+
+        ConsolidationModel dbModel = consolidationRepository.find(newObject.getId());
+        if (dbModel == null) {
+            consolidationRepository.save(newObject);
+        } else {
+            if (dbModel.getMd5Attributes().equals(newObject.getMd5Attributes())) {
+                logger.info(dbModel.getId().toString() + " not change. Not updated");
+                return;
+            }
+            dbModel.setName(newObject.getName());
+            dbModel.setUrl(newObject.getUrl());
+            consolidationRepository.update(dbModel);
+            consolidationAttributeRepository.deleteByConsolidationId(dbModel.getMd5Key());
         }
-
-        ConsolidationModel productModel = new ConsolidationModel();
-        ConsolidationData.toModel(product, productModel);
-        consolidationRepository.save(productModel);
-
-        ConsolidationData persisted = new ConsolidationData();
-        ConsolidationData.toData(productModel, persisted);
-
-        List<ConsolidationAttributeData> productAttributeDatas = product.getAttributes();
-        if (!productAttributeDatas.isEmpty()) {
-            List<ConsolidationAttributeModel> productAttributeModels = new ArrayList<ConsolidationAttributeModel>();
-            ConsolidationAttributeData.toModels(productAttributeDatas, productAttributeModels);
-            consolidationAttributeRepository.save(productAttributeModels);
-
-            List<ConsolidationAttributeData> productAttributePersisteds = new ArrayList<ConsolidationAttributeData>();
-            ConsolidationAttributeData.toDatas(productAttributeModels, productAttributePersisteds);
-            persisted.setAttributes(productAttributePersisteds);
-        }
-        return persisted;
-    }
-
-    @Override
-    @Transactional
-    public void update(ConsolidationData product) {
-        ConsolidationModel productModel = consolidationRepository.find(product.getId());
-        if (productModel == null) {
-            throw new InvalidParameterException("Product " + product.getId() + " not found");
-        }
-        productModel = new ConsolidationModel();
-        ConsolidationData.toModel(product, productModel);
-
-        consolidationAttributeRepository.deleteByConsolidationId(product.getId());
-        consolidationRepository.save(productModel);
-
-        List<ConsolidationAttributeData> productAttributeDatas = product.getAttributes();
-        if (!productAttributeDatas.isEmpty()) {
-            List<ConsolidationAttributeModel> productAttributeModels = new ArrayList<ConsolidationAttributeModel>();
-            ConsolidationAttributeData.toModels(productAttributeDatas, productAttributeModels);
-            consolidationAttributeRepository.save(productAttributeModels);
+        List<ConsolidationAttributeData> attributes = consolidation.getAttributes();
+        if (!attributes.isEmpty()) {
+            List<ConsolidationAttributeModel> attributeModels = new ArrayList<ConsolidationAttributeModel>();
+            ConsolidationAttributeData.toModels(attributes, attributeModels);
+            consolidationAttributeRepository.save(attributeModels);
         }
     }
 
     @Override
-    public void populateAttributes(ConsolidationData productData) {
-        List<ConsolidationAttributeData> productAttributeDatas = consolidationAttributeService.getByConsolidationId(productData.getId());
-        productData.setAttributes(productAttributeDatas);
+    public void populateAttributes(ConsolidationData consolidationData) {
+        List<ConsolidationAttributeData> productAttributeDatas = consolidationAttributeService
+                .getByConsolidationId(consolidationData.getMd5Key());
+        consolidationData.setAttributes(productAttributeDatas);
     }
 
 }

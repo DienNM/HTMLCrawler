@@ -35,7 +35,7 @@ public class CrawlResultModel extends AuditModel {
     @Enumerated(EnumType.STRING)
     private ResultStatus status;
 
-    @Column(name = "url")
+    @Column(name = "url", length = 1000)
     private String url;
 
     public CrawlResultModel() {
