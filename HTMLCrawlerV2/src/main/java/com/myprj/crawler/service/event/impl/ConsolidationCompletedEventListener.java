@@ -2,8 +2,6 @@ package com.myprj.crawler.service.event.impl;
 
 import javax.annotation.PostConstruct;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,8 +15,6 @@ import com.myprj.crawler.service.target.ConsolidationService;
  */
 @Service
 public class ConsolidationCompletedEventListener implements CrawlEventListener<ConsolidationCompletedEvent> {
-
-    private Logger logger = LoggerFactory.getLogger(ConsolidationCompletedEventListener.class);
 
     @Autowired
     private CrawlEventPublisher crawlEventPublisher;
@@ -37,7 +33,7 @@ public class ConsolidationCompletedEventListener implements CrawlEventListener<C
         if (event instanceof ConsolidationCompletedEvent) {
             ConsolidationCompletedEvent consolidationEvent = (ConsolidationCompletedEvent) event;
             ConsolidationData consolidation = consolidationEvent.getConsolidation();
-            logger.info("{}", consolidation);
+            consolidationService.saveOrUpdate(consolidation);
         }
     }
 
