@@ -3,11 +3,12 @@ package com.myprj.crawler.domain.target;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
+import com.myprj.crawler.annotation.Consolidation;
+import com.myprj.crawler.annotation.EntityTransfer;
 import com.myprj.crawler.model.AuditModel;
 import com.myprj.crawler.model.target.ConsolidationModel;
 import com.myprj.crawler.util.converter.EntityConverter;
@@ -22,22 +23,24 @@ public class ConsolidationData extends AuditModel {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id")
+    @EntityTransfer("id")
     private long id;
 
-    @Column(name = "result_key", length = 200)
+    @EntityTransfer("result_key")
+    @Consolidation("resultKey")
     private String resultKey;
 
-    @Column(name = "name", length = 200)
+    @EntityTransfer("name")
+    @Consolidation("name")
     private String name;
 
-    @Column(name = "category_key", length = 50)
+    @EntityTransfer("category_key")
     private String categoryKey;
 
-    @Column(name = "item_key", length = 50)
+    @EntityTransfer("item_key")
     private String itemKey;
 
-    @Column(name = "site", length = 50)
+    @EntityTransfer("site")
     private String site;
 
     private List<ConsolidationAttributeData> attributes = new ArrayList<ConsolidationAttributeData>();
