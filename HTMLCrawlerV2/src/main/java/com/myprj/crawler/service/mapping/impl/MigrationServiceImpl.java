@@ -46,7 +46,7 @@ public class MigrationServiceImpl implements MigrationService {
         int pageSize = 300;
         int pageIndex = 0;
         while (true) {
-            Pageable pageable = new Pageable(pageSize, pageIndex);
+            Pageable pageable = new Pageable(pageSize, pageIndex++);
             List<CrawlResultData> crawlResults = crawlResultService.get(migrationParam.getSiteKey(),
                     migrationParam.getCategoryKey(), migrationParam.getItemKey(), pageable);
             if (crawlResults.isEmpty()) {
@@ -70,6 +70,7 @@ public class MigrationServiceImpl implements MigrationService {
         return consolidationDatas;
     }
 
+    @SuppressWarnings("unchecked")
     private ConsolidationData createConsolidation(CrawlResultData crawlResult, Map<String, Object> indexMapping) {
         ConsolidationData consolidation = new ConsolidationData();
         consolidation.setCategoryKey(crawlResult.getCategoryKey());
@@ -77,9 +78,10 @@ public class MigrationServiceImpl implements MigrationService {
         consolidation.setSiteKey(crawlResult.getSiteKey());
         consolidation.setResultKey(crawlResult.getRequestId());
         ConsolidationData.createMd5Key(consolidation);
-
+        
+        Map<String, Object> contentObject = (Map<String, Object>) crawlResult.getDetail().get("content");
         Pair<Map<String, Object>, Map<String, Object>> resultPair = mappingService.doMappingIndex(indexMapping,
-                crawlResult.getDetail());
+                contentObject);
 
         Map<String, Object> mapFields = resultPair.getLeft();
         Map<String, Object> mapAttributes = resultPair.getRight();

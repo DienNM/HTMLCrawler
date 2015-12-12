@@ -33,9 +33,9 @@ public class DefaultCrawlResultRepository extends DefaultGenericDao<CrawlResultM
                 + " id.itemKey = :itemKey ");
 
         Query query = entityManager.createQuery(queryStr.toString(), getClazz());
-        query.setParameter("siteKey", categoryKey);
+        query.setParameter("siteKey", siteKey);
         query.setParameter("categoryKey", categoryKey);
-        query.setParameter("itemKey", categoryKey);
+        query.setParameter("itemKey", itemKey);
         
         query.setFirstResult(pageable.getCurrentPage() * pageable.getPageSize());
         query.setMaxResults(pageable.getPageSize());
@@ -56,9 +56,9 @@ public class DefaultCrawlResultRepository extends DefaultGenericDao<CrawlResultM
         countQuery.append(whereClause);
         
         Query query = entityManager.createQuery(selectQuery.toString(), getClazz());
-        query.setParameter("siteKey", categoryKey);
+        query.setParameter("siteKey", siteKey);
         query.setParameter("categoryKey", categoryKey);
-        query.setParameter("itemKey", categoryKey);
+        query.setParameter("itemKey", itemKey);
         
         query.setFirstResult(pageable.getCurrentPage() * pageable.getPageSize());
         query.setMaxResults(pageable.getPageSize());
@@ -66,7 +66,12 @@ public class DefaultCrawlResultRepository extends DefaultGenericDao<CrawlResultM
         List<CrawlResultModel> results = query.getResultList();
         
         // Count
-        Object obj = entityManager.createQuery(countQuery.toString()).getSingleResult();
+        Query queryCount = entityManager.createQuery(countQuery.toString(), getClazz());
+        queryCount.setParameter("siteKey", siteKey);
+        queryCount.setParameter("categoryKey", categoryKey);
+        queryCount.setParameter("itemKey", itemKey);
+        
+        Object obj = queryCount.getSingleResult();
         long totalRecords = Long.valueOf(obj.toString());
         long totalPages = totalRecords / pageable.getPageSize();
         if(totalRecords % pageable.getPageSize() != 0 ) {
