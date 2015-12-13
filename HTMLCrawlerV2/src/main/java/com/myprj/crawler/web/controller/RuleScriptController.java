@@ -27,7 +27,7 @@ import com.myprj.crawler.web.facades.RuleScriptFacade;
  */
 
 @Controller
-@RequestMapping(value = "/categories", produces = "application/json")
+@RequestMapping(value = "/scripts", produces = "application/json")
 public class RuleScriptController extends AbstractController {
     
     @Autowired
