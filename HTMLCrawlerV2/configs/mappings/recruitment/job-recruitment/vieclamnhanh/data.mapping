@@ -1,43 +1,13 @@
 
-# For Consolidation, add prefix with C@
-C@name=
+jobType=R000-001|jobType
+salary=R000-001|salary
+education=R000-001|education
+experience=R000-001|experience
+workplace=R000-001|workplace
 
-# Attributes
-# attribute_name|rule_code|parameter
+companyPhone=R000-001|companyPhone
+companySize=R000-001|companySize
+companyAddress=R000-001|companyAddress
 
-sku=
-jobName=R0001|
-jobTitle=
-jobType=
-salary=
-jobTitle=
-jobType=
-salary=
-education=
-experience=R001|- Trình độ:
-categories=
-jobExpired=
-workplace=
-
-companyName=
-companyPhone=R0001|Điện thoại:
-companyContact=
-companySize=
-companyIntro=
-companyAddress=R0001|Địa chỉ:
-companyLogo=
-
-contactName=
-contactEmail=
-contactAddress=
-contactPhone=
-contactMobile=
-contactResumeInfo=
-
-quantity=
-ageRequired=
-genderRequired=R0001|- Giới tính:
-resumeRequired=
-jobRequired=
-jobDescription=
-offers=
+quantity=R000-001|quantity
+genderRequired=R000-001|genderRequired

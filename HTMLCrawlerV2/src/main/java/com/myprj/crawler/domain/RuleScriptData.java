@@ -33,10 +33,6 @@ public class RuleScriptData extends AuditData {
     @EntityTransfer("enabled")
     private boolean enabled;
     
-    @DataTransfer("parameters")
-    @EntityTransfer("parameters")
-    private String parameters;
-    
     private Map<String, Object> runtimePamaters = new HashMap<String, Object>(); 
 
     public RuleScriptData() {
@@ -96,14 +92,6 @@ public class RuleScriptData extends AuditData {
 
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
-    }
-
-    public String getParameters() {
-        return parameters;
-    }
-
-    public void setParameters(String parameters) {
-        this.parameters = parameters;
     }
 
     public Map<String, Object> getRuntimePamaters() {

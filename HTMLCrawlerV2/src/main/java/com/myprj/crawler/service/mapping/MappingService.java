@@ -1,5 +1,6 @@
 package com.myprj.crawler.service.mapping;
 
+import java.util.List;
 import java.util.Map;
 
 import com.myprj.crawler.domain.DataMapping;
@@ -10,11 +11,10 @@ import com.myprj.crawler.domain.DataMapping;
 
 public interface MappingService {
 
-    Pair<Map<String, Object>, Map<String, Object>> doMappingIndex(Map<String, Object> indexMappings,
-            Map<String, Object> targetValues);
-    
-    Pair<DataMapping, DataMapping> loadDataMappings(String site);
-    
-    Map<String, Object> applyRuleMapping(String siteKey, Map<String, Object> originalObject);
+    Map<String, Object> doMappingIndex(Map<String, Object> indexMappings, Map<String, Object> targetValues);
+
+    List<DataMapping> loadDataMappings(String site, String category, String item);
+
+    void applyRuleMapping(List<DataMapping> dataMappings, Map<String, Object> values);
 
 }

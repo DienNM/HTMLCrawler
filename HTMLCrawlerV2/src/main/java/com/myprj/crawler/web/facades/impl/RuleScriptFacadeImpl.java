@@ -66,9 +66,7 @@ public class RuleScriptFacadeImpl implements RuleScriptFacade {
         if (StringUtils.isEmpty(content)) {
             throw new InvalidParameterException("Script is empty. Line: " + line);
         }
-        if(elements.length > 3) {
-            ruleScript.setParameters(elements[3]);
-        }
+        
         ruleScript.setScript(content);
         return ruleScript;
     }

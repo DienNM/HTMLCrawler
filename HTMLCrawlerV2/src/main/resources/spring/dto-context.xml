@@ -102,9 +102,9 @@
         <property name="targetClassName" value="com.myprj.crawler.web.dto.RuleScriptDTO" />
         <property name="targetMappings">
             <map>
-                <entry key="SIMPLE" value="code,enabled,file,parameters,script" />
+                <entry key="SIMPLE" value="code,enabled,file" />
                 <entry key="DEFAULT" value="SIMPLE,createdAt,createdBy,updatedAt,updatedBy" />
-                <entry key="FULL" value="DEFAULT" />
+                <entry key="FULL" value="DEFAULT,script" />
             </map>
         </property>
     </bean>

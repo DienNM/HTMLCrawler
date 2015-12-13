@@ -1,7 +1,6 @@
 package com.myprj.crawler.service.rule;
 
 import java.util.HashMap;
-import java.util.List;
 
 /**
  * @author DienNM (DEE)
@@ -11,14 +10,13 @@ public class RuleResponse extends HashMap<String, Object> {
 
     private static final long serialVersionUID = 1L;
 
-    public static final String RULE_RESULTS = "results";
+    public static final String RULE_RESULT = "result";
 
-    public void setRuleScripts(List<RuleResult> results) {
-        super.put(RULE_RESULTS, results);
+    public void setRuleScript(Object object) {
+        put(RULE_RESULT, object);
     }
 
-    @SuppressWarnings("unchecked")
-    public List<RuleResult> getRuleScripts() {
-        return (List<RuleResult>) super.get(RULE_RESULTS);
+    public Object getRuleScript() {
+        return get(RULE_RESULT);
     }
 }

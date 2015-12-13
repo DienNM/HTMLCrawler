@@ -27,9 +27,6 @@ public class ConsolidationModel extends AuditModel {
     @Column(name = "md5_attributes")
     private String md5Attributes;
 
-    @Column(name = "name", length = 200)
-    private String name;
-
     @Column(name = "url", length = 1000)
     private String url;
     
@@ -43,14 +40,6 @@ public class ConsolidationModel extends AuditModel {
     
     public void setId(ConsolidationId id) {
         this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public String getUrl() {

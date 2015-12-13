@@ -3,7 +3,6 @@ package com.myprj.crawler.domain.target;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.myprj.crawler.annotation.Consolidation;
 import com.myprj.crawler.annotation.EntityTransfer;
 import com.myprj.crawler.model.AuditModel;
 import com.myprj.crawler.model.target.ConsolidationId;
@@ -27,10 +26,6 @@ public class ConsolidationData extends AuditModel {
     private String itemKey;
 
     private String siteKey;
-
-    @EntityTransfer("name")
-    @Consolidation("name")
-    private String name;
 
     @EntityTransfer("url")
     private String url;
@@ -104,14 +99,6 @@ public class ConsolidationData extends AuditModel {
     @Override
     public String toString() {
         return String.format("Site=%s, Category=%s, Item=%s, ResultKey=%s", siteKey, categoryKey, itemKey, resultKey);
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public String getCategoryKey() {

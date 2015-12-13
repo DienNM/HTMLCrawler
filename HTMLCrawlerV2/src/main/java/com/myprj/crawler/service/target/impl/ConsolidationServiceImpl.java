@@ -86,7 +86,6 @@ public class ConsolidationServiceImpl implements ConsolidationService {
                 logger.info(dbModel.getId().toString() + " not change. Not updated");
                 return;
             }
-            dbModel.setName(newObject.getName());
             dbModel.setUrl(newObject.getUrl());
             consolidationRepository.update(dbModel);
             consolidationAttributeRepository.deleteByConsolidationId(dbModel.getMd5Key());

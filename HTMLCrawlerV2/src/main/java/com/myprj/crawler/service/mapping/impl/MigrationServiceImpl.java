@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.myprj.crawler.domain.DataMapping;
 import com.myprj.crawler.domain.MigrationParam;
 import com.myprj.crawler.domain.Pageable;
 import com.myprj.crawler.domain.crawl.CrawlResultData;
@@ -20,9 +21,7 @@ import com.myprj.crawler.service.event.CrawlEventPublisher;
 import com.myprj.crawler.service.event.impl.ConsolidationCompletedEvent;
 import com.myprj.crawler.service.mapping.MappingService;
 import com.myprj.crawler.service.mapping.MigrationService;
-import com.myprj.crawler.service.mapping.Pair;
 import com.myprj.crawler.util.Serialization;
-import com.myprj.crawler.util.converter.ConsolidationConverter;
 
 /**
  * @author DienNM (DEE)
@@ -37,13 +36,12 @@ public class MigrationServiceImpl implements MigrationService {
 
     @Autowired
     private CrawlResultService crawlResultService;
-    
+
     @Autowired
     private CrawlEventPublisher crawlEventPublisher;
 
     @Override
     public void migrate(MigrationParam migrationParam) {
-
         int pageSize = 300;
         int pageIndex = 0;
         while (true) {
@@ -55,15 +53,17 @@ public class MigrationServiceImpl implements MigrationService {
             }
             migrate(migrationParam, crawlResults);
         }
-
     }
 
     @Override
     public List<ConsolidationData> migrate(MigrationParam migrationParam, List<CrawlResultData> crawlResults) {
         List<ConsolidationData> consolidationDatas = new ArrayList<ConsolidationData>();
+        List<DataMapping> dataMappings = mappingService.loadDataMappings(migrationParam.getSiteKey(),
+                migrationParam.getCategoryKey(), migrationParam.getItemKey());
         for (CrawlResultData crawlResult : crawlResults) {
-            ConsolidationData consolidation = createConsolidation(crawlResult, migrationParam.getIndexMapping());
-            if(consolidation != null) {
+            ConsolidationData consolidation = createConsolidation(crawlResult, dataMappings,
+                    migrationParam.getIndexMapping());
+            if (consolidation != null) {
                 consolidationDatas.add(consolidation);
                 crawlEventPublisher.publish(new ConsolidationCompletedEvent(consolidation));
             }
@@ -72,7 +72,8 @@ public class MigrationServiceImpl implements MigrationService {
     }
 
     @SuppressWarnings("unchecked")
-    private ConsolidationData createConsolidation(CrawlResultData crawlResult, Map<String, Object> indexMapping) {
+    private ConsolidationData createConsolidation(CrawlResultData crawlResult, List<DataMapping> mappings,
+            Map<String, Object> indexMapping) {
         ConsolidationData consolidation = new ConsolidationData();
         consolidation.setCategoryKey(crawlResult.getCategoryKey());
         consolidation.setItemKey(crawlResult.getItemKey());
@@ -80,29 +81,25 @@ public class MigrationServiceImpl implements MigrationService {
         consolidation.setResultKey(crawlResult.getResultKey());
         consolidation.setUrl(crawlResult.getUrl());
         ConsolidationData.createMd5Key(consolidation);
-        
-        Map<String, Object> contentObject = (Map<String, Object>) crawlResult.getDetail().get("content");
-        
-        Pair<Map<String, Object>, Map<String, Object>> resultPair = mappingService.doMappingIndex(indexMapping,
-                contentObject);
-        
-        Map<String, Object> mapFields = resultPair.getLeft();
-        Map<String, Object> mapAttributes = resultPair.getRight();
-        
-        mappingService.applyRuleMapping(crawlResult.getSiteKey(), mapAttributes);
 
-        if (mapAttributes.isEmpty()) {
+        Map<String, Object> contentObject = (Map<String, Object>) crawlResult.getDetail().get("content");
+
+        Map<String, Object> resultMappingIndex = mappingService.doMappingIndex(indexMapping,
+                contentObject);
+
+        mappingService.applyRuleMapping(mappings, resultMappingIndex);
+
+        if (resultMappingIndex.isEmpty()) {
             logger.warn(String.format("No attributes are mapped: %s", consolidation.toString()));
             return null;
         }
-        ConsolidationData.createMd5Attribute(consolidation, mapAttributes);
+        ConsolidationData.createMd5Attribute(consolidation, resultMappingIndex);
 
-        ConsolidationConverter.map(mapFields, consolidation);
-        for (String attributeName : mapAttributes.keySet()) {
+        for (String attributeName : resultMappingIndex.keySet()) {
             ConsolidationAttributeData attribute = new ConsolidationAttributeData();
             attribute.setConsolidationId(consolidation.getMd5Key());
             attribute.setName(attributeName);
-            Object value = mapAttributes.get(attributeName);
+            Object value = resultMappingIndex.get(attributeName);
             if (value == null || StringUtils.isEmpty(value.toString())) {
                 continue;
             }

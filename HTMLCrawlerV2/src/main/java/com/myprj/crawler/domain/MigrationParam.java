@@ -8,6 +8,8 @@ import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 
+import com.myprj.crawler.util.Config;
+import com.myprj.crawler.util.FileUtil;
 import com.myprj.crawler.util.Serialization;
 import com.myprj.crawler.util.StreamUtil;
 
@@ -47,8 +49,7 @@ public class MigrationParam {
         this.itemKey = itemKey;
         this.siteKey = siteKey;
         
-        //String root = FileUtil.getDirPath(Config.get("mapping.dir"));
-        String root = "/media/diennm/Working/dee-projects/open_source/data/mappings/";
+        String root = FileUtil.getDirPath(Config.get("mapping.dir"));
         setIndexMappingFile(root + subIndexPath() + INDEX);
 
         if (!StringUtils.isEmpty(itemKey)) {

@@ -17,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.myprj.crawler.domain.RuleScriptData;
 import com.myprj.crawler.service.RuleScriptService;
+import com.myprj.crawler.service.rule.RuleEngine;
 import com.myprj.crawler.web.dto.JsonResponse;
 import com.myprj.crawler.web.dto.RuleScriptDTO;
 import com.myprj.crawler.web.enumeration.DTOLevel;
@@ -35,6 +36,15 @@ public class RuleScriptController extends AbstractController {
     
     @Autowired
     private RuleScriptService ruleScriptService;
+    
+    @Autowired
+    private RuleEngine ruleEngine;
+    
+    @RequestMapping(value = "/cache/clean", method = RequestMethod.GET)
+    @ResponseBody
+    public void cleanCache() {
+        ruleEngine.clearCache();
+    }
     
     @RequestMapping(value = "/all", method = RequestMethod.GET)
     @ResponseBody
