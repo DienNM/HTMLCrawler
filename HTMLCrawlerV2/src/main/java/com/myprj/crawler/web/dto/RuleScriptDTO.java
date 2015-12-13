@@ -28,6 +28,9 @@ public class RuleScriptDTO extends AuditDTO {
     @DataTransfer("enabled")
     private boolean enabled;
 
+    @DataTransfer("parameters")
+    private String parameters;
+
     public RuleScriptDTO() {
     }
 
@@ -77,6 +80,14 @@ public class RuleScriptDTO extends AuditDTO {
 
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
+    }
+
+    public String getParameters() {
+        return parameters;
+    }
+
+    public void setParameters(String parameters) {
+        this.parameters = parameters;
     }
 
 }

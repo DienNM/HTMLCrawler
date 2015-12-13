@@ -1,5 +1,7 @@
 package com.myprj.crawler.service.mapping.impl;
 
+import static java.io.File.separator;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,9 +13,19 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.myprj.crawler.domain.DataMapping;
+import com.myprj.crawler.domain.FieldMapping;
+import com.myprj.crawler.domain.RuleScriptData;
+import com.myprj.crawler.service.RuleScriptService;
 import com.myprj.crawler.service.mapping.MappingService;
 import com.myprj.crawler.service.mapping.Pair;
 import com.myprj.crawler.service.rule.RuleEngine;
+import com.myprj.crawler.service.rule.RuleRequest;
+import com.myprj.crawler.service.rule.RuleResponse;
+import com.myprj.crawler.util.Config;
+import com.myprj.crawler.util.FileUtil;
+import com.myprj.crawler.util.Serialization;
+import com.myprj.crawler.util.StreamUtil;
 
 /**
  * @author DienNM (DEE)
@@ -22,14 +34,17 @@ import com.myprj.crawler.service.rule.RuleEngine;
 public class MappingServiceImpl implements MappingService {
 
     private Logger logger = LoggerFactory.getLogger(MappingServiceImpl.class);
-    
+
     private final static String AT = "@".intern();
     private final static String A_AT = "A@".intern();
     private final static String C_AT = "C@".intern();
     private final static String PILE = Pattern.quote("|").intern();
-    
+
     @Autowired
     private RuleEngine ruleEngine;
+    
+    @Autowired
+    private RuleScriptService ruleScriptService;
 
     @Override
     public Pair<Map<String, Object>, Map<String, Object>> doMappingIndex(Map<String, Object> indexMappings,
@@ -41,10 +56,73 @@ public class MappingServiceImpl implements MappingService {
                 mapFields, mapAttributes);
         return result;
     }
-    
+
     @Override
-    public Map<String, Object> applyRuleMapping(Map<String, Object> originalObject) {
+    public Pair<DataMapping, DataMapping> loadDataMappings(String site) {
+        DataMapping dataMapping = new DataMapping();
+        DataMapping attributeMapping = new DataMapping();
+
+        Pair<DataMapping, DataMapping> mappingPair = new Pair<DataMapping, DataMapping>(dataMapping, attributeMapping);
+
+        String mappingDir = FileUtil.getDirPath(Config.get("mapping.dir"));
+        String mappingFile = mappingDir + site + separator + "data.mapping";
+
+        List<String> csvLines = StreamUtil.readCSVFile(mappingFile);
+        if (csvLines.isEmpty()) {
+            return mappingPair;
+        }
         
+        for (String line : csvLines) {
+            if(line.startsWith("C@")) {
+                FieldMapping fieldMapping = FieldMapping.parse(line.substring(1));
+                dataMapping.getMappings().add(fieldMapping);
+            } else {
+                FieldMapping fieldMapping = FieldMapping.parse(line);
+                dataMapping.getMappings().add(fieldMapping);
+            }
+        }
+        return mappingPair;
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public Map<String, Object> applyRuleMapping(String siteKey, Map<String, Object> originalObject) {
+        Pair<DataMapping, DataMapping> mappings = loadDataMappings(siteKey);
+        //DataMapping dataMapping = mappings.getLeft();
+        DataMapping attributeMapping = mappings.getRight();
+        
+        Map<String, RuleScriptData> ruleScriptCache = new HashMap<String, RuleScriptData>();
+        
+        for(FieldMapping fieldMapping : attributeMapping.getMappings()) {
+            if(fieldMapping.getRules().isEmpty()) {
+                continue;
+            }
+            for(String ruleCode : fieldMapping.getRules().keySet()) {
+                
+                RuleScriptData ruleScriptData = ruleScriptCache.get(ruleCode);
+                if(ruleScriptData == null) {
+                    ruleScriptData = ruleScriptService.get(ruleCode);
+                    if(ruleScriptData == null) {
+                        logger.warn("Rule Code: " + ruleCode + " not found");
+                        continue;
+                    }
+                    ruleScriptCache.put(ruleCode, ruleScriptData);
+                }
+                RuleRequest ruleRequest = new RuleRequest();
+                String attribute = fieldMapping.getAttributeName();
+                ruleRequest.setAttribute(attribute);
+                ruleRequest.setEvaluateObject(originalObject.get(attribute));
+                
+                String parameter = fieldMapping.getRules().get(ruleCode);
+                // Check parameters
+                if(!StringUtils.isEmpty(parameter)) {
+                    ruleRequest.setParameters(Serialization.deserialize(parameter, Map.class));
+                }
+                RuleResponse response = ruleEngine.perform(ruleRequest, ruleScriptData);
+                System.out.println(response.toString());
+            }
+            
+        }
         return null;
     }
 

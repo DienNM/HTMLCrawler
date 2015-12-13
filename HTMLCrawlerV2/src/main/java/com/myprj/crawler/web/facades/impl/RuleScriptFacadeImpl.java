@@ -15,6 +15,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.myprj.crawler.domain.RuleScriptData;
+import com.myprj.crawler.util.Config;
+import com.myprj.crawler.util.FileUtil;
 import com.myprj.crawler.util.StreamUtil;
 import com.myprj.crawler.web.facades.RuleScriptFacade;
 
@@ -57,12 +59,16 @@ public class RuleScriptFacadeImpl implements RuleScriptFacade {
         ruleScript.setCode(elements[0]);
         ruleScript.setEnabled(Boolean.valueOf(elements[1]));
         ruleScript.setFile(elements[2]);
-
-        String content = StreamUtil.readFile2String(ruleScript.getFile());
+        
+        String root = FileUtil.getDirPath(Config.get("scripts.ruby.dir"));
+        
+        String content = StreamUtil.readFile2String(root + ruleScript.getFile());
         if (StringUtils.isEmpty(content)) {
             throw new InvalidParameterException("Script is empty. Line: " + line);
         }
-
+        if(elements.length > 3) {
+            ruleScript.setParameters(elements[3]);
+        }
         ruleScript.setScript(content);
         return ruleScript;
     }

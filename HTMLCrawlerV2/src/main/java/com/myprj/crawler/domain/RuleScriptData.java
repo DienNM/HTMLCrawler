@@ -1,6 +1,8 @@
 package com.myprj.crawler.domain;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.myprj.crawler.annotation.DataTransfer;
 import com.myprj.crawler.annotation.EntityTransfer;
@@ -30,6 +32,12 @@ public class RuleScriptData extends AuditData {
     @DataTransfer("enabled")
     @EntityTransfer("enabled")
     private boolean enabled;
+    
+    @DataTransfer("parameters")
+    @EntityTransfer("parameters")
+    private String parameters;
+    
+    private Map<String, Object> runtimePamaters = new HashMap<String, Object>(); 
 
     public RuleScriptData() {
     }
@@ -88,5 +96,21 @@ public class RuleScriptData extends AuditData {
 
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
+    }
+
+    public String getParameters() {
+        return parameters;
+    }
+
+    public void setParameters(String parameters) {
+        this.parameters = parameters;
+    }
+
+    public Map<String, Object> getRuntimePamaters() {
+        return runtimePamaters;
+    }
+
+    public void setRuntimePamaters(Map<String, Object> runtimePamaters) {
+        this.runtimePamaters = runtimePamaters;
     }
 }

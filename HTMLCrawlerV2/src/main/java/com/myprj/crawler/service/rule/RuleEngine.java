@@ -1,9 +1,7 @@
 package com.myprj.crawler.service.rule;
 
 import java.security.InvalidParameterException;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.annotation.PostConstruct;
@@ -47,26 +45,20 @@ public class RuleEngine {
         }
     }
 
-    public List<RuleResponse> performRule(RuleRequest input) {
-        if (input.getRuleScripts().isEmpty()) {
-            throw new InvalidParameterException("No Rule Scrips");
+    public RuleResponse performRule(RuleRequest input, RuleScriptData ruleScript) {
+        if (input.getEvaluateObject() == null) {
+            throw new InvalidParameterException("Evaluate object is missing");
         }
-        List<RuleScriptData> ruleScripts = input.getRuleScripts();
-        List<RuleResponse> responses = new ArrayList<RuleResponse>();
-        for (RuleScriptData ruleScript : ruleScripts) {
-            try {
-                RuleResponse response = perform(ruleScript);
-                if (response != null) {
-                    responses.add(response);
-                }
-            } catch (Exception e) {
-                logger.error("Script [{}] is failed: Error: {}", ruleScript.getCode(), e);
-            }
+        try {
+            RuleResponse response = perform(input, ruleScript);
+            return response;
+        } catch (Exception e) {
+            logger.error("Script [{}] is failed: Error: {}", ruleScript.getCode(), e);
+            return null;
         }
-        return responses;
     }
 
-    public RuleResponse perform(RuleScriptData ruleScript) {
+    public RuleResponse perform(RuleRequest input, RuleScriptData ruleScript) {
         logger.debug("Running ruby script: " + ruleScript.getCode());
         EmbedEvalUnit script = receiveScript(ruleScript.getCode(), ruleScript.getScript());
         RuleResponse response = null;
@@ -74,7 +66,7 @@ public class RuleEngine {
             logger.warn("Cannot parse rule script: " + ruleScript.getCode());
             return null;
         }
-        response = (RuleResponse) this.rubyContainer.callMethod(script.run(), "perform", ruleScript);
+        response = (RuleResponse) this.rubyContainer.callMethod(script.run(), "perform", input);
         if (response == null || response.getRuleScripts().isEmpty()) {
             logger.warn("Rule script " + ruleScript.getCode() + " cannot return response");
             return null;

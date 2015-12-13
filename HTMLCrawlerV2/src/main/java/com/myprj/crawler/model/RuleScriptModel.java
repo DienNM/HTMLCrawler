@@ -28,6 +28,9 @@ public class RuleScriptModel extends AuditModel {
 
     @Column(name = "enabled")
     private boolean enabled;
+    
+    @Column(name = "parameters")
+    private String parameters;
 
     public RuleScriptModel() {
     }
@@ -62,5 +65,13 @@ public class RuleScriptModel extends AuditModel {
 
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
+    }
+
+    public String getParameters() {
+        return parameters;
+    }
+
+    public void setParameters(String parameters) {
+        this.parameters = parameters;
     }
 }

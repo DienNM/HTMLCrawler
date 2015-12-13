@@ -85,9 +85,11 @@ public class MigrationServiceImpl implements MigrationService {
         
         Pair<Map<String, Object>, Map<String, Object>> resultPair = mappingService.doMappingIndex(indexMapping,
                 contentObject);
-
+        
         Map<String, Object> mapFields = resultPair.getLeft();
         Map<String, Object> mapAttributes = resultPair.getRight();
+        
+        mappingService.applyRuleMapping(crawlResult.getSiteKey(), mapAttributes);
 
         if (mapAttributes.isEmpty()) {
             logger.warn(String.format("No attributes are mapped: %s", consolidation.toString()));

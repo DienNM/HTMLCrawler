@@ -12,5 +12,6 @@ public class RuleResult extends HashMap<String, Object> {
     
     public RuleResult() {
     }
+    
 
 }

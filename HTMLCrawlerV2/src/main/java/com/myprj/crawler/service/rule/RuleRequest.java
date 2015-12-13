@@ -1,9 +1,7 @@
 package com.myprj.crawler.service.rule;
 
 import java.io.Serializable;
-import java.util.List;
-
-import com.myprj.crawler.domain.RuleScriptData;
+import java.util.Map;
 
 /**
  * @author DienNM (DEE)
@@ -13,26 +11,36 @@ public class RuleRequest implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private List<RuleScriptData> ruleScripts;
-    
-    private Object targetObject;
-    
+    private String attribute;
+
+    private Object evaluateObject;
+
+    private Map<String, Object> parameters;
+
     public RuleRequest() {
     }
 
-    public List<RuleScriptData> getRuleScripts() {
-        return ruleScripts;
+    public Object getEvaluateObject() {
+        return evaluateObject;
     }
 
-    public void setRuleScripts(List<RuleScriptData> ruleScripts) {
-        this.ruleScripts = ruleScripts;
+    public void setEvaluateObject(Object evaluateObject) {
+        this.evaluateObject = evaluateObject;
     }
 
-    public Object getTargetObject() {
-        return targetObject;
+    public Map<String, Object> getParameters() {
+        return parameters;
     }
 
-    public void setTargetObject(Object targetObject) {
-        this.targetObject = targetObject;
+    public void setParameters(Map<String, Object> parameters) {
+        this.parameters = parameters;
+    }
+
+    public String getAttribute() {
+        return attribute;
+    }
+
+    public void setAttribute(String attribute) {
+        this.attribute = attribute;
     }
 }
