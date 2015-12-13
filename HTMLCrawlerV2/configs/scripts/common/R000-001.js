@@ -1,44 +1,42 @@
-
-function jobTitle(object) {
-	print('Hello, ' + object);
+function isPrefix(text, prefix) {
+	return text.indexOf(prefix) === 0;
+}
+function isSuffix(text, suffix) {
+	return text.match(suffix+"$") == suffix;
 }
 
-function jobType(object) {
-	print('Hello, ' + object);
+function getPrefix(attribute) {
+	var map = {
+		"jobType" : "- Hình thức làm việc:",
+		"salary" : "- Mức lương:",
+		"education" : "- Trình độ:",
+		"experience" : "- Kinh nghiệm:",
+		"workplace" : "Việc làm",
+		"companyPhone" : "Điện thoại:",
+		"companyAddress" : "Địa chỉ:",
+		"genderRequired" : "- Giới tính:"
+	};
+	return map[attribute];
 }
 
-function salary(object) {
-	print('Hello, ' + object);
+function getSuffix(attribute) {
+	var map = {
+		"companySize" : "người"
+	};
+	return map[attribute];
 }
 
-function education(object) {
-	print('Hello, ' + object);
-}
-
-function experience(object) {
-	print('Hello, ' + object);
-}
-
-function workplace(object) {
-	print('Hello, ' + object);
-}
-
-function companyPhone(object) {
-	print('Hello, ' + object);
-}
-
-function companySize(object) {
-	print('Hello, ' + object);
-}
-
-function companyAddress(object) {
-	print('Hello, ' + object);
-}
-
-function quantity(object) {
-	print('Hello, ' + object);
-}
-
-function genderRequired(object) {
-	print('Hello, ' + object);
+function normalize(attribute, object) {
+	var prefix = getPrefix(attribute);
+	var suffix = getSuffix(attribute);
+	var objectLowerCase = object.toLowerCase();
+	if(prefix != null && isPrefix(objectLowerCase, prefix.toLowerCase())) {
+		var indexPrefix = prefix.length;
+		object = object.substr(indexPrefix);
+	}
+	if(suffix != null && isSuffix(objectLowerCase, suffix.toLowerCase())) {
+		var indexSuffix = objectLowerCase.indexOf(suffix.toLowerCase());
+		object = object.substr(0, indexSuffix);
+	}
+	return object.replace(/^\s+|\s+$/g,'');
 }

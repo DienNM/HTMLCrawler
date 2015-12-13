@@ -35,10 +35,5 @@
     "resumeRequired": ["@resumeRequired"],
     "jobRequired": ["@jobRequired"],
     "jobDescription": ["@jobDescription"],
-    "offers": ["@offers"],
-
-    "attributes":[{ 
-        "key" : "TEXT",
-        "value" : "TEXT"
-    }]
+    "offers": ["@offers"]
 }

@@ -1,13 +1,13 @@
 
-jobType=R000-001|jobType
-salary=R000-001|salary
-education=R000-001|education
-experience=R000-001|experience
-workplace=R000-001|workplace
+jobType=R000-001|normalize
+salary=R000-001|normalize
+education=R000-001|normalize
+experience=R000-001|normalize
+workplace=R000-001|normalize
 
-companyPhone=R000-001|companyPhone
-companySize=R000-001|companySize
-companyAddress=R000-001|companyAddress
+companyPhone=R000-001|normalize
+companySize=R000-001|normalize
+companyAddress=R000-001|normalize
 
-quantity=R000-001|quantity
-genderRequired=R000-001|genderRequired
+quantity=R000-001|normalize
+genderRequired=R000-001|normalize

@@ -16,6 +16,8 @@ public class RuleRequest implements Serializable {
 
     private Object evaluateObject;
     
+    private String attributeName;
+    
     public RuleRequest() {
     }
 
@@ -41,6 +43,14 @@ public class RuleRequest implements Serializable {
 
     public void setFunctionName(String functionName) {
         this.functionName = functionName;
+    }
+
+    public String getAttributeName() {
+        return attributeName;
+    }
+
+    public void setAttributeName(String attributeName) {
+        this.attributeName = attributeName;
     }
 
 }

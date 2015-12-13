@@ -46,17 +46,16 @@ public class RuleEngine {
         }
     }
 
-    public RuleResponse perform(RuleRequest request) {
+    public Object perform(RuleRequest request) {
         logger.debug("Running script: " + request.getRuleCode());
-        RuleResponse response = null;
         try {
             Invocable invocable = receiveScript(request.getRuleCode());
-            response = (RuleResponse) invocable.invokeFunction(request.getFunctionName(), request.getEvaluateObject());
+            return invocable.invokeFunction(request.getFunctionName(), request.getAttributeName(),
+                    request.getEvaluateObject());
         } catch (Exception e) {
-            logger.error(e.getMessage());
-            logger.debug("{}", e);
+            logger.error("{}", e);
         }
-        return response;
+        return null;
     }
 
     private synchronized Invocable receiveScript(String scriptCode) throws Exception {

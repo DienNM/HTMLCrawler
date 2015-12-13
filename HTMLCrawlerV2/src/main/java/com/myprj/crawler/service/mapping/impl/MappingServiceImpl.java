@@ -1,6 +1,5 @@
 package com.myprj.crawler.service.mapping.impl;
 
-import static com.myprj.crawler.service.rule.RuleResponse.RULE_RESULT;
 import static java.io.File.separator;
 
 import java.util.ArrayList;
@@ -19,7 +18,6 @@ import com.myprj.crawler.service.RuleScriptService;
 import com.myprj.crawler.service.mapping.MappingService;
 import com.myprj.crawler.service.rule.RuleEngine;
 import com.myprj.crawler.service.rule.RuleRequest;
-import com.myprj.crawler.service.rule.RuleResponse;
 import com.myprj.crawler.util.Config;
 import com.myprj.crawler.util.FileUtil;
 import com.myprj.crawler.util.StreamUtil;
@@ -71,21 +69,22 @@ public class MappingServiceImpl implements MappingService {
     public void applyRuleMapping(List<DataMapping> dataMappings, Map<String, Object> values) {
         for (DataMapping dataMapping : dataMappings) {
             Object evaluateObject = values.get(dataMapping.getName());
-            RuleResponse response = executeRule(evaluateObject, dataMapping);
+            Object response = executeRule(evaluateObject, dataMapping);
             if (response == null) {
-                logger.warn("Rule: {} - Function: {} - Attribute: {}: Cannot return response", dataMapping.getRuleCode(),
+                logger.debug("Rule: {} - Function: {} - Attribute: {}: Cannot return response", dataMapping.getRuleCode(),
                         dataMapping.getFunction(), dataMapping.getName());
                 continue;
             }
-            values.put(dataMapping.getName(), response.get(RULE_RESULT));
+            values.put(dataMapping.getName(), response);
         }
     }
 
-    private RuleResponse executeRule(Object evaluateObject, DataMapping att) {
+    private Object executeRule(Object evaluateObject, DataMapping att) {
         RuleRequest ruleRequest = new RuleRequest();
         ruleRequest.setEvaluateObject(evaluateObject);
         ruleRequest.setFunctionName(att.getFunction());
         ruleRequest.setRuleCode(att.getRuleCode());
+        ruleRequest.setAttributeName(att.getName());
         return ruleEngine.perform(ruleRequest);
     }
 
@@ -129,7 +128,8 @@ public class MappingServiceImpl implements MappingService {
 
     private void mapValue2Index(String field, Object value, Map<String, Object> attributes) {
         if (StringUtils.isEmpty(field) || !field.contains(AT)) {
-            logger.warn("Field Name: " + field + " is invalid. Must contain " + AT);
+            logger.debug("Field Name: " + field + " is invalid. Must contain " + AT);
+            return;
         }
         attributes.put(field.substring(field.indexOf(AT) + 1), value);
     }
