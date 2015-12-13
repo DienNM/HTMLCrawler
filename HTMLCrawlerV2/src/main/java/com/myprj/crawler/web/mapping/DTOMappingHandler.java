@@ -15,8 +15,8 @@ import com.myprj.crawler.annotation.DataTransfer;
 import com.myprj.crawler.util.ReflectionUtil;
 import com.myprj.crawler.util.converter.TypeConverter;
 import com.myprj.crawler.web.enumeration.DTOLevel;
-import com.myprj.crawler.web.exception.DtoConvertException;
 import com.myprj.crawler.web.mapping.DTOField.DTOFieldType;
+import com.myprj.crawler.web.util.DtoConvertException;
 
 /**
  * @author DienNM (DEE)

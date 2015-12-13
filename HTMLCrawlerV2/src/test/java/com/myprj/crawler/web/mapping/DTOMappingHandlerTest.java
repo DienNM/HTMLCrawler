@@ -14,7 +14,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.myprj.crawler.web.enumeration.DTOLevel;
-import com.myprj.crawler.web.exception.DtoConvertException;
+import com.myprj.crawler.web.util.DtoConvertException;
 
 /**
  * @author DienNM (DEE)

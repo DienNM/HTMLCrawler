@@ -1,4 +1,4 @@
-package com.myprj.crawler.web.exception;
+package com.myprj.crawler.web.util;
 
 /**
  * @author DienNM (DEE)
