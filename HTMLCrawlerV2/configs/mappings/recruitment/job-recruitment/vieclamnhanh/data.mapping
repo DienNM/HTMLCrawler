@@ -3,10 +3,10 @@
 C@name=
 
 # Attributes
-# attribute_name|rule_code
+# attribute_name|rule_code|parameter
 
 sku=
-jobName=R0001-Prefix
+jobName=R0001|
 jobTitle=
 jobType=
 salary=
@@ -14,17 +14,17 @@ jobTitle=
 jobType=
 salary=
 education=
-experience=
+experience=R001|- Trình độ:
 categories=
 jobExpired=
 workplace=
 
 companyName=
-companyPhone=
+companyPhone=R0001|Điện thoại:
 companyContact=
 companySize=
 companyIntro=
-companyAddress=
+companyAddress=R0001|Địa chỉ:
 companyLogo=
 
 contactName=
@@ -36,7 +36,7 @@ contactResumeInfo=
 
 quantity=
 ageRequired=
-genderRequired=
+genderRequired=R0001|- Giới tính:
 resumeRequired=
 jobRequired=
 jobDescription=

@@ -1,0 +1,10 @@
+
+# Rules Common
+R000-001|true|common/R000-001.rb
+R000-002|true|common/R000-002.rb
+
+
+# 
+R001-001|false|vieclamnhanh/R001-001.rb
+R001-002|false|vieclamnhanh/R001-002.rb
+
