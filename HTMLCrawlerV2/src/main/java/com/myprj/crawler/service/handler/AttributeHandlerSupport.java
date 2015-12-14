@@ -1,6 +1,6 @@
 package com.myprj.crawler.service.handler;
 
-import static com.myprj.crawler.util.AttributeSelectorUtil.parseAttritbuteSelectors;
+import static com.myprj.crawler.domain.config.AttributeSelector.parseSelectors;
 
 import java.util.HashMap;
 import java.util.List;
@@ -70,22 +70,6 @@ public abstract class AttributeHandlerSupport implements AttributeHandler {
         return htmlCache.get(currentURL);
     }
     
-    public static void main(String[] args) {
-        TextAttributeHandler textAttributeHandler = new TextAttributeHandler();
-        Document document = HtmlDownloader.download("https://vieclam24h.vn/kd-bat-dong-san/chuyen-vien-tu-van-cskh-luong-8-15-trieu-c81p1id1968479.html");
-        
-        String s2 = "E@#cols-right > div.content_cols-right.pt_16.pl_24.pb_24 > div.box_chi_tiet_cong_viec.bg_white.mt16.box_shadow > div:nth-child(1) > div > p > a{{href}}";
-        String s1 = "I@#cols-right > div.content_cols-right.pt_16.pl_24.pb_24 > div.box_chi_tiet_nha_tuyen_dung.bg_white.mt16.box_shadow > div > div.col-xs-9 > div.mb_30.mt_10 > p:nth-child(1) > i";
-        
-        AttributeSelector selector = parseAttritbuteSelectors(s1 + "||" + s2);
-        
-        Map<String, HtmlDocument> caches = new HashMap<String, HtmlDocument>();
-        HtmlDocument htmlDocument = textAttributeHandler.getFinalDocument(selector, new HtmlDocument(document), caches);
-        
-        System.out.println("Cache: " + caches.keySet());
-        System.out.println(htmlDocument.getUrl());
-    }
-    
     protected String getLink(Document document, AttributeSelector selector) {
         Elements elements = document.select(selector.getSelector());
         return pickupString(elements, selector);
@@ -135,6 +119,23 @@ public abstract class AttributeHandlerSupport implements AttributeHandler {
             return "";
         }
         return object.toString().trim();
+    }
+
+    
+    public static void main(String[] args) {
+        TextAttributeHandler textAttributeHandler = new TextAttributeHandler();
+        Document document = HtmlDownloader.download("https://vieclam24h.vn/kd-bat-dong-san/chuyen-vien-tu-van-cskh-luong-8-15-trieu-c81p1id1968479.html");
+        
+        String s2 = "E@#cols-right > div.content_cols-right.pt_16.pl_24.pb_24 > div.box_chi_tiet_cong_viec.bg_white.mt16.box_shadow > div:nth-child(1) > div > p > a{{href}}";
+        String s1 = "I@#cols-right > div.content_cols-right.pt_16.pl_24.pb_24 > div.box_chi_tiet_nha_tuyen_dung.bg_white.mt16.box_shadow > div > div.col-xs-9 > div.mb_30.mt_10 > p:nth-child(1) > i";
+        
+        AttributeSelector selector = parseSelectors(s1 + "||" + s2);
+        
+        Map<String, HtmlDocument> caches = new HashMap<String, HtmlDocument>();
+        HtmlDocument htmlDocument = textAttributeHandler.getFinalDocument(selector, new HtmlDocument(document), caches);
+        
+        System.out.println("Cache: " + caches.keySet());
+        System.out.println(htmlDocument.getUrl());
     }
 
 }

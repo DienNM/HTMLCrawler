@@ -4,10 +4,10 @@ import static java.io.File.separator;
 
 import java.io.File;
 import java.security.InvalidParameterException;
-import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 
+import com.myprj.crawler.service.mapping.Mapping;
 import com.myprj.crawler.util.Config;
 import com.myprj.crawler.util.FileUtil;
 import com.myprj.crawler.util.Serialization;
@@ -17,7 +17,7 @@ import com.myprj.crawler.util.StreamUtil;
  * @author DienNM (DEE)
  */
 
-public class MigrationParam {
+public class MigrationContext {
 
     private final static String INDEX = "index.mapping".intern();
     private final static String VALUE = "value.mapping".intern();
@@ -32,13 +32,13 @@ public class MigrationParam {
 
     private String valueMappingFile;
     
-    private Map<String, Object> indexMapping;
+    private Mapping index;
     
-    public MigrationParam(String categoryKey, String itemKey) {
+    public MigrationContext(String categoryKey, String itemKey) {
         this(categoryKey, itemKey, null);
     }
 
-    public MigrationParam(String categoryKey, String itemKey, String siteKey) {
+    public MigrationContext(String categoryKey, String itemKey, String siteKey) {
         if (StringUtils.isEmpty(categoryKey)) {
             throw new InvalidParameterException("CategoryKey is required");
         }
@@ -66,7 +66,6 @@ public class MigrationParam {
         return categoryKey + separator + itemKey + separator + siteKey + separator;
     }
 
-    @SuppressWarnings("unchecked")
     private void validateMappingFiles() {
         File file = new File(indexMappingFile);
         if (!file.exists()) {
@@ -76,7 +75,7 @@ public class MigrationParam {
         if(StringUtils.isEmpty(jsonIndexMapping)) {
             throw new InvalidParameterException("File " + indexMappingFile + " is empty");
         }
-        indexMapping = Serialization.deserialize(jsonIndexMapping, Map.class);
+        index = Serialization.deserialize(jsonIndexMapping, Mapping.class);
     }
 
     public String getCategoryKey() {
@@ -119,12 +118,12 @@ public class MigrationParam {
         this.valueMappingFile = valueMappingFile;
     }
     
-    public Map<String, Object> getIndexMapping() {
-        return indexMapping;
+    public Mapping getIndex() {
+        return index;
     }
 
-    public void setIndexMapping(Map<String, Object> indexMapping) {
-        this.indexMapping = indexMapping;
+    public void setIndex(Mapping index) {
+        this.index = index;
     }
 
 }

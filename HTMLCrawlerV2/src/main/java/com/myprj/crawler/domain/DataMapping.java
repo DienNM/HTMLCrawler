@@ -1,8 +1,11 @@
 package com.myprj.crawler.domain;
 
-import static org.apache.commons.lang3.StringUtils.isEmpty;
+import static com.myprj.crawler.util.CommonUtil.isTextEmpty;
 
+import java.util.Map;
 import java.util.regex.Pattern;
+
+import com.myprj.crawler.util.Serialization;
 
 /**
  * @author DienNM (DEE)
@@ -16,9 +19,12 @@ public class DataMapping {
 
     private String function;
 
+    private Map<String, Object> parameters;
+
     public DataMapping() {
     }
 
+    @SuppressWarnings("unchecked")
     public static DataMapping parse(String line) {
         DataMapping dataMapping = new DataMapping();
 
@@ -30,13 +36,17 @@ public class DataMapping {
         }
         String[] right = line.substring(index + 1).split(Pattern.quote("|"));
         dataMapping.setRuleCode(right[0]);
+        dataMapping.setFunction(right[1]);
 
-        if (right.length == 2) {
-            dataMapping.setFunction(right[1]);
+        if (right.length > 2) {
+            dataMapping.setParameters(Serialization.deserialize(right[2], Map.class));
         }
-        if (isEmpty(dataMapping.getName()) || isEmpty(dataMapping.getRuleCode())) {
+
+        if (isTextEmpty(dataMapping.getName()) || isTextEmpty(dataMapping.getRuleCode())
+                || isTextEmpty(dataMapping.getFunction())) {
             return null;
         }
+
         return dataMapping;
     }
 
@@ -62,5 +72,13 @@ public class DataMapping {
 
     public void setFunction(String function) {
         this.function = function;
+    }
+
+    public Map<String, Object> getParameters() {
+        return parameters;
+    }
+
+    public void setParameters(Map<String, Object> parameters) {
+        this.parameters = parameters;
     }
 }

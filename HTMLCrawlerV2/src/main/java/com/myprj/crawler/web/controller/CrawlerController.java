@@ -1,5 +1,7 @@
 package com.myprj.crawler.web.controller;
 
+import static com.myprj.crawler.domain.config.AttributeSelector.parseSelectors;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -25,7 +27,6 @@ import com.myprj.crawler.service.crawl.CrawlerHandler;
 import com.myprj.crawler.service.crawl.CrawlerService;
 import com.myprj.crawler.service.handler.AttributeHandler;
 import com.myprj.crawler.service.handler.HandlerRegister;
-import com.myprj.crawler.util.AttributeSelectorUtil;
 import com.myprj.crawler.util.HtmlDownloader;
 import com.myprj.crawler.web.dto.JsonResponse;
 
@@ -106,7 +107,7 @@ public class CrawlerController extends AbstractController {
         List<Object> results = new ArrayList<Object>();
         for(int i = 0; i < selectors.size(); i++) {
             if(types.length > i) {
-                AttributeSelector attributeSelector = AttributeSelectorUtil.parseAttritbuteSelectors(selectors.get(i));
+                AttributeSelector attributeSelector = parseSelectors(selectors.get(i));
                 AttributeHandler handler = HandlerRegister.getHandler(AttributeType.valueOf(types[i]));
                 if(handler == null) {
                     jsonResponse = new JsonResponse(false);

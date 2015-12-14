@@ -1,9 +1,8 @@
 package com.myprj.crawler.service.mapping.impl;
 
-import static java.io.File.separator;
+import static com.myprj.crawler.util.CommonUtil.isCollectionEmpty;
+import static com.myprj.crawler.util.CommonUtil.isObjectTextEmpty;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -15,12 +14,10 @@ import org.springframework.stereotype.Service;
 
 import com.myprj.crawler.domain.DataMapping;
 import com.myprj.crawler.service.RuleScriptService;
+import com.myprj.crawler.service.mapping.Mapping;
 import com.myprj.crawler.service.mapping.MappingService;
 import com.myprj.crawler.service.rule.RuleEngine;
 import com.myprj.crawler.service.rule.RuleRequest;
-import com.myprj.crawler.util.Config;
-import com.myprj.crawler.util.FileUtil;
-import com.myprj.crawler.util.StreamUtil;
 
 /**
  * @author DienNM (DEE)
@@ -39,40 +36,20 @@ public class MappingServiceImpl implements MappingService {
     private RuleScriptService ruleScriptService;
 
     @Override
-    public Map<String, Object> doMappingIndex(Map<String, Object> indexMappings, Map<String, Object> targetValues) {
-        Map<String, Object> resultMappingIndex = new HashMap<String, Object>();
-        mapValues2Index(indexMappings, targetValues, resultMappingIndex);
-        return resultMappingIndex;
+    public Mapping doMappingIndex(Mapping indexes, Mapping values) {
+        Mapping result = new Mapping();
+        mapValues2Index(indexes, values, result);
+        return result;
     }
 
     @Override
-    public List<DataMapping> loadDataMappings(String site, String category, String item) {
-        List<DataMapping> dataMappings = new ArrayList<DataMapping>();
-
-        String mappingDir = FileUtil.getDirPath(Config.get("mapping.dir"));
-        String mappingFile = mappingDir + category + separator + item + separator + site + separator + "data.mapping";
-
-        List<String> csvLines = StreamUtil.readCSVFile(mappingFile);
-        if (csvLines.isEmpty()) {
-            return dataMappings;
-        }
-        for (String line : csvLines) {
-            DataMapping fieldMapping = DataMapping.parse(line);
-            if (fieldMapping != null) {
-                dataMappings.add(fieldMapping);
-            }
-        }
-        return dataMappings;
-    }
-
-    @Override
-    public void applyRuleMapping(List<DataMapping> dataMappings, Map<String, Object> values) {
-        for (DataMapping dataMapping : dataMappings) {
+    public void applyRuleMapping(List<DataMapping> ruleMappings, Map<String, Object> values) {
+        for (DataMapping dataMapping : ruleMappings) {
             Object evaluateObject = values.get(dataMapping.getName());
             Object response = executeRule(evaluateObject, dataMapping);
             if (response == null) {
-                logger.debug("Rule: {} - Function: {} - Attribute: {}: Cannot return response", dataMapping.getRuleCode(),
-                        dataMapping.getFunction(), dataMapping.getName());
+                logger.debug("Rule: {} - Function: {} - Attribute: {}: Cannot return response",
+                        dataMapping.getRuleCode(), dataMapping.getFunction(), dataMapping.getName());
                 continue;
             }
             values.put(dataMapping.getName(), response);
@@ -89,26 +66,26 @@ public class MappingServiceImpl implements MappingService {
     }
 
     @SuppressWarnings("unchecked")
-    private void mapValues2Index(Map<String, Object> indexMapping, Map<String, Object> values,
-            Map<String, Object> mapAttributes) {
-        for (String key : indexMapping.keySet()) {
+    private void mapValues2Index(Mapping indexes, Mapping values, Mapping results) {
+        for (String key : indexes.keySet()) {
             if (!values.containsKey(key)) {
                 logger.warn("Key: " + key + " not in mapping value");
             }
-            Object indexValue = indexMapping.get(key);
+            Object indexValue = indexes.get(key);
             Object targetValue = values.get(key);
 
-            if (indexValue == null || targetValue == null || StringUtils.isEmpty(targetValue.toString())) {
+            if (isObjectTextEmpty(indexValue) || isObjectTextEmpty(targetValue)) {
                 continue;
             }
+            
             if (indexValue instanceof String) {
-                mapValue2Index(indexValue.toString(), targetValue, mapAttributes);
+                mapValue2Index(indexValue.toString(), targetValue, results);
             } else if (targetValue instanceof Map) {
-                mapValues2Index((Map<String, Object>) indexValue, (Map<String, Object>) targetValue, mapAttributes);
+                mapValues2Index(new Mapping(indexValue), new Mapping(targetValue), results);
             } else if (targetValue instanceof List) {
                 List<Object> listIndexValue = (List<Object>) indexValue;
                 List<Object> listTargetValue = (List<Object>) targetValue;
-                if (listTargetValue.isEmpty() || listIndexValue.isEmpty()) {
+                if (isCollectionEmpty(listTargetValue) || isCollectionEmpty(listIndexValue)) {
                     continue;
                 }
                 Object sublistIndexValue = listIndexValue.get(0);
@@ -117,10 +94,9 @@ public class MappingServiceImpl implements MappingService {
                     logger.warn("Key: " + key + " not in mapping value");
                 }
                 if (sublistIndexValue instanceof Map) {
-                    mapValues2Index((Map<String, Object>) sublistIndexValue, (Map<String, Object>) sublistTargetValue,
-                            mapAttributes);
+                    mapValues2Index(new Mapping(sublistIndexValue), new Mapping(sublistTargetValue), results);
                 } else {
-                    mapValue2Index(sublistIndexValue.toString(), sublistTargetValue, mapAttributes);
+                    mapValue2Index(sublistIndexValue.toString(), sublistTargetValue, results);
                 }
             }
         }

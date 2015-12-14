@@ -14,7 +14,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.myprj.crawler.domain.MigrationParam;
+import com.myprj.crawler.domain.MigrationContext;
 import com.myprj.crawler.service.mapping.MigrationService;
 import com.myprj.crawler.util.Config;
 import com.myprj.crawler.util.StreamUtil;
@@ -61,7 +61,7 @@ public class MigrationFacadeImpl implements MigrationFacade {
             String categoryKey = items[0];
             String itemKey = items[1];
             String siteKey = items[2];
-            MigrationParam migrationParam = new MigrationParam(categoryKey, itemKey, siteKey);
+            MigrationContext migrationParam = new MigrationContext(categoryKey, itemKey, siteKey);
             migrationService.migrate(migrationParam);
         }
     }

@@ -14,6 +14,7 @@ import com.myprj.crawler.domain.AuditData;
 import com.myprj.crawler.enumeration.ResultStatus;
 import com.myprj.crawler.model.crawl.CrawlResultId;
 import com.myprj.crawler.model.crawl.CrawlResultModel;
+import com.myprj.crawler.service.mapping.Mapping;
 import com.myprj.crawler.util.converter.EntityConverter;
 import com.myprj.crawler.util.converter.ObjectConverter;
 
@@ -57,6 +58,11 @@ public class CrawlResultData extends AuditData {
     private Map<String, Object> detail = new HashMap<String, Object>();
 
     public CrawlResultData() {
+    }
+
+    @SuppressWarnings("unchecked")
+    public Mapping getDataAsMapping() {
+        return new Mapping((Map<String, Object>) detail.get("content"));
     }
 
     public static void toDatas(List<CrawlResultModel> sources, List<CrawlResultData> dests) {

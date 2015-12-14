@@ -1,7 +1,7 @@
 package com.myprj.crawler.service.impl;
 
+import static com.myprj.crawler.domain.config.AttributeSelector.parseSelectors;
 import static com.myprj.crawler.enumeration.AttributeType.OBJECT;
-import static com.myprj.crawler.util.AttributeSelectorUtil.parseAttritbuteSelectors;
 
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
@@ -132,7 +132,7 @@ public class WorkerItemAttributeStructureServiceImpl implements WorkerItemAttrib
             if (value.size() != 2) {
                 throw new InvalidParameterException("Error build attribute: " + key + " - LIST_OBJECT needs 2 params");
             }
-            AttributeSelector attributeSelector = parseAttritbuteSelectors(value.get(1).toString());
+            AttributeSelector attributeSelector = parseSelectors(value.get(1).toString());
             current.setSelector(attributeSelector);
 
             WorkerItemAttributeData attribute = createAttribute(current, workerItem, key, itemAttributeData);
@@ -143,7 +143,7 @@ public class WorkerItemAttributeStructureServiceImpl implements WorkerItemAttrib
         } else {
             WorkerItemAttributeData child = createAttribute(current, workerItem, key, itemAttributeData);
             if (value != null && !value.isEmpty()) {
-                AttributeSelector attributeSelector = parseAttritbuteSelectors(value.get(0).toString());
+                AttributeSelector attributeSelector = parseSelectors(value.get(0).toString());
                 child.setSelector(attributeSelector);
             }
             addChild(current, child);
@@ -154,7 +154,7 @@ public class WorkerItemAttributeStructureServiceImpl implements WorkerItemAttrib
     private WorkerItemAttributeData buildString(WorkerItemData workerItem, WorkerItemAttributeData parent, String key,
             String value) {
         WorkerItemAttributeData current = createAttribute(parent, workerItem, key);
-        AttributeSelector attributeSelector = parseAttritbuteSelectors(value);
+        AttributeSelector attributeSelector = parseSelectors(value);
         current.setSelector(attributeSelector);
         return current;
     }

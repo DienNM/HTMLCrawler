@@ -11,10 +11,8 @@ import com.myprj.crawler.domain.DataMapping;
 
 public interface MappingService {
 
-    Map<String, Object> doMappingIndex(Map<String, Object> indexMappings, Map<String, Object> targetValues);
+    Mapping doMappingIndex(Mapping index, Mapping value);
 
-    List<DataMapping> loadDataMappings(String site, String category, String item);
-
-    void applyRuleMapping(List<DataMapping> dataMappings, Map<String, Object> values);
+    void applyRuleMapping(List<DataMapping> ruleMappings, Map<String, Object> values);
 
 }

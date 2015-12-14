@@ -11,6 +11,7 @@ import org.apache.commons.codec.digest.DigestUtils;
  */
 
 public class Md5 {
+    
     public static String hex(File file) {
         try {
             FileInputStream fis = new FileInputStream(file);
@@ -36,9 +37,5 @@ public class Md5 {
         } catch (Exception e) {
             return null;
         }
-    }
-    
-    public static void main(String[] args) {
-        System.out.println(Md5.hex("nguyen minh dien"));
     }
 }
