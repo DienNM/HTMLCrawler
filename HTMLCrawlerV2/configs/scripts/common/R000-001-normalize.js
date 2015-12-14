@@ -6,16 +6,11 @@ function isSuffix(text, suffix) {
 }
 
 function normalize(attribute, object, parameters) {
-
 	parameters = JSON.parse(parameters);
-
-	// Get PREFIX
 	var prefix = parameters["prefix"];
 	if (prefix != null) {
 		prefix = prefix.toLowerCase();
 	}
-
-	// Get SUFFIX
 	var suffix = parameters["suffix"];
 	if (suffix != null) {
 		suffix = suffix.toLowerCase();
@@ -30,6 +25,6 @@ function normalize(attribute, object, parameters) {
 		var indexSuffix = objectLowerCase.indexOf(suffix);
 		object = object.substr(0, indexSuffix);
 	}
-	// TRIM
+	
 	return object.replace(/^\s+|\s+$/g, '');
 }
