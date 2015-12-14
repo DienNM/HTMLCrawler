@@ -1,13 +1,13 @@
 
-jobType=R000-001|normalize|{"prefix" : "", "suffix" : ""}
-salary=R000-001|normalize|{"prefix" : "", "suffix" : ""}
-education=R000-001|normalize|{"prefix" : "", "suffix" : ""}
-experience=R000-001|normalize|{"prefix" : "", "suffix" : ""}
-workplace=R000-001|normalize|{"prefix" : "", "suffix" : ""}
+jobType=R000-001|normalize|{"prefix" : "- Hình thức làm việc:", "suffix" : ""}
+salary=R000-001|normalize|{"prefix" : "- Mức lương:", "suffix" : ""}
+education=R000-001|normalize|{"prefix" : "- Trình độ:", "suffix" : ""}
+experience=R000-001|normalize|{"prefix" : "- Kinh nghiệm:", "suffix" : ""}
+workplace=R000-001|normalize|{"prefix" : "Việc làm", "suffix" : ""}
 
-companyPhone=R000-001|normalize|{"prefix" : "", "suffix" : ""}
+companyPhone=R000-001|normalize|{"prefix" : "Điện thoại:", "suffix" : ""}
 companySize=R000-001|normalize|{"prefix" : "", "suffix" : ""}
-companyAddress=R000-001|normalize|{"prefix" : "", "suffix" : ""}
+companyAddress=R000-001|normalize|{"prefix" : "Địa chỉ:", "suffix" : "người"}
 
 quantity=R000-001|normalize|{"prefix" : "", "suffix" : ""}
-genderRequired=R000-001|normalize|{"prefix" : "", "suffix" : ""}
+genderRequired=R000-001|normalize|{"prefix" : "- Giới tính:", "suffix" : ""}

@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import com.myprj.crawler.domain.RuleScriptData;
 import com.myprj.crawler.service.RuleScriptService;
+import com.myprj.crawler.util.Serialization;
 
 /**
  * @author DienNM (DEE)
@@ -51,7 +52,7 @@ public class RuleEngine {
         try {
             Invocable invocable = receiveScript(request.getRuleCode());
             return invocable.invokeFunction(request.getFunctionName(), request.getAttributeName(),
-                    request.getEvaluateObject());
+                    request.getEvaluateObject(), Serialization.serialize(request.getParameters()));
         } catch (Exception e) {
             logger.error("{}", e);
         }

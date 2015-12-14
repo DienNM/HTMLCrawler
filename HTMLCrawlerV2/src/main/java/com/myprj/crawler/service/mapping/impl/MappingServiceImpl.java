@@ -62,6 +62,7 @@ public class MappingServiceImpl implements MappingService {
         ruleRequest.setFunctionName(att.getFunction());
         ruleRequest.setRuleCode(att.getRuleCode());
         ruleRequest.setAttributeName(att.getName());
+        ruleRequest.setParameters(att.getParameters());
         return ruleEngine.perform(ruleRequest);
     }
 

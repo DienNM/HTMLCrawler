@@ -1,6 +1,7 @@
 package com.myprj.crawler.service.rule;
 
 import java.io.Serializable;
+import java.util.Map;
 
 /**
  * @author DienNM (DEE)
@@ -17,6 +18,8 @@ public class RuleRequest implements Serializable {
     private Object evaluateObject;
     
     private String attributeName;
+    
+    private Map<String, Object> parameters;
     
     public RuleRequest() {
     }
@@ -51,6 +54,14 @@ public class RuleRequest implements Serializable {
 
     public void setAttributeName(String attributeName) {
         this.attributeName = attributeName;
+    }
+
+    public Map<String, Object> getParameters() {
+        return parameters;
+    }
+
+    public void setParameters(Map<String, Object> parameters) {
+        this.parameters = parameters;
     }
 
 }
