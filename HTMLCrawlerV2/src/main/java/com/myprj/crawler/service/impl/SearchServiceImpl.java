@@ -69,7 +69,12 @@ public class SearchServiceImpl implements SearchService {
             result.put(siteKey, source.get(siteKey).toString());
             
             for(String key : searchParam.getMainFields()) {
-                result.put(key, source.get(key).toString());
+                Object object = source.get(key);
+                if(object == null) {
+                    result.put(key, null);
+                } else {
+                    result.put(key, source.get(key).toString());
+                }
             }
             results.add(result);
         }

@@ -20,14 +20,18 @@ function normalize(attribute, object, parameters) {
 	}
 	var objectLowerCase = object.toLowerCase();
 
-	if (prefix != null && isPrefix(objectLowerCase, prefix)) {
+	if (prefix != null && prefix != "" && isPrefix(objectLowerCase, prefix)) {
 		var indexPrefix = prefix.length;
-		object = object.substr(indexPrefix);
+		if(indexPrefix > -1) {
+			object = object.substr(indexPrefix);
+		}
 	}
-	if (suffix != null && isSuffix(objectLowerCase, suffix)) {
+	if (suffix != null && suffix != "" && isSuffix(objectLowerCase, suffix)) {
 		var indexSuffix = objectLowerCase.indexOf(suffix);
-		object = object.substr(0, indexSuffix);
+		if(indexSuffix > -1) {
+			object = object.substr(0, indexSuffix);
+		}
 	}
-	
+
 	return object.replace(/^\s+|\s+$/g, '');
 }

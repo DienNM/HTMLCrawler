@@ -24,10 +24,10 @@ public class GlobalSearchController {
     private SearchFacade searchFacade;
     
     @RequestMapping(value = "/search", method = RequestMethod.GET)
-    public String search(@RequestParam(value = "q") String q,
+    public String search(@RequestParam(value = "q", required = false) String q,
             @RequestParam(value = "type", required = false) String type,
             @RequestParam(value = "currentPage", defaultValue = "0") int currentPage,
-            @RequestParam(value = "pageSize", defaultValue = "10") int pageSize,
+            @RequestParam(value = "pageSize", defaultValue = "50") int pageSize,
             Model model) {
         Pageable pageable = new Pageable(pageSize, currentPage);
         SearchParam searchParam = new SearchParam();
@@ -36,7 +36,7 @@ public class GlobalSearchController {
         PageResult<Map<String, String>> results = searchFacade.search(searchParam);
         model.addAttribute("results", results.getContent());
         model.addAttribute("pageable", results.getPageable());
-        
+        model.addAttribute("q", q);
         return "search";
     }
 }
