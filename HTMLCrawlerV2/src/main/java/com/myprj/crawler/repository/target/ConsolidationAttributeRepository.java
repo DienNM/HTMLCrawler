@@ -13,6 +13,8 @@ import com.myprj.crawler.repository.GenericDao;
 public interface ConsolidationAttributeRepository extends GenericDao<ConsolidationAttributeModel, ConsolidationAttributeId> {
     
     List<ConsolidationAttributeModel> findByConsolidationId(String consolidationId);
+    
+    List<ConsolidationAttributeModel> findByConsolidationIds(List<String> consolidationIds);
 
     void deleteByConsolidationId(String consolidationId);
 }

@@ -1,0 +1,151 @@
+PUT /crawler
+{
+    "settings": {
+        "number_of_replicas": 1,
+        "number_of_shards" : 5,
+        "analysis": {
+            "analyzer": {
+                "folding": {
+                    "tokenizer": "standard",
+                    "filter": [ "lowercase", "asciifolding" ]
+                }
+            }
+        }
+    }
+}
+
+PUT /crawler/_mapping/consolidation
+{
+    "properties": {
+        "value": {
+          "type": "string",
+          "analyzer": "standard",
+          "fields": {
+                "folded": {
+                    "type": "string",
+                    "analyzer": "folding"
+                    }
+            }
+        },
+        "sku": {
+          "type": "string",
+          "analyzer": "standard"
+        },
+        "jobName": {
+          "type": "string",
+          "analyzer": "standard"
+        },
+        "jobTitle": {
+          "type": "string",
+          "analyzer": "standard"
+        },
+        "jobType": {
+          "type": "string",
+          "analyzer": "standard"
+        },
+        "salary": {
+          "type": "string",
+          "analyzer": "standard"
+        },
+        "education": {
+          "type": "string",
+          "analyzer": "standard"
+        },
+        "experience": {
+          "type": "string",
+          "analyzer": "standard"
+        },
+        "categories": {
+          "type": "string",
+          "analyzer": "standard"
+        },
+        "jobExpired": {
+          "type": "string",
+          "analyzer": "standard"
+        },
+        "workplace": {
+          "type": "string",
+          "analyzer": "standard"
+        },
+        "companyName": {
+          "type": "string",
+          "analyzer": "standard"
+        },
+        "companyPhone": {
+          "type": "string",
+          "analyzer": "standard"
+        },
+        "companyContact": {
+          "type": "string",
+          "analyzer": "standard"
+        },
+        "companySize": {
+          "type": "string",
+          "analyzer": "standard"
+        },
+        "companyIntro": {
+          "type": "string",
+          "analyzer": "standard"
+        },
+        "companyAddress": {
+          "type": "string",
+          "analyzer": "standard"
+        },
+        "companyLogo": {
+          "type": "string",
+          "analyzer": "standard"
+        },
+        "contactName": {
+          "type": "string",
+          "analyzer": "standard"
+        },
+        "contactEmail": {
+          "type": "string",
+          "analyzer": "standard"
+        },
+        "contactAddress": {
+          "type": "string",
+          "analyzer": "standard"
+        },
+        "contactPhone": {
+          "type": "string",
+          "analyzer": "standard"
+        },
+        "contactMobile": {
+          "type": "string",
+          "analyzer": "standard"
+        },
+        "contactResumeInfo": {
+          "type": "string",
+          "analyzer": "standard"
+        },
+        "quantity": {
+          "type": "string",
+          "analyzer": "standard"
+        },
+        "ageRequired": {
+          "type": "string",
+          "analyzer": "standard"
+        },
+        "genderRequired": {
+          "type": "string",
+          "analyzer": "standard"
+        },
+        "resumeRequired": {
+          "type": "string",
+          "analyzer": "standard"
+        },
+        "jobRequired": {
+          "type": "string",
+          "analyzer": "standard"
+        },
+        "jobDescription": {
+          "type": "string",
+          "analyzer": "standard"
+        },
+        "offers": {
+          "type": "string",
+          "analyzer": "standard"
+        }
+    }
+}

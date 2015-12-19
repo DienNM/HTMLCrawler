@@ -32,6 +32,15 @@ public class DefaultConsolidationAttributeRepository extends
         query.setParameter("consolidationId", consolidationId);
         return query.getResultList();
     }
+    
+    @SuppressWarnings("unchecked")
+    @Override
+    public List<ConsolidationAttributeModel> findByConsolidationIds(List<String> consolidationIds) {
+        Query query = entityManager
+                .createQuery("FROM " + getClassName() + " WHERE id.consolidationId in (:consolidationIds) ");
+        query.setParameter("consolidationIds", consolidationIds);
+        return query.getResultList();
+    }
 
     @Override
     public void deleteByConsolidationId(String consolidationId) {
