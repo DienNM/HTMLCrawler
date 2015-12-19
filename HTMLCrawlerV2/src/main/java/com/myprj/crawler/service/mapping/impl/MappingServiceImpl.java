@@ -46,6 +46,9 @@ public class MappingServiceImpl implements MappingService {
     public void applyRuleMapping(List<DataMapping> ruleMappings, Map<String, Object> values) {
         for (DataMapping dataMapping : ruleMappings) {
             Object evaluateObject = values.get(dataMapping.getName());
+            if(evaluateObject == null) {
+                continue;
+            }
             Object response = executeRule(evaluateObject, dataMapping);
             if (response == null) {
                 logger.debug("Rule: {} - Function: {} - Attribute: {}: Cannot return response",

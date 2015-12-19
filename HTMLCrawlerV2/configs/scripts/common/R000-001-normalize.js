@@ -15,6 +15,9 @@ function normalize(attribute, object, parameters) {
 	if (suffix != null) {
 		suffix = suffix.toLowerCase();
 	}
+	if(object == null) {
+		return object;
+	}
 	var objectLowerCase = object.toLowerCase();
 
 	if (prefix != null && isPrefix(objectLowerCase, prefix)) {

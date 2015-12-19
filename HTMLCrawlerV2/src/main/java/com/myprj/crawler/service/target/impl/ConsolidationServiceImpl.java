@@ -83,7 +83,7 @@ public class ConsolidationServiceImpl implements ConsolidationService {
             consolidationRepository.save(newObject);
         } else {
             if (dbModel.getMd5Attributes().equals(newObject.getMd5Attributes())) {
-                logger.info(dbModel.getId().toString() + " not change. Not updated");
+                logger.debug(dbModel.getId().toString() + " not change. Not updated");
                 return;
             }
             dbModel.setUrl(newObject.getUrl());

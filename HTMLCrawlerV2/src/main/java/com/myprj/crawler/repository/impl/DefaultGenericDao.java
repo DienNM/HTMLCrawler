@@ -69,6 +69,15 @@ public abstract class DefaultGenericDao<E, Id>  implements GenericDao<E, Id> {
         return pageResult;
     }
     
+    @SuppressWarnings("unchecked")
+    @Override
+    public List<E> find(Pageable pageable) {
+        Query query = entityManager.createQuery("from " + getClassName());
+        query.setFirstResult(pageable.getCurrentPage() *  pageable.getPageSize());
+        query.setMaxResults(pageable.getPageSize());
+        return query.getResultList();
+    }
+    
     @Override
     public E find(Id id) {
         E entity = entityManager.find(clazz, id);

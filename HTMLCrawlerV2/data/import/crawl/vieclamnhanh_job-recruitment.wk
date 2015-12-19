@@ -1,8 +1,8 @@
 #worker key|site|threads|attemptTimes|delayTime|name|description
 #site-key|level|crawlType|start|end|level0Selector
 
->jr-vieclamnhanh|vieclamnhanh|3|5|1000|Job Recruitment Worker|Job Recruitment Worker
-job-recruitment|Level0|LIST|1|1|body > section > div > div.col-xs-8.primary > div > div:nth-child(3) > article > table > tbody > tr > td.block-item.w55 > a.item{{href}}|http://www.timviecnhanh.com/viec-lam-ban-hang-c10.html?page=%s
+>jr-vieclamnhanh|vieclamnhanh|5|5|1000|Job Recruitment Worker|Job Recruitment Worker
+job-recruitment|Level0|LIST|1|1747|body > section > div > div.col-xs-8.primary > div > div > article.block-content.outer-b-20 > table > tbody > tr > td.block-item.w55 > a.item{{href}}|http://www.timviecnhanh.com/vieclam/timkiem?&page=%s
 job-recruitment|Level1|DETAIL|0|0||
 
 <<START>>

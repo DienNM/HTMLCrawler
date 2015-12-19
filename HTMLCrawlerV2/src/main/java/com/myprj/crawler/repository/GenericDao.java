@@ -14,6 +14,8 @@ public interface GenericDao<E, Id> {
     List<E> findAll();
     
     PageResult<E> findAll(Pageable pageable);
+
+    List<E> find(Pageable pageable);
     
     long count();
     

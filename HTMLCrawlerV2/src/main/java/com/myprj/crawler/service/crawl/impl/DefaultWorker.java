@@ -112,7 +112,7 @@ public class DefaultWorker implements Worker {
         int toPage = Integer.valueOf(workerTarget.getEnd());
         List<String> urls = new ArrayList<String>();
         String updatedURLPagingFormat = updateURLPagingFormat(url);
-        for (int page = fromPage; page <= toPage; page++) {
+        for (int page = toPage; page >= fromPage; page--) {
             String formatedURLPaging = formatURLPaging(updatedURLPagingFormat, String.valueOf(page));
             urls.add(formatedURLPaging);
         }
