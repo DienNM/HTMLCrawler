@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import com.myprj.crawler.domain.Pageable;
 import com.myprj.crawler.model.target.ConsolidationAttributeModel;
+import com.myprj.crawler.model.target.ConsolidationId;
 import com.myprj.crawler.model.target.ConsolidationModel;
 import com.myprj.crawler.repository.target.ConsolidationAttributeRepository;
 import com.myprj.crawler.repository.target.ConsolidationRepository;
@@ -44,17 +45,25 @@ public class IndexingServiceImpl implements IndexingService {
             if (consolidations.isEmpty()) {
                 break;
             }
-            List<String> consolidationIds = new ArrayList<String>();
+            Map<String, ConsolidationModel> consolidationIds = new HashMap<String, ConsolidationModel>();
             for (ConsolidationModel consolidationModel : consolidations) {
-                consolidationIds.add(consolidationModel.getMd5Key());
+                consolidationIds.put(consolidationModel.getMd5Key(), consolidationModel);
             }
             List<ConsolidationAttributeModel> attributes = consolidationAttributeRepository
-                    .findByConsolidationIds(consolidationIds);
+                    .findByConsolidationIds(new ArrayList<String>(consolidationIds.keySet()));
+
             Map<String, Map<String, Object>> dataIndex = new HashMap<String, Map<String, Object>>();
-            for(ConsolidationAttributeModel attribute : attributes) {
+            for (ConsolidationAttributeModel attribute : attributes) {
                 Map<String, Object> document = dataIndex.get(attribute.getId().getConsolidationId());
-                if(document == null) {
+                if (document == null) {
                     document = new HashMap<String, Object>();
+                    ConsolidationId id = consolidationIds
+                            .get(attribute.getId().getConsolidationId()).getId();
+
+                    document.put(Config.get("elasticsearch._key.id"), id.getResultKey());
+                    document.put(Config.get("elasticsearch._key.category"), id.getCategoryKey());
+                    document.put(Config.get("elasticsearch._key.item"), id.getItemKey());
+                    document.put(Config.get("elasticsearch._key.site"), id.getSiteKey());
                     dataIndex.put(attribute.getId().getConsolidationId(), document);
                 }
                 document.put(attribute.getId().getName(), attribute.getValue());
@@ -68,10 +77,9 @@ public class IndexingServiceImpl implements IndexingService {
             Client client = ElasticSearchClient.getInstance();
             String indexName = Config.get("elasticsearch.index.name");
             String type = Config.get("elasticsearch.index.type");
-            for(String key : dataIndex.keySet()) {
+            for (String key : dataIndex.keySet()) {
                 Map<String, Object> document = dataIndex.get(key);
-                client.prepareIndex(indexName, type, key).setSource(document)
-                        .execute().actionGet();
+                client.prepareIndex(indexName, type, key).setSource(document).execute().actionGet();
             }
         } catch (Exception e) {
             logger.error("{}", e);

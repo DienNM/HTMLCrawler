@@ -11,5 +11,71 @@
             http://www.springframework.org/schema/tx 
             http://www.springframework.org/schema/tx/spring-tx-4.1.xsd">
     
+    <bean name="fields_job" class="java.util.HashSet">
+        <constructor-arg>
+            <set value-type="java.lang.String">
+                <value>sku</value>
+                <value>jobName</value>
+                <value>jobTitle</value>
+                <value>jobType</value>
+                <value>salary</value>
+                <value>education</value>
+                <value>experience</value>
+                <value>categories</value>
+                <value>jobExpired</value>
+                <value>workplace</value>
+                <value>companyName</value>
+                <value>companyPhone</value>
+                <value>companyContact</value>
+                <value>companySize</value>
+                <value>companyIntro</value>
+                <value>companyAddress</value>
+                <value>companyLogo</value>
+                <value>contactName</value>
+                <value>contactEmail</value>
+                <value>contactAddress</value>
+                <value>contactPhone</value>
+                <value>contactMobile</value>
+                <value>contactResumeInfo</value>
+                <value>quantity</value>
+                <value>ageRequired</value>
+                <value>genderRequired</value>
+                <value>resumeRequired</value>
+                <value>jobRequired</value>
+                <value>jobDescription</value>
+                <value>offers</value>
+            </set>
+        </constructor-arg>
+    </bean>
+    
+    <bean name="main_fields_job" class="java.util.HashSet">
+        <constructor-arg>
+            <set value-type="java.lang.String">
+                <value>jobName</value>
+                <value>salary</value>
+                <value>categories</value>
+                <value>workplace</value>
+                <value>companyName</value>
+                <value>companyLogo</value>
+                <value>quantity</value>
+            </set>
+        </constructor-arg>
+    </bean>
+    
+    <bean name="elasticsearchFields" class="java.util.HashMap">
+	    <constructor-arg>
+	        <map key-type="java.lang.String" value-type="java.util.HashSet">
+	            <entry key="job" value-ref="fields_job" />
+	        </map>
+	    </constructor-arg>
+	</bean>
+	
+	<bean name="elasticsearchMainFields" class="java.util.HashMap">
+        <constructor-arg>
+            <map key-type="java.lang.String" value-type="java.util.HashSet">
+                <entry key="job" value-ref="main_fields_job" />
+            </map>
+        </constructor-arg>
+    </bean>
     
 </beans>
