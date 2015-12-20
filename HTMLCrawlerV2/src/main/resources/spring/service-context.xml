@@ -21,21 +21,16 @@
                 <value>salary</value>
                 <value>education</value>
                 <value>categories</value>
-                <value>jobExpired</value>
                 <value>workplace</value>
                 <value>companyName</value>
                 <value>companyPhone</value>
                 <value>companyContact</value>
-                <value>companySize</value>
                 <value>companyAddress</value>
                 <value>contactName</value>
                 <value>contactEmail</value>
-                <value>contactAddress</value>
                 <value>contactPhone</value>
                 <value>contactMobile</value>
                 <value>quantity</value>
-                <value>ageRequired</value>
-                <value>genderRequired</value>
             </set>
         </constructor-arg>
     </bean>
