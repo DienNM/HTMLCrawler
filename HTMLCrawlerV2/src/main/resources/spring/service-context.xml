@@ -20,7 +20,6 @@
                 <value>jobType</value>
                 <value>salary</value>
                 <value>education</value>
-                <value>experience</value>
                 <value>categories</value>
                 <value>jobExpired</value>
                 <value>workplace</value>
@@ -28,22 +27,15 @@
                 <value>companyPhone</value>
                 <value>companyContact</value>
                 <value>companySize</value>
-                <value>companyIntro</value>
                 <value>companyAddress</value>
-                <value>companyLogo</value>
                 <value>contactName</value>
                 <value>contactEmail</value>
                 <value>contactAddress</value>
                 <value>contactPhone</value>
                 <value>contactMobile</value>
-                <value>contactResumeInfo</value>
                 <value>quantity</value>
                 <value>ageRequired</value>
                 <value>genderRequired</value>
-                <value>resumeRequired</value>
-                <value>jobRequired</value>
-                <value>jobDescription</value>
-                <value>offers</value>
             </set>
         </constructor-arg>
     </bean>

@@ -3,6 +3,7 @@ package com.myprj.crawler.service.mapping.impl;
 import static com.myprj.crawler.util.CommonUtil.isCollectionEmpty;
 import static com.myprj.crawler.util.CommonUtil.isObjectTextEmpty;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -42,11 +43,33 @@ public class MappingServiceImpl implements MappingService {
         return result;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public void applyRuleMapping(List<DataMapping> ruleMappings, Map<String, Object> values) {
         for (DataMapping dataMapping : ruleMappings) {
             Object evaluateObject = values.get(dataMapping.getName());
-            if(evaluateObject == null) {
+            if (evaluateObject == null) {
+                continue;
+            }
+            if(evaluateObject instanceof List) {
+                applyRuleMappingForArray((List<Object>)evaluateObject, dataMapping, values);
+            } else {
+                Object response = executeRule(evaluateObject, dataMapping);
+                if (response == null) {
+                    logger.debug("Rule: {} - Function: {} - Attribute: {}: Cannot return response",
+                            dataMapping.getRuleCode(), dataMapping.getFunction(), dataMapping.getName());
+                    continue;
+                }
+                values.put(dataMapping.getName(), response);
+            }
+        }
+    }
+
+    private void applyRuleMappingForArray(List<Object> evaluateObjects, DataMapping dataMapping,
+            Map<String, Object> values) {
+        List<Object> results = new ArrayList<Object>();
+        for (Object evaluateObject : evaluateObjects) {
+            if (evaluateObject == null) {
                 continue;
             }
             Object response = executeRule(evaluateObject, dataMapping);
@@ -55,8 +78,10 @@ public class MappingServiceImpl implements MappingService {
                         dataMapping.getRuleCode(), dataMapping.getFunction(), dataMapping.getName());
                 continue;
             }
-            values.put(dataMapping.getName(), response);
+            results.add(response);
         }
+        values.put(dataMapping.getName(), results);
+
     }
 
     private Object executeRule(Object evaluateObject, DataMapping att) {
@@ -73,15 +98,13 @@ public class MappingServiceImpl implements MappingService {
     private void mapValues2Index(Mapping indexes, Mapping values, Mapping results) {
         for (String key : indexes.keySet()) {
             if (!values.containsKey(key)) {
-                logger.warn("Key: " + key + " not in mapping value");
+                continue;
             }
             Object indexValue = indexes.get(key);
             Object targetValue = values.get(key);
-
             if (isObjectTextEmpty(indexValue) || isObjectTextEmpty(targetValue)) {
                 continue;
             }
-            
             if (indexValue instanceof String) {
                 mapValue2Index(indexValue.toString(), targetValue, results);
             } else if (targetValue instanceof Map) {
@@ -100,7 +123,7 @@ public class MappingServiceImpl implements MappingService {
                 if (sublistIndexValue instanceof Map) {
                     mapValues2Index(new Mapping(sublistIndexValue), new Mapping(sublistTargetValue), results);
                 } else {
-                    mapValue2Index(sublistIndexValue.toString(), sublistTargetValue, results);
+                    mapValue2Index(sublistIndexValue.toString(), listTargetValue, results);
                 }
             }
         }

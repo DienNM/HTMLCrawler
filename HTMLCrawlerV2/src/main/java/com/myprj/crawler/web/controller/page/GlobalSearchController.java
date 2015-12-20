@@ -2,6 +2,7 @@ package com.myprj.crawler.web.controller.page;
 
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -33,7 +34,13 @@ public class GlobalSearchController {
         SearchParam searchParam = new SearchParam();
         searchParam.setPageable(pageable);
         searchParam.setKeyword(q);
-        PageResult<Map<String, String>> results = searchFacade.search(searchParam);
+        
+        PageResult<Map<String, String>> results = new PageResult<Map<String, String>>();
+        if(StringUtils.isEmpty(q)) {
+            results.setPageable(pageable);
+        } else {
+            results = searchFacade.search(searchParam);
+        }
         model.addAttribute("results", results.getContent());
         model.addAttribute("pageable", results.getPageable());
         model.addAttribute("q", q);

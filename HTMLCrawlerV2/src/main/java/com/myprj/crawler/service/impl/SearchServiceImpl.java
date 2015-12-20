@@ -34,12 +34,14 @@ public class SearchServiceImpl implements SearchService {
         BoolQueryBuilder query = QueryBuilders.boolQuery();
         query.must(
                 QueryBuilders.multiMatchQuery(searchParam.getKeyword(), searchParam.toArrayFields())
-                        .minimumShouldMatch("95%"));
+                        .minimumShouldMatch("98%"));
                 //.should(QueryBuilders.disMaxQuery().add(QueryBuilders.matchPhraseQuery("title", value)))
                 //.should(QueryBuilders.matchPhraseQuery("description", value));
 
         SearchResponse response = client.prepareSearch(index).setSearchType(SearchType.DFS_QUERY_THEN_FETCH)
-                .setQuery(query).setFrom(0).setSize(searchParam.getPageable().getPageSize()).execute().actionGet();
+                .setQuery(query)
+                .setFrom(searchParam.getPageable().getCurrentPage())
+                .setSize(searchParam.getPageable().getPageSize()).execute().actionGet();
         
         long totalRecords = response.getHits().getTotalHits();
         long totalPages = totalRecords / searchParam.getPageable().getPageSize();
@@ -57,6 +59,7 @@ public class SearchServiceImpl implements SearchService {
         String categoryKey = Config.get("elasticsearch._key.category");
         String itemKey = Config.get("elasticsearch._key.item");
         String siteKey = Config.get("elasticsearch._key.site");
+        String url = Config.get("elasticsearch._key.url");
         
         List<Map<String, String>> results = new ArrayList<Map<String, String>>();
         
@@ -67,6 +70,7 @@ public class SearchServiceImpl implements SearchService {
             result.put(categoryKey, source.get(categoryKey).toString());
             result.put(itemKey, source.get(itemKey).toString());
             result.put(siteKey, source.get(siteKey).toString());
+            result.put(url, source.get(url).toString());
             
             for(String key : searchParam.getMainFields()) {
                 Object object = source.get(key);

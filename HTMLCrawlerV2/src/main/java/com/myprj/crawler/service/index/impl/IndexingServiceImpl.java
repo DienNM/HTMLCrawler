@@ -57,13 +57,16 @@ public class IndexingServiceImpl implements IndexingService {
                 Map<String, Object> document = dataIndex.get(attribute.getId().getConsolidationId());
                 if (document == null) {
                     document = new HashMap<String, Object>();
-                    ConsolidationId id = consolidationIds
-                            .get(attribute.getId().getConsolidationId()).getId();
+                    ConsolidationModel consolidationModel = consolidationIds
+                            .get(attribute.getId().getConsolidationId());
+                    ConsolidationId id = consolidationModel.getId();
 
                     document.put(Config.get("elasticsearch._key.id"), id.getResultKey());
                     document.put(Config.get("elasticsearch._key.category"), id.getCategoryKey());
                     document.put(Config.get("elasticsearch._key.item"), id.getItemKey());
                     document.put(Config.get("elasticsearch._key.site"), id.getSiteKey());
+                    document.put(Config.get("elasticsearch._key.url"), consolidationModel.getUrl());
+
                     dataIndex.put(attribute.getId().getConsolidationId(), document);
                 }
                 document.put(attribute.getId().getName(), attribute.getValue());
